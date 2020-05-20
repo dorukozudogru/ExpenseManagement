@@ -57,7 +57,7 @@
                 </li>
             </ul>
         </nav>
-        <aside class="main-sidebar sidebar-light-primary elevation-4" style="position:fixed">
+        <aside class="main-sidebar sidebar-light-danger elevation-4" style="position:fixed">
             <a asp-controller="Home" asp-action="Index" class="brand-link text-center">
                 <span class="brand-text font-weight-light">Muhasebe Yönetimi</span>
             </a>
@@ -274,7 +274,6 @@
         });
 
         if (currentLink[0] != null) {
-            console.log(currentLink[0]);
             currentLink[0].classList.add("active");
             if (currentLink[0].closest(".nav-treeview") != null) {
                 currentLink[0].closest(".nav-treeview").style.display = "block";
