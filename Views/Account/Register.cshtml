@@ -1,0 +1,63 @@
+﻿@model ExpenseManagement.Models.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Kayıt Ol";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Muhasebe Yönetimi | Kayıt Ol</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="~/Content/NewSite/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="~/Content/NewSite/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/NewSite/dist/css/adminlte.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition register-page">
+    <div class="register-box">
+        <div class="register-logo">
+            <a href="#"><b>MUHASEBE YÖNETİMİ</b><br />Kayıt Ol</a>
+        </div>
+        <div class="card">
+            <div class="card-body register-card-body">
+                <form asp-action="Register" asp-controller="Account">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <label asp-for="Email" class="control-label"></label>
+                    <div class="input-group mb-3 has-feedback">
+                        <input type="email" asp-for="Email" class="form-control" placeholder="E-Posta" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <label asp-for="Password" class="control-label"></label>
+                    <div class="input-group mb-3 has-feedback">
+                        <input asp-for="Password" class="form-control" type="password" placeholder="Şifre" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block">Kayıt Ol</button>
+                        </div>
+                    </div>
+                </form>
+                <br />
+                <p class="mb-1">Hesabınız var mı? <a href="login" class="text-center">Buradan</a> giriş yapın.</p>
+            </div>
+        </div>
+    </div>
+    <script src="~/Content/NewSite/plugins/jquery/jquery.min.js"></script>
+    <script src="~/Content/NewSite/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/NewSite/dist/js/adminlte.min.js"></script>
+</body>
+</html>

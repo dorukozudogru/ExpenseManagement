@@ -1,0 +1,64 @@
+﻿@model ExpenseManagement.Models.AppIdentityRole
+
+@{
+    ViewData["Title"] = "Sistem Rolü Ekle";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-key"></i>&nbsp;Sistem Rolü Ekle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label class="control-label">Rol Adı</label>
+                                    <input asp-for="Name" class="form-control" autocomplete="off" id="roleName" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="button" value="Ekle" class="btn btn-success" onclick="addRole()" />
+                            <a class="btn btn-primary" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var roleName;
+
+    function addRole() {
+        roleName = document.getElementById("roleName").value;
+        $.ajax({
+            url: '/Role/Create?role.Name=' + roleName,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>

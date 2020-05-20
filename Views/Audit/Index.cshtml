@@ -1,0 +1,116 @@
+﻿@model IEnumerable<ExpenseManagement.Models.Audit>
+
+@{
+    ViewData["Title"] = "Yapılan Değişiklikler";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-video"></i>&nbsp;Yapılan Değişiklikler
+                            <strong class="text-warning float-right">Lütfen arama yaparken BÜYÜK/küçük harf farkına dikkat ediniz.</strong>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="card-body">
+                                <table id="ItemsTable" class="table table-striped table-bordered" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Id)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.TableName)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.EntityName)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Action)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.DateTime)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Username)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.KeyValues)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.OldValues)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.NewValues)
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script src="~/js/datatables.min.js"></script>
+    <script src="~/js/moment.min.js"></script>
+    <script>
+        (function () {
+            var generateCustomerTable = $("#ItemsTable").DataTable({
+                "language": {
+                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                    zeroRecords: "Hiçbir kayıt bulunamadı.",
+                    emptyTable: "Kayıt bulunmamaktadır.",
+                    search: "Ara:",
+                    oPaginate: {
+                        "sFirst": "İlk",
+                        "sLast": "Son",
+                        "sNext": "Sonraki",
+                        "sPrevious": "Önceki"
+                    },
+                    sLengthMenu: "_MENU_ adet kayıt getir",
+                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                },
+                "searching": true,
+                "processing": true,
+                "serverSide": true,
+                "searchDelay": 1200,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "url": "/Audit/Post",
+                    "method": "POST"
+                },
+                "columns": [
+                    { "data": "id" },
+                    { "data": "tableName" },
+                    { "data": "entityName" },
+                    { "data": "action" },
+                    {
+                        "data": "dateTime",
+                        render: function (data, type, row) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                    },
+                    { "data": "username" },
+                    { "data": "keyValues" },
+                    { "data": "oldValues" },
+                    { "data": "newValues" }
+                ],
+                "ordering": true,
+                "paging": true,
+                "pagingType": "simple_numbers",
+                "pageLength": 100
+            });
+        })(jQuery);
+    </script>
+}

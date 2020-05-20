@@ -1,0 +1,44 @@
+﻿@model ExpenseManagement.Models.AppIdentityRole
+
+@{
+    ViewData["Title"] = "Sistem Rolü Detayları";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="invoice p-3 mb-3">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4>
+                                <i class="fas fa-key"></i> @Html.DisplayFor(model => model.Name)
+                                <br />
+                            </h4>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row invoice-info">
+                        <div class="col-sm-4 invoice-col">
+                            <address>
+                                Rol Adı: <strong>@Html.DisplayFor(model => model.NormalizedName)</strong><br>
+                                Eşzamanlılık Damgası: <strong>@Html.DisplayFor(model => model.ConcurrencyStamp)</strong><br>
+                            </address>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row no-print">
+                        <div class="col-12">
+                            <a class="btn btn-success float-right" asp-action="Edit" asp-route-id="@Model.Id">
+                                <i class="fas fa-pencil-alt"></i>&nbsp;&nbsp;Güncelle
+                            </a>
+                            <a class="btn btn-primary float-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
