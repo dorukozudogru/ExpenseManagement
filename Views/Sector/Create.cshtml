@@ -1,7 +1,7 @@
-﻿@model ExpenseManagement.Models.AppIdentityRole
+﻿@model ExpenseManagement.Models.Sectors
 
 @{
-    ViewData["Title"] = "Sistem Rolü Güncelle";
+    ViewData["Title"] = "Sektör/İş Kolu Ekle";
 }
 
 <section class="content">
@@ -11,17 +11,16 @@
                 <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
-                            <i class="fas fa-pencil-alt"></i>&nbsp;Sistem Rolü Güncelle
+                            <i class="fa fa-plus"></i>&nbsp;Sektör/İş Kolu Ekle
                         </h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                <input type="hidden" asp-for="Id" id="Id" />
                                 <div class="form-group">
-                                    <label class="control-label">Rol Adı</label>
-                                    <input asp-for="Name" class="form-control" id="roleName" />
+                                    <label asp-for="Name" class="control-label"></label>
+                                    <input asp-for="Name" class="form-control" id="name" />
                                     <span asp-validation-for="Name" class="text-danger"></span>
                                 </div>
                             </div>
@@ -29,8 +28,8 @@
                     </div>
                     <div class="card-footer">
                         <div class="form-group">
-                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="updateRole()"/>
-                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                            <input type="submit" value="Ekle" class="btn btn-success" onclick="add()" />
+                            <a class="btn btn-primary" asp-action="Index" style="margin-right: 5px;">
                                 <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                             </a>
                         </div>
@@ -42,14 +41,12 @@
 </section>
 
 <script>
-    var roleName;
-    var id;
+    var name;
 
-    function updateRole() {
-        roleName = document.getElementById("roleName").value;
-        id = document.getElementById("Id").value;
+    function add() {
+        name = document.getElementById("name").value;
         $.ajax({
-            url: '/Role/Edit?roles.Name=' + roleName + "&id=" + id,
+            url: '/Sector/Create?sectors.Name=' + name,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

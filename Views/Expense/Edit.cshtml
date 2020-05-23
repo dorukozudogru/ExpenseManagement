@@ -1,0 +1,76 @@
+﻿@model ExpenseManagement.Models.Expenses
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Expenses</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="SectorId" class="control-label"></label>
+                <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId"></select>
+                <span asp-validation-for="SectorId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Definition" class="control-label"></label>
+                <input asp-for="Definition" class="form-control" />
+                <span asp-validation-for="Definition" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AmountCurrency" class="control-label"></label>
+                <input asp-for="AmountCurrency" class="form-control" />
+                <span asp-validation-for="AmountCurrency" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TAX" class="control-label"></label>
+                <input asp-for="TAX" class="form-control" />
+                <span asp-validation-for="TAX" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TAXCurrency" class="control-label"></label>
+                <input asp-for="TAXCurrency" class="form-control" />
+                <span asp-validation-for="TAXCurrency" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InvoiceImage" class="control-label"></label>
+                <input asp-for="InvoiceImage" class="form-control" />
+                <span asp-validation-for="InvoiceImage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="State" class="control-label"></label>
+                <input asp-for="State" class="form-control" />
+                <span asp-validation-for="State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ChangedAt" class="control-label"></label>
+                <input asp-for="ChangedAt" class="form-control" />
+                <span asp-validation-for="ChangedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ChangedBy" class="control-label"></label>
+                <input asp-for="ChangedBy" class="form-control" />
+                <span asp-validation-for="ChangedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

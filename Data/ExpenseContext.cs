@@ -86,5 +86,17 @@ namespace ExpenseManagement.Data
         }
 
         public DbSet<Audit> Audits { get; set; }
+
+        public DbSet<AccountTypes> AccountTypes { get; set; }
+
+        public DbSet<Banks> Banks { get; set; }
+
+        public DbSet<Endorsements> Endorsements { get; set; }
+
+        public DbSet<Expenses> Expenses { get; set; }
+
+        public DbSet<Incomes> Incomes { get; set; }
+
+        public DbSet<Sectors> Sectors { get; set; }
     }
 }

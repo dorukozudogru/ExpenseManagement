@@ -1,0 +1,78 @@
+﻿@model ExpenseManagement.Models.Expenses
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Expenses</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Sector)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Sector.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Definition)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Definition)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AmountCurrency)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AmountCurrency)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TAX)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TAX)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TAXCurrency)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TAXCurrency)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.InvoiceImage)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.InvoiceImage)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.State)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.State)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ChangedAt)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ChangedAt)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ChangedBy)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ChangedBy)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

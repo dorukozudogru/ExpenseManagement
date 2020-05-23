@@ -27,47 +27,6 @@ namespace ExpenseManagement.Controllers
             _context = context;
         }
 
-        [Route("account/register")]
-        public IActionResult Register()
-        {
-            var model = new RegisterViewModel
-            {
-
-            };
-            return View(model);
-        }
-
-        [HttpPost]
-        [Route("account/register")]
-        public async Task<IActionResult> Register(RegisterViewModel model)
-        {
-            var user = new AppIdentityUser
-            {
-                UserName = model.Email,
-                Email = model.Email,
-                IsActive = true
-            };
-
-            try
-            {
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (!result.Succeeded)
-                {
-                    foreach (var validateItem in result.Errors)
-                        ModelState.AddModelError("", validateItem.Description);
-
-                    return View(model);
-                }
-
-                return Redirect("~/account/login");
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", ex.Message);
-                return View(model);
-            }
-        }
-
         [Route("account/login")]
         public IActionResult Login()
         {
