@@ -24,11 +24,15 @@
                                     <select asp-for="AccountTypeId" class="form-control" asp-items="ViewBag.AccountTypeId" id="accountTypeId"></select>
                                 </div>
                                 <label asp-for="Amount" class="control-label"></label>
-                                <div class="input-group">
+                                <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <select asp-for="AmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Banks.AmountCurrencyEnum>()" id="amountCurrency"></select>
                                     </div>
                                     <input asp-for="Amount" class="form-control" id="amount" />
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="BankBranch" class="control-label"></label>
+                                    <input asp-for="BankBranch" class="form-control" id="bankBranch" />
                                 </div>
                             </div>
                         </div>
@@ -51,15 +55,17 @@
     var accountTypeId;
     var amount;
     var amountCurrency;
+    var bankBranch;
     var id;
 
     function update() {
         accountTypeId = document.getElementById("accountTypeId").value;
         amount = document.getElementById("amount").value;
         amountCurrency = document.getElementById("amountCurrency").value;
+        bankBranch = document.getElementById("bankBranch").value;
         id = document.getElementById("id").value;
         $.ajax({
-            url: '/Bank/Edit?banks.AccountTypeId=' + accountTypeId + '&banks.Amount=' + amount + '&banks.AmountCurrency=' + amountCurrency + '&id=' + id,
+            url: '/Bank/Edit?banks.AccountTypeId=' + accountTypeId + '&banks.Amount=' + amount + '&banks.AmountCurrency=' + amountCurrency + '&banks.BankBranch=' + bankBranch + '&id=' + id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

@@ -71,6 +71,9 @@ namespace ExpenseManagement.Models
         [DisplayName("Fatura Görüntüsü")]
         public byte[] InvoiceImage { get; set; }
 
+        [DisplayName("Fatura Görüntüsü Formatı")]
+        public string InvoiceImageFormat { get; set; }
+
         [DisplayName("Durum")]
         public int State { get; set; }
 

@@ -37,5 +37,8 @@ namespace ExpenseManagement.Models
             [Display(Name = "£")]
             GBP = 3
         }
+
+        [DisplayName("Banka/Şube")]
+        public string BankBranch { get; set; }
     }
 }

@@ -51,22 +51,50 @@ namespace ExpenseManagement.Controllers
                     {
                         foreach (var value in oldValue)
                         {
-                            if (value.Key != "Id")
+                            if (value.Key != "InvoiceImage")
                             {
-                                var _tempNew = newValue.Where(nv => nv.Key == value.Key && nv.Value?.ToString() != value.Value?.ToString()).ToList().FirstOrDefault();
-                                string _tempOld = value.Value;
+                                if (value.Key != "Id")
+                                {
+                                    var _tempNew = newValue.Where(nv => nv.Key == value.Key && nv.Value?.ToString() != value.Value?.ToString()).ToList().FirstOrDefault();
+                                    string _tempOld = value.Value;
 
-                                if (_tempNew.Value != null && _tempNew.Key != null)
+                                    if (_tempNew.Value != null && _tempNew.Key != null)
+                                    {
+                                        lastAuditList.Add(new Audit
+                                        {
+                                            Action = audit.Action,
+                                            DateTime = audit.DateTime,
+                                            EntityName = _tempNew.Key.ToString(),
+                                            Id = audit.Id,
+                                            KeyValues = keyValue.FirstOrDefault().Value.ToString(),
+                                            NewValues = _tempNew.Value.ToString(),
+                                            OldValues = _tempOld.ToString(),
+                                            TableName = audit.TableName,
+                                            Username = username
+                                        });
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                    else if (audit.Action == "Added")
+                    {
+                        foreach (var value in newValue)
+                        {
+                            if (value.Key != "InvoiceImage")
+                            {
+                                if (value.Value != null && value.Key != null)
                                 {
                                     lastAuditList.Add(new Audit
                                     {
                                         Action = audit.Action,
                                         DateTime = audit.DateTime,
-                                        EntityName = _tempNew.Key.ToString(),
+                                        EntityName = value.Key.ToString(),
                                         Id = audit.Id,
                                         KeyValues = keyValue.FirstOrDefault().Value.ToString(),
-                                        NewValues = _tempNew.Value.ToString(),
-                                        OldValues = _tempOld.ToString(),
+                                        NewValues = value.Value.ToString(),
+                                        OldValues = "-",
                                         TableName = audit.TableName,
                                         Username = username
                                     });
@@ -74,45 +102,27 @@ namespace ExpenseManagement.Controllers
                             }
                         }
                     }
-                    else if (audit.Action == "Added")
-                    {
-                        foreach (var value in newValue)
-                        {
-                            if (value.Value != null && value.Key != null)
-                            {
-                                lastAuditList.Add(new Audit
-                                {
-                                    Action = audit.Action,
-                                    DateTime = audit.DateTime,
-                                    EntityName = value.Key.ToString(),
-                                    Id = audit.Id,
-                                    KeyValues = keyValue.FirstOrDefault().Value.ToString(),
-                                    NewValues = value.Value.ToString(),
-                                    OldValues = "-",
-                                    TableName = audit.TableName,
-                                    Username = username
-                                });
-                            }
-                        }
-                    }
                     else if (audit.Action == "Deleted")
                     {
                         foreach (var value in oldValue)
                         {
-                            if (value.Value != null && value.Key != null)
+                            if (value.Key != "InvoiceImage")
                             {
-                                lastAuditList.Add(new Audit
+                                if (value.Value != null && value.Key != null)
                                 {
-                                    Action = audit.Action,
-                                    DateTime = audit.DateTime,
-                                    EntityName = value.Key.ToString(),
-                                    Id = audit.Id,
-                                    KeyValues = keyValue.FirstOrDefault().Value.ToString(),
-                                    NewValues = "-",
-                                    OldValues = value.Value.ToString(),
-                                    TableName = audit.TableName,
-                                    Username = username
-                                });
+                                    lastAuditList.Add(new Audit
+                                    {
+                                        Action = audit.Action,
+                                        DateTime = audit.DateTime,
+                                        EntityName = value.Key.ToString(),
+                                        Id = audit.Id,
+                                        KeyValues = keyValue.FirstOrDefault().Value.ToString(),
+                                        NewValues = "-",
+                                        OldValues = value.Value.ToString(),
+                                        TableName = audit.TableName,
+                                        Username = username
+                                    });
+                                }
                             }
                         }
                     }

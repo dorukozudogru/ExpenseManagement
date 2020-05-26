@@ -15,11 +15,11 @@ using static ExpenseManagement.Helpers.ProcessCollectionHelper;
 
 namespace ExpenseManagement.Controllers
 {
-    public class ExpenseController : Controller
+    public class IncomeController : Controller
     {
         private readonly ExpenseContext _context;
 
-        public ExpenseController(ExpenseContext context)
+        public IncomeController(ExpenseContext context)
         {
             _context = context;
         }
@@ -34,16 +34,16 @@ namespace ExpenseManagement.Controllers
         {
             var requestFormData = Request.Form;
 
-            var expenseContext = await _context.Expenses
+            var expenseContext = await _context.Incomes
                 .Include(e => e.Sector)
                 .AsNoTracking()
                 .ToListAsync();
 
             expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
 
-            List<Expenses> listItems = ProcessCollection(expenseContext, requestFormData);
+            List<Incomes> listItems = ProcessCollection(expenseContext, requestFormData);
 
-            var response = new PaginatedResponse<Expenses>
+            var response = new PaginatedResponse<Incomes>
             {
                 Data = listItems,
                 Draw = int.Parse(requestFormData["draw"]),
@@ -61,18 +61,18 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            var expenses = await _context.Expenses
-                .Include(e => e.Sector)
+            var incomes = await _context.Incomes
+                .Include(i => i.Sector)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
+            incomes = GetAllEnumNamesHelper.GetEnumName(incomes);
 
-            if (expenses == null)
+            if (incomes == null)
             {
                 return View("Error");
             }
 
-            return View(expenses);
+            return View(incomes);
         }
 
         public async Task<IActionResult> Print(int? id)
@@ -82,18 +82,18 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            var expenses = await _context.Expenses
+            var incomes = await _context.Incomes
                 .Include(e => e.Sector)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
+            incomes = GetAllEnumNamesHelper.GetEnumName(incomes);
 
-            if (expenses == null)
+            if (incomes == null)
             {
                 return View("Error");
             }
 
-            return View(expenses);
+            return View(incomes);
         }
 
         public IActionResult Create()
@@ -103,7 +103,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,SectorId,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Expenses expenses)
+        public async Task<IActionResult> Create([Bind("Id,SectorId,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Incomes incomes)
         {
             if (ModelState.IsValid)
             {
@@ -117,8 +117,8 @@ namespace ExpenseManagement.Controllers
                         ms.Close();
                         ms.Dispose();
 
-                        expenses.InvoiceImage = ms.ToArray();
-                        expenses.InvoiceImageFormat = Request.Form.Files.First().ContentType;
+                        incomes.InvoiceImage = ms.ToArray();
+                        incomes.InvoiceImageFormat = Request.Form.Files.First().ContentType;
                     }
                     else
                     {
@@ -126,15 +126,15 @@ namespace ExpenseManagement.Controllers
                     }
                 }
 
-                expenses.State = (int)StateEnum.Active;
-                expenses.ChangedAt = DateTime.Now;
-                expenses.ChangedBy = GetLoggedUserId();
+                incomes.State = (int)StateEnum.Active;
+                incomes.ChangedAt = DateTime.Now;
+                incomes.ChangedBy = GetLoggedUserId();
 
-                _context.Add(expenses);
+                _context.Add(incomes);
                 await _context.SaveChangesAsync();
-                return Ok(new { Result = true, Message = "Gider Başarıyla Kaydedilmiştir!" });
+                return Ok(new { Result = true, Message = "Gelir Başarıyla Kaydedilmiştir!" });
             }
-            return BadRequest("Gider Kaydedilirken Bir Hata Oluştu!");
+            return BadRequest("Gelir Kaydedilirken Bir Hata Oluştu!");
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -144,23 +144,23 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            var expenses = await _context.Expenses.FindAsync(id);
-            expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
+            var incomes = await _context.Incomes.FindAsync(id);
+            incomes = GetAllEnumNamesHelper.GetEnumName(incomes);
 
-            if (expenses == null)
+            if (incomes == null)
             {
                 return View("Error");
             }
-            ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name", expenses.SectorId);
-            return View(expenses);
+            ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name", incomes.SectorId);
+            return View(incomes);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Expenses expenses)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Incomes incomes)
         {
-            var expense = await _context.Expenses.FindAsync(id);
+            var income = await _context.Incomes.FindAsync(id);
 
-            if (expense != null)
+            if (income != null)
             {
                 if (ModelState.IsValid)
                 {
@@ -174,8 +174,8 @@ namespace ExpenseManagement.Controllers
                             ms.Close();
                             ms.Dispose();
 
-                            expense.InvoiceImage = ms.ToArray();
-                            expense.InvoiceImageFormat = Request.Form.Files.First().ContentType;
+                            income.InvoiceImage = ms.ToArray();
+                            income.InvoiceImageFormat = Request.Form.Files.First().ContentType;
                         }
                         else
                         {
@@ -183,24 +183,24 @@ namespace ExpenseManagement.Controllers
                         }
                     }
 
-                    expense.SectorId = expenses.SectorId;
-                    expense.Definition = expenses.Definition;
-                    expense.Amount = expenses.Amount;
-                    expense.AmountCurrency = expenses.AmountCurrency;
-                    expense.TAX = expenses.TAX;
-                    expense.TAXCurrency = expenses.TAXCurrency;
+                    income.SectorId = incomes.SectorId;
+                    income.Definition = incomes.Definition;
+                    income.Amount = incomes.Amount;
+                    income.AmountCurrency = incomes.AmountCurrency;
+                    income.TAX = incomes.TAX;
+                    income.TAXCurrency = incomes.TAXCurrency;
 
-                    expense.ChangedAt = DateTime.Now;
-                    expense.ChangedBy = GetLoggedUserId();
+                    income.ChangedAt = DateTime.Now;
+                    income.ChangedBy = GetLoggedUserId();
 
-                    _context.Update(expense);
+                    _context.Update(income);
                     await _context.SaveChangesAsync();
-                    return Ok(new { Result = true, Message = "Gider Başarıyla Güncellendi!" });
+                    return Ok(new { Result = true, Message = "Gelir Başarıyla Güncellendi!" });
                 }
                 else
                     return BadRequest("Tüm Alanları Doldurunuz!");
             }
-            return BadRequest("Gider Güncellenirken Bir Hata Oluştu!");
+            return BadRequest("Gelir Güncellenirken Bir Hata Oluştu!");
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -210,26 +210,26 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            var expenses = await _context.Expenses
-                .Include(e => e.Sector)
+            var incomes = await _context.Incomes
+                .Include(i => i.Sector)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
+            incomes = GetAllEnumNamesHelper.GetEnumName(incomes);
 
-            if (expenses == null)
+            if (incomes == null)
             {
                 return View("Error");
             }
 
-            return View(expenses);
+            return View(incomes);
         }
 
         [HttpPost]
         public async Task<IActionResult> DeleteImage(int id)
         {
-            var expenses = await _context.Expenses.FindAsync(id);
-            expenses.InvoiceImage = null;
-            expenses.InvoiceImageFormat = null;
-            _context.Expenses.Update(expenses);
+            var incomes = await _context.Incomes.FindAsync(id);
+            incomes.InvoiceImage = null;
+            incomes.InvoiceImageFormat = null;
+            _context.Incomes.Update(incomes);
             await _context.SaveChangesAsync();
             return Ok(new { Result = true, Message = "Görüntü Silinmiştir!" });
         }
@@ -237,10 +237,10 @@ namespace ExpenseManagement.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var expenses = await _context.Expenses.FindAsync(id);
-            _context.Expenses.Remove(expenses);
+            var incomes = await _context.Incomes.FindAsync(id);
+            _context.Incomes.Remove(incomes);
             await _context.SaveChangesAsync();
-            return Ok(new { Result = true, Message = "Gider Silinmiştir!" });
+            return Ok(new { Result = true, Message = "Gelir Silinmiştir!" });
         }
 
         public string GetLoggedUserId()
@@ -248,9 +248,9 @@ namespace ExpenseManagement.Controllers
             return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
         }
 
-        private bool ExpensesExists(int id)
+        private bool IncomesExists(int id)
         {
-            return _context.Expenses.Any(e => e.Id == id);
+            return _context.Incomes.Any(e => e.Id == id);
         }
     }
 }

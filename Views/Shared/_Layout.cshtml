@@ -32,7 +32,7 @@
                         <span class="d-none d-md-inline">@this.User?.Claims?.FirstOrDefault()?.Subject?.Name</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <li class="user-header bg-primary">
+                        <li class="user-header bg-secondary">
                             <br />
                             <img src="~/Content/NewSite/dist/img/user.png" class="img-circle elevation-2">
                             <p>
@@ -40,7 +40,7 @@
                             </p>
                         </li>
                         <li class="user-footer">
-                            <a asp-controller="Audit" asp-action="Index" class="btn btn-default btn-flat">Log Kayıtları</a>
+                            <a asp-controller="Audit" asp-action="Index" class="btn btn-dark btn-flat">Log Kayıtları</a>
                             <a asp-controller="Account" asp-action="Logout" class="btn btn-danger btn-flat float-right">Çıkış Yap</a>
                         </li>
                     </ul>

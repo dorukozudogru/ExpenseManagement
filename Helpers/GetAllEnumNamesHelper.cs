@@ -177,5 +177,88 @@ namespace ExpenseManagement.Helpers
             }
             return expenses;
         }
+
+        public static List<Incomes> GetEnumName(List<Incomes> incomes)
+        {
+            foreach (var income in incomes)
+            {
+                switch (income.AmountCurrency)
+                {
+                    case 0:
+                        income.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.AmountCurrencyEnum.TRY);
+                        break;
+                    case 1:
+                        income.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.AmountCurrencyEnum.USD);
+                        break;
+                    case 2:
+                        income.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.AmountCurrencyEnum.EUR);
+                        break;
+                    case 3:
+                        income.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.AmountCurrencyEnum.GBP);
+                        break;
+                    default:
+                        break;
+                }
+
+                switch (income.TAXCurrency)
+                {
+                    case 0:
+                        income.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.TAXCurrencyEnum.TRY);
+                        break;
+                    case 1:
+                        income.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.TAXCurrencyEnum.USD);
+                        break;
+                    case 2:
+                        income.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.TAXCurrencyEnum.EUR);
+                        break;
+                    case 3:
+                        income.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.TAXCurrencyEnum.GBP);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return incomes;
+        }
+
+        public static Incomes GetEnumName(Incomes incomes)
+        {
+            switch (incomes.AmountCurrency)
+            {
+                case 0:
+                    incomes.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.AmountCurrencyEnum.TRY);
+                    break;
+                case 1:
+                    incomes.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.AmountCurrencyEnum.USD);
+                    break;
+                case 2:
+                    incomes.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.AmountCurrencyEnum.EUR);
+                    break;
+                case 3:
+                    incomes.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.AmountCurrencyEnum.GBP);
+                    break;
+                default:
+                    break;
+            }
+
+            switch (incomes.TAXCurrency)
+            {
+                case 0:
+                    incomes.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.TAXCurrencyEnum.TRY);
+                    break;
+                case 1:
+                    incomes.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.TAXCurrencyEnum.USD);
+                    break;
+                case 2:
+                    incomes.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.TAXCurrencyEnum.EUR);
+                    break;
+                case 3:
+                    incomes.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.TAXCurrencyEnum.GBP);
+                    break;
+                default:
+                    break;
+            }
+            return incomes;
+        }
     }
 }

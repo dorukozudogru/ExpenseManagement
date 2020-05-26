@@ -37,7 +37,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,AccountTypeId,Amount,AmountCurrency")] Banks banks)
+        public async Task<IActionResult> Create([Bind("Id,AccountTypeId,Amount,AmountCurrency,BankBranch")] Banks banks)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountTypeId,Amount,AmountCurrency")] Banks banks)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountTypeId,Amount,AmountCurrency,BankBranch")] Banks banks)
         {
             var bank = await _context.Banks.FindAsync(id);
 
@@ -78,6 +78,7 @@ namespace ExpenseManagement.Controllers
                     bank.AccountTypeId = banks.AccountTypeId;
                     bank.Amount = banks.Amount;
                     bank.AmountCurrency = banks.AmountCurrency;
+                    bank.BankBranch = banks.BankBranch;
 
                     _context.Update(bank);
                     await _context.SaveChangesAsync();

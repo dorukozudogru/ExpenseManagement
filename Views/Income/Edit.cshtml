@@ -1,7 +1,7 @@
-﻿@model ExpenseManagement.Models.Expenses
+﻿@model ExpenseManagement.Models.Incomes
 
 @{
-    ViewData["Title"] = "Gideri Güncelle";
+    ViewData["Title"] = "Geliri Güncelle";
 }
 
 <section class="content">
@@ -11,7 +11,7 @@
                 <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
-                            <i class="fas fa-pencil-alt"></i>&nbsp;Gideri Güncelle
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Geliri Güncelle
                         </h5>
                     </div>
                     <div class="card-body">
@@ -153,7 +153,7 @@
 
         $.ajax({
             type: "POST",
-            url: "/Expense/Edit",
+            url: "/Income/Edit",
             contentType: false,
             processData: false,
             data: data,

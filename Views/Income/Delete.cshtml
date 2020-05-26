@@ -1,11 +1,17 @@
-﻿@model ExpenseManagement.Models.Expenses
+﻿@model ExpenseManagement.Models.Incomes
 
 @{
-    ViewData["Title"] = "Gider Detayı";
+    ViewData["Title"] = "Gelir Sil";
 }
 
 <section class="content">
     <div class="container-fluid">
+        <div class="callout callout-danger">
+            <h4>Bu geliri silmek istediğinizden emin misiniz?</h4>
+            <p>
+                Bu geliri silerseniz işlemi geriye alamayacaksınız.
+            </p>
+        </div>
         <div class="row">
             <div class="col-6">
                 <div class="invoice p-3 mb-3">
@@ -68,9 +74,7 @@
                     <div class="row no-print">
                         <div class="col-12">
                             <input type="hidden" asp-for="Id" id="id" />
-                            <a class="btn btn-success float-right" asp-action="Edit" asp-route-id="@Model.Id">
-                                <i class="fas fa-pencil-alt"></i>&nbsp;&nbsp;Güncelle
-                            </a>
+                            <input type="submit" value="Evet" class="btn btn-danger float-right" onclick="deleted()" />
                             <a class="btn btn-primary float-right" asp-action="Index" style="margin-right: 5px;">
                                 <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                             </a>
@@ -81,3 +85,26 @@
         </div>
     </div>
 </section>
+
+<script>
+    var id;
+
+    function deleted() {
+        id = document.getElementById("id").value;
+        $.ajax({
+            url: '/Income/Delete?id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>

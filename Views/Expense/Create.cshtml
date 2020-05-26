@@ -1,74 +1,120 @@
 ﻿@model ExpenseManagement.Models.Expenses
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Gider Ekle";
 }
 
-<h1>Create</h1>
-
-<h4>Expenses</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="SectorId" class="control-label"></label>
-                <select asp-for="SectorId" class ="form-control" asp-items="ViewBag.SectorId"></select>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fa fa-plus"></i>&nbsp;Gider Ekle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label asp-for="Sector.Name" class="control-label"></label>
+                                    <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Definition" class="control-label"></label>
+                                    <input asp-for="Definition" class="form-control" id="definition" />
+                                    <span asp-validation-for="Definition" class="text-danger"></span>
+                                </div>
+                                <label asp-for="Amount" class="control-label"></label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <select asp-for="AmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
+                                    </div>
+                                    <input asp-for="Amount" class="form-control" id="amount" />
+                                    <span asp-validation-for="Amount" class="text-danger"></span>
+                                </div>
+                                <label asp-for="TAX" class="control-label"></label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <select asp-for="TAXCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.TAXCurrencyEnum>()" id="taxCurrency"></select>
+                                    </div>
+                                    <input asp-for="TAX" class="form-control" id="tax" />
+                                    <span asp-validation-for="TAX" class="text-danger"></span>
+                                </div>
+                                <label asp-for="InvoiceImage" class="control-label"></label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" asp-for="InvoiceImage" accept="application/pdf,image/*" id="imageFile" name="imageFile">
+                                        <label class="custom-file-label" for="exampleInputFile">Dosya Seçiniz</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Ekle" class="btn btn-success" onclick="add()" />
+                            <a class="btn btn-primary" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Definition" class="control-label"></label>
-                <input asp-for="Definition" class="form-control" />
-                <span asp-validation-for="Definition" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" class="form-control" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AmountCurrency" class="control-label"></label>
-                <input asp-for="AmountCurrency" class="form-control" />
-                <span asp-validation-for="AmountCurrency" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TAX" class="control-label"></label>
-                <input asp-for="TAX" class="form-control" />
-                <span asp-validation-for="TAX" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TAXCurrency" class="control-label"></label>
-                <input asp-for="TAXCurrency" class="form-control" />
-                <span asp-validation-for="TAXCurrency" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="InvoiceImage" class="control-label"></label>
-                <input asp-for="InvoiceImage" class="form-control" />
-                <span asp-validation-for="InvoiceImage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="State" class="control-label"></label>
-                <input asp-for="State" class="form-control" />
-                <span asp-validation-for="State" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ChangedAt" class="control-label"></label>
-                <input asp-for="ChangedAt" class="form-control" />
-                <span asp-validation-for="ChangedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ChangedBy" class="control-label"></label>
-                <input asp-for="ChangedBy" class="form-control" />
-                <span asp-validation-for="ChangedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</section>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<script>
+    var sectorId;
+    var definition;
+    var amount;
+    var amountCurrency;
+    var tax;
+    var taxCurrency;
 
+    function add() {
+        sectorId = document.getElementById("sectorId").value;
+        definition = document.getElementById("definition").value;
+        amount = document.getElementById("amount").value;
+        amountCurrency = document.getElementById("amountCurrency").value;
+        tax = document.getElementById("tax").value;
+        taxCurrency = document.getElementById("taxCurrency").value;
+
+
+        var fileupload = $("#imageFile").get(0);
+        var files = fileupload.files;
+        var data = new FormData();
+        for (var i = 0; i < files.length; i++) {
+            data.append(files[i].name, files[i]);
+        }
+
+        data.append('sectorId', sectorId);
+        data.append('definition', definition);
+        data.append('amount', amount);
+        data.append('amountCurrency', amountCurrency);
+        data.append('tax', tax);
+        data.append('taxCurrency', taxCurrency);
+
+        $.ajax({
+            type: "POST",
+            url: "/Expense/Create",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>

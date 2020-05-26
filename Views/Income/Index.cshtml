@@ -1,7 +1,7 @@
-﻿@model IEnumerable<ExpenseManagement.Models.Expenses>
+﻿@model IEnumerable<ExpenseManagement.Models.Incomes>
 
 @{
-    ViewData["Title"] = "Giderler";
+    ViewData["Title"] = "Gelirler";
 }
 
 <section class="content">
@@ -11,7 +11,7 @@
                 <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
-                            <i class="fas fa-credit-card"></i>&nbsp;Giderler
+                            <i class="fas fa-coins"></i>&nbsp;Gelirler
                             <a class="btn btn-light text-primary btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
                         </h5>
                     </div>
@@ -73,7 +73,7 @@
                 "stateSave": true,
                 "stateDuration": -1,
                 "ajax": {
-                    "url": "/Expense/Post",
+                    "url": "/Income/Post",
                     "method": "POST"
                 },
                 "columns": [
@@ -97,7 +97,7 @@
                     },
                     {
                         "data": "actionId", render: function (data, type, row) {
-                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Expense/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="Expense/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="Expense/Delete/' + row.id + '">Sil</a></ul></div>'
+                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Income/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="Income/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="Income/Delete/' + row.id + '">Sil</a></ul></div>'
                         },
                         "orderable": false
                     }

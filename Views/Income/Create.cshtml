@@ -1,7 +1,7 @@
-﻿@model ExpenseManagement.Models.Expenses
+﻿@model ExpenseManagement.Models.Incomes
 
 @{
-    ViewData["Title"] = "Gideri Güncelle";
+    ViewData["Title"] = "Gelir Ekle";
 }
 
 <section class="content">
@@ -11,14 +11,13 @@
                 <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
-                            <i class="fas fa-pencil-alt"></i>&nbsp;Gideri Güncelle
+                            <i class="fa fa-plus"></i>&nbsp;Gelir Ekle
                         </h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                <input type="hidden" asp-for="Id" id="id" />
                                 <div class="form-group">
                                     <label asp-for="Sector.Name" class="control-label"></label>
                                     <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
@@ -44,38 +43,11 @@
                                     <input asp-for="TAX" class="form-control" id="tax" />
                                     <span asp-validation-for="TAX" class="text-danger"></span>
                                 </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label class="control-label">Görüntüyü Güncelle</label>
-                                        <div class="input-group mb-3">
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input" asp-for="InvoiceImage" accept="application/pdf,image/*" id="imageFile" name="imageFile">
-                                                <label class="custom-file-label" for="exampleInputFile">Dosya Seçiniz</label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label">Görüntüyü Sil</label>
-                                            <br />
-                                            <a class="btn btn-danger btn-block text-white" onclick="deleteImage()"><i class="fas fa-trash"></i>&nbsp;&nbsp;Sil</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        @if (Model.InvoiceImage != null)
-                                        {
-                                            <label asp-for="InvoiceImage" class="control-label"></label>
-                                            if (Model.InvoiceImageFormat.Contains("image"))
-                                            {
-                                                <div class="row invoice-info">
-                                                    <img class="img-fluid pad" src="data:image;base64, @System.Convert.ToBase64String(Model.InvoiceImage)" />
-                                                </div>
-                                            }
-                                            if (Model.InvoiceImageFormat == "application/pdf")
-                                            {
-                                                <div class="row invoice-info">
-                                                    <object data="data:application/pdf;base64,@System.Convert.ToBase64String((Byte[])Model.InvoiceImage)" type="application/pdf" style="width:810px;height:650px" scrolling="no" frameborder="0"></object>
-                                                </div>
-                                            }
-                                        }
+                                <label asp-for="InvoiceImage" class="control-label"></label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" asp-for="InvoiceImage" accept="application/pdf,image/*" id="imageFile" name="imageFile">
+                                        <label class="custom-file-label" for="exampleInputFile">Dosya Seçiniz</label>
                                     </div>
                                 </div>
                             </div>
@@ -83,8 +55,8 @@
                     </div>
                     <div class="card-footer">
                         <div class="form-group">
-                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="update()" />
-                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                            <input type="submit" value="Ekle" class="btn btn-success" onclick="add()" />
+                            <a class="btn btn-primary" asp-action="Index" style="margin-right: 5px;">
                                 <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                             </a>
                         </div>
@@ -96,29 +68,6 @@
 </section>
 
 <script>
-    var id;
-
-    function deleteImage() {
-        id = document.getElementById("id").value;
-        $.ajax({
-            url: '/Expense/DeleteImage?id=' + id,
-            type: 'POST',
-            success: function (returnvalue) {
-                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
-                document.getElementById("swalDefaultSuccess").click();
-                window.setTimeout(function () {
-                    window.location.reload();
-                }, 2000);
-            },
-            error: function (error) {
-                document.getElementById("swalDefaultError").value = error.responseText;
-                document.getElementById("swalDefaultError").click();
-            }
-        });
-    }
-</script>
-<script>
-    var id;
     var sectorId;
     var definition;
     var amount;
@@ -126,14 +75,13 @@
     var tax;
     var taxCurrency;
 
-    function update() {
+    function add() {
         sectorId = document.getElementById("sectorId").value;
         definition = document.getElementById("definition").value;
         amount = document.getElementById("amount").value;
         amountCurrency = document.getElementById("amountCurrency").value;
         tax = document.getElementById("tax").value;
         taxCurrency = document.getElementById("taxCurrency").value;
-        id = document.getElementById("id").value;
 
 
         var fileupload = $("#imageFile").get(0);
@@ -149,11 +97,10 @@
         data.append('amountCurrency', amountCurrency);
         data.append('tax', tax);
         data.append('taxCurrency', taxCurrency);
-        data.append('id', id);
 
         $.ajax({
             type: "POST",
-            url: "/Expense/Edit",
+            url: "/Income/Create",
             contentType: false,
             processData: false,
             data: data,

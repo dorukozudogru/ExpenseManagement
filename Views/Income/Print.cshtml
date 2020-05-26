@@ -1,0 +1,18 @@
+﻿@model ExpenseManagement.Models.Incomes
+
+@{
+    ViewData["Title"] = "Gelir Yazdır";
+}
+
+<section class="content text-center">
+    <img class="img-fluid pad" src="data:image;base64, @System.Convert.ToBase64String(Model.InvoiceImage)" />
+</section>
+
+<script type="text/javascript">
+    setTimeout(function () {
+        var document_focus = false;
+        
+        $(document).ready(function () { window.print(); document_focus = true; });
+        setInterval(function () { if (document_focus === true) { window.close(); } }, 300);
+    }, 2000);
+</script>
