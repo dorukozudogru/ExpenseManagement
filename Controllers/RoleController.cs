@@ -99,7 +99,7 @@ namespace ExpenseManagement.Controllers
                     if (ModelState.IsValid)
                     {
                         role.Name = roles.Name;
-                        role.NormalizedName = roles.Name;
+                        role.NormalizedName = roles.Name.ToUpperInvariant();
                         _context.Update(role);
                         await _context.SaveChangesAsync();
                         return Ok(new { Result = true, Message = "Rol Başarıyla Güncellendi!" });

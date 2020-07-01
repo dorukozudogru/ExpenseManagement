@@ -23,6 +23,14 @@
                                     <label asp-for="Sector.Name" class="control-label"></label>
                                     <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
                                 </div>
+                                <div class="form-group">
+                                    <label asp-for="Month" class="control-label"></label>
+                                    <select asp-for="Month" class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Year" class="control-label"></label>
+                                    <input asp-for="Year" class="form-control" id="year" />
+                                </div>
                                 <label asp-for="Amount" class="control-label"></label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -52,14 +60,18 @@
     var amount;
     var amountCurrency;
     var id;
+    var monthId;
+    var year;
 
     function update() {
         sectorId = document.getElementById("sectorId").value;
         amount = document.getElementById("amount").value;
         amountCurrency = document.getElementById("amountCurrency").value;
         id = document.getElementById("id").value;
+        monthId = document.getElementById("monthId").value;
+        year = document.getElementById("year").value;
         $.ajax({
-            url: '/Endorsement/Edit?endorsements.SectorId=' + sectorId + '&endorsements.Amount=' + amount + '&endorsements.AmountCurrency=' + amountCurrency + '&id=' + id,
+            url: '/Endorsement/Edit?endorsements.SectorId=' + sectorId + '&endorsements.Amount=' + amount + '&endorsements.AmountCurrency=' + amountCurrency + '&endorsements.Month=' + monthId + '&endorsements.Year=' + year + '&id=' + id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

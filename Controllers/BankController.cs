@@ -6,9 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using ExpenseManagement.Data;
 using ExpenseManagement.Models;
 using ExpenseManagement.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExpenseManagement.Controllers
 {
+    [Authorize(Roles = ("Admin, Muhasebe"))]
     public class BankController : Controller
     {
         private readonly ExpenseContext _context;

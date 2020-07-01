@@ -23,6 +23,17 @@
                                     <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
                                 </div>
                                 <div class="form-group">
+                                    <label asp-for="Date" class="control-label"></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input asp-for="Date" type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label asp-for="Definition" class="control-label"></label>
                                     <input asp-for="Definition" class="form-control" id="definition" />
                                     <span asp-validation-for="Definition" class="text-danger"></span>
@@ -69,6 +80,7 @@
 
 <script>
     var sectorId;
+    var date;
     var definition;
     var amount;
     var amountCurrency;
@@ -77,6 +89,7 @@
 
     function add() {
         sectorId = document.getElementById("sectorId").value;
+        date = document.getElementById("datepicker").value;
         definition = document.getElementById("definition").value;
         amount = document.getElementById("amount").value;
         amountCurrency = document.getElementById("amountCurrency").value;
@@ -92,6 +105,7 @@
         }
 
         data.append('sectorId', sectorId);
+        data.append('date', date);
         data.append('definition', definition);
         data.append('amount', amount);
         data.append('amountCurrency', amountCurrency);

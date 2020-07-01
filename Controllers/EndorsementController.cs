@@ -6,9 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using ExpenseManagement.Data;
 using ExpenseManagement.Models;
 using ExpenseManagement.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExpenseManagement.Controllers
 {
+    [Authorize(Roles = ("Admin, Muhasebe"))]
     public class EndorsementController : Controller
     {
         private readonly ExpenseContext _context;
@@ -37,7 +39,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,SectorId,Amount,AmountCurrency")] Endorsements endorsements)
+        public async Task<IActionResult> Create([Bind("Id,SectorId,Amount,AmountCurrency,Month,Year")] Endorsements endorsements)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +69,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Amount,AmountCurrency")] Endorsements endorsements)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Amount,AmountCurrency,Month,Year")] Endorsements endorsements)
         {
             var endorsement = await _context.Endorsements.FindAsync(id);
 
@@ -78,6 +80,8 @@ namespace ExpenseManagement.Controllers
                     endorsement.SectorId = endorsements.SectorId;
                     endorsement.Amount = endorsements.Amount;
                     endorsement.AmountCurrency = endorsements.AmountCurrency;
+                    endorsement.Month = endorsements.Month;
+                    endorsement.Year = endorsements.Year;
 
                     _context.Update(endorsement);
                     await _context.SaveChangesAsync();

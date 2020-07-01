@@ -13,10 +13,17 @@ namespace ExpenseManagement.Models
         [ForeignKey(nameof(Sector))]
         public int SectorId { get; set; }
         public virtual Sectors Sector { get; set; }
+        [NotMapped]
+        [DisplayName("Sektör/İş Kolu Adı")]
+        public string SectorName { get; set; }
 
         [Required]
         [DisplayName("Tutar")]
         public double Amount { get; set; }
+
+        [NotMapped]
+        [DisplayName("Toplam Tutar")]
+        public double TotalAmount { get; set; }
 
         [Required]
         [DisplayName("Tutar Dövizi")]
@@ -37,5 +44,17 @@ namespace ExpenseManagement.Models
             [Display(Name = "£")]
             GBP = 3
         }
+
+        [Required]
+        [DisplayName("Ay")]
+        public byte Month { get; set; }
+
+        [NotMapped]
+        [DisplayName("Ay")]
+        public string MonthName { get; set; }
+
+        [Required]
+        [DisplayName("Yıl")]
+        public int Year { get; set; }
     }
 }

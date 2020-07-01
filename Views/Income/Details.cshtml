@@ -54,14 +54,13 @@
                         <div class="col-sm-6 invoice-col">
                             <address>
                                 @Html.DisplayNameFor(model => model.Sector.Name): <strong>@Html.DisplayFor(model => model.Sector.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.Date): <strong>@Html.DisplayFor(model => model.Date)</strong><br>
                                 @Html.DisplayNameFor(model => model.Definition): <strong>@Html.DisplayFor(model => model.Definition)</strong><br>
-                                @Html.DisplayNameFor(model => model.Amount): <strong>@Html.DisplayFor(model => model.Amount) @Html.DisplayFor(model => model.AmountCurrencyName)</strong><br>
-                                @Html.DisplayNameFor(model => model.TAX): <strong>@Html.DisplayFor(model => model.TAX) @Html.DisplayFor(model => model.TAXCurrencyName)</strong><br>
                             </address>
                         </div>
                         <div class="col-sm-6 invoice-col">
-                            @Html.DisplayNameFor(model => model.ChangedAt): <strong>@Html.DisplayFor(model => model.ChangedAt)</strong><br>
-                            @Html.DisplayNameFor(model => model.ChangedBy): <strong>@Html.DisplayFor(model => model.ChangedBy)</strong><br>
+                            @Html.DisplayNameFor(model => model.Amount): <strong>@Html.DisplayFor(model => model.Amount) @Html.DisplayFor(model => model.AmountCurrencyName)</strong><br>
+                            @Html.DisplayNameFor(model => model.TAX): <strong>@Html.DisplayFor(model => model.TAX) @Html.DisplayFor(model => model.TAXCurrencyName)</strong><br>
                         </div>
                     </div>
                     <hr />

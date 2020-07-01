@@ -18,6 +18,10 @@ namespace ExpenseManagement.Models
         [DisplayName("Tutar")]
         public double Amount { get; set; }
 
+        [NotMapped]
+        [DisplayName("Toplam Tutar")]
+        public double TotalAmount { get; set; }
+
         [Required]
         [DisplayName("Tutar Dövizi")]
         public byte AmountCurrency { get; set; }

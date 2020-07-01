@@ -12,9 +12,11 @@ using System.Security.Claims;
 using System.IO;
 using System.Collections.Generic;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExpenseManagement.Controllers
 {
+    [Authorize]
     public class ExpenseController : Controller
     {
         private readonly ExpenseContext _context;
@@ -38,6 +40,13 @@ namespace ExpenseManagement.Controllers
                 .Include(e => e.Sector)
                 .AsNoTracking()
                 .ToListAsync();
+
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe")
+            {
+                expenseContext = expenseContext
+                    .Where(e => e.CreatedBy == GetLoggedUserId())
+                    .ToList();
+            }
 
             expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
 
@@ -72,7 +81,11 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            return View(expenses);
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || expenses.CreatedBy == GetLoggedUserId())
+            {
+                return View(expenses);
+            }
+            return View("AccessDenied");
         }
 
         public async Task<IActionResult> Print(int? id)
@@ -93,7 +106,11 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            return View(expenses);
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || expenses.CreatedBy == GetLoggedUserId())
+            {
+                return View(expenses);
+            }
+            return View("AccessDenied");
         }
 
         public IActionResult Create()
@@ -103,7 +120,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,SectorId,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Expenses expenses)
+        public async Task<IActionResult> Create([Bind("Id,SectorId,Date,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Expenses expenses)
         {
             if (ModelState.IsValid)
             {
@@ -127,8 +144,8 @@ namespace ExpenseManagement.Controllers
                 }
 
                 expenses.State = (int)StateEnum.Active;
-                expenses.ChangedAt = DateTime.Now;
-                expenses.ChangedBy = GetLoggedUserId();
+                expenses.CreatedAt = DateTime.Now;
+                expenses.CreatedBy = GetLoggedUserId();
 
                 _context.Add(expenses);
                 await _context.SaveChangesAsync();
@@ -152,11 +169,16 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
             ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name", expenses.SectorId);
-            return View(expenses);
+
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || expenses.CreatedBy == GetLoggedUserId())
+            {
+                return View(expenses);
+            }
+            return View("AccessDenied");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Expenses expenses)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Date,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Expenses expenses)
         {
             var expense = await _context.Expenses.FindAsync(id);
 
@@ -184,14 +206,12 @@ namespace ExpenseManagement.Controllers
                     }
 
                     expense.SectorId = expenses.SectorId;
+                    expense.Date = expenses.Date;
                     expense.Definition = expenses.Definition;
                     expense.Amount = expenses.Amount;
                     expense.AmountCurrency = expenses.AmountCurrency;
                     expense.TAX = expenses.TAX;
                     expense.TAXCurrency = expenses.TAXCurrency;
-
-                    expense.ChangedAt = DateTime.Now;
-                    expense.ChangedBy = GetLoggedUserId();
 
                     _context.Update(expense);
                     await _context.SaveChangesAsync();
@@ -220,7 +240,11 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            return View(expenses);
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || expenses.CreatedBy == GetLoggedUserId())
+            {
+                return View(expenses);
+            }
+            return View("AccessDenied");
         }
 
         [HttpPost]
@@ -246,6 +270,11 @@ namespace ExpenseManagement.Controllers
         public string GetLoggedUserId()
         {
             return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        public string GetLoggedUserRole()
+        {
+            return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
         }
 
         private bool ExpensesExists(int id)

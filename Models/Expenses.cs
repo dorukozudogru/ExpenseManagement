@@ -21,6 +21,10 @@ namespace ExpenseManagement.Models
         public string Definition { get; set; }
 
         [Required]
+        [DisplayName("Fatura Tarihi")]
+        public DateTime Date { get; set; }
+
+        [Required]
         [DisplayName("Tutar")]
         public double Amount { get; set; }
 
@@ -85,10 +89,10 @@ namespace ExpenseManagement.Models
             Passive = 20,
         }
 
-        [DisplayName("Değiştirilme Tarihi")]
-        public DateTime ChangedAt { get; set; }
+        [DisplayName("Oluşturulma Tarihi")]
+        public DateTime CreatedAt { get; set; }
 
-        [DisplayName("Değiştiren Kişi")]
-        public string ChangedBy { get; set; }
+        [DisplayName("Oluşturan Kişi")]
+        public string CreatedBy { get; set; }
     }
 }
