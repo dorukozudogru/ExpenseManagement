@@ -59,6 +59,25 @@
                             </div>
                         </div>
                     </div>
+                    <div class="modal fade" id="modal-active">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title"><strong>Kullanıcıyı Aktif Yap</strong></h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p id="message-active">&hellip;</p>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-success" id="active">Evet</button>
+                                    <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Kapat</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="modal fade" id="modal-admin">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -98,6 +117,14 @@
                     document.getElementById('message-passive').innerHTML = "<strong>" + passiveUserName + "</strong> kullanıcısını <strong>pasif</strong> yapmak istediğinizden emin misiniz?";
                 });
 
+            $(document).delegate('.setActive',
+                'click',
+                function (e) {
+                    passiveUserId = $(this).attr('user-id');
+                    passiveUserName = $(this).attr('user-username');
+                    document.getElementById('message-active').innerHTML = "<strong>" + passiveUserName + "</strong> kullanıcısını <strong>aktif</strong> yapmak istediğinizden emin misiniz?";
+                });
+
             $(document).delegate('#passive',
                 'click',
                 function (e) {
@@ -112,6 +139,26 @@
                         },
                         error: function (error) {
                             $("#modal-passive").modal('hide');
+                            document.getElementById("swalDefaultError").value = error.responseText;
+                            document.getElementById("swalDefaultError").click();
+                        }
+                    });
+                });
+
+            $(document).delegate('#active',
+                'click',
+                function (e) {
+                    $.ajax({
+                        url: '/Account/Active?passiveUserId=' + passiveUserId,
+                        type: 'POST',
+                        success: function (returnvalue) {
+                            $("#modal-active").modal('hide');
+                            document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                            document.getElementById("swalDefaultSuccess").click();
+                            setTimeout("location.reload(true);", 2000);
+                        },
+                        error: function (error) {
+                            $("#modal-active").modal('hide');
                             document.getElementById("swalDefaultError").value = error.responseText;
                             document.getElementById("swalDefaultError").click();
                         }
@@ -206,11 +253,11 @@
                         },
                         {
                             "data": "actionId", render: function (data, type, row) {
-                                if (row.isAdmin) {
-                                    return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Account/Edit/' + row.id + '">Şifre Güncelle</a> <a href="#" data-toggle="modal" data-target="#modal-admin" class="setAdmin dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setAdmin">Adminliği Al</a><a href="#" data-toggle="modal" data-target="#modal-passive" class="setPassive dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setPassive">Pasif Yap</a> </ul></div>'
+                                if (row.isActive) {
+                                    return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Account/Edit/' + row.id + '">Şifre Güncelle</a> <a class="dropdown-item" href="Role/RoleAssign/' + row.id + '">Rol Ata</a> <a href="#" data-toggle="modal" data-target="#modal-passive" class="setPassive dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setPassive">Pasif Yap</a> </ul></div>'
                                 }
                                 else {
-                                    return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Account/Edit/' + row.id + '">Şifre Güncelle</a> <a href="#" data-toggle="modal" data-target="#modal-admin" class="setAdmin dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setAdmin">Admin Yap</a><a href="#" data-toggle="modal" data-target="#modal-passive" class="setPassive dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setPassive">Pasif Yap</a> </ul></div>'
+                                    return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Account/Edit/' + row.id + '">Şifre Güncelle</a> <a class="dropdown-item" href="Role/RoleAssign/' + row.id + '">Rol Ata</a> <a href="#" data-toggle="modal" data-target="#modal-active" class="setActive dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setActive">Aktif Yap</a> </ul></div>'
                                 }
                             }
                         }

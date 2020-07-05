@@ -1,0 +1,62 @@
+﻿@model List<ExpenseManagement.Models.ViewModels.RoleAssignViewModel>
+
+@{
+    ViewData["Title"] = "Kullanıcıya Rol Atama";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-user-tag"></i>&nbsp;&nbsp;Kullanıcıya Rol Atama - <strong>@TempData["Username"]</strong>
+                        </h5>
+                    </div>
+                    <form asp-action="RoleAssign" asp-controller="Role">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <div class="card-body">
+                                    <table id="allTables" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    Rol Adı
+                                                </th>
+                                                <th>
+                                                    Rol Ekli Mi?
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (int i = 0; i < Model.Count; i++)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Model[i].RoleName
+                                                        <input type="hidden" asp-for="@Model[i].RoleId" />
+                                                        <input type="hidden" asp-for="@Model[i].RoleName" />
+                                                    </td>
+                                                    <td><input type="checkbox" asp-for="@Model[i].HasAssign" /> </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="form-group">
+                                <input type="submit" value="Kaydet" class="btn btn-success" />
+                                <a class="btn btn-primary" asp-action="Index" asp-controller="Account" style="margin-right: 5px;">
+                                    <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -300,42 +300,20 @@ namespace ExpenseManagement.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Admin(string adminUserId)
+        public async Task<IActionResult> Active(string passiveUserId)
         {
-            var user = await _context.Users.FindAsync(adminUserId);
+            var user = await _context.Users.FindAsync(passiveUserId);
             if (user == null)
             {
                 return BadRequest("Kullanıcı Bulunamadı!");
             }
 
-            var isUserAdmin = _context.UserRoles.Where(i => i.UserId == user.Id).ToList();
+            user.IsActive = true;
 
-            if (isUserAdmin.Count != 0)
-            {
-                var result = await _userManager.RemoveFromRoleAsync(user, "Admin");
-                user.IsAdmin = false;
-                _context.SaveChanges();
+            _context.Update(user);
+            await _context.SaveChangesAsync();
 
-                if (!result.Succeeded)
-                {
-                    return BadRequest(result.Errors.FirstOrDefault().Description);
-                }
-
-                return Ok(new { Result = true, Message = "Kullanıcıdan Admin Rolü Alınmıştır!" });
-            }
-            else
-            {
-                var result = await _userManager.AddToRoleAsync(user, "Admin");
-                user.IsAdmin = true;
-                _context.SaveChanges();
-
-                if (!result.Succeeded)
-                {
-                    return BadRequest(result.Errors.FirstOrDefault().Description);
-                }
-
-                return Ok(new { Result = true, Message = "Kullanıcıya Admin Rolü Verilmiştir!" });
-            }
+            return Ok(new { Result = true, Message = "Kullanıcı Aktif Olarak Ayarlanmıştır!" });
         }
 
         public IActionResult AccessDenied()

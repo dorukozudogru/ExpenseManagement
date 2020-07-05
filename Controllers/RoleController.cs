@@ -1,21 +1,30 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ExpenseManagement.Models;
 using ExpenseManagement.Data;
+using ExpenseManagement.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using ExpenseManagement.Models.ViewModels;
+
 
 namespace ExpenseManagement.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class RoleController : Controller
     {
+        private readonly UserManager<AppIdentityUser> _userManager;
+        private readonly RoleManager<AppIdentityRole> _roleManager;
         private readonly ExpenseContext _context;
 
-        public RoleController(ExpenseContext context)
+        public RoleController(ExpenseContext context, UserManager<AppIdentityUser> userManager, RoleManager<AppIdentityRole> roleManager)
         {
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<IActionResult> Index()
@@ -90,7 +99,6 @@ namespace ExpenseManagement.Controllers
         public async Task<IActionResult> Edit(string id, AppIdentityRole roles)
         {
             var role = await _context.Roles.FindAsync(id);
-            
 
             if (role != null)
             {
@@ -142,6 +150,58 @@ namespace ExpenseManagement.Controllers
                 return Ok(new { Result = true, Message = "Rol Silinmiştir!" });
             }
             return BadRequest("Bu Role Ait Kullanıcı Bulunmaktadır.");
+        }
+
+        public async Task<IActionResult> RoleAssign(string id)
+        {
+            try
+            {
+                AppIdentityUser user = await _userManager.FindByIdAsync(id);
+                TempData["Username"] = user.Email.ToString();
+                List<AppIdentityRole> allRoles = _roleManager.Roles.ToList();
+                List<string> userRoles = await _userManager.GetRolesAsync(user) as List<string>;
+                List<RoleAssignViewModel> assignRoles = new List<RoleAssignViewModel>();
+                allRoles.ForEach(role => assignRoles.Add(new RoleAssignViewModel
+                {
+                    HasAssign = userRoles.Contains(role.Name),
+                    RoleId = role.Id,
+                    RoleName = role.Name
+                }));
+
+                return View(assignRoles);
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> RoleAssign(List<RoleAssignViewModel> modelList, string id)
+        {
+            AppIdentityUser user = await _userManager.FindByIdAsync(id);
+            foreach (RoleAssignViewModel role in modelList)
+            {
+                if (role.HasAssign)
+                {
+                    if (role.RoleName == "Admin")
+                    {
+                        user.IsAdmin = true;
+                        _context.SaveChanges();
+                    }
+                    await _userManager.AddToRoleAsync(user, role.RoleName);
+                }
+                else
+                {
+                    if (role.RoleName == "Admin")
+                    {
+                        user.IsAdmin = false;
+                        _context.SaveChanges();
+                    }
+                    await _userManager.RemoveFromRoleAsync(user, role.RoleName);
+                }
+            }
+            return RedirectToAction("Index", "Account");
         }
 
         private bool AppIdentityRoleExists(string id)
