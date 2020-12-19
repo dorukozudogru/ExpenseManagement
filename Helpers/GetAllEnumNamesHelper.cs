@@ -7,6 +7,51 @@ namespace ExpenseManagement.Helpers
 {
     public static class GetAllEnumNamesHelper
     {
+        public static List<ToDoLists> GetEnumName(List<ToDoLists> lists)
+        {
+            foreach (var list in lists)
+            {
+                if (list.AmountCurrency == 0)
+                {
+                    list.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(ToDoLists.AmountCurrencyEnum.TRY);
+                }
+                if (list.AmountCurrency == 1)
+                {
+                    list.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(ToDoLists.AmountCurrencyEnum.USD);
+                }
+                if (list.AmountCurrency == 2)
+                {
+                    list.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(ToDoLists.AmountCurrencyEnum.EUR);
+                }
+                if (list.AmountCurrency == 3)
+                {
+                    list.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(ToDoLists.AmountCurrencyEnum.GBP);
+                }
+            }
+            return lists;
+        }
+
+        public static ToDoLists GetEnumName(ToDoLists lists)
+        {
+            if (lists.AmountCurrency == 0)
+            {
+                lists.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(ToDoLists.AmountCurrencyEnum.TRY);
+            }
+            if (lists.AmountCurrency == 1)
+            {
+                lists.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(ToDoLists.AmountCurrencyEnum.USD);
+            }
+            if (lists.AmountCurrency == 2)
+            {
+                lists.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(ToDoLists.AmountCurrencyEnum.EUR);
+            }
+            if (lists.AmountCurrency == 3)
+            {
+                lists.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(ToDoLists.AmountCurrencyEnum.GBP);
+            }
+            return lists;
+        }
+
         public static List<BankVaults> GetEnumName(List<BankVaults> banks)
         {
             foreach (var bank in banks)

@@ -4,14 +4,16 @@ using ExpenseManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseManagement.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    partial class ExpenseContextModelSnapshot : ModelSnapshot
+    [Migration("20201219110922_todolists")]
+    partial class todolists
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -301,8 +303,6 @@ namespace ExpenseManagement.Migrations
 
                     b.Property<byte>("AmountCurrency");
 
-                    b.Property<DateTime>("CollectAt");
-
                     b.Property<DateTime>("CreatedAt");
 
                     b.Property<string>("CreatedBy");
@@ -312,7 +312,7 @@ namespace ExpenseManagement.Migrations
 
                     b.Property<int>("SectorId");
 
-                    b.Property<bool>("State");
+                    b.Property<int>("State");
 
                     b.HasKey("Id");
 

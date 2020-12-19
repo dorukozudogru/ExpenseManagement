@@ -100,5 +100,7 @@ namespace ExpenseManagement.Data
         public DbSet<Sectors> Sectors { get; set; }
 
         public DbSet<BankBranches> BankBranches { get; set; }
+
+        public DbSet<ToDoLists> ToDoLists { get; set; }
     }
 }

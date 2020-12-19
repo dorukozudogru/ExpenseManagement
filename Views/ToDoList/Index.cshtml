@@ -1,0 +1,153 @@
+﻿@model IEnumerable<ExpenseManagement.Models.ToDoLists>
+
+@{
+    ViewData["Title"] = "Alacak Listesi";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header border-0">
+                        <h5 class="card-title">
+                            <i class="ion ion-clipboard mr-1"></i>&nbsp;Alacak Listesi
+                        </h5>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a class="btn btn-outline-light text-primary btn-block btn-sm" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
+                        </div>
+                        <div class="col-md-6">
+                            <a class="btn btn-outline-light text-info btn-block btn-sm" asp-controller="ToDoList" asp-action="ExportAllActiveToDos"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="todo-list" id="todo-list" data-widget="todo-list">
+                            @*@foreach (var item in Model)
+                                {
+                                    <li id="@item.Id">
+                                        <div class="icheck-primary d-inline ml-2">
+                                            <input class="checkbox" type="checkbox" asp-for="@item.State" id="cb+@item.Id">
+                                            <label for="cb+@item.Id"></label>
+                                        </div>
+                                        <span class="text">
+                                            @item.Sector.Name - @item.Debtor - @item.Amount @item.AmountCurrencyName
+                                        </span>
+                                        @if (@item.State != true)
+                                        {
+                                            <div class="tools">
+                                                <a asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a>
+                                                <i class="fas fa-trash-o"></i>
+                                            </div>
+                                        }
+                                    </li>
+                                }*@
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary collapsed-card">
+                    <div class="card-header border-0">
+                        <h5 class="card-title">
+                            <i class="ion ion-clipboard mr-1"></i>&nbsp;Tamamlananlar
+                        </h5>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="todo-list" id="done-todo-list" data-widget="todo-list">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script>
+        $(".todo-list").on("click", ":checkbox", function () {
+            id = $(this).closest("li")[0].id;
+            console.log(id);
+            $.ajax({
+                url: '/ToDoList/EditState?id=' + id,
+                type: 'POST',
+                success: function (returnvalue) {
+                    document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                    document.getElementById("swalDefaultSuccess").click();
+                    window.setTimeout(function () {
+                        window.location.reload();
+                    }, 2000);
+                },
+                error: function (error) {
+                    document.getElementById("swalDefaultError").value = error.responseText;
+                    document.getElementById("swalDefaultError").click();
+                }
+            });
+        });
+    </script>
+    <script>
+        (function () {
+            $.ajax({
+                type: "POST",
+                url: "/ToDoList/Post?state=false",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (index, item) {
+                        $("#todo-list").append(
+                            '<li id="' + item.id + '">'
+                            + '<div class="icheck-primary d-inline ml-2">'
+                            + '<input class="checkbox" type="checkbox" asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
+                            + '<span class="text">'
+                            + item.sector.name + ' - ' + item.debtor + ' - ' + item.amount + ' ' + item.amountCurrencyName
+                            + '</span><div class="tools">'
+                            //+ '<a asp-action="Edit" asp-route-id="' + item.id + '"><i class="fas fa-edit"></i></a>'
+                            + '<a href="ToDoList/Edit?Id=' + item.id + '"><i class="fas fa-edit"></i></a>'
+                            + '</div>'
+                            + '</li>'
+                        );
+                    });
+                }
+            })
+        })(jQuery);
+        (function () {
+            $.ajax({
+                type: "POST",
+                url: "/ToDoList/Post?state=true",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (index, item) {
+                        $("#done-todo-list").append(
+                            '<li class="done" id="' + item.id + '">'
+                            + '<div class="icheck-primary d-inline ml-2">'
+                            + '<input class="checkbox" type="checkbox" checked asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
+                            + '<span class="text">'
+                            + item.sector.name + ' - ' + item.debtor + ' - ' + item.amount + ' ' + item.amountCurrencyName
+                            + '</span><div class="tools">'
+                            + '</div>'
+                            + '</li>'
+                        );
+                    });
+                }
+            })
+        })(jQuery);
+    </script>
+}
