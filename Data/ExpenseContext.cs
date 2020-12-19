@@ -89,7 +89,7 @@ namespace ExpenseManagement.Data
 
         public DbSet<AccountTypes> AccountTypes { get; set; }
 
-        public DbSet<Banks> Banks { get; set; }
+        public DbSet<BankVaults> BankVaults { get; set; }
 
         public DbSet<Endorsements> Endorsements { get; set; }
 
@@ -98,5 +98,7 @@ namespace ExpenseManagement.Data
         public DbSet<Incomes> Incomes { get; set; }
 
         public DbSet<Sectors> Sectors { get; set; }
+
+        public DbSet<BankBranches> BankBranches { get; set; }
     }
 }

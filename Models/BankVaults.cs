@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExpenseManagement.Models
 {
-    public class Banks
+    public class BankVaults
     {
         [Key]
         public int Id { get; set; }
@@ -42,7 +42,11 @@ namespace ExpenseManagement.Models
             GBP = 3
         }
 
-        [DisplayName("Banka/Şube")]
-        public string BankBranch { get; set; }
+        [Required]
+        [ForeignKey(nameof(BankBranches))]
+        [DisplayName("Banka/Şube Adı")]
+        public int BankBranchId { get; set; }
+        [DisplayName("Banka/Şube Adı")]
+        public virtual BankBranches BankBranch { get; set; }
     }
 }

@@ -96,7 +96,7 @@ namespace ExpenseManagement.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var hasAnyRecord = await _context.Banks
+            var hasAnyRecord = await _context.BankVaults
                 .FirstOrDefaultAsync(m => m.AccountTypeId == id);
 
             if (hasAnyRecord == null)

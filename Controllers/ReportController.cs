@@ -129,14 +129,14 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> BankReport()
+        public async Task<IActionResult> BankVaultsReport()
         {
-            List<Banks> banks = await _context.Banks
+            List<BankVaults> banks = await _context.BankVaults
                 .GroupBy(i => new
                 {
                     AmountCurrency = i.AmountCurrency
                 })
-                .Select(i => new Banks
+                .Select(i => new BankVaults
                 {
                     AmountCurrency = i.Key.AmountCurrency,
                     TotalAmount = i.Sum(x => x.Amount)

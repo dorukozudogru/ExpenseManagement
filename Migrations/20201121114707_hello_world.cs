@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ExpenseManagement.Migrations
 {
-    public partial class firstinstallation : Migration
+    public partial class hello_world : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -83,6 +83,19 @@ namespace ExpenseManagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BankBranches",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BankBranches", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Sectors",
                 columns: table => new
                 {
@@ -93,28 +106,6 @@ namespace ExpenseManagement.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sectors", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Banks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AccountTypeId = table.Column<int>(nullable: false),
-                    Amount = table.Column<double>(nullable: false),
-                    AmountCurrency = table.Column<byte>(nullable: false),
-                    BankBranch = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Banks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Banks_AccountTypes_AccountTypeId",
-                        column: x => x.AccountTypeId,
-                        principalTable: "AccountTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -224,6 +215,34 @@ namespace ExpenseManagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BankVaults",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AccountTypeId = table.Column<int>(nullable: false),
+                    Amount = table.Column<double>(nullable: false),
+                    AmountCurrency = table.Column<byte>(nullable: false),
+                    BankBranchId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BankVaults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BankVaults_AccountTypes_AccountTypeId",
+                        column: x => x.AccountTypeId,
+                        principalTable: "AccountTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BankVaults_BankBranches_BankBranchId",
+                        column: x => x.BankBranchId,
+                        principalTable: "BankBranches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Endorsements",
                 columns: table => new
                 {
@@ -255,6 +274,7 @@ namespace ExpenseManagement.Migrations
                     SectorId = table.Column<int>(nullable: false),
                     Definition = table.Column<string>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
+                    LastPaymentDate = table.Column<DateTime>(nullable: false),
                     Amount = table.Column<double>(nullable: false),
                     AmountCurrency = table.Column<byte>(nullable: false),
                     TAX = table.Column<double>(nullable: false),
@@ -346,9 +366,14 @@ namespace ExpenseManagement.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Banks_AccountTypeId",
-                table: "Banks",
+                name: "IX_BankVaults_AccountTypeId",
+                table: "BankVaults",
                 column: "AccountTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BankVaults_BankBranchId",
+                table: "BankVaults",
+                column: "BankBranchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Endorsements_SectorId",
@@ -387,7 +412,7 @@ namespace ExpenseManagement.Migrations
                 name: "Audits");
 
             migrationBuilder.DropTable(
-                name: "Banks");
+                name: "BankVaults");
 
             migrationBuilder.DropTable(
                 name: "Endorsements");
@@ -406,6 +431,9 @@ namespace ExpenseManagement.Migrations
 
             migrationBuilder.DropTable(
                 name: "AccountTypes");
+
+            migrationBuilder.DropTable(
+                name: "BankBranches");
 
             migrationBuilder.DropTable(
                 name: "Sectors");

@@ -24,6 +24,9 @@ namespace ExpenseManagement.Models
         [DisplayName("Fatura Tarihi")]
         public DateTime Date { get; set; }
 
+        [DisplayName("Son Ödeme Tarihi")]
+        public DateTime LastPaymentDate { get; set; }
+
         [Required]
         [DisplayName("Tutar")]
         public double Amount { get; set; }

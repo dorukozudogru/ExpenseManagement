@@ -11,19 +11,20 @@ using Microsoft.AspNetCore.Authorization;
 namespace ExpenseManagement.Controllers
 {
     [Authorize(Roles = ("Admin, Muhasebe"))]
-    public class BankController : Controller
+    public class BankVaultController : Controller
     {
         private readonly ExpenseContext _context;
 
-        public BankController(ExpenseContext context)
+        public BankVaultController(ExpenseContext context)
         {
             _context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-            var expenseContext = await _context.Banks
+            var expenseContext = await _context.BankVaults
                 .Include(b => b.AccountType)
+                .Include(c => c.BankBranch)
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -35,19 +36,20 @@ namespace ExpenseManagement.Controllers
         public IActionResult Create()
         {
             ViewData["AccountTypeId"] = new SelectList(_context.AccountTypes, "Id", "Name");
+            ViewData["BankBranchId"] = new SelectList(_context.BankBranches, "Id", "Name");
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,AccountTypeId,Amount,AmountCurrency,BankBranch")] Banks banks)
+        public async Task<IActionResult> Create([Bind("Id,AccountTypeId,Amount,AmountCurrency,BankBranchId")] BankVaults banks)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(banks);
                 await _context.SaveChangesAsync();
-                return Ok(new { Result = true, Message = "Banka Kaydı Başarıyla Oluşturulmuştur!" });
+                return Ok(new { Result = true, Message = "Kasa Kaydı Başarıyla Oluşturulmuştur!" });
             }
-            return BadRequest("Banka Kaydı Oluşturulurken Bir Hata Oluştu!");
+            return BadRequest("Kasa Kaydı Oluşturulurken Bir Hata Oluştu!");
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -57,7 +59,7 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            var banks = await _context.Banks.FindAsync(id);
+            var banks = await _context.BankVaults.FindAsync(id);
             banks = GetAllEnumNamesHelper.GetEnumName(banks);
 
             if (banks == null)
@@ -65,13 +67,14 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
             ViewData["AccountTypeId"] = new SelectList(_context.AccountTypes, "Id", "Name", banks.AccountTypeId);
+            ViewData["BankBranchId"] = new SelectList(_context.BankBranches, "Id", "Name", banks.BankBranchId);
             return View(banks);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountTypeId,Amount,AmountCurrency,BankBranch")] Banks banks)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountTypeId,Amount,AmountCurrency,BankBranchId")] BankVaults banks)
         {
-            var bank = await _context.Banks.FindAsync(id);
+            var bank = await _context.BankVaults.FindAsync(id);
 
             if (bank != null)
             {
@@ -80,16 +83,16 @@ namespace ExpenseManagement.Controllers
                     bank.AccountTypeId = banks.AccountTypeId;
                     bank.Amount = banks.Amount;
                     bank.AmountCurrency = banks.AmountCurrency;
-                    bank.BankBranch = banks.BankBranch;
+                    bank.BankBranchId = banks.BankBranchId;
 
                     _context.Update(bank);
                     await _context.SaveChangesAsync();
-                    return Ok(new { Result = true, Message = "Banka Kaydı Başarıyla Güncellendi!" });
+                    return Ok(new { Result = true, Message = "Kasa Kaydı Başarıyla Güncellendi!" });
                 }
                 else
                     return BadRequest("Tüm Alanları Doldurunuz!");
             }
-            return BadRequest("Banka Kaydı Güncellenirken Bir Hata Oluştu!");
+            return BadRequest("Kasa Kaydı Güncellenirken Bir Hata Oluştu!");
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -99,7 +102,7 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            var banks = await _context.Banks
+            var banks = await _context.BankVaults
                 .Include(b => b.AccountType)
                 .FirstOrDefaultAsync(m => m.Id == id);
             banks = GetAllEnumNamesHelper.GetEnumName(banks);
@@ -115,15 +118,15 @@ namespace ExpenseManagement.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var banks = await _context.Banks.FindAsync(id);
-            _context.Banks.Remove(banks);
+            var banks = await _context.BankVaults.FindAsync(id);
+            _context.BankVaults.Remove(banks);
             await _context.SaveChangesAsync();
-            return Ok(new { Result = true, Message = "Banka Kaydı Silinmiştir!" });
+            return Ok(new { Result = true, Message = "Kasa Kaydı Silinmiştir!" });
         }
 
         private bool BanksExists(int id)
         {
-            return _context.Banks.Any(e => e.Id == id);
+            return _context.BankVaults.Any(e => e.Id == id);
         }
     }
 }

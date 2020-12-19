@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ExpenseManagement.Models.Banks>
+﻿@model IEnumerable<ExpenseManagement.Models.BankVaults>
 
 @{
     ViewData["Title"] = "Banka Kayıtları";
@@ -11,7 +11,7 @@
                 <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
-                            <i class="fas fa-university"></i>&nbsp;Banka Kayıtları
+                            <i class="fas fa-university"></i>&nbsp;Kasa/Vadesiz Kayıtları
                             <a class="btn btn-light text-primary btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
                         </h5>
                     </div>
@@ -44,7 +44,7 @@
                                                 @Html.DisplayFor(modelItem => item.AccountType.Name)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.BankBranch)
+                                                @Html.DisplayFor(modelItem => item.BankBranch.Name)
                                             </td>
                                             <td>
                                                 <div class="btn-group">

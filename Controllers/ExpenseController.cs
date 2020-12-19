@@ -120,7 +120,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,SectorId,Date,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Expenses expenses)
+        public async Task<IActionResult> Create([Bind("Id,SectorId,Date,LastPaymentDate,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Expenses expenses)
         {
             if (ModelState.IsValid)
             {
@@ -178,7 +178,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Date,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Expenses expenses)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Date,LastPaymentDate,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Expenses expenses)
         {
             var expense = await _context.Expenses.FindAsync(id);
 
@@ -207,6 +207,7 @@ namespace ExpenseManagement.Controllers
 
                     expense.SectorId = expenses.SectorId;
                     expense.Date = expenses.Date;
+                    expense.LastPaymentDate = expenses.LastPaymentDate;
                     expense.Definition = expenses.Definition;
                     expense.Amount = expenses.Amount;
                     expense.AmountCurrency = expenses.AmountCurrency;

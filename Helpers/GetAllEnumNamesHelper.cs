@@ -7,47 +7,47 @@ namespace ExpenseManagement.Helpers
 {
     public static class GetAllEnumNamesHelper
     {
-        public static List<Banks> GetEnumName(List<Banks> banks)
+        public static List<BankVaults> GetEnumName(List<BankVaults> banks)
         {
             foreach (var bank in banks)
             {
                 if (bank.AmountCurrency == 0)
                 {
-                    bank.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Banks.AmountCurrencyEnum.TRY);
+                    bank.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(BankVaults.AmountCurrencyEnum.TRY);
                 }
                 if (bank.AmountCurrency == 1)
                 {
-                    bank.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Banks.AmountCurrencyEnum.USD);
+                    bank.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(BankVaults.AmountCurrencyEnum.USD);
                 }
                 if (bank.AmountCurrency == 2)
                 {
-                    bank.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Banks.AmountCurrencyEnum.EUR);
+                    bank.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(BankVaults.AmountCurrencyEnum.EUR);
                 }
                 if (bank.AmountCurrency == 3)
                 {
-                    bank.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Banks.AmountCurrencyEnum.GBP);
+                    bank.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(BankVaults.AmountCurrencyEnum.GBP);
                 }
             }
             return banks;
         }
 
-        public static Banks GetEnumName(Banks banks)
+        public static BankVaults GetEnumName(BankVaults banks)
         {
             if (banks.AmountCurrency == 0)
             {
-                banks.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Banks.AmountCurrencyEnum.TRY);
+                banks.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(BankVaults.AmountCurrencyEnum.TRY);
             }
             if (banks.AmountCurrency == 1)
             {
-                banks.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Banks.AmountCurrencyEnum.USD);
+                banks.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(BankVaults.AmountCurrencyEnum.USD);
             }
             if (banks.AmountCurrency == 2)
             {
-                banks.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Banks.AmountCurrencyEnum.EUR);
+                banks.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(BankVaults.AmountCurrencyEnum.EUR);
             }
             if (banks.AmountCurrency == 3)
             {
-                banks.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Banks.AmountCurrencyEnum.GBP);
+                banks.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(BankVaults.AmountCurrencyEnum.GBP);
             }
             return banks;
         }

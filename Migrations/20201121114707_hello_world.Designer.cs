@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseManagement.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    [Migration("20200701195601_first-installation")]
-    partial class firstinstallation
+    [Migration("20201121114707_hello_world")]
+    partial class hello_world
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -141,7 +141,21 @@ namespace ExpenseManagement.Migrations
                     b.ToTable("Audits");
                 });
 
-            modelBuilder.Entity("ExpenseManagement.Models.Banks", b =>
+            modelBuilder.Entity("ExpenseManagement.Models.BankBranches", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BankBranches");
+                });
+
+            modelBuilder.Entity("ExpenseManagement.Models.BankVaults", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -153,13 +167,15 @@ namespace ExpenseManagement.Migrations
 
                     b.Property<byte>("AmountCurrency");
 
-                    b.Property<string>("BankBranch");
+                    b.Property<int>("BankBranchId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AccountTypeId");
 
-                    b.ToTable("Banks");
+                    b.HasIndex("BankBranchId");
+
+                    b.ToTable("BankVaults");
                 });
 
             modelBuilder.Entity("ExpenseManagement.Models.Endorsements", b =>
@@ -207,6 +223,8 @@ namespace ExpenseManagement.Migrations
                     b.Property<byte[]>("InvoiceImage");
 
                     b.Property<string>("InvoiceImageFormat");
+
+                    b.Property<DateTime>("LastPaymentDate");
 
                     b.Property<int>("SectorId");
 
@@ -361,11 +379,16 @@ namespace ExpenseManagement.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("ExpenseManagement.Models.Banks", b =>
+            modelBuilder.Entity("ExpenseManagement.Models.BankVaults", b =>
                 {
                     b.HasOne("ExpenseManagement.Models.AccountTypes", "AccountType")
                         .WithMany()
                         .HasForeignKey("AccountTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ExpenseManagement.Models.BankBranches", "BankBranch")
+                        .WithMany()
+                        .HasForeignKey("BankBranchId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

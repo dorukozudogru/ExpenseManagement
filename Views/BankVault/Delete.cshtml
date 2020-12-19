@@ -1,4 +1,4 @@
-﻿@model ExpenseManagement.Models.Banks
+﻿@model ExpenseManagement.Models.BankVaults
 
 @{
     ViewData["Title"] = "Banka Kaydını Sil";
@@ -46,7 +46,7 @@
     function deleted() {
         id = document.getElementById("id").value;
         $.ajax({
-            url: '/Bank/Delete?id=' + id,
+            url: '/BankVaults/Delete?id=' + id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

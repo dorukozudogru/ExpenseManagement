@@ -1,7 +1,7 @@
-﻿@model ExpenseManagement.Models.Banks
+﻿@model ExpenseManagement.Models.BankBranches
 
 @{
-    ViewData["Title"] = "Banka Kaydı Ekle";
+    ViewData["Title"] = "Banka/Şube Ekle";
 }
 
 <section class="content">
@@ -11,7 +11,7 @@
                 <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
-                            <i class="fa fa-plus"></i>&nbsp;Banka Kaydı Ekle
+                            <i class="fa fa-plus"></i>&nbsp;Banka/Şube Ekle
                         </h5>
                     </div>
                     <div class="card-body">
@@ -19,19 +19,9 @@
                             <div class="col-md-12">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 <div class="form-group">
-                                    <label asp-for="AccountType.Name" class="control-label"></label>
-                                    <select asp-for="AccountTypeId" class="form-control" asp-items="ViewBag.AccountTypeId" id="accountTypeId"></select>
-                                </div>
-                                <label asp-for="Amount" class="control-label"></label>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <select asp-for="AmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Banks.AmountCurrencyEnum>()" id="amountCurrency"></select>
-                                    </div>
-                                    <input asp-for="Amount" class="form-control" id="amount" />
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="BankBranch" class="control-label"></label>
-                                    <input asp-for="BankBranch" class="form-control" id="bankBranch" />
+                                    <label asp-for="Name" class="control-label"></label>
+                                    <input asp-for="Name" class="form-control" id="name" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -51,18 +41,12 @@
 </section>
 
 <script>
-    var accountTypeId;
-    var amount;
-    var amountCurrency;
-    var bankBranch;
+    var name;
 
     function add() {
-        accountTypeId = document.getElementById("accountTypeId").value;
-        amount = document.getElementById("amount").value;
-        amountCurrency = document.getElementById("amountCurrency").value;
-        bankBranch = document.getElementById("bankBranch").value;
+        name = document.getElementById("name").value;
         $.ajax({
-            url: '/Bank/Create?banks.AccountTypeId=' + accountTypeId + '&banks.Amount=' + amount + '&banks.AmountCurrency=' + amountCurrency + '&banks.BankBranch=' + bankBranch,
+            url: '/BankBranches/Create?bankBranches.Name=' + name,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

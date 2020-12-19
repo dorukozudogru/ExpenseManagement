@@ -31,6 +31,9 @@
                                                 @Html.DisplayNameFor(model => model.Date)
                                             </th>
                                             <th>
+                                                @Html.DisplayNameFor(model => model.LastPaymentDate)
+                                            </th>
+                                            <th>
                                                 @Html.DisplayNameFor(model => model.Definition)
                                             </th>
                                             <th>
@@ -87,6 +90,12 @@
                     },
                     {
                         "data": "date",
+                        render: function (data, type, row) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                    },
+                    {
+                        "data": "lastPaymentDate",
                         render: function (data, type, row) {
                             return window.moment(data).format("DD-MMMM-YYYY");
                         }

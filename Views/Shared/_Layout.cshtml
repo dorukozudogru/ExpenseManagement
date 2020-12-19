@@ -72,37 +72,81 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a asp-controller="Income" asp-action="Index" class="nav-link">
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-car"></i>
+                                <p>
+                                    Araç Satış
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="New" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-warning"></i><p>Sıfır Araç Satışı</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Used" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-warning"></i><p>2. El Araç Satışı</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-coins"></i>
                                 <p>
-                                    Gelirler
+                                    Gelir - Gider
+                                    <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Income" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-warning"></i><p>Gelirler</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Expense" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-warning"></i><p>Giderler</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a asp-controller="Expense" asp-action="Index" class="nav-link">
-                                <i class="nav-icon fas fa-credit-card"></i>
-                                <p>
-                                    Giderler
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
+                        @*<li class="nav-item">
                             <a asp-controller="Endorsement" asp-action="Index" class="nav-link">
                                 <i class="nav-icon fas fa-hand-holding-usd"></i>
                                 <p>
                                     Ciro
                                 </p>
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-controller="Bank" asp-action="Index" class="nav-link">
+                        </li>*@
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-university"></i>
                                 <p>
                                     Banka
+                                    <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="AccountType" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-warning"></i><p>Banka Özeti</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="BankVault" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-warning"></i><p>Kasaya/Vadesize Ekle</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="AccountType" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-warning"></i><p>Vadeliye Ekle (Faiz)</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
@@ -123,9 +167,14 @@
                                         <i class="far fa-circle nav-icon text-warning"></i><p>Hesap Türleri</p>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="BankBranches" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-warning"></i><p>Banka/Şube </p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
-                        <li class="nav-item has-treeview">
+                        @*<li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-chart-line"></i>
                                 <p>
@@ -160,7 +209,7 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li>
+                        </li>*@
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-tools"></i>
@@ -250,6 +299,11 @@
         $('.select2').select2()
 
         $('#datepicker').datepicker({
+            autoclose: true,
+            format: "yyyy/mm/dd",
+        })
+
+        $('#datepicker2').datepicker({
             autoclose: true,
             format: "yyyy/mm/dd",
         })

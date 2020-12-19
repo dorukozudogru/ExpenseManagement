@@ -59,6 +59,7 @@
                             </address>
                         </div>
                         <div class="col-sm-6 invoice-col">
+                            @Html.DisplayNameFor(model => model.LastPaymentDate): <strong>@Html.DisplayFor(model => model.LastPaymentDate)</strong><br>
                             @Html.DisplayNameFor(model => model.Amount): <strong>@Html.DisplayFor(model => model.Amount) @Html.DisplayFor(model => model.AmountCurrencyName)</strong><br>
                             @Html.DisplayNameFor(model => model.TAX): <strong>@Html.DisplayFor(model => model.TAX) @Html.DisplayFor(model => model.TAXCurrencyName)</strong><br>
                         </div>
