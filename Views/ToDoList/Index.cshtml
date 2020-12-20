@@ -84,7 +84,6 @@
     <script>
         $(".todo-list").on("click", ":checkbox", function () {
             id = $(this).closest("li")[0].id;
-            console.log(id);
             $.ajax({
                 url: '/ToDoList/EditState?id=' + id,
                 type: 'POST',

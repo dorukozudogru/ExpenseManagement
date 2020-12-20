@@ -20,6 +20,10 @@
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 <input type="hidden" asp-for="Id" id="id" />
                                 <div class="form-group">
+                                    <label asp-for="ExpenseType" class="control-label"></label>
+                                    <select asp-for="ExpenseType" class="form-control" asp-items="@Html.GetEnumSelectList<Expenses.ExpenseTypeEnum>()" id="expenseType"></select>
+                                </div>
+                                <div class="form-group">
                                     <label asp-for="Sector.Name" class="control-label"></label>
                                     <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
                                 </div>
@@ -100,6 +104,13 @@
                                         }
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <label asp-for="Month" class="control-label"></label>
+                                    <select asp-for="Month" class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>

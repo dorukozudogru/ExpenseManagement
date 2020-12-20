@@ -1,0 +1,214 @@
+﻿@model ExpenseManagement.Models.VehiclePurchases
+
+@{
+    ViewData["Title"] = "Araç Alımını Güncelle";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Araç Alımını Güncelle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input asp-for="Id" class="form-control" id="id" hidden />
+                                <div class="form-group">
+                                    <label asp-for="CarModel.CarBrandName" class="control-label"></label>
+                                    <select id="Brand" asp-for="CarModel.CarBrandId" class="form-control" asp-items="@ViewBag.CarBrands"></select>
+                                    <span asp-validation-for="CarModel.CarBrandId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="CarModel.Name" class="control-label"></label>
+                                    <select id="Model" asp-for="CarModel.Name" class="form-control" asp-items="@ViewBag.CarModels"></select>
+                                    <span asp-validation-for="CarModel.Name" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" asp-for="IsSold"></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <input type="checkbox" asp-for="IsSold" id="isSold">
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="PurchaseDate" class="control-label"></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input asp-for="PurchaseDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker" />
+                                    </div>
+                                    <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="SaleDate" class="control-label"></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input asp-for="SaleDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker2" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Chassis" class="control-label"></label>
+                                    <input asp-for="Chassis" class="form-control" autocomplete="off" id="chassis" />
+                                    <span asp-validation-for="Chassis" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="PurchaseAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-try"></i></span>
+                                        <input asp-for="PurchaseAmount" class="form-control" autocomplete="off" id="purchaseAmount" />
+                                    </div>
+                                    <span asp-validation-for="PurchaseAmount" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="SaleAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-try"></i></span>
+                                        <input asp-for="SaleAmount" class="form-control" autocomplete="off" id="saleAmount" />
+                                    </div>
+                                    <span asp-validation-for="SaleAmount" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="updateVehiclePurchase()" id="updateButton" />
+                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.onload = function getVehiclePurchase() {
+        $("#isSold").on('change', function () {
+        if ($(this).is(':checked')) {
+            $(this).attr('value', 'true');
+            $('#datepicker2').removeAttr('disabled');
+            $('#saleAmount').removeAttr('disabled');
+        } else {
+            $(this).attr('value', 'false');
+            $('#datepicker2').attr('disabled', 'disabled');
+            $('#saleAmount').attr('disabled', 'disabled');
+            $('#datepicker2').val('');
+            $('#saleAmount').val('');
+        }
+    });
+
+        var id = '@Url.RouteUrl(ViewContext.RouteData.Values).Split("/").Last()';
+
+        $.ajax({
+            url: '/VehiclePurchase/EditPost?&id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                var start = new Date(returnvalue.purchaseDate);
+
+                if (returnvalue.saleDate != null) {
+                    var finish = new Date(returnvalue.saleDate);
+
+                    var dayF = finish.getDate();
+                    var monthF = finish.getMonth() + 1;
+                    var yearF = finish.getFullYear();
+                    dayF = dayF < 10 ? "0" + dayF : dayF;
+                    monthF = monthF < 10 ? "0" + monthF : monthF;
+
+                    document.getElementById("datepicker2").value = yearF + "/" + monthF + "/" + dayF;
+                }
+
+                if (returnvalue.isSold == false) {
+                    $('#isSold').attr('value', 'false');
+                    $('#datepicker2').attr('disabled', 'disabled');
+                    $('#saleAmount').attr('disabled', 'disabled');
+                }
+
+                var dayS = start.getDate();
+                var monthS = start.getMonth() + 1;
+                var yearS = start.getFullYear();
+                dayS = dayS < 10 ? "0" + dayS : dayS;
+                monthS = monthS < 10 ? "0" + monthS : monthS;
+
+                document.getElementById("id").value = returnvalue.id;
+                document.getElementById("Brand").value = returnvalue.carModel.carBrandId;
+                document.getElementById("Model").value = returnvalue.carModel.name;
+                document.getElementById("isSold").checked = returnvalue.isSold;
+                document.getElementById("chassis").value = returnvalue.chassis;
+                document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
+                document.getElementById("purchaseAmount").value = returnvalue.purchaseAmount.toLocaleString("tr-TR");
+                document.getElementById("saleAmount").value = returnvalue.saleAmount.toLocaleString("tr-TR");
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = "Araç Alımı Getirilirken Bir Hata Oluştu!";
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>
+<script>
+    function updateVehiclePurchase() {
+        var Id = document.getElementById("id").value;
+        var Brand = document.getElementById("Brand").value;
+        var Model = document.getElementById("Model").value;
+        var IsSold = document.getElementById("isSold").value;
+        var PurchaseDate = document.getElementById("datepicker").value;
+        var SaleDate = document.getElementById("datepicker2").value;
+        var Chassis = document.getElementById("chassis").value;
+        var PurchaseAmount = document.getElementById("purchaseAmount").value;
+        var SaleAmount = document.getElementById("saleAmount").value;
+
+        var data = new FormData();
+
+        data.append('CarModel.Name', Model);
+        data.append('PurchaseDate', PurchaseDate);
+        data.append('IsSold', IsSold);
+        data.append('SaleDate', SaleDate);
+        data.append('Chassis', Chassis);
+        data.append('PurchaseAmount', PurchaseAmount);
+        data.append('SaleAmount', SaleAmount);
+
+        $("#updateButton").attr("disabled", true);
+
+        $.ajax({
+            url: '/VehiclePurchase/Edit?id=' + Id,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#updateButton").attr("disabled", false);
+                }, 1600);
+            }
+        });
+    }
+</script>

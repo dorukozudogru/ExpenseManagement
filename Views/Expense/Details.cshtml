@@ -53,6 +53,7 @@
                     <div class="row invoice-info">
                         <div class="col-sm-6 invoice-col">
                             <address>
+                                @Html.DisplayNameFor(model => model.ExpenseTypeName): <strong>@Html.DisplayFor(model => model.ExpenseTypeName)</strong><br>
                                 @Html.DisplayNameFor(model => model.Sector.Name): <strong>@Html.DisplayFor(model => model.Sector.Name)</strong><br>
                                 @Html.DisplayNameFor(model => model.Date): <strong>@Html.DisplayFor(model => model.Date)</strong><br>
                                 @Html.DisplayNameFor(model => model.Definition): <strong>@Html.DisplayFor(model => model.Definition)</strong><br>

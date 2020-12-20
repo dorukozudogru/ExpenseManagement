@@ -1,0 +1,57 @@
+﻿@model ExpenseManagement.Models.VehiclePurchases
+
+@{
+    ViewData["Title"] = "Araç Alımı Detayları";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="invoice p-3 mb-3">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4>
+                                <i class="fa fa-folder-open"></i> @Html.DisplayFor(model => model.Id)
+                                <br />
+                                <small class="pull-left">Alış / Satış Tarihi: <strong>@Html.DisplayFor(model => model.PurchaseDate) / @Html.DisplayFor(model => model.SaleDate)</strong></small>
+                                <br />
+                            </h4>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row invoice-info">
+                        <div class="col-sm-4 invoice-col">
+                            <address>
+                                @Html.DisplayNameFor(model => model.CarModel.CarBrand.Name): <strong>@Html.DisplayFor(model => model.CarModel.CarBrand.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.CarModel.Name): <strong>@Html.DisplayFor(model => model.CarModel.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.Chassis): <strong>@Html.DisplayFor(model => model.Chassis)</strong><br>
+                                @Html.DisplayNameFor(model => model.PurchaseAmount) : <strong>@Html.DisplayFor(model => model.PurchaseAmount) ₺</strong><br>
+                                @Html.DisplayNameFor(model => model.SaleAmount): <strong>@Html.DisplayFor(model => model.SaleAmount) ₺</strong><br>
+                            </address>
+                        </div>
+                        @*<div class="col-sm-4 invoice-col">
+                                <address>
+                                    @Html.DisplayNameFor(model => model.CreatedAt): <strong>@Html.DisplayFor(model => model.CreatedAt)</strong><br>
+                                    @Html.DisplayNameFor(model => model.CreatedBy): <strong>@Html.DisplayFor(model => model.CreatedBy)</strong><br>
+                                    @Html.DisplayNameFor(model => model.UpdatedAt): <strong>@Html.DisplayFor(model => model.UpdatedAt)</strong><br>
+                                    @Html.DisplayNameFor(model => model.UpdatedBy): <strong>@Html.DisplayFor(model => model.UpdatedBy)</strong><br>
+                                </address>
+                            </div>*@
+                    </div>
+                    <hr />
+                    <div class="row no-print">
+                        <div class="col-12">
+                            <a class="btn btn-success float-right" asp-action="Edit" asp-route-id="@Model.Id">
+                                <i class="fas fa-pencil-alt"></i>&nbsp;&nbsp;Güncelle
+                            </a>
+                            <a class="btn btn-primary float-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

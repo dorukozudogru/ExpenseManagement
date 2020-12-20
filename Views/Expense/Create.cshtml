@@ -19,6 +19,10 @@
                             <div class="col-md-12">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 <div class="form-group">
+                                    <label asp-for="ExpenseType" class="control-label"></label>
+                                    <select asp-for="ExpenseType" class="form-control" asp-items="@Html.GetEnumSelectList<Expenses.ExpenseTypeEnum>()" id="expenseType"></select>
+                                </div>
+                                <div class="form-group">
                                     <label asp-for="Sector.Name" class="control-label"></label>
                                     <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
                                 </div>
@@ -72,6 +76,20 @@
                                         <label class="custom-file-label" for="exampleInputFile">Dosya Seçiniz</label>
                                     </div>
                                 </div>
+
+                                <div class="form-group" id="month-for-salary" hidden>
+                                    <label asp-for="Month" class="control-label"></label>
+                                    <select asp-for="Month" class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                </div>
+                                <label asp-for="SalaryAmount" class="control-label" id="salary-title-for-salary"></label>
+                                <div class="input-group mb-3" id="salary-for-salary" hidden>
+                                    <div class="input-group-prepend">
+                                        <select asp-for="SalaryAmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.SalaryAmountCurrencyEnum>()" id="salaryAmountCurrency"></select>
+                                    </div>
+                                    <input asp-for="SalaryAmount" class="form-control" id="amount" />
+                                    <span asp-validation-for="SalaryAmount" class="text-danger"></span>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -90,6 +108,7 @@
 </section>
 
 <script>
+    var expenseType;
     var sectorId;
     var date;
     var definition;
@@ -99,6 +118,7 @@
     var taxCurrency;
 
     function add() {
+        expenseType = document.getElementById("expenseType").value;
         sectorId = document.getElementById("sectorId").value;
         date = document.getElementById("datepicker").value;
         lastPaymentDate = document.getElementById("datepicker2").value;
@@ -116,6 +136,7 @@
             data.append(files[i].name, files[i]);
         }
 
+        data.append('expenseType', expenseType);
         data.append('sectorId', sectorId);
         data.append('date', date);
         data.append('lastPaymentDate', lastPaymentDate);

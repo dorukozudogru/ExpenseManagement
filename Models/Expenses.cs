@@ -12,6 +12,24 @@ namespace ExpenseManagement.Models
         public int Id { get; set; }
 
         [Required]
+        [DisplayName("Gider Türü")]
+        public byte ExpenseType { get; set; }
+
+        [NotMapped]
+        [DisplayName("Gider Türü")]
+        public string ExpenseTypeName { get; set; }
+
+        public enum ExpenseTypeEnum
+        {
+            [Display(Name = "Satınalma")]
+            PURCHASE = 0,
+            [Display(Name = "Gider")]
+            EXPENSE = 1,
+            [Display(Name = "Maaş")]
+            SALARY = 2,
+        }
+
+        [Required]
         [ForeignKey(nameof(Sector))]
         public int SectorId { get; set; }
         public virtual Sectors Sector { get; set; }
@@ -91,6 +109,37 @@ namespace ExpenseManagement.Models
             [Display(Name = "Pasif")]
             Passive = 20,
         }
+
+        #region ForSalary
+        [DisplayName("Ay")]
+        public byte Month { get; set; }
+
+        [NotMapped]
+        [DisplayName("Ay")]
+        public string MonthName { get; set; }
+
+        [DisplayName("Net Tutar")]
+        public double SalaryAmount { get; set; }
+
+        [DisplayName("Net Tutar Dövizi")]
+        public byte SalaryAmountCurrency { get; set; }
+
+        [NotMapped]
+        [DisplayName("Net Tutar Dövizi")]
+        public string SalaryAmountCurrencyName { get; set; }
+
+        public enum SalaryAmountCurrencyEnum
+        {
+            [Display(Name = "₺")]
+            TRY = 0,
+            [Display(Name = "$")]
+            USD = 1,
+            [Display(Name = "€")]
+            EUR = 2,
+            [Display(Name = "£")]
+            GBP = 3
+        }
+        #endregion
 
         [DisplayName("Oluşturulma Tarihi")]
         public DateTime CreatedAt { get; set; }

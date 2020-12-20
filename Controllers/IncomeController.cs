@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ExpenseManagement.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class IncomeController : Controller
     {
         private readonly ExpenseContext _context;
@@ -120,7 +120,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,SectorId,Date,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Incomes incomes)
+        public async Task<IActionResult> Create([Bind("Id,SectorId,Month,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Incomes incomes)
         {
             if (ModelState.IsValid)
             {
@@ -178,7 +178,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Date,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Incomes incomes)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Month,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Incomes incomes)
         {
             var income = await _context.Incomes.FindAsync(id);
 
@@ -206,7 +206,7 @@ namespace ExpenseManagement.Controllers
                     }
 
                     income.SectorId = incomes.SectorId;
-                    income.Date = incomes.Date;
+                    income.Month = incomes.Month;
                     income.Definition = incomes.Definition;
                     income.Amount = incomes.Amount;
                     income.AmountCurrency = incomes.AmountCurrency;

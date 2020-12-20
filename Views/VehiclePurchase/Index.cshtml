@@ -1,18 +1,18 @@
-﻿@model IEnumerable<ExpenseManagement.Models.Expenses>
+﻿@model IEnumerable<ExpenseManagement.Models.VehiclePurchases>
 
 @{
-    ViewData["Title"] = "Giderler";
+    ViewData["Title"] = "Araç Alımı";
 }
 
 <section class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="card card-primary">
+                <div class="card card-secondary">
                     <div class="card-header">
                         <h5 class="box-title">
-                            <i class="fas fa-credit-card"></i>&nbsp;Giderler
-                            <a class="btn btn-light text-primary btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
+                            <i class="fas fa-warehouse"></i>&nbsp;Araç Alımı
+                            <a class="btn btn-success btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
                         </h5>
                     </div>
                     <div class="card-body">
@@ -25,27 +25,30 @@
                                                 @Html.DisplayNameFor(model => model.Id)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.ExpenseType)
+                                                @Html.DisplayNameFor(model => model.CarModel.CarBrand.Name)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.Sector.Name)
+                                                @Html.DisplayNameFor(model => model.CarModel.Name)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.Date)
+                                                @Html.DisplayNameFor(model => model.IsSold)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.LastPaymentDate)
+                                                @Html.DisplayNameFor(model => model.PurchaseDate)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.Definition)
+                                                @Html.DisplayNameFor(model => model.SaleDate)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.Amount)
+                                                @Html.DisplayNameFor(model => model.Chassis)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.TAX)
+                                                @Html.DisplayNameFor(model => model.PurchaseAmount)
                                             </th>
-                                            <th>İşlemler</th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.SaleAmount)
+                                            </th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -58,7 +61,10 @@
     </div>
 </section>
 
+
 @section Scripts{
+    <script src="~/js/datatables.min.js"></script>
+    <script src="~/js/moment.min.js"></script>
     <script>
         (function () {
             var generateCustomerTable = $("#ItemsTable").DataTable({
@@ -82,49 +88,58 @@
                 "stateSave": true,
                 "stateDuration": -1,
                 "ajax": {
-                    "url": "/Expense/Post",
+                    "url": "/VehiclePurchase/Post",
                     "method": "POST"
                 },
                 "columns": [
                     { "data": "id" },
+                    { "data": "carModel.carBrand.name", "orderable": false },
+                    { "data": "carModel.name", "orderable": false },
                     {
-                        "data": "expenseTypeName",
-                        "orderable": false
+                        "data": "isSold", "orderable": false,
+                        render: function (data, type, row) {
+                            if (data == true) {
+                                return "Evet";
+                            }
+                            else if (data == false) {
+                                return "Hayır";
+                            }
+                        }
                     },
                     {
-                        "data": "sector.name",
-                        "orderable": false
-                    },
-                    {
-                        "data": "date",
+                        "data": "purchaseDate",
                         render: function (data, type, row) {
                             return window.moment(data).format("DD-MMMM-YYYY");
                         }
                     },
                     {
-                        "data": "lastPaymentDate",
+                        "data": "saleDate",
                         render: function (data, type, row) {
-                            return window.moment(data).format("DD-MMMM-YYYY");
+                            if (data != null) {
+                                return window.moment(data).format("DD-MMMM-YYYY");
+                            }
+                            else {
+                                return "-";
+                            }
                         }
                     },
-                    { "data": "definition" },
+                    { "data": "chassis" },
+                    { "data": "purchaseAmount" },
                     {
-                        "data": "amount",
-                        "render": function (data, type, full, meta) {
-                            return full.amount + " " + full.amountCurrencyName;
+                        "data": "saleAmount",
+                        render: function (data, type, row) {
+                            if (data != null) {
+                                return data;
+                            }
+                            else {
+                                return "-";
+                            }
                         }
                     },
                     {
-                        "data": "tax",
-                        "render": function (data, type, full, meta) {
-                            return full.tax + " " + full.taxCurrencyName;
+                        "data": "actionId", "orderable": false, render: function (data, type, row) {
+                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="VehiclePurchase/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="VehiclePurchase/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="VehiclePurchase/Delete/' + row.id + '">Sil</a></ul></div>'
                         }
-                    },
-                    {
-                        "data": "actionId", render: function (data, type, row) {
-                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Expense/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="Expense/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="Expense/Delete/' + row.id + '">Sil</a></ul></div>'
-                        },
-                        "orderable": false
                     }
                 ],
                 "ordering": true,

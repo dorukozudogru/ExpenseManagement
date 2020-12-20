@@ -102,5 +102,11 @@ namespace ExpenseManagement.Data
         public DbSet<BankBranches> BankBranches { get; set; }
 
         public DbSet<ToDoLists> ToDoLists { get; set; }
+
+        public DbSet<CarBrands> CarBrands { get; set; }
+
+        public DbSet<CarModels> CarModels { get; set; }
+
+        public DbSet<VehiclePurchases> VehiclePurchases { get; set; }
     }
 }

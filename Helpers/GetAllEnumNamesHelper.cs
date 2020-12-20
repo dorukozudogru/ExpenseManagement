@@ -266,6 +266,21 @@ namespace ExpenseManagement.Helpers
                     default:
                         break;
                 }
+
+                switch (expense.ExpenseType)
+                {
+                    case 0:
+                        expense.ExpenseTypeName = EnumExtensionsHelper.GetDisplayName(Expenses.ExpenseTypeEnum.PURCHASE);
+                        break;
+                    case 1:
+                        expense.ExpenseTypeName = EnumExtensionsHelper.GetDisplayName(Expenses.ExpenseTypeEnum.EXPENSE);
+                        break;
+                    case 2:
+                        expense.ExpenseTypeName = EnumExtensionsHelper.GetDisplayName(Expenses.ExpenseTypeEnum.SALARY);
+                        break;
+                    default:
+                        break;
+                }
             }
             return expenses;
         }
@@ -303,6 +318,21 @@ namespace ExpenseManagement.Helpers
                     break;
                 case 3:
                     expenses.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.TAXCurrencyEnum.GBP);
+                    break;
+                default:
+                    break;
+            }
+
+            switch (expenses.ExpenseType)
+            {
+                case 0:
+                    expenses.ExpenseTypeName = EnumExtensionsHelper.GetDisplayName(Expenses.ExpenseTypeEnum.PURCHASE);
+                    break;
+                case 1:
+                    expenses.ExpenseTypeName = EnumExtensionsHelper.GetDisplayName(Expenses.ExpenseTypeEnum.EXPENSE);
+                    break;
+                case 2:
+                    expenses.ExpenseTypeName = EnumExtensionsHelper.GetDisplayName(Expenses.ExpenseTypeEnum.SALARY);
                     break;
                 default:
                     break;
@@ -349,6 +379,48 @@ namespace ExpenseManagement.Helpers
                     default:
                         break;
                 }
+
+                switch (income.Month)
+                {
+                    case 1:
+                        income.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JANUARY);
+                        break;
+                    case 2:
+                        income.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.FEBRUARY);
+                        break;
+                    case 3:
+                        income.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MARCH);
+                        break;
+                    case 4:
+                        income.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.APRIL);
+                        break;
+                    case 5:
+                        income.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MAY);
+                        break;
+                    case 6:
+                        income.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JUNE);
+                        break;
+                    case 7:
+                        income.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JULY);
+                        break;
+                    case 8:
+                        income.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.AUGUST);
+                        break;
+                    case 9:
+                        income.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.SEPTEMBER);
+                        break;
+                    case 10:
+                        income.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.OCTOBER);
+                        break;
+                    case 11:
+                        income.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.NOVEMBER);
+                        break;
+                    case 12:
+                        income.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.DECEMBER);
+                        break;
+                    default:
+                        break;
+                }
             }
             return incomes;
         }
@@ -386,6 +458,48 @@ namespace ExpenseManagement.Helpers
                     break;
                 case 3:
                     incomes.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Incomes.TAXCurrencyEnum.GBP);
+                    break;
+                default:
+                    break;
+            }
+
+            switch (incomes.Month)
+            {
+                case 1:
+                    incomes.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JANUARY);
+                    break;
+                case 2:
+                    incomes.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.FEBRUARY);
+                    break;
+                case 3:
+                    incomes.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MARCH);
+                    break;
+                case 4:
+                    incomes.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.APRIL);
+                    break;
+                case 5:
+                    incomes.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MAY);
+                    break;
+                case 6:
+                    incomes.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JUNE);
+                    break;
+                case 7:
+                    incomes.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JULY);
+                    break;
+                case 8:
+                    incomes.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.AUGUST);
+                    break;
+                case 9:
+                    incomes.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.SEPTEMBER);
+                    break;
+                case 10:
+                    incomes.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.OCTOBER);
+                    break;
+                case 11:
+                    incomes.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.NOVEMBER);
+                    break;
+                case 12:
+                    incomes.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.DECEMBER);
                     break;
                 default:
                     break;
