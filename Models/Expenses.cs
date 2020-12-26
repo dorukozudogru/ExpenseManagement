@@ -34,24 +34,25 @@ namespace ExpenseManagement.Models
         public int SectorId { get; set; }
         public virtual Sectors Sector { get; set; }
 
+        [ForeignKey(nameof(Supplier))]
+        public int SupplierId { get; set; }
+        public virtual Suppliers Supplier { get; set; }
+
         [Required]
-        [DisplayName("Fatura Tanımı")]
+        [DisplayName("Gider Tanımı")]
         public string Definition { get; set; }
 
-        [Required]
-        [DisplayName("Fatura Tarihi")]
-        public DateTime Date { get; set; }
+        [DisplayName("Gider Tarihi")]
+        public DateTime? Date { get; set; }
 
         [DisplayName("Son Ödeme Tarihi")]
-        public DateTime LastPaymentDate { get; set; }
+        public DateTime? LastPaymentDate { get; set; }
 
-        [Required]
         [DisplayName("Tutar")]
-        public double Amount { get; set; }
+        public double? Amount { get; set; }
 
-        [Required]
         [DisplayName("Tutar Dövizi")]
-        public byte AmountCurrency { get; set; }
+        public byte? AmountCurrency { get; set; }
 
         [NotMapped]
         [DisplayName("Tutar Dövizi")]
@@ -69,13 +70,11 @@ namespace ExpenseManagement.Models
             GBP = 3
         }
 
-        [Required]
         [DisplayName("KDV")]
-        public double TAX { get; set; }
+        public double? TAX { get; set; }
 
-        [Required]
         [DisplayName("KDV Dövizi")]
-        public double TAXCurrency { get; set; }
+        public double? TAXCurrency { get; set; }
 
         [NotMapped]
         [DisplayName("KDV Dövizi")]
@@ -112,17 +111,17 @@ namespace ExpenseManagement.Models
 
         #region ForSalary
         [DisplayName("Ay")]
-        public byte Month { get; set; }
+        public byte? Month { get; set; }
 
         [NotMapped]
         [DisplayName("Ay")]
         public string MonthName { get; set; }
 
         [DisplayName("Net Tutar")]
-        public double SalaryAmount { get; set; }
+        public double? SalaryAmount { get; set; }
 
         [DisplayName("Net Tutar Dövizi")]
-        public byte SalaryAmountCurrency { get; set; }
+        public byte? SalaryAmountCurrency { get; set; }
 
         [NotMapped]
         [DisplayName("Net Tutar Dövizi")]

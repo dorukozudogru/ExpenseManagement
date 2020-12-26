@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseManagement.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    [Migration("20201219224507_todolists2")]
-    partial class todolists2
+    [Migration("20201226231346_updates")]
+    partial class updates
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -178,6 +178,38 @@ namespace ExpenseManagement.Migrations
                     b.ToTable("BankVaults");
                 });
 
+            modelBuilder.Entity("ExpenseManagement.Models.CarBrands", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CarBrands");
+                });
+
+            modelBuilder.Entity("ExpenseManagement.Models.CarModels", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CarBrandId");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarBrandId");
+
+                    b.ToTable("CarModels");
+                });
+
             modelBuilder.Entity("ExpenseManagement.Models.Endorsements", b =>
                 {
                     b.Property<int>("Id")
@@ -207,36 +239,48 @@ namespace ExpenseManagement.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("Amount");
+                    b.Property<double?>("Amount");
 
-                    b.Property<byte>("AmountCurrency");
+                    b.Property<byte?>("AmountCurrency");
 
                     b.Property<DateTime>("CreatedAt");
 
                     b.Property<string>("CreatedBy");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime?>("Date");
 
                     b.Property<string>("Definition")
                         .IsRequired();
+
+                    b.Property<byte>("ExpenseType");
 
                     b.Property<byte[]>("InvoiceImage");
 
                     b.Property<string>("InvoiceImageFormat");
 
-                    b.Property<DateTime>("LastPaymentDate");
+                    b.Property<DateTime?>("LastPaymentDate");
+
+                    b.Property<byte?>("Month");
+
+                    b.Property<double?>("SalaryAmount");
+
+                    b.Property<byte?>("SalaryAmountCurrency");
 
                     b.Property<int>("SectorId");
 
                     b.Property<int>("State");
 
-                    b.Property<double>("TAX");
+                    b.Property<int>("SupplierId");
 
-                    b.Property<double>("TAXCurrency");
+                    b.Property<double?>("TAX");
+
+                    b.Property<double?>("TAXCurrency");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SectorId");
+
+                    b.HasIndex("SupplierId");
 
                     b.ToTable("Expenses");
                 });
@@ -255,14 +299,14 @@ namespace ExpenseManagement.Migrations
 
                     b.Property<string>("CreatedBy");
 
-                    b.Property<DateTime>("Date");
-
                     b.Property<string>("Definition")
                         .IsRequired();
 
                     b.Property<byte[]>("InvoiceImage");
 
                     b.Property<string>("InvoiceImageFormat");
+
+                    b.Property<byte>("Month");
 
                     b.Property<int>("SectorId");
 
@@ -293,6 +337,20 @@ namespace ExpenseManagement.Migrations
                     b.ToTable("Sectors");
                 });
 
+            modelBuilder.Entity("ExpenseManagement.Models.Suppliers", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Suppliers");
+                });
+
             modelBuilder.Entity("ExpenseManagement.Models.ToDoLists", b =>
                 {
                     b.Property<int>("Id")
@@ -321,6 +379,34 @@ namespace ExpenseManagement.Migrations
                     b.HasIndex("SectorId");
 
                     b.ToTable("ToDoLists");
+                });
+
+            modelBuilder.Entity("ExpenseManagement.Models.VehiclePurchases", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CarModelId");
+
+                    b.Property<string>("Chassis")
+                        .IsRequired();
+
+                    b.Property<bool>("IsSold");
+
+                    b.Property<double>("PurchaseAmount");
+
+                    b.Property<DateTime>("PurchaseDate");
+
+                    b.Property<double?>("SaleAmount");
+
+                    b.Property<DateTime?>("SaleDate");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarModelId");
+
+                    b.ToTable("VehiclePurchases");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -422,6 +508,14 @@ namespace ExpenseManagement.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("ExpenseManagement.Models.CarModels", b =>
+                {
+                    b.HasOne("ExpenseManagement.Models.CarBrands", "CarBrand")
+                        .WithMany()
+                        .HasForeignKey("CarBrandId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("ExpenseManagement.Models.Endorsements", b =>
                 {
                     b.HasOne("ExpenseManagement.Models.Sectors", "Sector")
@@ -435,6 +529,11 @@ namespace ExpenseManagement.Migrations
                     b.HasOne("ExpenseManagement.Models.Sectors", "Sector")
                         .WithMany()
                         .HasForeignKey("SectorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ExpenseManagement.Models.Suppliers", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -451,6 +550,14 @@ namespace ExpenseManagement.Migrations
                     b.HasOne("ExpenseManagement.Models.Sectors", "Sector")
                         .WithMany()
                         .HasForeignKey("SectorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ExpenseManagement.Models.VehiclePurchases", b =>
+                {
+                    b.HasOne("ExpenseManagement.Models.CarModels", "CarModel")
+                        .WithMany("VehiclePurchases")
+                        .HasForeignKey("CarModelId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

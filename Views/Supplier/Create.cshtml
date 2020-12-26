@@ -1,7 +1,7 @@
-﻿@model ExpenseManagement.Models.CarBrands
+﻿@model ExpenseManagement.Models.Suppliers
 
 @{
-    ViewData["Title"] = "Marka Ekle";
+    ViewData["Title"] = "Satıcı/Tedarikçi Ekle";
 }
 
 <section class="content">
@@ -11,7 +11,7 @@
                 <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
-                            <i class="fa fa-plus"></i>&nbsp;Marka Ekle
+                            <i class="fa fa-plus"></i>&nbsp;Satıcı/Tedarikçi Ekle
                         </h5>
                     </div>
                     <div class="card-body">
@@ -20,7 +20,7 @@
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 <div class="form-group">
                                     <label asp-for="Name" class="control-label"></label>
-                                    <input asp-for="Name" class="form-control" id="carBrandName" />
+                                    <input asp-for="Name" class="form-control" id="name" />
                                     <span asp-validation-for="Name" class="text-danger"></span>
                                 </div>
                             </div>
@@ -28,7 +28,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="form-group">
-                            <input type="submit" value="Ekle" class="btn btn-success" onclick="addBrand()" />
+                            <input type="submit" value="Ekle" class="btn btn-success" onclick="add()" />
                             <a class="btn btn-primary" asp-action="Index" style="margin-right: 5px;">
                                 <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                             </a>
@@ -41,12 +41,12 @@
 </section>
 
 <script>
-    var carBrandName;
+    var name;
 
-    function addBrand() {
-        carBrandName = document.getElementById("carBrandName").value;
+    function add() {
+        name = document.getElementById("name").value;
         $.ajax({
-            url: '/CarBrand/Create?carBrands.Name=' + carBrandName,
+            url: '/Supplier/Create?suppliers.Name=' + name,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

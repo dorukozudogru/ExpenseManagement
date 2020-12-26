@@ -237,15 +237,15 @@ namespace ExpenseManagement.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("Amount");
+                    b.Property<double?>("Amount");
 
-                    b.Property<byte>("AmountCurrency");
+                    b.Property<byte?>("AmountCurrency");
 
                     b.Property<DateTime>("CreatedAt");
 
                     b.Property<string>("CreatedBy");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime?>("Date");
 
                     b.Property<string>("Definition")
                         .IsRequired();
@@ -256,19 +256,29 @@ namespace ExpenseManagement.Migrations
 
                     b.Property<string>("InvoiceImageFormat");
 
-                    b.Property<DateTime>("LastPaymentDate");
+                    b.Property<DateTime?>("LastPaymentDate");
+
+                    b.Property<byte?>("Month");
+
+                    b.Property<double?>("SalaryAmount");
+
+                    b.Property<byte?>("SalaryAmountCurrency");
 
                     b.Property<int>("SectorId");
 
                     b.Property<int>("State");
 
-                    b.Property<double>("TAX");
+                    b.Property<int>("SupplierId");
 
-                    b.Property<double>("TAXCurrency");
+                    b.Property<double?>("TAX");
+
+                    b.Property<double?>("TAXCurrency");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SectorId");
+
+                    b.HasIndex("SupplierId");
 
                     b.ToTable("Expenses");
                 });
@@ -323,6 +333,20 @@ namespace ExpenseManagement.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Sectors");
+                });
+
+            modelBuilder.Entity("ExpenseManagement.Models.Suppliers", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Suppliers");
                 });
 
             modelBuilder.Entity("ExpenseManagement.Models.ToDoLists", b =>
@@ -503,6 +527,11 @@ namespace ExpenseManagement.Migrations
                     b.HasOne("ExpenseManagement.Models.Sectors", "Sector")
                         .WithMany()
                         .HasForeignKey("SectorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ExpenseManagement.Models.Suppliers", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

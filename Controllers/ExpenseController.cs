@@ -31,12 +31,52 @@ namespace ExpenseManagement.Controllers
             return View();
         }
 
+        public IActionResult Salary()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> SalaryPost()
+        {
+            var requestFormData = Request.Form;
+
+            var expenseContext = await _context.Expenses
+                .Where(e => e.ExpenseType == 2)
+                .Include(e => e.Sector)
+                .AsNoTracking()
+                .ToListAsync();
+
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe")
+            {
+                expenseContext = expenseContext
+                    .Where(e => e.CreatedBy == GetLoggedUserId())
+                    .ToList();
+            }
+
+            expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
+
+            List<Expenses> listItems = ProcessCollection(expenseContext, requestFormData);
+
+            var response = new PaginatedResponse<Expenses>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = expenseContext.Count,
+                RecordsTotal = expenseContext.Count
+            };
+
+            return Ok(response);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post()
         {
             var requestFormData = Request.Form;
 
             var expenseContext = await _context.Expenses
+                .Where(e => e.ExpenseType != 2)
                 .Include(e => e.Sector)
                 .AsNoTracking()
                 .ToListAsync();
@@ -116,11 +156,12 @@ namespace ExpenseManagement.Controllers
         public IActionResult Create()
         {
             ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name");
+            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Name");
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,ExpenseType,SectorId,Date,LastPaymentDate,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Expenses expenses)
+        public async Task<IActionResult> Create(Expenses expenses)
         {
             if (ModelState.IsValid)
             {
@@ -178,7 +219,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ExpenseType,SectorId,Date,LastPaymentDate,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Expenses expenses)
+        public async Task<IActionResult> Edit(int id, Expenses expenses)
         {
             var expense = await _context.Expenses.FindAsync(id);
 

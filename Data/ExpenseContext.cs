@@ -108,5 +108,7 @@ namespace ExpenseManagement.Data
         public DbSet<CarModels> CarModels { get; set; }
 
         public DbSet<VehiclePurchases> VehiclePurchases { get; set; }
+
+        public DbSet<Suppliers> Suppliers { get; set; }
     }
 }

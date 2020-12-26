@@ -151,34 +151,34 @@ namespace ExpenseManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> MontlyExpensesReport()
         {
-            var requestFormData = Request.Form;
+            //var requestFormData = Request.Form;
 
-            var expenses = await _context.Expenses
-                .Where(i => i.Date.Month >= DateTime.Now.AddMonths(-2).Month)
-                .GroupBy(i => new
-                {
-                    i.Date.Month
-                })
-                .Select(i => new GeneralResponse
-                {
-                    Month = i.Key.Month,
-                    Count = i.Count(),
-                    TotalAmount = i.Sum(x => x.Amount),
-                    TotalAmountCurrency = "₺"
-                })
-                .ToListAsync();
+            //var expenses = await _context.Expenses
+            //    .Where(i => i.Date.Month >= DateTime.Now.AddMonths(-2).Month)
+            //    .GroupBy(i => new
+            //    {
+            //        i.Date.Month
+            //    })
+            //    .Select(i => new GeneralResponse
+            //    {
+            //        Month = i.Key.Month,
+            //        Count = i.Count(),
+            //        TotalAmount = i.Sum(x => x.Amount),
+            //        TotalAmountCurrency = "₺"
+            //    })
+            //    .ToListAsync();
 
-            expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
+            //expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
 
-            var response = new PaginatedResponse<GeneralResponse>
-            {
-                Data = expenses,
-                Draw = int.Parse(requestFormData["draw"]),
-                RecordsFiltered = expenses.Count,
-                RecordsTotal = expenses.Count
-            };
+            //var response = new PaginatedResponse<GeneralResponse>
+            //{
+            //    Data = expenses,
+            //    Draw = int.Parse(requestFormData["draw"]),
+            //    RecordsFiltered = expenses.Count,
+            //    RecordsTotal = expenses.Count
+            //};
 
-            return Ok(response);
+            return Ok(/*response*/);
         }
 
         [HttpPost]
@@ -219,7 +219,7 @@ namespace ExpenseManagement.Controllers
         {
             return Ok(new List<int>
             {
-                _context.Expenses.Where(i => i.Date.ToShortDateString() == DateTime.Now.ToShortDateString()).Count()
+                //_context.Expenses.Where(i => i.Date.ToShortDateString() == DateTime.Now.ToShortDateString()).Count()
                 //_context.Incomes.Where(i => i.Date.ToShortDateString() == DateTime.Now.ToShortDateString()).Count()
             });
         }

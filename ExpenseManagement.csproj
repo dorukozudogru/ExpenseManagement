@@ -8,6 +8,18 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200701195354_first.cs" />
     <Compile Remove="Migrations\20200701195354_first.Designer.cs" />
+    <Compile Remove="Migrations\20201226215845_test2.cs" />
+    <Compile Remove="Migrations\20201226215845_test2.Designer.cs" />
+    <Compile Remove="Migrations\20201226220036_test2.cs" />
+    <Compile Remove="Migrations\20201226220036_test2.Designer.cs" />
+    <Compile Remove="Migrations\20201226220449_test2.cs" />
+    <Compile Remove="Migrations\20201226220449_test2.Designer.cs" />
+    <Compile Remove="Migrations\20201226220856_asdasd.cs" />
+    <Compile Remove="Migrations\20201226220856_asdasd.Designer.cs" />
+    <Compile Remove="Migrations\20201226221025_hello_world.cs" />
+    <Compile Remove="Migrations\20201226221025_hello_world.Designer.cs" />
+    <Compile Remove="Migrations\20201226221314_first-installation.cs" />
+    <Compile Remove="Migrations\20201226221314_first-installation.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

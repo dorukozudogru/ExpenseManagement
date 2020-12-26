@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseManagement.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    [Migration("20201220003024_car-brand-and-model3")]
-    partial class carbrandandmodel3
+    [Migration("20201226221837_first-installation")]
+    partial class firstinstallation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -239,32 +239,40 @@ namespace ExpenseManagement.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("Amount");
+                    b.Property<double?>("Amount");
 
-                    b.Property<byte>("AmountCurrency");
+                    b.Property<byte?>("AmountCurrency");
 
                     b.Property<DateTime>("CreatedAt");
 
                     b.Property<string>("CreatedBy");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime?>("Date");
 
                     b.Property<string>("Definition")
                         .IsRequired();
+
+                    b.Property<byte>("ExpenseType");
 
                     b.Property<byte[]>("InvoiceImage");
 
                     b.Property<string>("InvoiceImageFormat");
 
-                    b.Property<DateTime>("LastPaymentDate");
+                    b.Property<DateTime?>("LastPaymentDate");
+
+                    b.Property<byte?>("Month");
+
+                    b.Property<double?>("SalaryAmount");
+
+                    b.Property<byte?>("SalaryAmountCurrency");
 
                     b.Property<int>("SectorId");
 
                     b.Property<int>("State");
 
-                    b.Property<double>("TAX");
+                    b.Property<double?>("TAX");
 
-                    b.Property<double>("TAXCurrency");
+                    b.Property<double?>("TAXCurrency");
 
                     b.HasKey("Id");
 
@@ -287,14 +295,14 @@ namespace ExpenseManagement.Migrations
 
                     b.Property<string>("CreatedBy");
 
-                    b.Property<DateTime>("Date");
-
                     b.Property<string>("Definition")
                         .IsRequired();
 
                     b.Property<byte[]>("InvoiceImage");
 
                     b.Property<string>("InvoiceImageFormat");
+
+                    b.Property<byte>("Month");
 
                     b.Property<int>("SectorId");
 
@@ -366,13 +374,15 @@ namespace ExpenseManagement.Migrations
                     b.Property<string>("Chassis")
                         .IsRequired();
 
+                    b.Property<bool>("IsSold");
+
                     b.Property<double>("PurchaseAmount");
 
                     b.Property<DateTime>("PurchaseDate");
 
-                    b.Property<byte>("SaleAmount");
+                    b.Property<double?>("SaleAmount");
 
-                    b.Property<DateTime>("SaleDate");
+                    b.Property<DateTime?>("SaleDate");
 
                     b.HasKey("Id");
 
