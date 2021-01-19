@@ -25,19 +25,13 @@
                             <address>
                                 @Html.DisplayNameFor(model => model.CarModel.CarBrand.Name): <strong>@Html.DisplayFor(model => model.CarModel.CarBrand.Name)</strong><br>
                                 @Html.DisplayNameFor(model => model.CarModel.Name): <strong>@Html.DisplayFor(model => model.CarModel.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.IsNew): <strong>@Html.DisplayFor(model => model.IsNew)</strong><br>
+                                @Html.DisplayNameFor(model => model.IsSold): <strong>@Html.DisplayFor(model => model.IsSold)</strong><br>
                                 @Html.DisplayNameFor(model => model.Chassis): <strong>@Html.DisplayFor(model => model.Chassis)</strong><br>
-                                @Html.DisplayNameFor(model => model.PurchaseAmount) : <strong>@Html.DisplayFor(model => model.PurchaseAmount) ₺</strong><br>
-                                @Html.DisplayNameFor(model => model.SaleAmount): <strong>@Html.DisplayFor(model => model.SaleAmount) ₺</strong><br>
+                                @Html.DisplayNameFor(model => model.PurchaseAmount) : <strong>@Html.DisplayFor(model => model.PurchaseAmount) @Html.DisplayFor(model => model.PurchaseAmountCurrencyName)</strong><br>
+                                @Html.DisplayNameFor(model => model.SaleAmount): <strong>@Html.DisplayFor(model => model.SaleAmount) @Html.DisplayFor(model => model.SaleAmountCurrencyName)</strong><br>
                             </address>
                         </div>
-                        @*<div class="col-sm-4 invoice-col">
-                                <address>
-                                    @Html.DisplayNameFor(model => model.CreatedAt): <strong>@Html.DisplayFor(model => model.CreatedAt)</strong><br>
-                                    @Html.DisplayNameFor(model => model.CreatedBy): <strong>@Html.DisplayFor(model => model.CreatedBy)</strong><br>
-                                    @Html.DisplayNameFor(model => model.UpdatedAt): <strong>@Html.DisplayFor(model => model.UpdatedAt)</strong><br>
-                                    @Html.DisplayNameFor(model => model.UpdatedBy): <strong>@Html.DisplayFor(model => model.UpdatedBy)</strong><br>
-                                </address>
-                            </div>*@
                     </div>
                     <hr />
                     <div class="row no-print">

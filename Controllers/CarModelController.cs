@@ -102,10 +102,10 @@ namespace ExpenseManagement.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var hasAnyInsurance = await _context.VehiclePurchases
+            var hasAnyVehiclePurchases = await _context.VehiclePurchases
                 .FirstOrDefaultAsync(m => m.CarModelId == id);
 
-            if (hasAnyInsurance == null)
+            if (hasAnyVehiclePurchases == null)
             {
                 var carModels = await _context.CarModels.FindAsync(id);
                 _context.Remove(carModels);

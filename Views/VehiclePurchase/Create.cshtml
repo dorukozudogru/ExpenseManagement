@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="card card-secondary">
+                <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
                             <i class="fas fa-plus"></i>&nbsp;Araç Alımı Ekle
@@ -27,6 +27,17 @@
                                     <label asp-for="CarModel.Name" class="control-label"></label>
                                     <select id="Model" asp-for="CarModel.Name" class="form-control"></select>
                                     <span asp-validation-for="CarModel.Name" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" asp-for="IsNew"></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <input type="checkbox" asp-for="IsNew" id="isNew">
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" disabled>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" asp-for="IsSold"></label>
@@ -68,20 +79,24 @@
                                     <span asp-validation-for="Chassis" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="PurchaseAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fa fa-try"></i></span>
+                                    <label asp-for="PurchaseAmount" class="control-label"></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select asp-for="PurchaseAmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="purchaseAmountCurrency"></select>
+                                        </div>
                                         <input asp-for="PurchaseAmount" class="form-control" autocomplete="off" id="purchaseAmount" />
+                                        <span asp-validation-for="PurchaseAmount" class="text-danger"></span>
                                     </div>
-                                    <span asp-validation-for="PurchaseAmount" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="SaleAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fa fa-try"></i></span>
+                                    <label asp-for="SaleAmount" class="control-label"></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select asp-for="SaleAmountCurrency" class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="saleAmountCurrency"></select>
+                                        </div>
                                         <input asp-for="SaleAmount" class="form-control" autocomplete="off" id="saleAmount" type="text" disabled />
+                                        <span asp-validation-for="SaleAmount" class="text-danger"></span>
                                     </div>
-                                    <span asp-validation-for="SaleAmount" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -105,6 +120,8 @@
         <script>
             function brandLoad() {
                 $('#Brand').html('');
+                $("#isNew").attr('value', 'false');
+                $("#isSold").attr('value', 'false');
                 $.getJSON('@Url.Action("GetCarBrands", "CarBrand")', function (result) {
                     for (var i = 0; i < result.length; i++) {
                         $("#Brand").append("<option id='" + result[i].id + "'>" + result[i].name + "</option>")
@@ -134,12 +151,21 @@
                     $(this).attr('value', 'true');
                     $('#datepicker2').removeAttr('disabled');
                     $('#saleAmount').removeAttr('disabled');
+                    $('#saleAmountCurrency').removeAttr('disabled');
                 } else {
                     $(this).attr('value', 'false');
                     $('#datepicker2').attr('disabled', 'disabled');
                     $('#saleAmount').attr('disabled', 'disabled');
+                    $('#saleAmountCurrency').attr('disabled', 'disabled');
                     $('#datepicker2').val('');
                     $('#saleAmount').val('');
+                }
+            });
+            $("#isNew").on('change', function () {
+                if ($(this).is(':checked')) {
+                    $(this).attr('value', 'true');
+                } else {
+                    $(this).attr('value', 'false');
                 }
             });
         </script>
@@ -147,20 +173,28 @@
             function createVehiclePurchase() {
                 var Brand = document.getElementById("Brand").value;
                 var Model = document.getElementById("Model").value;
+                var IsNew = document.getElementById("isNew").value;
+                var IsSold = document.getElementById("isSold").value;
                 var PurchaseDate = document.getElementById("datepicker").value;
                 var SaleDate = document.getElementById("datepicker2").value;
                 var Chassis = document.getElementById("chassis").value;
                 var PurchaseAmount = document.getElementById("purchaseAmount").value;
+                var PurchaseAmountCurrency = document.getElementById("purchaseAmountCurrency").value;
                 var SaleAmount = document.getElementById("saleAmount").value;
+                var SaleAmountCurrency = document.getElementById("saleAmountCurrency").value;
 
                 var data = new FormData();
 
                 data.append('CarModel.Name', Model);
+                data.append('IsNew', IsNew);
+                data.append('IsSold', IsSold);
                 data.append('PurchaseDate', PurchaseDate);
                 data.append('SaleDate', SaleDate);
                 data.append('Chassis', Chassis);
                 data.append('PurchaseAmount', PurchaseAmount);
+                data.append('PurchaseAmountCurrency', PurchaseAmountCurrency);
                 data.append('SaleAmount', SaleAmount);
+                data.append('SaleAmountCurrency', SaleAmountCurrency);
 
                 $("#createButton").attr("disabled", true);
 

@@ -20,6 +20,12 @@
     <Compile Remove="Migrations\20201226221025_hello_world.Designer.cs" />
     <Compile Remove="Migrations\20201226221314_first-installation.cs" />
     <Compile Remove="Migrations\20201226221314_first-installation.Designer.cs" />
+    <Compile Remove="Migrations\20201227205751_first-installation.cs" />
+    <Compile Remove="Migrations\20201227205751_first-installation.Designer.cs" />
+    <Compile Remove="Migrations\20201227210314_first-installation.cs" />
+    <Compile Remove="Migrations\20201227210314_first-installation.Designer.cs" />
+    <Compile Remove="Migrations\20210102151126_test.cs" />
+    <Compile Remove="Migrations\20210102151126_test.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

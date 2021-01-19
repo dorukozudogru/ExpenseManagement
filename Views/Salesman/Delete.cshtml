@@ -1,7 +1,7 @@
-﻿@model ExpenseManagement.Models.Suppliers
+﻿@model ExpenseManagement.Models.Salesmans
 
 @{
-    ViewData["Title"] = "Satıcıyı/Tedarikçiyi Sil";
+    ViewData["Title"] = "Danışmanı Sil";
 }
 
 <section class="content">
@@ -9,9 +9,9 @@
         <div class="row">
             <div class="col-12">
                 <div class="callout callout-danger">
-                    <h4>Bu satıcıyı/tedarikçiyi silmek istediğinizden emin misiniz?</h4>
+                    <h4>Bu danışmanı silmek istediğinizden emin misiniz?</h4>
                     <p>
-                        Bu satıcıyı/tedarikçiyi silerseniz işlemi geriye alamayacaksınız.
+                        Bu danışmanı silerseniz işlemi geriye alamayacaksınız.
                     </p>
                 </div>
                 <div class="invoice p-3 mb-3">
@@ -46,7 +46,7 @@
     function deleted() {
         id = document.getElementById("id").value;
         $.ajax({
-            url: '/Supplier/Delete?id=' + id,
+            url: '/Salesman/Delete?id=' + id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

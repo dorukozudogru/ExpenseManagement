@@ -35,7 +35,7 @@ namespace ExpenseManagement.Models
         public virtual Sectors Sector { get; set; }
 
         [ForeignKey(nameof(Supplier))]
-        public int SupplierId { get; set; }
+        public int? SupplierId { get; set; }
         public virtual Suppliers Supplier { get; set; }
 
         [Required]

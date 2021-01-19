@@ -7,6 +7,198 @@ namespace ExpenseManagement.Helpers
 {
     public static class GetAllEnumNamesHelper
     {
+        public static List<VehiclePurchases> GetEnumName(List<VehiclePurchases> vehiclePurchases)
+        {
+            foreach (var vehiclePurchase in vehiclePurchases)
+            {
+                if (vehiclePurchase.SaleAmountCurrency == 0)
+                {
+                    vehiclePurchase.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                }
+                if (vehiclePurchase.SaleAmountCurrency == 1)
+                {
+                    vehiclePurchase.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                }
+                if (vehiclePurchase.SaleAmountCurrency == 2)
+                {
+                    vehiclePurchase.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                }
+                if (vehiclePurchase.SaleAmountCurrency == 3)
+                {
+                    vehiclePurchase.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                }
+
+                if (vehiclePurchase.PurchaseAmountCurrency == 0)
+                {
+                    vehiclePurchase.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                }
+                if (vehiclePurchase.PurchaseAmountCurrency == 1)
+                {
+                    vehiclePurchase.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                }
+                if (vehiclePurchase.PurchaseAmountCurrency == 2)
+                {
+                    vehiclePurchase.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                }
+                if (vehiclePurchase.PurchaseAmountCurrency == 3)
+                {
+                    vehiclePurchase.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                }
+            }
+            return vehiclePurchases;
+        }
+
+        public static VehiclePurchases GetEnumName(VehiclePurchases vehiclePurchases)
+        {
+            if (vehiclePurchases.SaleAmountCurrency == 0)
+            {
+                vehiclePurchases.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+            }
+            if (vehiclePurchases.SaleAmountCurrency == 1)
+            {
+                vehiclePurchases.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+            }
+            if (vehiclePurchases.SaleAmountCurrency == 2)
+            {
+                vehiclePurchases.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+            }
+            if (vehiclePurchases.SaleAmountCurrency == 3)
+            {
+                vehiclePurchases.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+            }
+
+            if (vehiclePurchases.PurchaseAmountCurrency == 0)
+            {
+                vehiclePurchases.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+            }
+            if (vehiclePurchases.PurchaseAmountCurrency == 1)
+            {
+                vehiclePurchases.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+            }
+            if (vehiclePurchases.PurchaseAmountCurrency == 2)
+            {
+                vehiclePurchases.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+            }
+            if (vehiclePurchases.PurchaseAmountCurrency == 3)
+            {
+                vehiclePurchases.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+            }
+            return vehiclePurchases;
+        }
+
+        public static List<NewVehicleSales> GetEnumName(List<NewVehicleSales> newVehicleSales)
+        {
+            foreach (var newVehicleSale in newVehicleSales)
+            {
+                if (newVehicleSale.SaleAmountCurrency == 0)
+                {
+                    newVehicleSale.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                }
+                if (newVehicleSale.SaleAmountCurrency == 1)
+                {
+                    newVehicleSale.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                }
+                if (newVehicleSale.SaleAmountCurrency == 2)
+                {
+                    newVehicleSale.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                }
+                if (newVehicleSale.SaleAmountCurrency == 3)
+                {
+                    newVehicleSale.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                }
+
+                if (newVehicleSale.VehicleCostCurrency == 0)
+                {
+                    newVehicleSale.VehicleCostCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                }
+                if (newVehicleSale.VehicleCostCurrency == 1)
+                {
+                    newVehicleSale.VehicleCostCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                }
+                if (newVehicleSale.VehicleCostCurrency == 2)
+                {
+                    newVehicleSale.VehicleCostCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                }
+                if (newVehicleSale.VehicleCostCurrency == 3)
+                {
+                    newVehicleSale.VehicleCostCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                }
+
+                if (newVehicleSale.SalesmanBonusCurrency == 0)
+                {
+                    newVehicleSale.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                }
+                if (newVehicleSale.SalesmanBonusCurrency == 1)
+                {
+                    newVehicleSale.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                }
+                if (newVehicleSale.SalesmanBonusCurrency == 2)
+                {
+                    newVehicleSale.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                }
+                if (newVehicleSale.SalesmanBonusCurrency == 3)
+                {
+                    newVehicleSale.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                }
+            }
+            return newVehicleSales;
+        }
+
+        public static NewVehicleSales GetEnumName(NewVehicleSales newVehicleSales)
+        {
+            if (newVehicleSales.SaleAmountCurrency == 0)
+            {
+                newVehicleSales.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+            }
+            if (newVehicleSales.SaleAmountCurrency == 1)
+            {
+                newVehicleSales.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+            }
+            if (newVehicleSales.SaleAmountCurrency == 2)
+            {
+                newVehicleSales.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+            }
+            if (newVehicleSales.SaleAmountCurrency == 3)
+            {
+                newVehicleSales.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+            }
+
+            if (newVehicleSales.VehicleCostCurrency == 0)
+            {
+                newVehicleSales.VehicleCostCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+            }
+            if (newVehicleSales.VehicleCostCurrency == 1)
+            {
+                newVehicleSales.VehicleCostCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+            }
+            if (newVehicleSales.VehicleCostCurrency == 2)
+            {
+                newVehicleSales.VehicleCostCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+            }
+            if (newVehicleSales.VehicleCostCurrency == 3)
+            {
+                newVehicleSales.VehicleCostCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+            }
+
+            if (newVehicleSales.SalesmanBonusCurrency == 0)
+            {
+                newVehicleSales.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+            }
+            if (newVehicleSales.SalesmanBonusCurrency == 1)
+            {
+                newVehicleSales.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+            }
+            if (newVehicleSales.SalesmanBonusCurrency == 2)
+            {
+                newVehicleSales.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+            }
+            if (newVehicleSales.SalesmanBonusCurrency == 3)
+            {
+                newVehicleSales.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+            }
+            return newVehicleSales;
+        }
+
         public static List<ToDoLists> GetEnumName(List<ToDoLists> lists)
         {
             foreach (var list in lists)

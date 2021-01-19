@@ -109,6 +109,19 @@ namespace ExpenseManagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Salesmans",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Salesmans", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Sectors",
                 columns: table => new
                 {
@@ -119,6 +132,19 @@ namespace ExpenseManagement.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sectors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Suppliers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Suppliers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -299,41 +325,6 @@ namespace ExpenseManagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Expenses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ExpenseType = table.Column<byte>(nullable: false),
-                    SectorId = table.Column<int>(nullable: false),
-                    Definition = table.Column<string>(nullable: false),
-                    Date = table.Column<DateTime>(nullable: true),
-                    LastPaymentDate = table.Column<DateTime>(nullable: true),
-                    Amount = table.Column<double>(nullable: true),
-                    AmountCurrency = table.Column<byte>(nullable: true),
-                    TAX = table.Column<double>(nullable: true),
-                    TAXCurrency = table.Column<double>(nullable: true),
-                    InvoiceImage = table.Column<byte[]>(nullable: true),
-                    InvoiceImageFormat = table.Column<string>(nullable: true),
-                    State = table.Column<int>(nullable: false),
-                    Month = table.Column<byte>(nullable: true),
-                    SalaryAmount = table.Column<double>(nullable: true),
-                    SalaryAmountCurrency = table.Column<byte>(nullable: true),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Expenses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Expenses_Sectors_SectorId",
-                        column: x => x.SectorId,
-                        principalTable: "Sectors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Incomes",
                 columns: table => new
                 {
@@ -390,6 +381,48 @@ namespace ExpenseManagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Expenses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ExpenseType = table.Column<byte>(nullable: false),
+                    SectorId = table.Column<int>(nullable: false),
+                    SupplierId = table.Column<int>(nullable: true),
+                    Definition = table.Column<string>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: true),
+                    LastPaymentDate = table.Column<DateTime>(nullable: true),
+                    Amount = table.Column<double>(nullable: true),
+                    AmountCurrency = table.Column<byte>(nullable: true),
+                    TAX = table.Column<double>(nullable: true),
+                    TAXCurrency = table.Column<double>(nullable: true),
+                    InvoiceImage = table.Column<byte[]>(nullable: true),
+                    InvoiceImageFormat = table.Column<string>(nullable: true),
+                    State = table.Column<int>(nullable: false),
+                    Month = table.Column<byte>(nullable: true),
+                    SalaryAmount = table.Column<double>(nullable: true),
+                    SalaryAmountCurrency = table.Column<byte>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Expenses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Expenses_Sectors_SectorId",
+                        column: x => x.SectorId,
+                        principalTable: "Sectors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Expenses_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalTable: "Suppliers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "VehiclePurchases",
                 columns: table => new
                 {
@@ -410,6 +443,88 @@ namespace ExpenseManagement.Migrations
                         name: "FK_VehiclePurchases_CarModels_CarModelId",
                         column: x => x.CarModelId,
                         principalTable: "CarModels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NewVehicleSales",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    VehiclePurchaseId = table.Column<int>(nullable: false),
+                    SalesmanId = table.Column<int>(nullable: false),
+                    SaleAmount = table.Column<double>(nullable: false),
+                    SaleAmountCurrency = table.Column<byte>(nullable: false),
+                    PurchaseDate = table.Column<DateTime>(nullable: false),
+                    SaleDate = table.Column<DateTime>(nullable: false),
+                    VehicleCost = table.Column<double>(nullable: false),
+                    VehicleCostCurrency = table.Column<byte>(nullable: false),
+                    SalesmanBonus = table.Column<double>(nullable: false),
+                    SalesmanBonusCurrency = table.Column<byte>(nullable: false),
+                    WarrantyPlus = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NewVehicleSales", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NewVehicleSales_Salesmans_SalesmanId",
+                        column: x => x.SalesmanId,
+                        principalTable: "Salesmans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_NewVehicleSales_VehiclePurchases_VehiclePurchaseId",
+                        column: x => x.VehiclePurchaseId,
+                        principalTable: "VehiclePurchases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UsedVehicleSales",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    VehiclePurchaseId = table.Column<int>(nullable: false),
+                    LicencePlate = table.Column<string>(nullable: false),
+                    KM = table.Column<string>(nullable: false),
+                    PurchaseDate = table.Column<DateTime>(nullable: false),
+                    SaleDate = table.Column<DateTime>(nullable: false),
+                    PurchasedSalesmanId = table.Column<int>(nullable: false),
+                    SoldSalesmanId = table.Column<int>(nullable: true),
+                    PurchaseAmount = table.Column<double>(nullable: false),
+                    PurchaseAmountCurrency = table.Column<byte>(nullable: false),
+                    SaleAmount = table.Column<double>(nullable: false),
+                    SaleAmountCurrency = table.Column<byte>(nullable: false),
+                    PurchasedSalesmanBonus = table.Column<double>(nullable: false),
+                    PurchasedSalesmanBonusCurrency = table.Column<byte>(nullable: false),
+                    SoldSalesmanBonus = table.Column<double>(nullable: false),
+                    SoldSalesmanBonusCurrency = table.Column<byte>(nullable: false),
+                    Description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsedVehicleSales", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UsedVehicleSales_Salesmans_PurchasedSalesmanId",
+                        column: x => x.PurchasedSalesmanId,
+                        principalTable: "Salesmans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UsedVehicleSales_Salesmans_SoldSalesmanId",
+                        column: x => x.SoldSalesmanId,
+                        principalTable: "Salesmans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UsedVehicleSales_VehiclePurchases_VehiclePurchaseId",
+                        column: x => x.VehiclePurchaseId,
+                        principalTable: "VehiclePurchases",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -479,14 +594,44 @@ namespace ExpenseManagement.Migrations
                 column: "SectorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Expenses_SupplierId",
+                table: "Expenses",
+                column: "SupplierId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Incomes_SectorId",
                 table: "Incomes",
                 column: "SectorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_NewVehicleSales_SalesmanId",
+                table: "NewVehicleSales",
+                column: "SalesmanId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NewVehicleSales_VehiclePurchaseId",
+                table: "NewVehicleSales",
+                column: "VehiclePurchaseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ToDoLists_SectorId",
                 table: "ToDoLists",
                 column: "SectorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsedVehicleSales_PurchasedSalesmanId",
+                table: "UsedVehicleSales",
+                column: "PurchasedSalesmanId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsedVehicleSales_SoldSalesmanId",
+                table: "UsedVehicleSales",
+                column: "SoldSalesmanId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsedVehicleSales_VehiclePurchaseId",
+                table: "UsedVehicleSales",
+                column: "VehiclePurchaseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VehiclePurchases_CarModelId",
@@ -527,10 +672,13 @@ namespace ExpenseManagement.Migrations
                 name: "Incomes");
 
             migrationBuilder.DropTable(
+                name: "NewVehicleSales");
+
+            migrationBuilder.DropTable(
                 name: "ToDoLists");
 
             migrationBuilder.DropTable(
-                name: "VehiclePurchases");
+                name: "UsedVehicleSales");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -545,7 +693,16 @@ namespace ExpenseManagement.Migrations
                 name: "BankBranches");
 
             migrationBuilder.DropTable(
+                name: "Suppliers");
+
+            migrationBuilder.DropTable(
                 name: "Sectors");
+
+            migrationBuilder.DropTable(
+                name: "Salesmans");
+
+            migrationBuilder.DropTable(
+                name: "VehiclePurchases");
 
             migrationBuilder.DropTable(
                 name: "CarModels");

@@ -110,5 +110,11 @@ namespace ExpenseManagement.Data
         public DbSet<VehiclePurchases> VehiclePurchases { get; set; }
 
         public DbSet<Suppliers> Suppliers { get; set; }
+
+        public DbSet<Salesmans> Salesmans { get; set; }
+
+        public DbSet<NewVehicleSales> NewVehicleSales { get; set; }
+
+        public DbSet<UsedVehicleSales> UsedVehicleSales { get; set; }
     }
 }

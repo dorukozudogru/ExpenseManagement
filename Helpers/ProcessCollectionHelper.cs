@@ -396,17 +396,80 @@ namespace ExpenseManagement.Helpers
                         {
                             if (sortDirection == "asc")
                             {
-                                return lstElements.Where(l => l.Chassis.ToString().Contains(searchValue)
+                                return lstElements.Where(l => l.Chassis.ToUpper().Contains(searchValue)
+                                || l.CarModel.Name.ToUpper().Contains(searchValue)
+                                || l.CarModel.CarBrand.Name.ToUpper().Contains(searchValue)
                                 || l.PurchaseDate.ToString().Contains(searchValue)
                                 || l.Id.ToString().Contains(searchValue)
                                 || l.SaleDate.ToString().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                             }
                             else
                             {
-                                return lstElements.Where(l => l.Chassis.ToString().Contains(searchValue)
+                                return lstElements.Where(l => l.Chassis.ToUpper().Contains(searchValue)
+                                || l.CarModel.Name.ToUpper().Contains(searchValue)
+                                || l.CarModel.CarBrand.Name.ToUpper().Contains(searchValue)
                                 || l.PurchaseDate.ToString().Contains(searchValue)
                                 || l.Id.ToString().Contains(searchValue)
                                 || l.SaleDate.ToString().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                        }
+                        else
+                        {
+                            if (sortDirection == "asc")
+                            {
+                                return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                            else
+                            {
+                                return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return lstElements;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static List<NewVehicleSales> ProcessCollection(List<NewVehicleSales> lstElements, IFormCollection requestFormData)
+        {
+            var skip = Convert.ToInt32(requestFormData["start"].ToString());
+            var pageSize = Convert.ToInt32(requestFormData["length"].ToString());
+            Microsoft.Extensions.Primitives.StringValues tempOrder = new[] { "" };
+
+            if (requestFormData.TryGetValue("order[0][column]", out tempOrder))
+            {
+                var columnIndex = requestFormData["order[0][column]"].ToString();
+                var sortDirection = requestFormData["order[0][dir]"].ToString();
+                tempOrder = new[] { "" };
+                if (requestFormData.TryGetValue($"columns[{columnIndex}][data]", out tempOrder))
+                {
+                    var columnName = requestFormData[$"columns[{columnIndex}][data]"].ToString();
+                    string searchValue = requestFormData["search[value]"].ToString().ToUpper();
+
+                    if (pageSize > 0)
+                    {
+                        var prop = GetNewVehicleSalesProperty(columnName);
+                        if (!string.IsNullOrEmpty(searchValue))
+                        {
+                            if (sortDirection == "asc")
+                            {
+                                return lstElements.Where(l => l.VehiclePurchase.Chassis.ToUpper().Contains(searchValue)
+                                || l.VehiclePurchase.CarModel.CarBrand.Name.ToUpper().Contains(searchValue)
+                                || l.VehiclePurchase.CarModel.Name.ToUpper().Contains(searchValue)
+                                || l.Salesman.Name.ToUpper().Contains(searchValue)
+                                || l.Id.ToString().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList(); ;
+                            }
+                            else
+                            {
+                                return lstElements.Where(l => l.VehiclePurchase.Chassis.ToUpper().ToString().Contains(searchValue)
+                                || l.VehiclePurchase.CarModel.CarBrand.Name.ToUpper().ToString().Contains(searchValue)
+                                || l.VehiclePurchase.CarModel.Name.ToUpper().ToString().Contains(searchValue)
+                                || l.Salesman.Name.ToUpper().Contains(searchValue)
+                                || l.Id.ToString().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                             }
                         }
                         else
@@ -538,6 +601,21 @@ namespace ExpenseManagement.Helpers
         private static PropertyInfo GetVehicleProperty(string name)
         {
             var properties = typeof(VehiclePurchases).GetProperties();
+            PropertyInfo prop = null;
+            foreach (var item in properties)
+            {
+                if (item.Name.ToLowerInvariant().Equals(name.ToLowerInvariant()))
+                {
+                    prop = item;
+                    break;
+                }
+            }
+            return prop;
+        }
+
+        private static PropertyInfo GetNewVehicleSalesProperty(string name)
+        {
+            var properties = typeof(NewVehicleSales).GetProperties();
             PropertyInfo prop = null;
             foreach (var item in properties)
             {

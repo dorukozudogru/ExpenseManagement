@@ -82,12 +82,12 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="New" asp-action="Index">
+                                    <a class="nav-link" asp-controller="NewVehicleSale" asp-action="Index">
                                         <i class="far fa-circle nav-icon text-warning"></i><p>Sıfır Araç Satışı</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Used" asp-action="Index">
+                                    <a class="nav-link" asp-controller="UsedVehicleSale" asp-action="Index">
                                         <i class="far fa-circle nav-icon text-warning"></i><p>2. El Araç Satışı</p>
                                     </a>
                                 </li>
@@ -181,6 +181,11 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Salesman" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-warning"></i><p>Danışman Listesi</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link" asp-controller="AccountType" asp-action="Index">
                                         <i class="far fa-circle nav-icon text-warning"></i><p>Hesap Türleri</p>
                                     </a>
@@ -203,41 +208,41 @@
                             </ul>
                         </li>
                         @*<li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-chart-line"></i>
-                <p>
-                    Raporlar
-                    <i class="fas fa-angle-left right"></i>
-                </p>
-            </a>
-            <ul class="nav nav-treeview">
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Report" asp-action="ProfitReport">
-                        <i class="far fa-circle nav-icon text-info"></i><p>Şirket Bazlı Kâr Raporu</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Report" asp-action="ProfitReportWithInsurancePolicyType">
-                        <i class="far fa-circle nav-icon text-info"></i><p>Poliçe Tipi Bazlı Kâr Rap.</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Report" asp-action="AllProfitReport">
-                        <i class="far fa-circle nav-icon text-info"></i><p>Kâr Raporu</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Report" asp-action="GeneralInsuranceReport">
-                        <i class="far fa-circle nav-icon text-info"></i><p>Genel Rapor</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Report" asp-action="InsurancePaymentTypeReport">
-                        <i class="far fa-circle nav-icon text-info"></i><p>Ödeme Şekli Raporu</p>
-                    </a>
-                </li>
-            </ul>
-        </li>*@
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-chart-line"></i>
+                                    <p>
+                                        Raporlar
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Report" asp-action="ProfitReport">
+                                            <i class="far fa-circle nav-icon text-info"></i><p>Şirket Bazlı Kâr Raporu</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Report" asp-action="ProfitReportWithInsurancePolicyType">
+                                            <i class="far fa-circle nav-icon text-info"></i><p>Poliçe Tipi Bazlı Kâr Rap.</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Report" asp-action="AllProfitReport">
+                                            <i class="far fa-circle nav-icon text-info"></i><p>Kâr Raporu</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Report" asp-action="GeneralInsuranceReport">
+                                            <i class="far fa-circle nav-icon text-info"></i><p>Genel Rapor</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Report" asp-action="InsurancePaymentTypeReport">
+                                            <i class="far fa-circle nav-icon text-info"></i><p>Ödeme Şekli Raporu</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>*@
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-tools"></i>
@@ -277,6 +282,9 @@
             </div>
             <button type="button" class="btn btn-success swalDefaultSuccess" hidden id="swalDefaultSuccess">
             </button>
+            <button type="button" class="btn btn-danger swalDefaultWarning" hidden id="swalDefaultWarning">
+            </button>
+            <input id="warningSuccessMessage" hidden />
             <button type="button" class="btn btn-danger swalDefaultError" hidden id="swalDefaultError">
             </button>
             @RenderBody()
@@ -343,6 +351,32 @@
                 title: document.getElementById("swalDefaultSuccess").value,
                 showConfirmButton: false,
                 timer: 1500
+            })
+        });
+
+        $('.swalDefaultWarning').click(function () {
+            Swal.fire({
+                title: 'Emin misiniz?',
+                text: document.getElementById("swalDefaultWarning").value,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: document.getElementById("warningSuccessMessage").value,
+                cancelButtonText: 'Geri Dön'
+            }).then((result) => {
+                if (result.dismiss == "cancel") {
+                    window.history.back();
+                }
+                if (result.value && document.getElementById("warningSuccessMessage").value == "Devam Et") {
+                    Swal.fire({
+                        title: 'Unutmayın!',
+                        text: 'Alış tarihinde yapacağınız değişiklik satış kaydını da etkileyecektir.',
+                        icon: 'warning',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: "Anladım!"
+                    })
+                }
             })
         });
 

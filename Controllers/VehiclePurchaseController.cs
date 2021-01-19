@@ -9,6 +9,7 @@ using ExpenseManagement.Data;
 using ExpenseManagement.Models;
 using Microsoft.AspNetCore.Authorization;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
+using ExpenseManagement.Helpers;
 
 namespace ExpenseManagement.Controllers
 {
@@ -38,6 +39,8 @@ namespace ExpenseManagement.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
+            vehiclePurchaseContext = GetAllEnumNamesHelper.GetEnumName(vehiclePurchaseContext);
+
             List<VehiclePurchases> listItems = ProcessCollection(vehiclePurchaseContext, requestFormData);
 
             var response = new PaginatedResponse<VehiclePurchases>
@@ -58,17 +61,19 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            var vehichelPurchases = await _context.VehiclePurchases
+            var vehiclePurchases = await _context.VehiclePurchases
                 .Include(c => c.CarModel)
                 .Include(cb => cb.CarModel.CarBrand)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (vehichelPurchases == null)
+            vehiclePurchases = GetAllEnumNamesHelper.GetEnumName(vehiclePurchases);
+
+            if (vehiclePurchases == null)
             {
                 return View("Error");
             }
 
-            return View(vehichelPurchases);
+            return View(vehiclePurchases);
         }
 
         public IActionResult Create()
@@ -77,7 +82,6 @@ namespace ExpenseManagement.Controllers
             return View();
         }
 
-        //Sale'ler boş olacak şekilde yap!
         [HttpPost]
         public async Task<IActionResult> Create(VehiclePurchases vehiclePurchases)
         {
@@ -108,17 +112,17 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            var insurance = await _context.VehiclePurchases
+            var vehiclePurchases = await _context.VehiclePurchases
                 .Include(c => c.CarModel)
                 .Include(cb => cb.CarModel.CarBrand)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (insurance == null)
+            if (vehiclePurchases == null)
             {
                 return View("Error");
             }
 
-            return Ok(insurance);
+            return Ok(vehiclePurchases);
         }
 
         [HttpPost]
@@ -129,17 +133,28 @@ namespace ExpenseManagement.Controllers
                 .Include(cb => cb.CarModel.CarBrand)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
+            var newVehicleSale = await _context.NewVehicleSales.FirstOrDefaultAsync(nvs => nvs.VehiclePurchaseId == id);
+
             if (vehiclePurchase != null)
             {
                 if (ModelState.IsValid)
                 {
+                    if (newVehicleSale != null)
+                    {
+                        newVehicleSale.PurchaseDate = vehiclePurchases.PurchaseDate;
+                        _context.Update(newVehicleSale);
+                    }
+
                     vehiclePurchase.CarModelId = _context.CarModels.FirstOrDefault(x => x.Name == vehiclePurchases.CarModel.Name).Id;
+                    vehiclePurchase.IsNew = vehiclePurchases.IsNew;
                     vehiclePurchase.IsSold = vehiclePurchases.IsSold;
                     vehiclePurchase.PurchaseDate = vehiclePurchases.PurchaseDate;
                     vehiclePurchase.SaleDate = vehiclePurchases.SaleDate;
                     vehiclePurchase.Chassis = vehiclePurchases.Chassis;
                     vehiclePurchase.PurchaseAmount = vehiclePurchases.PurchaseAmount;
+                    vehiclePurchase.PurchaseAmountCurrency = vehiclePurchases.PurchaseAmountCurrency;
                     vehiclePurchase.SaleAmount = vehiclePurchases.SaleAmount;
+                    vehiclePurchase.SaleAmountCurrency = vehiclePurchases.SaleAmountCurrency;
 
                     _context.Update(vehiclePurchase);
                     await _context.SaveChangesAsync();
@@ -162,6 +177,9 @@ namespace ExpenseManagement.Controllers
                 .Include(c => c.CarModel)
                 .Include(cb => cb.CarModel.CarBrand)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            vehiclePurchases = GetAllEnumNamesHelper.GetEnumName(vehiclePurchases);
+
             if (vehiclePurchases == null)
             {
                 return NotFound();
@@ -173,16 +191,17 @@ namespace ExpenseManagement.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var vehiclePurchases = await _context.VehiclePurchases.FindAsync(id);
+            var hasAnyNewVehicleSales = await _context.NewVehicleSales
+                .FirstOrDefaultAsync(m => m.VehiclePurchaseId == id);
 
-            if (vehiclePurchases != null)
+            if (hasAnyNewVehicleSales == null)
             {
+                var vehiclePurchases = await _context.VehiclePurchases.FindAsync(id);
                 _context.VehiclePurchases.Remove(vehiclePurchases);
-
                 await _context.SaveChangesAsync();
                 return Ok(new { Result = true, Message = "Araç Alımı Silinmiştir!" });
             }
-            return BadRequest("Araç Alımı Silinirken Bir Hata Oluştu!");
+            return BadRequest("Araç Satışı Bulunduğundan Dolayı Silinemez!");
         }
 
         private bool VehiclePurchasesExists(int id)
