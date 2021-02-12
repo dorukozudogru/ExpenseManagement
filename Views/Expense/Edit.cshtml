@@ -20,6 +20,10 @@
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 <input type="hidden" asp-for="Id" id="id" />
                                 <div class="form-group">
+                                    <label asp-for="ExpenseType" class="control-label"></label>
+                                    <select asp-for="ExpenseType" class="form-control" asp-items="@Html.GetEnumSelectList<Expenses.ExpenseTypeEnum>()" id="expenseType"></select>
+                                </div>
+                                <div class="form-group">
                                     <label asp-for="Sector.Name" class="control-label"></label>
                                     <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
                                 </div>
@@ -32,6 +36,17 @@
                                             </span>
                                         </div>
                                         <input asp-for="Date" type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="LastPaymentDate" class="control-label"></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input asp-for="LastPaymentDate" type="text" class="form-control float-right" id="datepicker2" autocomplete="off" />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -89,6 +104,13 @@
                                         }
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <label asp-for="Month" class="control-label"></label>
+                                    <select asp-for="Month" class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -132,6 +154,7 @@
     var id;
     var sectorId;
     var date;
+    var lastPaymentDate;
     var definition;
     var amount;
     var amountCurrency;
@@ -141,6 +164,7 @@
     function update() {
         sectorId = document.getElementById("sectorId").value;
         date = document.getElementById("datepicker").value;
+        lastPaymentDate = document.getElementById("datepicker2").value;
         definition = document.getElementById("definition").value;
         amount = document.getElementById("amount").value;
         amountCurrency = document.getElementById("amountCurrency").value;
@@ -158,6 +182,7 @@
 
         data.append('sectorId', sectorId);
         data.append('date', date);
+        data.append('lastPaymentDate', lastPaymentDate);
         data.append('definition', definition);
         data.append('amount', amount);
         data.append('amountCurrency', amountCurrency);

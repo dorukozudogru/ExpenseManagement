@@ -9,46 +9,11 @@
                 <div class="info-box mb-3 bg-danger">
                     <span class="info-box-icon"><i class="fas fa-credit-card"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">@DateTime.Now.ToShortDateString() Tarihli Girilen Gider Sayısı</span>
-                        <span class="info-box-number" id="dailyExpenseCount"></span>
+                        <span class="info-box-text">@DateTime.Now.ToString("MMMM") Ayında Girilen Gider Sayısı</span>
+                        <span class="info-box-number" id="monthlyExpenseCount"></span>
                     </div>
                 </div>
-                <div class="card card-primary">
-                    <div class="card-header border-0">
-                        <h3 class="card-title"><i class="nav-icon fas fa-hand-holding-usd"></i>&nbsp;&nbsp;Toplam Ciro</h3>
-                        <div class="card-tools">
-                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive p-0">
-                            <table id="endorsementTable" class="table table-striped table-valign-middle">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            Sektör/İş Kolu
-                                        </th>
-                                        <th>
-                                            Yıl
-                                        </th>
-                                        <th>
-                                            Miktar
-                                        </th>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th></th>
-                                        <th>Genel Toplam:</th>
-                                        <th id="totalAmount"></th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="card card-primary">
+                <div class="card card-danger">
                     <div class="card-header border-0">
                         <h3 class="card-title"><i class="nav-icon fas fa-credit-card"></i>&nbsp;&nbsp;Son 3 Ayda Sisteme Eklenen Gider Sayısı</h3>
                         <div class="card-tools">
@@ -79,11 +44,11 @@
                 <div class="info-box mb-3 bg-success">
                     <span class="info-box-icon"><i class="fas fa-coins"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">@DateTime.Now.ToShortDateString() Tarihli Girilen Gelir Sayısı</span>
-                        <span class="info-box-number" id="dailyIncomeCount"></span>
+                        <span class="info-box-text">@DateTime.Now.ToString("MMMM") Ayında Girilen Gelir Sayısı</span>
+                        <span class="info-box-number" id="monthlyIncomeCount"></span>
                     </div>
                 </div>
-                <div class="card card-primary">
+                @*<div class="card card-primary">
                     <div class="card-header border-0">
                         <h3 class="card-title"><i class="nav-icon fas fa-university"></i>&nbsp;&nbsp;Banka</h3>
                         <div class="card-tools">
@@ -95,8 +60,8 @@
                     <div class="card-body">
                         <canvas id="pieChart" style="min-height: 305px; height: 305px; max-height: 305px; max-width: 100%;"></canvas>
                     </div>
-                </div>
-                <div class="card card-primary">
+                </div>*@
+                <div class="card card-success">
                     <div class="card-header border-0">
                         <h3 class="card-title"><i class="nav-icon fas fa-coins"></i>&nbsp;&nbsp;Son 3 Ayda Sisteme Eklenen Gelir Sayısı</h3>
                         <div class="card-tools">
@@ -135,146 +100,84 @@
     <script>
         (function () {
             $.ajax({
-                "url": "/Report/CumulatedTotalEndorsementReport",
+                "url": "/Report/MonthlyCountReport",
                 "method": "POST"
             }).done(function (response) {
-                $('#totalAmount').html(response[0]);
+                $('#monthlyExpenseCount').html(response[0]);
+                $('#monthlyIncomeCount').html(response[1]);
             });
 
-            $.ajax({
-                "url": "/Report/DailyCountReport",
-                "method": "POST"
-            }).done(function (response) {
-                $('#dailyExpenseCount').html(response[0]);
-                $('#dailyIncomeCount').html(response[1]);
-            });
+            //$.ajax({
+            //    url: "/Report/BankReport",
+            //    dataType: "json",
+            //    type: "POST",
+            //    contentType: "application/json; charset=utf-8",
+            //    success: function (data) {
+            //        var amountCurrency = [];
 
-            $("#endorsementTable").DataTable({
-                "language": {
-                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
-                    zeroRecords: "Hiçbir kayıt bulunamadı.",
-                    emptyTable: "Kayıt bulunmamaktadır.",
-                    search: "Ara:",
-                    oPaginate: {
-                        "sFirst": "İlk",
-                        "sLast": "Son",
-                        "sNext": "Sonraki",
-                        "sPrevious": "Önceki"
-                    },
-                    sLengthMenu: "_MENU_ adet kayıt getir",
-                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
-                },
-                "processing": true,
-                "serverSide": true,
-                "searchDelay": 1200,
-                "stateSave": true,
-                "lengthChange": false,
-                "searching": false,
-                "stateDuration": -1,
-                "ajax": {
-                    "url": "/Report/CumulatedEndorsementReport",
-                    "method": "POST",
-                    "error": function (error) {
-                        $('#endorsementTable tbody')
-                            .empty()
-                            .append('<tr><td colspan="3" class="dataTables_empty">Kayıt Bulunmamaktadır.</td></tr>')
-                    }
-                },
-                "destroy": true,
-                "columns": [
-                    {
-                        "data": "sectorName",
-                        "orderable": false
-                    },
-                    {
-                        "data": "year",
-                        "orderable": false
-                    },
-                    {
-                        "data": "totalAmount",
-                        "render": function (data, type, full, meta) {
-                            return full.totalAmount + " " + full.currency;
-                        },
-                        "orderable": false
-                    }
-                ],
-                "ordering": true,
-                "paging": true,
-                "pagingType": "simple_numbers",
-                "pageLength": 3
-            });
+            //        $.each(data, function (index, value) {
+            //            amountCurrency.push([value.amountCurrencyName]);
+            //        });
 
-            $.ajax({
-                url: "/Report/BankReport",
-                dataType: "json",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                success: function (data) {
-                    var amountCurrency = [];
+            //        var totalAmount = [];
 
-                    $.each(data, function (index, value) {
-                        amountCurrency.push([value.amountCurrencyName]);
-                    });
+            //        $.each(data, function (index, value) {
+            //            totalAmount.push([value.totalAmount]);
+            //        });
 
-                    var totalAmount = [];
+            //        var backgroundColor = ['#dc3545', '#ff851b', '#001f3f', '#007bff', '#3d9970', '#343a40'];
 
-                    $.each(data, function (index, value) {
-                        totalAmount.push([value.totalAmount]);
-                    });
-
-                    var backgroundColor = ['#dc3545', '#ff851b', '#001f3f', '#007bff', '#3d9970', '#343a40'];
-
-                    var donutData = {
-                        labels:
-                            $.each(amountCurrency, function (index, value) {
-                                value;
-                            }),
-                        datasets: [
-                            {
-                                data: $.each(totalAmount, function (index, value) {
-                                    totalAmount;
-                                }),
-                                backgroundColor: $.each(backgroundColor, function (index, value) {
-                                    backgroundColor
-                                }),
-                            }
-                        ]
-                    }
-                    var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-                    var pieData = donutData;
-                    var pieOptions = {
-                        maintainAspectRatio: false,
-                        responsive: true,
-                    }
-                    var pieChart = new Chart(pieChartCanvas, {
-                        type: 'pie',
-                        data: pieData,
-                        options: pieOptions
-                    })
-                },
-                error: function (error) {
-                    var donutData = {
-                        labels: ['Kayıt Bulunmamaktadır.'],
-                        datasets: [
-                            {
-                                data: [100],
-                                backgroundColor: ['#dc3545'],
-                            }
-                        ]
-                    }
-                    var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-                    var pieData = donutData;
-                    var pieOptions = {
-                        maintainAspectRatio: false,
-                        responsive: true,
-                    }
-                    var pieChart = new Chart(pieChartCanvas, {
-                        type: 'pie',
-                        data: pieData,
-                        options: pieOptions
-                    })
-                }
-            })
+            //        var donutData = {
+            //            labels:
+            //                $.each(amountCurrency, function (index, value) {
+            //                    value;
+            //                }),
+            //            datasets: [
+            //                {
+            //                    data: $.each(totalAmount, function (index, value) {
+            //                        totalAmount;
+            //                    }),
+            //                    backgroundColor: $.each(backgroundColor, function (index, value) {
+            //                        backgroundColor
+            //                    }),
+            //                }
+            //            ]
+            //        }
+            //        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+            //        var pieData = donutData;
+            //        var pieOptions = {
+            //            maintainAspectRatio: false,
+            //            responsive: true,
+            //        }
+            //        var pieChart = new Chart(pieChartCanvas, {
+            //            type: 'pie',
+            //            data: pieData,
+            //            options: pieOptions
+            //        })
+            //    },
+            //    error: function (error) {
+            //        var donutData = {
+            //            labels: ['Kayıt Bulunmamaktadır.'],
+            //            datasets: [
+            //                {
+            //                    data: [100],
+            //                    backgroundColor: ['#dc3545'],
+            //                }
+            //            ]
+            //        }
+            //        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+            //        var pieData = donutData;
+            //        var pieOptions = {
+            //            maintainAspectRatio: false,
+            //            responsive: true,
+            //        }
+            //        var pieChart = new Chart(pieChartCanvas, {
+            //            type: 'pie',
+            //            data: pieData,
+            //            options: pieOptions
+            //        })
+            //    }
+            //})
 
             $("#generalTable").DataTable({
                 "language": {
@@ -321,7 +224,7 @@
                     {
                         "data": "totalAmount",
                         "render": function (data, type, full, meta) {
-                            return full.totalAmount + " " + full.totalAmountCurrency;
+                            return full.totalAmount + " " + full.totalAmountCurrencyName;
                         },
                         "orderable": false
                     }

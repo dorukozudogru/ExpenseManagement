@@ -28,7 +28,7 @@
                                                 @Html.DisplayNameFor(model => model.Sector.Name)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.Date)
+                                                @Html.DisplayNameFor(model => model.MonthName)
                                             </th>
                                             <th>
                                                 @Html.DisplayNameFor(model => model.Definition)
@@ -85,12 +85,7 @@
                         "data": "sector.name",
                         "orderable": false
                     },
-                    {
-                        "data": "date",
-                        render: function (data, type, row) {
-                            return window.moment(data).format("DD-MMMM-YYYY");
-                        }
-                    },
+                    { "data": "monthName" },
                     { "data": "definition" },
                     {
                         "data": "amount",

@@ -1,0 +1,144 @@
+﻿@model IEnumerable<ExpenseManagement.Models.DepositAccounts>
+
+@{
+    ViewData["Title"] = "Vadeli Hesaplar";
+    Layout = "_BankLayout";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-credit-card"></i>&nbsp;Vadeli Hesaplar
+                            <a class="btn btn-light text-primary btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="card-body">
+                                <table id="ItemsTable" class="table table-bordered table-striped" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Id)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.BankBranch.Name)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Amount)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.DayOfDeposit)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Interest)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Profit)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.StartDate)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.FinishDate)
+                                            </th>
+                                            <th>İşlemler</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script>
+        (function () {
+            var generateCustomerTable = $("#ItemsTable").DataTable({
+                "language": {
+                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                    zeroRecords: "Hiçbir kayıt bulunamadı.",
+                    emptyTable: "Kayıt bulunmamaktadır.",
+                    search: "Ara:",
+                    oPaginate: {
+                        "sFirst": "İlk",
+                        "sLast": "Son",
+                        "sNext": "Sonraki",
+                        "sPrevious": "Önceki"
+                    },
+                    sLengthMenu: "_MENU_ adet kayıt getir",
+                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                },
+                "processing": true,
+                "serverSide": true,
+                "searchDelay": 1200,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "url": "/DepositAccount/Post",
+                    "method": "POST"
+                },
+                "columns": [
+                    { "data": "id" },
+                    {
+                        "data": "bankBranch.name",
+                        "orderable": false
+                    },
+                    {
+                        "data": "amount",
+                        "render": function (data, type, full, meta) {
+                            return full.amount + " " + full.amountCurrencyName;
+                        }
+                    },
+                    {
+                        "data": "dayOfDeposit",
+                        "orderable": false
+                    },
+                    {
+                        "data": "interest",
+                        "orderable": false,
+                        "render": function (data, type, full, meta) {
+                            return "%" + full.interest;
+                        }
+                    },
+                     {
+                        "data": "profit",
+                        "render": function (data, type, full, meta) {
+                            return full.profit + " " + full.profitCurrencyName;
+                        }
+                    },
+                    {
+                        "data": "startDate",
+                        render: function (data, type, row) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                    },
+                    {
+                        "data": "finishDate",
+                        render: function (data, type, row) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                    },
+                    {
+                        "data": "actionId", render: function (data, type, row) {
+                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="DepositAccount/Edit/' + row.id + '">Güncelle</a><a class="dropdown-item" href="DepositAccount/Delete/' + row.id + '">Sil</a></ul></div>'
+                        },
+                        "orderable": false
+                    }
+                ],
+                "ordering": true,
+                "paging": true,
+                "pagingType": "simple_numbers",
+                "pageLength": 100
+            });
+        })(jQuery);
+    </script>
+}

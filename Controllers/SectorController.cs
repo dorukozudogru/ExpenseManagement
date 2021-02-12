@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ExpenseManagement.Controllers
 {
-    [Authorize(Roles = ("Admin, Muhasebe"))]
+    [Authorize]
     public class SectorController : Controller
     {
         private readonly ExpenseContext _context;
@@ -102,10 +102,7 @@ namespace ExpenseManagement.Controllers
             var hasAnyExpense = await _context.Expenses
                 .FirstOrDefaultAsync(m => m.SectorId == id);
 
-            var hasAnyEndorsement = await _context.Endorsements
-                .FirstOrDefaultAsync(m => m.SectorId == id);
-
-            if (hasAnyIncome == null && hasAnyExpense == null && hasAnyEndorsement == null)
+            if (hasAnyIncome == null && hasAnyExpense == null)
             {
                 var sectors = await _context.Sectors.FindAsync(id);
                 _context.Sectors.Remove(sectors);

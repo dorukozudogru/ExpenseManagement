@@ -12,7 +12,7 @@ using ExpenseManagement.Data;
 
 namespace ExpenseManagement.Controllers
 {
-    [Authorize(Roles = ("Admin, Muhasebe"))]
+    [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
     public class AuditController : Controller
     {
         private readonly ExpenseContext _context;

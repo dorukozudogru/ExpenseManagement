@@ -89,14 +89,32 @@ namespace ExpenseManagement.Data
 
         public DbSet<AccountTypes> AccountTypes { get; set; }
 
-        public DbSet<Banks> Banks { get; set; }
-
-        public DbSet<Endorsements> Endorsements { get; set; }
+        public DbSet<BankVaults> BankVaults { get; set; }
 
         public DbSet<Expenses> Expenses { get; set; }
 
         public DbSet<Incomes> Incomes { get; set; }
 
         public DbSet<Sectors> Sectors { get; set; }
+
+        public DbSet<BankBranches> BankBranches { get; set; }
+
+        public DbSet<ToDoLists> ToDoLists { get; set; }
+
+        public DbSet<CarBrands> CarBrands { get; set; }
+
+        public DbSet<CarModels> CarModels { get; set; }
+
+        public DbSet<VehiclePurchases> VehiclePurchases { get; set; }
+
+        public DbSet<Suppliers> Suppliers { get; set; }
+
+        public DbSet<Salesmans> Salesmans { get; set; }
+
+        public DbSet<NewVehicleSales> NewVehicleSales { get; set; }
+
+        public DbSet<UsedVehicleSales> UsedVehicleSales { get; set; }
+
+        public DbSet<DepositAccounts> DepositAccounts { get; set; }
     }
 }

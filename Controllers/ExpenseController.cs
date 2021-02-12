@@ -31,17 +31,58 @@ namespace ExpenseManagement.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public IActionResult Salary()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public async Task<IActionResult> SalaryPost()
+        {
+            var requestFormData = Request.Form;
+
+            var expenseContext = await _context.Expenses
+                .Where(e => e.ExpenseType == 2)
+                .Include(e => e.Sector)
+                .AsNoTracking()
+                .ToListAsync();
+
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
+            {
+                expenseContext = expenseContext
+                    .Where(e => e.CreatedBy == GetLoggedUserId())
+                    .ToList();
+            }
+
+            expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
+
+            List<Expenses> listItems = ProcessCollection(expenseContext, requestFormData);
+
+            var response = new PaginatedResponse<Expenses>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = expenseContext.Count,
+                RecordsTotal = expenseContext.Count
+            };
+
+            return Ok(response);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post()
         {
             var requestFormData = Request.Form;
 
             var expenseContext = await _context.Expenses
+                .Where(e => e.ExpenseType != 2)
                 .Include(e => e.Sector)
                 .AsNoTracking()
                 .ToListAsync();
 
-            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe")
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
             {
                 expenseContext = expenseContext
                     .Where(e => e.CreatedBy == GetLoggedUserId())
@@ -81,7 +122,7 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || expenses.CreatedBy == GetLoggedUserId())
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || expenses.CreatedBy == GetLoggedUserId())
             {
                 return View(expenses);
             }
@@ -106,7 +147,7 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || expenses.CreatedBy == GetLoggedUserId())
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || expenses.CreatedBy == GetLoggedUserId())
             {
                 return View(expenses);
             }
@@ -116,11 +157,12 @@ namespace ExpenseManagement.Controllers
         public IActionResult Create()
         {
             ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name");
+            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Name");
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,SectorId,Date,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Expenses expenses)
+        public async Task<IActionResult> Create(Expenses expenses)
         {
             if (ModelState.IsValid)
             {
@@ -170,7 +212,7 @@ namespace ExpenseManagement.Controllers
             }
             ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name", expenses.SectorId);
 
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || expenses.CreatedBy == GetLoggedUserId())
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || expenses.CreatedBy == GetLoggedUserId())
             {
                 return View(expenses);
             }
@@ -178,7 +220,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Date,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Expenses expenses)
+        public async Task<IActionResult> Edit(int id, Expenses expenses)
         {
             var expense = await _context.Expenses.FindAsync(id);
 
@@ -207,6 +249,7 @@ namespace ExpenseManagement.Controllers
 
                     expense.SectorId = expenses.SectorId;
                     expense.Date = expenses.Date;
+                    expense.LastPaymentDate = expenses.LastPaymentDate;
                     expense.Definition = expenses.Definition;
                     expense.Amount = expenses.Amount;
                     expense.AmountCurrency = expenses.AmountCurrency;
@@ -240,7 +283,7 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || expenses.CreatedBy == GetLoggedUserId())
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || expenses.CreatedBy == GetLoggedUserId())
             {
                 return View(expenses);
             }

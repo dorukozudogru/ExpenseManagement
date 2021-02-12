@@ -1,0 +1,222 @@
+﻿@model ExpenseManagement.Models.NewVehicleSales
+
+@{
+    ViewData["Title"] = "Sıfır Araç Satışını Güncelle";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Sıfır Araç Satışını Güncelle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input asp-for="Id" class="form-control" id="id" hidden />
+                                <div class="form-group">
+                                    <label asp-for="VehiclePurchase.CarModel.CarBrand.Name" class="control-label"></label>
+                                    <select asp-for="VehiclePurchase.CarModel.CarBrand.Id" class="form-control" style="width: 100%;" asp-items="@ViewBag.VehiclePurchaseCarBrandId" id="vehiclePurchaseCarBrandId" disabled></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="VehiclePurchase.CarModel.Name" class="control-label"></label>
+                                    <select asp-for="VehiclePurchase.CarModel.Id" class="form-control" style="width: 100%;" asp-items="@ViewBag.VehiclePurchaseCarModelId" id="vehiclePurchaseCarModelId" disabled></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="VehiclePurchaseId" class="control-label"></label>
+                                    <select asp-for="VehiclePurchaseId" class="form-control" style="width: 100%;" asp-items="@ViewBag.VehiclePurchaseId" id="vehiclePurchaseId" disabled></select>
+                                    <span asp-validation-for="VehiclePurchaseId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="SalesmanId" class="control-label"></label>
+                                    <select asp-for="SalesmanId" class="form-control" asp-items="ViewBag.SalesmanId" id="salesmanId"></select>
+                                    <span asp-validation-for="SalesmanId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="SaleAmount" class="control-label"></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select asp-for="SaleAmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="saleAmountCurrency"></select>
+                                        </div>
+                                        <input asp-for="SaleAmount" class="form-control" autocomplete="off" id="saleAmount" type="text" />
+                                        <span asp-validation-for="SaleAmount" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="PurchaseDate" class="control-label"></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input asp-for="PurchaseDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker" disabled />
+                                    </div>
+                                    <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="SaleDate" class="control-label"></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input asp-for="SaleDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker2" />
+                                    </div>
+                                    <span asp-validation-for="SaleDate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="VehicleCost" class="control-label"></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select asp-for="VehicleCostCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="vehicleCostCurrency"></select>
+                                        </div>
+                                        <input asp-for="VehicleCost" class="form-control" autocomplete="off" id="vehicleCost" />
+                                        <span asp-validation-for="VehicleCost" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="SalesmanBonus" class="control-label"></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select asp-for="SalesmanBonusCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="salesmanBonusCurrency"></select>
+                                        </div>
+                                        <input asp-for="SalesmanBonus" class="form-control" autocomplete="off" id="salesmanBonus" />
+                                        <span asp-validation-for="SalesmanBonus" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="WarrantyPlus" class="control-label"></label>
+                                    <input asp-for="WarrantyPlus" class="form-control" id="warrantyPlus" autocomplete="off" />
+                                    <span asp-validation-for="WarrantyPlus" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Description" class="control-label"></label>
+                                    <input asp-for="Description" class="form-control" id="description" autocomplete="off" />
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="updateNewVehicleSales()" id="updateButton" />
+                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.onload = function getVehiclePurchase() {
+        var id = '@Url.RouteUrl(ViewContext.RouteData.Values).Split("/").Last()';
+
+        $.ajax({
+            url: '/NewVehicleSale/EditPost?&id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                var start = new Date(returnvalue.purchaseDate);
+                var finish = new Date(returnvalue.saleDate);
+
+                var dayS = start.getDate();
+                var monthS = start.getMonth() + 1;
+                var yearS = start.getFullYear();
+                dayS = dayS < 10 ? "0" + dayS : dayS;
+                monthS = monthS < 10 ? "0" + monthS : monthS;
+
+                var dayF = finish.getDate();
+                var monthF = finish.getMonth() + 1;
+                var yearF = finish.getFullYear();
+                dayF = dayF < 10 ? "0" + dayF : dayF;
+                monthF = monthF < 10 ? "0" + monthF : monthF;
+
+                document.getElementById("id").value = returnvalue.id;
+                document.getElementById("vehiclePurchaseCarBrandId").value = returnvalue.vehiclePurchase.carModel.carBrand.id;
+                document.getElementById("vehiclePurchaseCarModelId").value = returnvalue.vehiclePurchase.carModel.id;
+                document.getElementById("vehiclePurchaseId").value = returnvalue.vehiclePurchaseId;
+                document.getElementById("salesmanId").value = returnvalue.salesmanId;
+                document.getElementById("saleAmount").value = returnvalue.saleAmount.toLocaleString("tr-TR");
+                document.getElementById("saleAmountCurrency").value = returnvalue.saleAmountCurrency;
+                document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;;
+                document.getElementById("datepicker2").value = yearF + "/" + monthF + "/" + dayF;
+                document.getElementById("vehicleCost").value = returnvalue.vehicleCost.toLocaleString("tr-TR");
+                document.getElementById("vehicleCostCurrency").value = returnvalue.vehicleCostCurrency;
+                document.getElementById("salesmanBonus").value = returnvalue.salesmanBonus.toLocaleString("tr-TR");
+                document.getElementById("salesmanBonusCurrency").value = returnvalue.salesmanBonusCurrency;
+                document.getElementById("warrantyPlus").value = returnvalue.warrantyPlus;
+                document.getElementById("description").value = returnvalue.description;
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = "Sıfır Araç Satışı Getirilirken Bir Hata Oluştu!";
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>
+<script>
+    function updateNewVehicleSales() {
+        var Id = document.getElementById("id").value;
+        var VehiclePurchaseId = document.getElementById("vehiclePurchaseId").value;
+        var SalesmanId = document.getElementById("salesmanId").value;
+        var SaleAmount = document.getElementById("saleAmount").value;
+        var SaleAmountCurrency = document.getElementById("saleAmountCurrency").value;
+        var PurchaseDate = document.getElementById("datepicker").value;
+        var SaleDate = document.getElementById("datepicker2").value;
+        var VehicleCost = document.getElementById("vehicleCost").value;
+        var VehicleCostCurrency = document.getElementById("vehicleCostCurrency").value;
+        var SalesmanBonus = document.getElementById("salesmanBonus").value;
+        var SalesmanBonusCurrency = document.getElementById("salesmanBonusCurrency").value;
+        var WarrantyPlus = document.getElementById("warrantyPlus").value;
+        var Description = document.getElementById("description").value;
+
+        var data = new FormData();
+
+        data.append('VehiclePurchaseId', VehiclePurchaseId);
+        data.append('SalesmanId', SalesmanId);
+        data.append('SaleAmount', SaleAmount);
+        data.append('SaleAmountCurrency', SaleAmountCurrency);
+        data.append('PurchaseDate', PurchaseDate);
+        data.append('SaleDate', SaleDate);
+        data.append('VehicleCost', VehicleCost);
+        data.append('VehicleCostCurrency', VehicleCostCurrency);
+        data.append('SalesmanBonus', SalesmanBonus);
+        data.append('SalesmanBonusCurrency', SalesmanBonusCurrency);
+        data.append('WarrantyPlus', WarrantyPlus);
+        data.append('Description', Description);
+
+        $("#updateButton").attr("disabled", true);
+
+        $.ajax({
+            url: '/NewVehicleSale/Edit?id=' + Id,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#updateButton").attr("disabled", false);
+                }, 1600);
+            }
+        });
+    }
+</script>

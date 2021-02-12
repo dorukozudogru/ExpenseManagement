@@ -35,9 +35,11 @@ namespace ExpenseManagement.Models.ViewModels
 
             public int Count { get; set; }
 
-            public double TotalAmount { get; set; }
+            public double? TotalAmount { get; set; }
 
-            public string TotalAmountCurrency { get; set; }
+            public byte? TotalAmountCurrency { get; set; }
+
+            public string TotalAmountCurrencyName { get; set; }
         }
     }
 }

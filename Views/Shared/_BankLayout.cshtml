@@ -1,0 +1,332 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Muhasebe Yönetimi | @ViewData["Title"]</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="~/Content/NewSite/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="~/Content/NewSite/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <link rel="stylesheet" href="~/Content/NewSite/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/NewSite/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="~/Content/NewSite/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="~/Content/NewSite/plugins/pace-progress/themes/black/pace-theme-flat-top.css">
+    <link rel="stylesheet" href="~/Content/NewSite/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/Content/NewSite/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet" href="~/Content/NewSite/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition sidebar-mini pace-primary layout-fixed">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand navbar-dark navbar-dark border-bottom-0">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown user-menu">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                        <img src="~/Content/NewSite/dist/img/user.png" class="user-image img-circle elevation-2">
+                        <span class="d-none d-md-inline">@this.User?.Claims?.FirstOrDefault()?.Subject?.Name</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <li class="user-header bg-secondary">
+                            <br />
+                            <img src="~/Content/NewSite/dist/img/user.png" class="img-circle elevation-2">
+                            <p>
+                                @this.User?.Claims?.FirstOrDefault()?.Subject?.Name
+                            </p>
+                        </li>
+                        <li class="user-footer">
+                            <a asp-controller="Audit" asp-action="Index" class="btn btn-dark btn-flat disabled">Log Kayıtları</a>
+                            <a asp-controller="Account" asp-action="Logout" class="btn btn-danger btn-flat float-right">Çıkış Yap</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-sm-right">
+                        <div class="dropdown-item">
+                            <i class="fas fa-laptop-code"></i>&nbsp;&nbsp;Versiyon 1.0.0
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="position:fixed">
+            <a asp-controller="Report" asp-action="Bank" class="brand-link text-center">
+                <span class="brand-text font-weight-light">Muhasebe Yönetimi</span>
+            </a>
+            <div class="sidebar">
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
+                        <li class="nav-item">
+                            <a asp-controller="ToDoList" asp-action="Index" class="nav-link">
+                                <i class="nav-icon fas fa-hand-holding-usd"></i>
+                                <p>
+                                    Alacak Listesi
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-university"></i>
+                                <p>
+                                    Banka
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Report" asp-action="Bank">
+                                        <i class="far fa-circle nav-icon text-warning"></i><p>Banka Anasayfası</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="BankVault" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-warning"></i><p>Kasaya/Vadesize Ekle</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="DepositAccount" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-warning"></i><p>Vadeli Hesap Ekle (Faiz)</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        @*<li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-chart-line"></i>
+                                    <p>
+                                        Raporlar
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Report" asp-action="ProfitReport">
+                                            <i class="far fa-circle nav-icon text-info"></i><p>Şirket Bazlı Kâr Raporu</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Report" asp-action="ProfitReportWithInsurancePolicyType">
+                                            <i class="far fa-circle nav-icon text-info"></i><p>Poliçe Tipi Bazlı Kâr Rap.</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Report" asp-action="AllProfitReport">
+                                            <i class="far fa-circle nav-icon text-info"></i><p>Kâr Raporu</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Report" asp-action="GeneralInsuranceReport">
+                                            <i class="far fa-circle nav-icon text-info"></i><p>Genel Rapor</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Report" asp-action="InsurancePaymentTypeReport">
+                                            <i class="far fa-circle nav-icon text-info"></i><p>Ödeme Şekli Raporu</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>*@
+                        <li class="nav-item">
+                            <a asp-controller="Expense" asp-action="Salary" class="nav-link">
+                                <i class="fas fa-wallet nav-icon"></i><p>Maaşlar</p>
+                            </a>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-cogs"></i>
+                                <p>
+                                    Sistem Değişkenleri
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="AccountType" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-warning"></i><p>Hesap Türleri</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="BankBranches" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-warning"></i><p>Banka/Şube Listesi</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-tools"></i>
+                                <p>
+                                    Yönetici İşlemleri
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Account" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-success"></i><p>Sistem Kullanıcıları</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Role" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-success"></i><p>Sistem Rolleri</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        <div class="content-wrapper" style="background-color:#343a40">
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0 text-dark"></h1>
+                        </div>
+                        <div class="col-sm-6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-success swalDefaultSuccess" hidden id="swalDefaultSuccess">
+            </button>
+            <button type="button" class="btn btn-danger swalDefaultWarning" hidden id="swalDefaultWarning">
+            </button>
+            <input id="warningSuccessMessage" hidden />
+            <button type="button" class="btn btn-danger swalDefaultError" hidden id="swalDefaultError">
+            </button>
+            @RenderBody()
+        </div>
+        <footer class="main-footer border-top-0" style="background-color:#343a40">
+        </footer>
+    </div>
+
+    <script src="~/Content/NewSite/plugins/jquery/jquery.min.js"></script>
+    <script src="~/Content/NewSite/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <script src="~/Content/NewSite/plugins/pace-progress/pace.min.js"></script>
+    <script src="~/Content/NewSite/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/NewSite/plugins/jquery-knob/jquery.knob.min.js"></script>
+    <script src="~/Content/NewSite/plugins/moment/moment.min.js"></script>
+    <script src="~/Content/NewSite/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/Content/NewSite/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="~/Content/NewSite/dist/js/adminlte.js"></script>
+    <script src="~/Content/NewSite/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/Content/NewSite/plugins/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/Content/NewSite/plugins/sweetalert2.9/sweetalert2.9.js"></script>
+    <script src="~/Content/NewSite/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <script src="~/Content/NewSite/plugins/chart.js/Chart.min.js"></script>
+    <script src="~/Content/NewSite/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#allTables').DataTable({
+                "language": {
+                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                    zeroRecords: "Hiçbir kayıt bulunamadı.",
+                    emptyTable: "Kayıt bulunmamaktadır.",
+                    search: "Ara:",
+                    oPaginate: {
+                        "sNext": "Sonraki",
+                        "sPrevious": "Önceki"
+                    },
+                    sLengthMenu: "_MENU_ adet kayıt getir",
+                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                },
+                "pageLength": 100
+            });
+
+            bsCustomFileInput.init();
+        });
+
+        $('.select2').select2()
+
+        $('#datepicker').datepicker({
+            autoclose: true,
+            format: "yyyy/mm/dd",
+        })
+
+        $('#datepicker2').datepicker({
+            autoclose: true,
+            format: "yyyy/mm/dd",
+        })
+
+        $('.swalDefaultSuccess').click(function () {
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: document.getElementById("swalDefaultSuccess").value,
+                showConfirmButton: false,
+                timer: 1500
+            })
+        });
+
+        $('.swalDefaultWarning').click(function () {
+            Swal.fire({
+                title: 'Emin misiniz?',
+                text: document.getElementById("swalDefaultWarning").value,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: document.getElementById("warningSuccessMessage").value,
+                cancelButtonText: 'Geri Dön'
+            }).then((result) => {
+                if (result.dismiss == "cancel") {
+                    window.history.back();
+                }
+                if (result.value && document.getElementById("warningSuccessMessage").value == "Devam Et") {
+                    Swal.fire({
+                        title: 'Unutmayın!',
+                        text: 'Alış tarihinde yapacağınız değişiklik satış kaydını da etkileyecektir.',
+                        icon: 'warning',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: "Anladım!"
+                    })
+                }
+            })
+        });
+
+        $('.swalDefaultError').click(function () {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: document.getElementById("swalDefaultError").value,
+                showConfirmButton: false,
+                timer: 1500
+            })
+        });
+
+        $("#resultRow").hide();
+        $("#exportButton").hide();
+    </script>
+    <script type='text/javascript'>
+        var url = window.location;
+        const allLinks = document.querySelectorAll('.nav-item a');
+        const currentLink = [...allLinks].filter(e => {
+            return e.href == url;
+        });
+
+        if (currentLink[0] != null) {
+            currentLink[0].classList.add("active");
+            if (currentLink[0].closest(".nav-treeview") != null) {
+                currentLink[0].closest(".nav-treeview").style.display = "block";
+                currentLink[0].closest(".has-treeview").classList.add("active");
+                currentLink[0].parentElement.parentElement.parentElement.children[0].classList.add("active");
+                currentLink[0].parentElement.parentElement.parentElement.classList.add("menu-open");
+            }
+        }
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -6,11 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200701195354_first.cs" />
-    <Compile Remove="Migrations\20200701195354_first.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\Content\NewSite\plugins\bootstrap-datepicker\.github\ISSUE_TEMPLATE.md" />
     <None Include="wwwroot\Content\NewSite\plugins\bootstrap-datepicker\.github\PULL_REQUEST_TEMPLATE.md" />
   </ItemGroup>
@@ -20,6 +15,7 @@
     <PackageReference Include="bootstrap" Version="4.5.0" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.10.1" />
     <PackageReference Include="EFCoreAutoMigrator" Version="1.0.3" />
+    <PackageReference Include="EPPlus" Version="4.5.3.2" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />

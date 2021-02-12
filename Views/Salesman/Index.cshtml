@@ -1,0 +1,62 @@
+﻿@model IEnumerable<ExpenseManagement.Models.Salesmans>
+
+@{
+    ViewData["Title"] = "Danışmanlar";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-male"></i><i class="fas fa-female"></i>&nbsp;Danışmanlar
+                            <a class="btn btn-light text-primary btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="card-body">
+                                <table id="allTables" class="table table-bordered table-striped" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Name)
+                                            </th>
+                                            <th>İşlemler</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model)
+                                        {
+                                            @if (item.Name != " ")
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Name)
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                                <span class="fa fa-ellipsis-h"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef">
+                                                                <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Güncelle</a></li>
+                                                                <li><a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id">Sil</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

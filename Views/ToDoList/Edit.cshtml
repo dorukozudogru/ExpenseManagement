@@ -1,0 +1,99 @@
+﻿@model ExpenseManagement.Models.ToDoLists
+
+@{
+    ViewData["Title"] = "Alacak Güncelle";
+    Layout = "_BankLayout";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Alacak Güncelle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" id="id" />
+                                <div class="form-group">
+                                    <label asp-for="Sector.Name" class="control-label"></label>
+                                    <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Debtor" class="control-label"></label>
+                                    <input asp-for="Debtor" class="form-control" id="debtor" />
+                                    <span asp-validation-for="Debtor" class="text-danger"></span>
+                                </div>
+                                <label asp-for="Amount" class="control-label"></label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <select asp-for="AmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
+                                    </div>
+                                    <input asp-for="Amount" class="form-control" id="amount" />
+                                    <span asp-validation-for="Amount" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="update()" />
+                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var id;
+    var sectorId;
+    var debtor;
+    var amount;
+    var amountCurrency;
+
+    function update() {
+        sectorId = document.getElementById("sectorId").value;
+        debtor = document.getElementById("debtor").value;
+        amount = document.getElementById("amount").value;
+        amountCurrency = document.getElementById("amountCurrency").value;
+        id = document.getElementById("id").value;
+
+
+        var data = new FormData();
+
+        data.append('sectorId', sectorId);
+        data.append('debtor', debtor);
+        data.append('amount', amount);
+        data.append('amountCurrency', amountCurrency);
+        data.append('id', id);
+
+        $.ajax({
+            type: "POST",
+            url: "/ToDoList/Edit",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>

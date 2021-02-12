@@ -21,8 +21,12 @@ namespace ExpenseManagement.Models
         public string Definition { get; set; }
 
         [Required]
-        [DisplayName("Fatura Tarihi")]
-        public DateTime Date { get; set; }
+        [DisplayName("Ay")]
+        public byte Month { get; set; }
+
+        [NotMapped]
+        [DisplayName("Ay")]
+        public string MonthName { get; set; }
 
         [Required]
         [DisplayName("Tutar")]

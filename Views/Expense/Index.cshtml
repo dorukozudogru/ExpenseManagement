@@ -25,10 +25,16 @@
                                                 @Html.DisplayNameFor(model => model.Id)
                                             </th>
                                             <th>
+                                                @Html.DisplayNameFor(model => model.ExpenseType)
+                                            </th>
+                                            <th>
                                                 @Html.DisplayNameFor(model => model.Sector.Name)
                                             </th>
                                             <th>
                                                 @Html.DisplayNameFor(model => model.Date)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.LastPaymentDate)
                                             </th>
                                             <th>
                                                 @Html.DisplayNameFor(model => model.Definition)
@@ -82,11 +88,21 @@
                 "columns": [
                     { "data": "id" },
                     {
+                        "data": "expenseTypeName",
+                        "orderable": false
+                    },
+                    {
                         "data": "sector.name",
                         "orderable": false
                     },
                     {
                         "data": "date",
+                        render: function (data, type, row) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                    },
+                    {
+                        "data": "lastPaymentDate",
                         render: function (data, type, row) {
                             return window.moment(data).format("DD-MMMM-YYYY");
                         }

@@ -36,28 +36,28 @@ namespace ExpenseManagement.Controllers
         {
             var requestFormData = Request.Form;
 
-            var expenseContext = await _context.Incomes
+            var incomeContext = await _context.Incomes
                 .Include(e => e.Sector)
                 .AsNoTracking()
                 .ToListAsync();
 
-            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe")
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
             {
-                expenseContext = expenseContext
+                incomeContext = incomeContext
                     .Where(e => e.CreatedBy == GetLoggedUserId())
                     .ToList();
             }
 
-            expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
+            incomeContext = GetAllEnumNamesHelper.GetEnumName(incomeContext);
 
-            List<Incomes> listItems = ProcessCollection(expenseContext, requestFormData);
+            List<Incomes> listItems = ProcessCollection(incomeContext, requestFormData);
 
             var response = new PaginatedResponse<Incomes>
             {
                 Data = listItems,
                 Draw = int.Parse(requestFormData["draw"]),
-                RecordsFiltered = expenseContext.Count,
-                RecordsTotal = expenseContext.Count
+                RecordsFiltered = incomeContext.Count,
+                RecordsTotal = incomeContext.Count
             };
 
             return Ok(response);
@@ -81,7 +81,7 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || incomes.CreatedBy == GetLoggedUserId())
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || incomes.CreatedBy == GetLoggedUserId())
             {
                 return View(incomes);
             }
@@ -106,7 +106,7 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || incomes.CreatedBy == GetLoggedUserId())
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || incomes.CreatedBy == GetLoggedUserId())
             {
                 return View(incomes);
             }
@@ -120,7 +120,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,SectorId,Date,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Incomes incomes)
+        public async Task<IActionResult> Create([Bind("Id,SectorId,Month,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Incomes incomes)
         {
             if (ModelState.IsValid)
             {
@@ -170,7 +170,7 @@ namespace ExpenseManagement.Controllers
             }
             ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name", incomes.SectorId);
 
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || incomes.CreatedBy == GetLoggedUserId())
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || incomes.CreatedBy == GetLoggedUserId())
             {
                 return View(incomes);
             }
@@ -178,7 +178,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Date,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Incomes incomes)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Month,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Incomes incomes)
         {
             var income = await _context.Incomes.FindAsync(id);
 
@@ -206,7 +206,7 @@ namespace ExpenseManagement.Controllers
                     }
 
                     income.SectorId = incomes.SectorId;
-                    income.Date = incomes.Date;
+                    income.Month = incomes.Month;
                     income.Definition = incomes.Definition;
                     income.Amount = incomes.Amount;
                     income.AmountCurrency = incomes.AmountCurrency;
@@ -240,7 +240,7 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || incomes.CreatedBy == GetLoggedUserId())
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || incomes.CreatedBy == GetLoggedUserId())
             {
                 return View(incomes);
             }
