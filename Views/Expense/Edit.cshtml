@@ -116,7 +116,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="form-group">
-                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="update()" />
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="update()" id="updateButton" />
                             <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
                                 <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                             </a>
@@ -190,6 +190,8 @@
         data.append('taxCurrency', taxCurrency);
         data.append('id', id);
 
+        $("#updateButton").attr("disabled", true);
+
         $.ajax({
             type: "POST",
             url: "/Expense/Edit",
@@ -206,6 +208,9 @@
             error: function (error) {
                 document.getElementById("swalDefaultError").value = error.responseText;
                 document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#updateButton").attr("disabled", false);
+                }, 1600);
             }
         });
     }

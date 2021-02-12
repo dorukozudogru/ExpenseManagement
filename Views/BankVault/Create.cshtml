@@ -39,7 +39,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="form-group">
-                            <input type="submit" value="Ekle" class="btn btn-success" onclick="add()" />
+                            <input type="submit" value="Ekle" class="btn btn-success" onclick="add()" id="createButton" />
                             <a class="btn btn-primary" asp-action="Index" style="margin-right: 5px;">
                                 <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                             </a>
@@ -62,6 +62,9 @@
         amount = document.getElementById("amount").value;
         amountCurrency = document.getElementById("amountCurrency").value;
         bankBranchId = document.getElementById("bankBranchId").value;
+
+        $("#createButton").attr("disabled", true);
+
         $.ajax({
             url: '/BankVault/Create?banks.AccountTypeId=' + accountTypeId + '&banks.Amount=' + amount + '&banks.AmountCurrency=' + amountCurrency + '&banks.BankBranchId=' + bankBranchId,
             type: 'POST',
@@ -75,6 +78,9 @@
             error: function (error) {
                 document.getElementById("swalDefaultError").value = error.responseText;
                 document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#createButton").attr("disabled", false);
+                }, 1600);
             }
         });
     }
