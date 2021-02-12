@@ -14,6 +14,10 @@ namespace ExpenseManagement.Models
         public int AccountTypeId { get; set; }
         public virtual AccountTypes AccountType { get; set; }
 
+        [NotMapped]
+        [DisplayName("Hesap Türü")]
+        public string AccountTypeName { get; set; }
+
         [Required]
         [DisplayName("Tutar")]
         public double Amount { get; set; }
@@ -48,5 +52,9 @@ namespace ExpenseManagement.Models
         public int BankBranchId { get; set; }
         [DisplayName("Banka/Şube Adı")]
         public virtual BankBranches BankBranch { get; set; }
+
+        [NotMapped]
+        [DisplayName("Banka/Şube Adı")]
+        public string BankBranchName { get; set; }
     }
 }

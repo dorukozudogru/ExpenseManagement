@@ -1,0 +1,211 @@
+﻿
+@{
+    ViewData["Title"] = "Vadeli Hesabı Düzenle";
+    Layout = "_BankLayout";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary" style="background-color:#343a40">
+                    <div class="card-header border-0">
+                        <h3 class="card-title"><i class="nav-icon fas fa-credit-card"></i>&nbsp;&nbsp;Vadeli Hesaplar</h3>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="container3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-warning" style="background-color:#343a40">
+                    <div class="card-header border-0">
+                        <h3 class="card-title"><i class="nav-icon fas fa-university"></i>&nbsp;&nbsp;Kasa</h3>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-warning" style="background-color:#343a40">
+                    <div class="card-header border-0">
+                        <h3 class="card-title"><i class="nav-icon fas fa-university"></i>&nbsp;&nbsp;Vadesiz</h3>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="container2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card card-success">
+                    <div class="card-header border-0">
+                        <h3 class="card-title"><i class="nav-icon fas fa-credit-card"></i>&nbsp;&nbsp;Toplam</h3>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body" style="background-color:#343a40">
+                        <div class="row">
+                            <div class="col-lg-3 col-6">
+                                <div class="small-box bg-success">
+                                    <div class="inner">
+                                        <h3 id="lira">0</h3>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-lira-sign"></i>
+                                    </div>
+                                    <a href="#" class="">
+                                        &nbsp;
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-6">
+                                <div class="small-box bg-success">
+                                    <div class="inner">
+                                        <h3 id="dollar">0</h3>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-dollar-sign"></i>
+                                    </div>
+                                    <a href="#" class="">
+                                        &nbsp;
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-6">
+                                <div class="small-box bg-success">
+                                    <div class="inner">
+                                        <h3 id="euro">0</h3>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-euro-sign"></i>
+                                    </div>
+                                    <a href="#" class="">
+                                        &nbsp;
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-6">
+                                <div class="small-box bg-success">
+                                    <div class="inner">
+                                        <h3 id="pound">0</h3>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-pound-sign"></i>
+                                    </div>
+                                    <a href="#" class="">
+                                        &nbsp;
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script src="~/js/datatables.min.js"></script>
+    <script src="~/js/moment.min.js"></script>
+    <script src="~/Content/NewSite/plugins/chart.js/Chart.min.js"></script>
+    <script>
+        (function () {
+            $.ajax({
+                "url": "/Report/BankVaultsReport",
+                "method": "POST"
+            }).done(function (response) {
+                const container = document.getElementById('container');
+                const container2 = document.getElementById('container2');
+                response.forEach(element => {
+                    const content = '<div class="col-md-6">'
+                        + '<div class="info-box bg-warning">'
+                        + '<span class="info-box-icon"><i class="fas fa-university"></i></span>'
+                        + '<div class="info-box-content">'
+                        + '<span class="info-box-text">' + element.bankBranchName + '</span>'
+                        + '<span class="info-box-text">' + element.accountTypeName + '</span>'
+                        + '<span class="info-box-number">' + element.totalAmount.toLocaleString("tr-TR") + ' ' + element.amountCurrencyName + '</span>'
+                        + '</div>'
+                        + '</div>'
+                        + '</div>';
+                    if (element.accountTypeName == "Kasa") {
+                        container.innerHTML += content;
+                    }
+                    else if (element.accountTypeName.includes("Vadesiz")) {
+                        container2.innerHTML += content;
+                    }
+                });
+            });
+
+            $.ajax({
+                "url": "/Report/DepositAccountReport",
+                "method": "POST"
+            }).done(function (response) {
+                const container3 = document.getElementById('container3');
+                response.forEach(element => {
+                    const content = '<div class="col-md-6">'
+                        + '<div class="info-box bg-primary">'
+                        + '<span class="info-box-icon"><i class="fas fa-university"></i></span>'
+                        + '<div class="info-box-content">'
+                        + '<span class="info-box-text">' + element.bankBranchName + '</span>'
+                        + '<span class="info-box-number">' + element.totalAmount.toLocaleString("tr-TR") + ' ' + element.amountCurrencyName + '</span>'
+                        + '</div>'
+                        + '</div>'
+                        + '</div>';
+                    container3.innerHTML += content;
+                });
+            });
+
+            $.ajax({
+                "url": "/Report/TotalAccountReport",
+                "method": "POST"
+            }).done(function (response) {
+                console.log(response);
+                response.forEach(element => {
+                    if (element.currency == "₺") {
+                        if (element.totalAmount != null) {
+                            $('#lira').html(element.totalAmount.toLocaleString("tr-TR"));
+                        }
+                    }
+                    if (element.currency == "$") {
+                        if (element.totalAmount != null) {
+                            $('#dollar').html(element.totalAmount.toLocaleString("tr-TR"));
+                        }
+                    }
+                    if (element.currency == "€") {
+                        if (element.totalAmount != null) {
+                            $('#euro').html(element.totalAmount.toLocaleString("tr-TR"));
+                        }
+                    }
+                    if (element.currency == "£") {
+                        if (element.totalAmount != null) {
+                            $('#pound').html(element.totalAmount.toLocaleString("tr-TR"));
+                        }
+                    }
+                });
+            });
+        })(jQuery);
+    </script>
+}

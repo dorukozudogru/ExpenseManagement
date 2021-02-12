@@ -20,6 +20,7 @@ namespace ExpenseManagement.Models
         [DisplayName("Satan Danışman")]
         [ForeignKey(nameof(Salesman))]
         public int SalesmanId { get; set; }
+        [DisplayName("Satan Danışman")]
         public virtual Salesmans Salesman { get; set; }
 
         [Required]

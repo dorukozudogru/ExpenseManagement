@@ -13,7 +13,7 @@ using static ExpenseManagement.Models.ViewModels.ReportViewModel;
 
 namespace ExpenseManagement.Controllers
 {
-    [Authorize(Roles = ("Admin, Muhasebe"))]
+    [Authorize]
     public class ReportController : Controller
     {
         private readonly ExpenseContext _context;
@@ -23,122 +23,30 @@ namespace ExpenseManagement.Controllers
             _context = context;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CumulatedEndorsementReport()
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        public IActionResult Bank()
         {
-            var requestFormData = Request.Form;
-
-            List<Endorsements> endorsements = await _context.Endorsements
-                .Include(i => i.Sector)
-                .GroupBy(i => new
-                {
-                    Year = i.Year,
-                    Month = i.Month,
-                    AmountCurrency = i.AmountCurrency,
-                    SectorName = i.Sector.Name
-                })
-                .Select(i => new Endorsements
-                {
-                    SectorName = i.Key.SectorName,
-                    Year = i.Key.Year,
-                    Month = i.Key.Month,
-                    AmountCurrency = i.Key.AmountCurrency,
-                    TotalAmount = i.Sum(x => x.Amount)
-                })
-                .OrderBy(i => i.SectorName)
-                .ThenBy(i => i.Month)
-                .ThenBy(i => i.Year)
-                .ToListAsync();
-
-            endorsements = GetAllEnumNamesHelper.GetEnumName(endorsements);
-
-            var listItems = endorsements
-                .GroupBy(i => new
-                {
-                    i.SectorName,
-                    i.AmountCurrencyName,
-                    i.Year
-                })
-                .Select(i => new EndorsementResponse
-                {
-                    SectorName = i.Key.SectorName,
-                    Currency = i.Key.AmountCurrencyName,
-                    Year = i.Key.Year,
-                    TotalAmount = i.Sum(x => x.TotalAmount)
-                })
-                .ToList();
-
-            List<EndorsementResponse> endorsementResponse = ProcessCollection(listItems, requestFormData);
-
-            var response = new PaginatedResponse<EndorsementResponse>
-            {
-                Data = endorsementResponse,
-                Draw = int.Parse(requestFormData["draw"]),
-                RecordsFiltered = listItems.Count,
-                RecordsTotal = listItems.Count
-            };
-
-            return Ok(response);
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> CumulatedTotalEndorsementReport()
-        {
-            List<Endorsements> endorsements = await _context.Endorsements
-                .GroupBy(i => new
-                {
-                    Year = i.Year,
-                    Month = i.Month,
-                    AmountCurrency = i.AmountCurrency
-                })
-                .Select(i => new Endorsements
-                {
-                    Year = i.Key.Year,
-                    Month = i.Key.Month,
-                    AmountCurrency = i.Key.AmountCurrency,
-                    TotalAmount = i.Sum(x => x.Amount)
-                })
-                .OrderBy(i => i.Month)
-                .ThenBy(i => i.Year)
-                .ToListAsync();
-
-            endorsements = GetAllEnumNamesHelper.GetEnumName(endorsements);
-
-            var listItems = endorsements
-                .GroupBy(i => i.AmountCurrencyName)
-                .Select(i => new TotalResponse
-                {
-                    TotalAmount = i.Sum(x => x.TotalAmount),
-                    Currency = i.Key
-                })
-                .ToList();
-
-            string responseStr = null;
-
-            foreach (var item in listItems)
-            {
-                responseStr += (item.TotalAmount + " " + item.Currency + " + ");
-            }
-
-            var response = new List<string>
-            {
-                responseStr.Substring(0, responseStr.Length-3)
-            };
-
-            return Ok(response);
-        }
-
-        [HttpPost]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
         public async Task<IActionResult> BankVaultsReport()
         {
             List<BankVaults> banks = await _context.BankVaults
+                .Include(i => i.AccountType)
+                .Include(i => i.BankBranch)
                 .GroupBy(i => new
                 {
-                    AmountCurrency = i.AmountCurrency
+                    i.AmountCurrency,
+                    BankBranchName = i.BankBranch.Name,
+                    AccountTypeName = i.AccountType.Name
                 })
                 .Select(i => new BankVaults
                 {
                     AmountCurrency = i.Key.AmountCurrency,
+                    BankBranchName = i.Key.BankBranchName,
+                    AccountTypeName = i.Key.AccountTypeName,
                     TotalAmount = i.Sum(x => x.Amount)
                 })
                 .ToListAsync();
@@ -149,36 +57,131 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        public async Task<IActionResult> DepositAccountReport()
+        {
+            List<DepositAccounts> banks = await _context.DepositAccounts
+                .Include(i => i.BankBranch)
+                .Where(i => i.FinishDate >= DateTime.Now.Date)
+                .GroupBy(i => new
+                {
+                    i.AmountCurrency,
+                    BankBranchName = i.BankBranch.Name,
+                })
+                .Select(i => new DepositAccounts
+                {
+                    AmountCurrency = i.Key.AmountCurrency,
+                    BankBranchName = i.Key.BankBranchName,
+                    TotalAmount = i.Sum(x => x.Amount)
+                })
+                .ToListAsync();
+
+            banks = GetAllEnumNamesHelper.GetEnumName(banks);
+
+            return Json(banks);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        public async Task<IActionResult> TotalAccountReport()
+        {
+            List<DepositAccounts> depositAccounts = await _context.DepositAccounts
+                .Include(i => i.BankBranch)
+                .Where(i => i.FinishDate >= DateTime.Now.Date)
+                .GroupBy(i => new
+                {
+                    i.AmountCurrency,
+                })
+                .Select(i => new DepositAccounts
+                {
+                    AmountCurrency = i.Key.AmountCurrency,
+                    TotalAmount = i.Sum(x => x.Amount)
+                })
+                .ToListAsync();
+
+            List<BankVaults> bankVaults = await _context.BankVaults
+                .Include(i => i.AccountType)
+                .Include(i => i.BankBranch)
+                .GroupBy(i => new
+                {
+                    i.AmountCurrency,
+                })
+                .Select(i => new BankVaults
+                {
+                    AmountCurrency = i.Key.AmountCurrency,
+                    TotalAmount = i.Sum(x => x.Amount)
+                })
+                .ToListAsync();
+
+            depositAccounts = GetAllEnumNamesHelper.GetEnumName(depositAccounts);
+            bankVaults = GetAllEnumNamesHelper.GetEnumName(bankVaults);
+
+            List<TotalResponse> totalResponse = new List<TotalResponse>();
+
+            foreach (var item in depositAccounts)
+            {
+                totalResponse.Add(new TotalResponse
+                {
+                    Currency = item.AmountCurrencyName,
+                    TotalAmount = item.TotalAmount
+                });
+            }
+
+            foreach (var item in bankVaults)
+            {
+                totalResponse.Add(new TotalResponse
+                {
+                    Currency = item.AmountCurrencyName,
+                    TotalAmount = item.TotalAmount
+                });
+            }
+
+            var finalTotalAmount = totalResponse
+                .GroupBy(t => new {
+                    t.Currency,
+                })
+                .Select(t => new TotalResponse
+                {
+                    Currency = t.Key.Currency,
+                    TotalAmount = t.Sum(x => x.TotalAmount)
+                })
+                .ToList();
+
+            return Json(finalTotalAmount);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> MontlyExpensesReport()
         {
-            //var requestFormData = Request.Form;
+            var requestFormData = Request.Form;
 
-            //var expenses = await _context.Expenses
-            //    .Where(i => i.Date.Month >= DateTime.Now.AddMonths(-2).Month)
-            //    .GroupBy(i => new
-            //    {
-            //        i.Date.Month
-            //    })
-            //    .Select(i => new GeneralResponse
-            //    {
-            //        Month = i.Key.Month,
-            //        Count = i.Count(),
-            //        TotalAmount = i.Sum(x => x.Amount),
-            //        TotalAmountCurrency = "₺"
-            //    })
-            //    .ToListAsync();
+            var expenses = await _context.Expenses
+                .Where(i => i.Date.Value.Month >= DateTime.Now.AddMonths(-2).Month && i.ExpenseType != 2)
+                .GroupBy(i => new
+                {
+                    i.Date.Value.Month,
+                    i.AmountCurrency
+                })
+                .Select(i => new GeneralResponse
+                {
+                    Month = i.Key.Month,
+                    Count = i.Count(),
+                    TotalAmount = i.Sum(x => x.Amount),
+                    TotalAmountCurrency = i.Key.AmountCurrency
+                })
+                .ToListAsync();
 
-            //expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
+            expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
 
-            //var response = new PaginatedResponse<GeneralResponse>
-            //{
-            //    Data = expenses,
-            //    Draw = int.Parse(requestFormData["draw"]),
-            //    RecordsFiltered = expenses.Count,
-            //    RecordsTotal = expenses.Count
-            //};
+            var response = new PaginatedResponse<GeneralResponse>
+            {
+                Data = expenses,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = expenses.Count,
+                RecordsTotal = expenses.Count
+            };
 
-            return Ok(/*response*/);
+            return Ok(response);
         }
 
         [HttpPost]
@@ -190,14 +193,15 @@ namespace ExpenseManagement.Controllers
                 .Where(i => i.Month >= DateTime.Now.AddMonths(-2).Month)
                 .GroupBy(i => new
                 {
-                    i.Month
+                    i.Month,
+                    i.AmountCurrency
                 })
                 .Select(i => new GeneralResponse
                 {
                     Month = i.Key.Month,
                     Count = i.Count(),
                     TotalAmount = i.Sum(x => x.Amount),
-                    TotalAmountCurrency = "₺"
+                    TotalAmountCurrency = i.Key.AmountCurrency
                 })
                 .ToListAsync();
 
@@ -215,12 +219,12 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public IActionResult DailyCountReport()
+        public IActionResult MonthlyCountReport()
         {
             return Ok(new List<int>
             {
-                //_context.Expenses.Where(i => i.Date.ToShortDateString() == DateTime.Now.ToShortDateString()).Count()
-                //_context.Incomes.Where(i => i.Date.ToShortDateString() == DateTime.Now.ToShortDateString()).Count()
+                _context.Expenses.Where(i => i.Date.Value.Month == DateTime.Now.Month && i.ExpenseType != 2).Count(),
+                _context.Incomes.Where(i => i.Month == DateTime.Now.Month).Count()
             });
         }
     }

@@ -123,14 +123,24 @@
             $(this).attr('value', 'true');
             $('#datepicker2').removeAttr('disabled');
             $('#saleAmount').removeAttr('disabled');
+            $('#saleAmountCurrency').removeAttr('disabled');
         } else {
             $(this).attr('value', 'false');
             $('#datepicker2').attr('disabled', 'disabled');
             $('#saleAmount').attr('disabled', 'disabled');
+            $('#saleAmountCurrency').attr('disabled', 'disabled');
             $('#datepicker2').val('');
             $('#saleAmount').val('');
-        }
-    });
+            }
+        });
+
+        $("#isNew").on('change', function () {
+                if ($(this).is(':checked')) {
+                    $(this).attr('value', 'true');
+                } else {
+                    $(this).attr('value', 'false');
+            }
+        });
 
         var id = '@Url.RouteUrl(ViewContext.RouteData.Values).Split("/").Last()';
 
@@ -156,6 +166,11 @@
                     $('#isSold').attr('value', 'false');
                     $('#datepicker2').attr('disabled', 'disabled');
                     $('#saleAmount').attr('disabled', 'disabled');
+                    $('#saleAmountCurrency').attr('disabled', 'disabled');
+                }
+
+                if (returnvalue.isNew == false) {
+                    $('#isNew').attr('value', 'false');
                 }
 
                 var dayS = start.getDate();

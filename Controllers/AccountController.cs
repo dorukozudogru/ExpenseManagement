@@ -76,6 +76,57 @@ namespace ExpenseManagement.Controllers
             return View(model);
         }
 
+        [Route("account/admin")]
+        public IActionResult AdminLogin()
+        {
+            var model = new LoginViewModel
+            {
+
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("account/admin")]
+        public async Task<IActionResult> AdminLogin(LoginViewModel model)
+        {
+            var result = await _signInManager.PasswordSignInAsync("", "", false, true);
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var user = _userManager.FindByEmailAsync(model.Email).Result;
+                    var userRole = _context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == user.Id).Result;
+                    var role = _context.Roles.FirstOrDefaultAsync(r => r.Id == userRole.RoleId).Result;
+
+                    if (user.IsActive != false && (role.Name == "Admin" || role.Name == "Banaz" || role.Name == "Muhasebe"))
+                    {
+                        result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
+                        if (!result.Succeeded)
+                        {
+                            ViewBag.LoginError = "E-Posta veya Şifre Hatalı Girildi! Lütfen Tekrar Deneyiniz!";
+                        }
+                        else
+                        {
+                            return Redirect("~/Report/Bank");
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.LoginError = "Hesabınız Pasif Durumdadır! Lütfen Yöneticiniz ile İletişime Geçiniz!";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.LoginError = ex.Message;
+                    return View(model);
+                }
+            }
+            return View(model);
+        }
+
         [Route("account/logout")]
         public async Task<IActionResult> LogOut()
         {

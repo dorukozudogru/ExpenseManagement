@@ -7,10 +7,12 @@ using ExpenseManagement.Data;
 using ExpenseManagement.Models;
 using ExpenseManagement.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
+using static ExpenseManagement.Helpers.ProcessCollectionHelper;
 
 namespace ExpenseManagement.Controllers
 {
-    [Authorize(Roles = ("Admin, Muhasebe"))]
+    [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
     public class BankVaultController : Controller
     {
         private readonly ExpenseContext _context;
@@ -20,17 +22,35 @@ namespace ExpenseManagement.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post()
+        {
+            var requestFormData = Request.Form;
+
             var expenseContext = await _context.BankVaults
-                .Include(b => b.AccountType)
-                .Include(c => c.BankBranch)
-                .AsNoTracking()
-                .ToListAsync();
+               .Include(b => b.AccountType)
+               .Include(c => c.BankBranch)
+               .AsNoTracking()
+               .ToListAsync();
 
             expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
 
-            return View(expenseContext);
+            List<BankVaults> listItems = ProcessCollection(expenseContext, requestFormData);
+
+            var response = new PaginatedResponse<BankVaults>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = expenseContext.Count,
+                RecordsTotal = expenseContext.Count
+            };
+
+            return Ok(response);
         }
 
         public IActionResult Create()

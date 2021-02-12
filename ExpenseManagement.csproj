@@ -6,29 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200701195354_first.cs" />
-    <Compile Remove="Migrations\20200701195354_first.Designer.cs" />
-    <Compile Remove="Migrations\20201226215845_test2.cs" />
-    <Compile Remove="Migrations\20201226215845_test2.Designer.cs" />
-    <Compile Remove="Migrations\20201226220036_test2.cs" />
-    <Compile Remove="Migrations\20201226220036_test2.Designer.cs" />
-    <Compile Remove="Migrations\20201226220449_test2.cs" />
-    <Compile Remove="Migrations\20201226220449_test2.Designer.cs" />
-    <Compile Remove="Migrations\20201226220856_asdasd.cs" />
-    <Compile Remove="Migrations\20201226220856_asdasd.Designer.cs" />
-    <Compile Remove="Migrations\20201226221025_hello_world.cs" />
-    <Compile Remove="Migrations\20201226221025_hello_world.Designer.cs" />
-    <Compile Remove="Migrations\20201226221314_first-installation.cs" />
-    <Compile Remove="Migrations\20201226221314_first-installation.Designer.cs" />
-    <Compile Remove="Migrations\20201227205751_first-installation.cs" />
-    <Compile Remove="Migrations\20201227205751_first-installation.Designer.cs" />
-    <Compile Remove="Migrations\20201227210314_first-installation.cs" />
-    <Compile Remove="Migrations\20201227210314_first-installation.Designer.cs" />
-    <Compile Remove="Migrations\20210102151126_test.cs" />
-    <Compile Remove="Migrations\20210102151126_test.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\Content\NewSite\plugins\bootstrap-datepicker\.github\ISSUE_TEMPLATE.md" />
     <None Include="wwwroot\Content\NewSite\plugins\bootstrap-datepicker\.github\PULL_REQUEST_TEMPLATE.md" />
   </ItemGroup>

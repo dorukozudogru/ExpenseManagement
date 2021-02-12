@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ExpenseManagement.Controllers
 {
-    [Authorize(Roles = ("Admin, Muhasebe"))]
+    [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
     public class AccountTypeController : Controller
     {
         private readonly ExpenseContext _context;

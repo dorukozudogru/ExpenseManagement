@@ -62,7 +62,6 @@ namespace ExpenseManagement.Controllers
             return BadRequest("Rol Oluşturulurken Bir Hata Oluştu!");
         }
 
-        //SHOULD SHOW WHO HAS ROLES
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -202,11 +201,6 @@ namespace ExpenseManagement.Controllers
                 }
             }
             return RedirectToAction("Index", "Account");
-        }
-
-        private bool AppIdentityRoleExists(string id)
-        {
-            return _context.Roles.Any(e => e.Id == id);
         }
     }
 }

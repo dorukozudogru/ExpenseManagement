@@ -115,16 +115,15 @@
             window.onload = GetPurchaseDate(1);
 
             $("#vehiclePurchaseId").on("change", function (e) {
-                GetPurchaseDate(e.target.selectedOptions[0].value);
+                GetPurchaseDate(e.target.options[e.target.options.selectedIndex].label);
             })
 
-            function GetPurchaseDate(vehiclePurchaseId)
+            function GetPurchaseDate(vehiclePurchaseName)
             {
                 $('#datepicker').html('');
-                $.getJSON('@Url.Action("GetPurchaseDate", "NewVehicleSale")' + "?vehiclePurchaseId=" + vehiclePurchaseId, function (result) {
+                $.getJSON('@Url.Action("GetPurchaseDate", "NewVehicleSale")' + "?vehiclePurchaseName=" + vehiclePurchaseName, function (result) {
                     for (var i = 0; i < result.length; i++) {
                         $("#datepicker").attr('value', moment(result[i].purchaseDate).format("YYYY/MM/DD"))
-                        //window.moment(data).format("DD-MMMM-YYYY");
                     }
                 })
             }

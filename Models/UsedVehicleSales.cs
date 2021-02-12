@@ -36,11 +36,13 @@ namespace ExpenseManagement.Models
         [DisplayName("Alan Danışman")]
         [ForeignKey(nameof(PurchasedSalesman))]
         public int PurchasedSalesmanId { get; set; }
+        [DisplayName("Alan Danışman")]
         public virtual Salesmans PurchasedSalesman { get; set; }
 
         [DisplayName("Satan Danışman")]
         [ForeignKey(nameof(SoldSalesman))]
         public int? SoldSalesmanId { get; set; }
+        [DisplayName("Satan Danışman")]
         public virtual Salesmans SoldSalesman { get; set; }
 
         [DisplayName("Araç Alış Fiyatı")]

@@ -19,7 +19,7 @@ using System.Drawing;
 
 namespace ExpenseManagement.Controllers
 {
-    [Authorize(Roles = ("Admin, Muhasebe"))]
+    [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
     public class ToDoListController : Controller
     {
         private readonly ExpenseContext _context;
@@ -82,21 +82,21 @@ namespace ExpenseManagement.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var toDoLists = await _context.ToDoLists.FindAsync(id);
             toDoLists = GetAllEnumNamesHelper.GetEnumName(toDoLists);
             if (toDoLists == null)
             {
-                return NotFound();
+                return View("Error");
             }
             ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name", toDoLists.SectorId);
             return View(toDoLists);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Debtor,Amount,AmountCurrency")] ToDoLists toDoLists)
+        public async Task<IActionResult> Edit(int id, ToDoLists toDoLists)
         {
             var toDoList = await _context.ToDoLists.FindAsync(id);
 

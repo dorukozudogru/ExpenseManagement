@@ -13,7 +13,7 @@ using static ExpenseManagement.Helpers.ProcessCollectionHelper;
 
 namespace ExpenseManagement.Controllers
 {
-    [Authorize(Roles = "Admin, Satışçı")]
+    [Authorize]
     public class NewVehicleSaleController : Controller
     {
         private readonly ExpenseContext _context;
@@ -65,11 +65,13 @@ namespace ExpenseManagement.Controllers
                 .Include(cb => cb.CarModel.CarBrand)
                 .Select(vp => new VehiclePurchases()
                 {
+                    Id = vp.Id,
                     FullInfo = vp.CarModel.Name + " - " + vp.Chassis,
                     IsSold = vp.IsSold,
+                    IsNew = vp.IsNew,
                     CarBrandName = vp.CarModel.CarBrand.Name
                 })
-                .Where(vp => vp.IsSold == false && vp.CarBrandName == "Skoda");
+                .Where(vp => vp.IsSold == false && vp.IsNew == true && vp.CarBrandName == "Skoda");
 
             ViewData["VehiclePurchaseId"] = new SelectList(newCars, "Id", "FullInfo");
             return View();
@@ -95,16 +97,17 @@ namespace ExpenseManagement.Controllers
             return BadRequest("Sıfır Araç Satışı Oluşturulurken Bir Hata Oluştu!");
         }
 
-        public ActionResult GetPurchaseDate(int vehiclePurchaseId)
+        public ActionResult GetPurchaseDate(string vehiclePurchaseName)
         {
-            return Json(_context.VehiclePurchases.Where(x => x.Id == vehiclePurchaseId).ToList());
+            var chassisNo = vehiclePurchaseName.Split("-").Last().Trim();
+            return Json(_context.VehiclePurchases.Where(x => x.Chassis == chassisNo).ToList());
         }
 
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var newVehicleSales = await _context.NewVehicleSales
@@ -118,7 +121,7 @@ namespace ExpenseManagement.Controllers
 
             if (newVehicleSales == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             return View(newVehicleSales);
@@ -127,8 +130,9 @@ namespace ExpenseManagement.Controllers
         public IActionResult Edit()
         {
             ViewData["SalesmanId"] = new SelectList(_context.Salesmans, "Id", "Name");
+            ViewData["VehiclePurchaseCarBrandId"] = new SelectList(_context.CarBrands, "Id", "Name");
+            ViewData["VehiclePurchaseCarModelId"] = new SelectList(_context.CarModels, "Id", "Name");
             ViewData["VehiclePurchaseId"] = new SelectList(_context.VehiclePurchases.OrderBy(vp => vp.FullInfo), "Id", "FullInfo");
-
             return View();
         }
 
@@ -165,10 +169,17 @@ namespace ExpenseManagement.Controllers
                 .Include(n => n.VehiclePurchase.CarModel.CarBrand)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (newVehicleSale != null)
+            var vehiclePurchase = await _context.VehiclePurchases
+                .FirstOrDefaultAsync(v => v.Id == newVehicleSale.VehiclePurchaseId);
+
+            if (newVehicleSale != null && vehiclePurchase != null)
             {
                 if (ModelState.IsValid)
                 {
+                    vehiclePurchase.SaleDate = newVehicleSales.SaleDate;
+                    vehiclePurchase.SaleAmount = newVehicleSales.SaleAmount;
+                    vehiclePurchase.SaleAmountCurrency = newVehicleSales.SaleAmountCurrency;
+
                     newVehicleSale.Description = newVehicleSales.Description;
                     newVehicleSale.PurchaseDate = newVehicleSales.PurchaseDate;
                     newVehicleSale.SaleAmount = newVehicleSales.SaleAmount;
@@ -182,6 +193,7 @@ namespace ExpenseManagement.Controllers
                     newVehicleSale.VehiclePurchaseId = newVehicleSales.VehiclePurchaseId;
                     newVehicleSale.WarrantyPlus = newVehicleSales.WarrantyPlus;
 
+                    _context.Update(vehiclePurchase);
                     _context.Update(newVehicleSale);
                     await _context.SaveChangesAsync();
                     return Ok(new { Result = true, Message = "Sıfır Araç Satışı Başarıyla Güncellendi!" });
@@ -196,7 +208,7 @@ namespace ExpenseManagement.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var newVehicleSales = await _context.NewVehicleSales
@@ -210,7 +222,7 @@ namespace ExpenseManagement.Controllers
 
             if (newVehicleSales == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             return View(newVehicleSales);
@@ -239,11 +251,6 @@ namespace ExpenseManagement.Controllers
                 return Ok(new { Result = true, Message = "Sıfır Araç Satışı Silinmiştir!" });
             }
             return BadRequest("Sıfır Araç Satışı Silinirken Bir Hata Oluştu!");
-        }
-
-        private bool NewVehicleSalesExists(int id)
-        {
-            return _context.NewVehicleSales.Any(e => e.Id == id);
         }
     }
 }

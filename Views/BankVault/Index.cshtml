@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Banka Kayıtları";
+    Layout = "_BankLayout";
 }
 
 <section class="content">
@@ -18,7 +19,7 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <div class="card-body">
-                                <table id="allTables" class="table table-bordered table-striped" width="100%">
+                                <table id="ItemsTable" class="table table-bordered table-striped" width="100%">
                                     <thead>
                                         <tr>
                                             <th>
@@ -33,33 +34,6 @@
                                             <th>İşlemler</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        @foreach (var item in Model)
-                                        {
-                                        <tr>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Amount) @Html.DisplayFor(modelItem => item.AmountCurrencyName)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.AccountType.Name)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.BankBranch.Name)
-                                            </td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                        <span class="fa fa-ellipsis-h"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef">
-                                                        <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Güncelle</a></li>
-                                                        <li><a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id">Sil</a></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        }
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -69,3 +43,55 @@
         </div>
     </div>
 </section>
+
+@section Scripts{
+    <script>
+        (function () {
+            var generateCustomerTable = $("#ItemsTable").DataTable({
+                "language": {
+                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                    zeroRecords: "Hiçbir kayıt bulunamadı.",
+                    emptyTable: "Kayıt bulunmamaktadır.",
+                    search: "Ara:",
+                    oPaginate: {
+                        "sFirst": "İlk",
+                        "sLast": "Son",
+                        "sNext": "Sonraki",
+                        "sPrevious": "Önceki"
+                    },
+                    sLengthMenu: "_MENU_ adet kayıt getir",
+                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                },
+                "processing": true,
+                "serverSide": true,
+                "searchDelay": 1200,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "url": "/BankVault/Post",
+                    "method": "POST"
+                },
+                "columns": [
+                    {
+                        "data": "amount",
+                        "render": function (data, type, full, meta) {
+                            return full.amount + " " + full.amountCurrencyName;
+                        }
+                    },
+                    { "data": "accountType.name" },
+                    { "data": "bankBranch.name" },
+                    {
+                        "data": "actionId", render: function (data, type, row) {
+                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="BankVault/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="BankVault/Delete/' + row.id + '">Sil</a></ul></div>'
+                        },
+                        "orderable": false
+                    }
+                ],
+                "ordering": true,
+                "paging": true,
+                "pagingType": "simple_numbers",
+                "pageLength": 100
+            });
+        })(jQuery);
+    </script>
+}

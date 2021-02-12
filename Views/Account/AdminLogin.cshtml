@@ -19,14 +19,14 @@
     <link rel="stylesheet" href="~/Content/NewSite/dist/css/adminlte.min.css">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
-<body class="hold-transition login-page">
+<body class="hold-transition login-page bg-gradient-gray-dark">
     <div class="login-box">
-        <div class="login-logo">
-            <a href="#"><b>MUHASEBE YÖNETİMİ</b><br />Giriş Yap</a>
+        <div class="login-logo accent-light">
+            <a href="#"><b>MUHASEBE YÖNETİMİ BANKA</b><br />Giriş Yap</a>
         </div>
         <div class="card">
-            <div class="card-body login-card-body">
-                <form asp-action="Login" asp-controller="Account">
+            <div class="card-body login-card-body bg-gradient-gray-dark">
+                <form asp-action="AdminLogin" asp-controller="Account">
                     <label asp-for="Email" class="control-label"></label>
                     <div class="input-group mb-3 has-feedback">
                         <input type="email" asp-for="Email" class="form-control" placeholder="E-Posta" />

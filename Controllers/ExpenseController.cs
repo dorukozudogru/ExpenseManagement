@@ -31,13 +31,14 @@ namespace ExpenseManagement.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
         public IActionResult Salary()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
         public async Task<IActionResult> SalaryPost()
         {
             var requestFormData = Request.Form;
@@ -48,7 +49,7 @@ namespace ExpenseManagement.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
-            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe")
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
             {
                 expenseContext = expenseContext
                     .Where(e => e.CreatedBy == GetLoggedUserId())
@@ -81,7 +82,7 @@ namespace ExpenseManagement.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
-            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe")
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
             {
                 expenseContext = expenseContext
                     .Where(e => e.CreatedBy == GetLoggedUserId())
@@ -121,7 +122,7 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || expenses.CreatedBy == GetLoggedUserId())
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || expenses.CreatedBy == GetLoggedUserId())
             {
                 return View(expenses);
             }
@@ -146,7 +147,7 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || expenses.CreatedBy == GetLoggedUserId())
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || expenses.CreatedBy == GetLoggedUserId())
             {
                 return View(expenses);
             }
@@ -211,7 +212,7 @@ namespace ExpenseManagement.Controllers
             }
             ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name", expenses.SectorId);
 
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || expenses.CreatedBy == GetLoggedUserId())
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || expenses.CreatedBy == GetLoggedUserId())
             {
                 return View(expenses);
             }
@@ -282,7 +283,7 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || expenses.CreatedBy == GetLoggedUserId())
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || expenses.CreatedBy == GetLoggedUserId())
             {
                 return View(expenses);
             }

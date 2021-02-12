@@ -33,17 +33,17 @@ namespace ExpenseManagement.Helpers
                         {
                             if (sortDirection == "asc")
                             {
-                                return lstElements.Where(l => l.Amount.ToString().Contains(searchValue)
-                                || l.Definition.Contains(searchValue)
+                                return lstElements.Where(l => l.Amount.ToString().ToUpper().Contains(searchValue)
+                                || l.Definition.ToUpper().Contains(searchValue)
                                 || l.Id.ToString().Contains(searchValue)
-                                || l.Sector.Name.Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                                || l.Sector.Name.ToUpper().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                             }
                             else
                             {
-                                return lstElements.Where(l => l.Amount.ToString().Contains(searchValue)
-                                || l.Definition.Contains(searchValue)
+                                return lstElements.Where(l => l.Amount.ToString().ToUpper().Contains(searchValue)
+                                || l.Definition.ToUpper().Contains(searchValue)
                                 || l.Id.ToString().Contains(searchValue)
-                                || l.Sector.Name.Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                                || l.Sector.Name.ToUpper().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                             }
                         }
                         else
@@ -90,17 +90,17 @@ namespace ExpenseManagement.Helpers
                         {
                             if (sortDirection == "asc")
                             {
-                                return lstElements.Where(l => l.Amount.ToString().Contains(searchValue)
-                                || l.Definition.Contains(searchValue)
+                                return lstElements.Where(l => l.Amount.ToString().ToUpper().Contains(searchValue)
+                                || l.Definition.ToUpper().Contains(searchValue)
                                 || l.Id.ToString().Contains(searchValue)
-                                || l.Sector.Name.Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                                || l.Sector.Name.ToUpper().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                             }
                             else
                             {
-                                return lstElements.Where(l => l.Amount.ToString().Contains(searchValue)
-                                || l.Definition.Contains(searchValue)
+                                return lstElements.Where(l => l.Amount.ToString().ToUpper().Contains(searchValue)
+                                || l.Definition.ToUpper().Contains(searchValue)
                                 || l.Id.ToString().Contains(searchValue)
-                                || l.Sector.Name.Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                                || l.Sector.Name.ToUpper().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                             }
                         }
                         else
@@ -228,151 +228,6 @@ namespace ExpenseManagement.Helpers
             return null;
         }
 
-        public static List<Endorsements> ProcessCollection(List<Endorsements> lstElements, IFormCollection requestFormData)
-        {
-            var skip = Convert.ToInt32(requestFormData["start"].ToString());
-            var pageSize = Convert.ToInt32(requestFormData["length"].ToString());
-            Microsoft.Extensions.Primitives.StringValues tempOrder = new[] { "" };
-
-            if (requestFormData.TryGetValue("order[0][column]", out tempOrder))
-            {
-                var columnIndex = requestFormData["order[0][column]"].ToString();
-                var sortDirection = requestFormData["order[0][dir]"].ToString();
-                tempOrder = new[] { "" };
-                if (requestFormData.TryGetValue($"columns[{columnIndex}][data]", out tempOrder))
-                {
-                    var columnName = requestFormData[$"columns[{columnIndex}][data]"].ToString();
-                    string searchValue = requestFormData["search[value]"].ToString().ToUpper();
-
-                    if (pageSize > 0)
-                    {
-                        var prop = GetEndorsementsProperty(columnName);
-                        if (!string.IsNullOrEmpty(searchValue))
-                        {
-                            if (sortDirection == "asc")
-                            {
-                                return lstElements.Where(l => l.Amount.ToString().Contains(searchValue)
-                                || l.MonthName.Contains(searchValue)
-                                || l.Sector.Name.Contains(searchValue)
-                                || l.Year.ToString().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                            else
-                            {
-                                return lstElements.Where(l => l.Amount.ToString().Contains(searchValue)
-                                || l.MonthName.Contains(searchValue)
-                                || l.Sector.Name.Contains(searchValue)
-                                || l.Year.ToString().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                        }
-                        else
-                        {
-                            if (sortDirection == "asc")
-                            {
-                                return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                            else
-                            {
-                                return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        return lstElements;
-                    }
-                }
-            }
-            return null;
-        }
-
-        public static List<EndorsementResponse> ProcessCollection(List<EndorsementResponse> lstElements, IFormCollection requestFormData)
-        {
-            var skip = Convert.ToInt32(requestFormData["start"].ToString());
-            var pageSize = Convert.ToInt32(requestFormData["length"].ToString());
-            Microsoft.Extensions.Primitives.StringValues tempOrder = new[] { "" };
-
-            if (requestFormData.TryGetValue("order[0][column]", out tempOrder))
-            {
-                var columnIndex = requestFormData["order[0][column]"].ToString();
-                var sortDirection = requestFormData["order[0][dir]"].ToString();
-                tempOrder = new[] { "" };
-                if (requestFormData.TryGetValue($"columns[{columnIndex}][data]", out tempOrder))
-                {
-                    var columnName = requestFormData[$"columns[{columnIndex}][data]"].ToString();
-                    string searchValue = requestFormData["search[value]"].ToString().ToUpper();
-
-                    if (pageSize > 0)
-                    {
-                        var prop = GetEndorsementResponseProperty(columnName);
-
-                        return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                    }
-                }
-                else
-                {
-                    return lstElements;
-                }
-            }
-            return null;
-        }
-
-        public static List<ToDoLists> ProcessCollection(List<ToDoLists> lstElements, IFormCollection requestFormData)
-        {
-            var skip = Convert.ToInt32(requestFormData["start"].ToString());
-            var pageSize = Convert.ToInt32(requestFormData["length"].ToString());
-            Microsoft.Extensions.Primitives.StringValues tempOrder = new[] { "" };
-
-            if (requestFormData.TryGetValue("order[0][column]", out tempOrder))
-            {
-                var columnIndex = requestFormData["order[0][column]"].ToString();
-                var sortDirection = requestFormData["order[0][dir]"].ToString();
-                tempOrder = new[] { "" };
-                if (requestFormData.TryGetValue($"columns[{columnIndex}][data]", out tempOrder))
-                {
-                    var columnName = requestFormData[$"columns[{columnIndex}][data]"].ToString();
-                    string searchValue = requestFormData["search[value]"].ToString().ToUpper();
-
-                    if (pageSize > 0)
-                    {
-                        var prop = GetToDoListsProperty(columnName);
-                        if (!string.IsNullOrEmpty(searchValue))
-                        {
-                            if (sortDirection == "asc")
-                            {
-                                return lstElements.Where(l => l.Amount.ToString().Contains(searchValue)
-                                || l.Debtor.Contains(searchValue)
-                                || l.Id.ToString().Contains(searchValue)
-                                || l.Sector.Name.Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                            else
-                            {
-                                return lstElements.Where(l => l.Amount.ToString().Contains(searchValue)
-                                || l.Debtor.Contains(searchValue)
-                                || l.Id.ToString().Contains(searchValue)
-                                || l.Sector.Name.Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                        }
-                        else
-                        {
-                            if (sortDirection == "asc")
-                            {
-                                return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                            else
-                            {
-                                return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        return lstElements;
-                    }
-                }
-            }
-            return null;
-        }
-
         public static List<VehiclePurchases> ProcessCollection(List<VehiclePurchases> lstElements, IFormCollection requestFormData)
         {
             var skip = Convert.ToInt32(requestFormData["start"].ToString());
@@ -461,7 +316,7 @@ namespace ExpenseManagement.Helpers
                                 || l.VehiclePurchase.CarModel.CarBrand.Name.ToUpper().Contains(searchValue)
                                 || l.VehiclePurchase.CarModel.Name.ToUpper().Contains(searchValue)
                                 || l.Salesman.Name.ToUpper().Contains(searchValue)
-                                || l.Id.ToString().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList(); ;
+                                || l.Id.ToString().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                             }
                             else
                             {
@@ -470,6 +325,175 @@ namespace ExpenseManagement.Helpers
                                 || l.VehiclePurchase.CarModel.Name.ToUpper().ToString().Contains(searchValue)
                                 || l.Salesman.Name.ToUpper().Contains(searchValue)
                                 || l.Id.ToString().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                        }
+                        else
+                        {
+                            if (sortDirection == "asc")
+                            {
+                                return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                            else
+                            {
+                                return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return lstElements;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static List<UsedVehicleSales> ProcessCollection(List<UsedVehicleSales> lstElements, IFormCollection requestFormData)
+        {
+            var skip = Convert.ToInt32(requestFormData["start"].ToString());
+            var pageSize = Convert.ToInt32(requestFormData["length"].ToString());
+            Microsoft.Extensions.Primitives.StringValues tempOrder = new[] { "" };
+
+            if (requestFormData.TryGetValue("order[0][column]", out tempOrder))
+            {
+                var columnIndex = requestFormData["order[0][column]"].ToString();
+                var sortDirection = requestFormData["order[0][dir]"].ToString();
+                tempOrder = new[] { "" };
+                if (requestFormData.TryGetValue($"columns[{columnIndex}][data]", out tempOrder))
+                {
+                    var columnName = requestFormData[$"columns[{columnIndex}][data]"].ToString();
+                    string searchValue = requestFormData["search[value]"].ToString().ToUpper();
+
+                    if (pageSize > 0)
+                    {
+                        var prop = GetUsedVehicleSalesProperty(columnName);
+                        if (!string.IsNullOrEmpty(searchValue))
+                        {
+                            if (sortDirection == "asc")
+                            {
+                                return lstElements.Where(l => l.VehiclePurchase.Chassis.ToUpper().Contains(searchValue)
+                                || l.VehiclePurchase.CarModel.CarBrand.Name.ToUpper().Contains(searchValue)
+                                || l.VehiclePurchase.CarModel.Name.ToUpper().Contains(searchValue)
+                                || l.PurchasedSalesman.Name.ToUpper().Contains(searchValue)
+                                || l.SoldSalesman.Name.ToUpper().Contains(searchValue)
+                                || l.Id.ToString().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                            else
+                            {
+                                return lstElements.Where(l => l.VehiclePurchase.Chassis.ToUpper().ToString().Contains(searchValue)
+                                || l.VehiclePurchase.CarModel.CarBrand.Name.ToUpper().Contains(searchValue)
+                                || l.VehiclePurchase.CarModel.Name.ToUpper().Contains(searchValue)
+                                || l.PurchasedSalesman.Name.ToUpper().Contains(searchValue)
+                                || l.SoldSalesman.Name.ToUpper().Contains(searchValue)
+                                || l.Id.ToString().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                        }
+                        else
+                        {
+                            if (sortDirection == "asc")
+                            {
+                                return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                            else
+                            {
+                                return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return lstElements;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static List<BankVaults> ProcessCollection(List<BankVaults> lstElements, IFormCollection requestFormData)
+        {
+            var skip = Convert.ToInt32(requestFormData["start"].ToString());
+            var pageSize = Convert.ToInt32(requestFormData["length"].ToString());
+            Microsoft.Extensions.Primitives.StringValues tempOrder = new[] { "" };
+
+            if (requestFormData.TryGetValue("order[0][column]", out tempOrder))
+            {
+                var columnIndex = requestFormData["order[0][column]"].ToString();
+                var sortDirection = requestFormData["order[0][dir]"].ToString();
+                tempOrder = new[] { "" };
+                if (requestFormData.TryGetValue($"columns[{columnIndex}][data]", out tempOrder))
+                {
+                    var columnName = requestFormData[$"columns[{columnIndex}][data]"].ToString();
+                    string searchValue = requestFormData["search[value]"].ToString().ToUpper();
+
+                    if (pageSize > 0)
+                    {
+                        var prop = GetBankVaultsProperty(columnName);
+                        if (!string.IsNullOrEmpty(searchValue))
+                        {
+                            if (sortDirection == "asc")
+                            {
+                                return lstElements.Where(l => l.Amount.ToString().ToUpper().Contains(searchValue)
+                                || l.AccountType.Name.ToUpper().Contains(searchValue)
+                                || l.BankBranch.Name.ToUpper().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                            else
+                            {
+                                return lstElements.Where(l => l.Amount.ToString().ToUpper().Contains(searchValue)
+                                || l.AccountType.Name.ToUpper().Contains(searchValue)
+                                || l.BankBranch.Name.ToUpper().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                        }
+                        else
+                        {
+                            if (sortDirection == "asc")
+                            {
+                                return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                            else
+                            {
+                                return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return lstElements;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static List<DepositAccounts> ProcessCollection(List<DepositAccounts> lstElements, IFormCollection requestFormData)
+        {
+            var skip = Convert.ToInt32(requestFormData["start"].ToString());
+            var pageSize = Convert.ToInt32(requestFormData["length"].ToString());
+            Microsoft.Extensions.Primitives.StringValues tempOrder = new[] { "" };
+
+            if (requestFormData.TryGetValue("order[0][column]", out tempOrder))
+            {
+                var columnIndex = requestFormData["order[0][column]"].ToString();
+                var sortDirection = requestFormData["order[0][dir]"].ToString();
+                tempOrder = new[] { "" };
+                if (requestFormData.TryGetValue($"columns[{columnIndex}][data]", out tempOrder))
+                {
+                    var columnName = requestFormData[$"columns[{columnIndex}][data]"].ToString();
+                    string searchValue = requestFormData["search[value]"].ToString().ToUpper();
+
+                    if (pageSize > 0)
+                    {
+                        var prop = GetDepositAccountsProperty(columnName);
+                        if (!string.IsNullOrEmpty(searchValue))
+                        {
+                            if (sortDirection == "asc")
+                            {
+                                return lstElements.Where(l => l.Amount.ToString().ToUpper().Contains(searchValue)
+                                || l.BankBranch.Name.ToUpper().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                            else
+                            {
+                                return lstElements.Where(l => l.Amount.ToString().ToUpper().Contains(searchValue)
+                                || l.BankBranch.Name.ToUpper().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                             }
                         }
                         else
@@ -553,21 +577,6 @@ namespace ExpenseManagement.Helpers
             return prop;
         }
 
-        private static PropertyInfo GetEndorsementsProperty(string name)
-        {
-            var properties = typeof(Endorsements).GetProperties();
-            PropertyInfo prop = null;
-            foreach (var item in properties)
-            {
-                if (item.Name.ToLowerInvariant().Equals(name.ToLowerInvariant()))
-                {
-                    prop = item;
-                    break;
-                }
-            }
-            return prop;
-        }
-
         private static PropertyInfo GetEndorsementResponseProperty(string name)
         {
             var properties = typeof(EndorsementResponse).GetProperties();
@@ -616,6 +625,51 @@ namespace ExpenseManagement.Helpers
         private static PropertyInfo GetNewVehicleSalesProperty(string name)
         {
             var properties = typeof(NewVehicleSales).GetProperties();
+            PropertyInfo prop = null;
+            foreach (var item in properties)
+            {
+                if (item.Name.ToLowerInvariant().Equals(name.ToLowerInvariant()))
+                {
+                    prop = item;
+                    break;
+                }
+            }
+            return prop;
+        }
+
+        private static PropertyInfo GetUsedVehicleSalesProperty(string name)
+        {
+            var properties = typeof(UsedVehicleSales).GetProperties();
+            PropertyInfo prop = null;
+            foreach (var item in properties)
+            {
+                if (item.Name.ToLowerInvariant().Equals(name.ToLowerInvariant()))
+                {
+                    prop = item;
+                    break;
+                }
+            }
+            return prop;
+        }
+
+        private static PropertyInfo GetBankVaultsProperty(string name)
+        {
+            var properties = typeof(BankVaults).GetProperties();
+            PropertyInfo prop = null;
+            foreach (var item in properties)
+            {
+                if (item.Name.ToLowerInvariant().Equals(name.ToLowerInvariant()))
+                {
+                    prop = item;
+                    break;
+                }
+            }
+            return prop;
+        }
+
+        private static PropertyInfo GetDepositAccountsProperty(string name)
+        {
+            var properties = typeof(DepositAccounts).GetProperties();
             PropertyInfo prop = null;
             foreach (var item in properties)
             {

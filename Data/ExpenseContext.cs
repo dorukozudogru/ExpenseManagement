@@ -91,8 +91,6 @@ namespace ExpenseManagement.Data
 
         public DbSet<BankVaults> BankVaults { get; set; }
 
-        public DbSet<Endorsements> Endorsements { get; set; }
-
         public DbSet<Expenses> Expenses { get; set; }
 
         public DbSet<Incomes> Incomes { get; set; }
@@ -116,5 +114,7 @@ namespace ExpenseManagement.Data
         public DbSet<NewVehicleSales> NewVehicleSales { get; set; }
 
         public DbSet<UsedVehicleSales> UsedVehicleSales { get; set; }
+
+        public DbSet<DepositAccounts> DepositAccounts { get; set; }
     }
 }

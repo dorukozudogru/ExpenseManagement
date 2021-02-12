@@ -86,6 +86,85 @@ namespace ExpenseManagement.Helpers
             return vehiclePurchases;
         }
 
+        public static List<DepositAccounts> GetEnumName(List<DepositAccounts> depositAccounts)
+        {
+            foreach (var depositAccount in depositAccounts)
+            {
+                if (depositAccount.AmountCurrency == 0)
+                {
+                    depositAccount.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                }
+                if (depositAccount.AmountCurrency == 1)
+                {
+                    depositAccount.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                }
+                if (depositAccount.AmountCurrency == 2)
+                {
+                    depositAccount.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                }
+                if (depositAccount.AmountCurrency == 3)
+                {
+                    depositAccount.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                }
+
+                if (depositAccount.ProfitCurrency == 0)
+                {
+                    depositAccount.ProfitCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                }
+                if (depositAccount.ProfitCurrency == 1)
+                {
+                    depositAccount.ProfitCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                }
+                if (depositAccount.ProfitCurrency == 2)
+                {
+                    depositAccount.ProfitCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                }
+                if (depositAccount.ProfitCurrency == 3)
+                {
+                    depositAccount.ProfitCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                }
+            }
+            return depositAccounts;
+        }
+
+        public static DepositAccounts GetEnumName(DepositAccounts depositAccounts)
+        {
+            if (depositAccounts.AmountCurrency == 0)
+            {
+                depositAccounts.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+            }
+            if (depositAccounts.AmountCurrency == 1)
+            {
+                depositAccounts.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+            }
+            if (depositAccounts.AmountCurrency == 2)
+            {
+                depositAccounts.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+            }
+            if (depositAccounts.AmountCurrency == 3)
+            {
+                depositAccounts.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+            }
+
+            if (depositAccounts.ProfitCurrency == 0)
+            {
+                depositAccounts.ProfitCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+            }
+            if (depositAccounts.ProfitCurrency == 1)
+            {
+                depositAccounts.ProfitCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+            }
+            if (depositAccounts.ProfitCurrency == 2)
+            {
+                depositAccounts.ProfitCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+            }
+            if (depositAccounts.ProfitCurrency == 3)
+            {
+                depositAccounts.ProfitCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+            }
+            return depositAccounts;
+        }
+
         public static List<NewVehicleSales> GetEnumName(List<NewVehicleSales> newVehicleSales)
         {
             foreach (var newVehicleSale in newVehicleSales)
@@ -199,6 +278,153 @@ namespace ExpenseManagement.Helpers
             return newVehicleSales;
         }
 
+        public static List<UsedVehicleSales> GetEnumName(List<UsedVehicleSales> usedVehicleSales)
+        {
+            foreach (var usedVehicleSale in usedVehicleSales)
+            {
+                if (usedVehicleSale.SaleAmountCurrency == 0)
+                {
+                    usedVehicleSale.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                }
+                if (usedVehicleSale.SaleAmountCurrency == 1)
+                {
+                    usedVehicleSale.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                }
+                if (usedVehicleSale.SaleAmountCurrency == 2)
+                {
+                    usedVehicleSale.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                }
+                if (usedVehicleSale.SaleAmountCurrency == 3)
+                {
+                    usedVehicleSale.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                }
+
+                if (usedVehicleSale.PurchaseAmountCurrency == 0)
+                {
+                    usedVehicleSale.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                }
+                if (usedVehicleSale.PurchaseAmountCurrency == 1)
+                {
+                    usedVehicleSale.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                }
+                if (usedVehicleSale.PurchaseAmountCurrency == 2)
+                {
+                    usedVehicleSale.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                }
+                if (usedVehicleSale.PurchaseAmountCurrency == 3)
+                {
+                    usedVehicleSale.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                }
+
+                if (usedVehicleSale.PurchasedSalesmanBonusCurrency == 0)
+                {
+                    usedVehicleSale.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                }
+                if (usedVehicleSale.PurchasedSalesmanBonusCurrency == 1)
+                {
+                    usedVehicleSale.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                }
+                if (usedVehicleSale.PurchasedSalesmanBonusCurrency == 2)
+                {
+                    usedVehicleSale.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                }
+                if (usedVehicleSale.PurchasedSalesmanBonusCurrency == 3)
+                {
+                    usedVehicleSale.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                }
+
+                if (usedVehicleSale.SoldSalesmanBonusCurrency == 0)
+                {
+                    usedVehicleSale.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                }
+                if (usedVehicleSale.SoldSalesmanBonusCurrency == 1)
+                {
+                    usedVehicleSale.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                }
+                if (usedVehicleSale.SoldSalesmanBonusCurrency == 2)
+                {
+                    usedVehicleSale.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                }
+                if (usedVehicleSale.SoldSalesmanBonusCurrency == 3)
+                {
+                    usedVehicleSale.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                }
+            }
+            return usedVehicleSales;
+        }
+
+        public static UsedVehicleSales GetEnumName(UsedVehicleSales usedVehicleSales)
+        {
+            if (usedVehicleSales.SaleAmountCurrency == 0)
+            {
+                usedVehicleSales.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+            }
+            if (usedVehicleSales.SaleAmountCurrency == 1)
+            {
+                usedVehicleSales.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+            }
+            if (usedVehicleSales.SaleAmountCurrency == 2)
+            {
+                usedVehicleSales.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+            }
+            if (usedVehicleSales.SaleAmountCurrency == 3)
+            {
+                usedVehicleSales.SaleAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+            }
+
+            if (usedVehicleSales.PurchaseAmountCurrency == 0)
+            {
+                usedVehicleSales.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+            }
+            if (usedVehicleSales.PurchaseAmountCurrency == 1)
+            {
+                usedVehicleSales.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+            }
+            if (usedVehicleSales.PurchaseAmountCurrency == 2)
+            {
+                usedVehicleSales.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+            }
+            if (usedVehicleSales.PurchaseAmountCurrency == 3)
+            {
+                usedVehicleSales.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+            }
+
+            if (usedVehicleSales.PurchasedSalesmanBonusCurrency == 0)
+            {
+                usedVehicleSales.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+            }
+            if (usedVehicleSales.PurchasedSalesmanBonusCurrency == 1)
+            {
+                usedVehicleSales.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+            }
+            if (usedVehicleSales.PurchasedSalesmanBonusCurrency == 2)
+            {
+                usedVehicleSales.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+            }
+            if (usedVehicleSales.PurchasedSalesmanBonusCurrency == 3)
+            {
+                usedVehicleSales.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+            }
+
+            if (usedVehicleSales.SoldSalesmanBonusCurrency == 0)
+            {
+                usedVehicleSales.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+            }
+            if (usedVehicleSales.SoldSalesmanBonusCurrency == 1)
+            {
+                usedVehicleSales.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+            }
+            if (usedVehicleSales.SoldSalesmanBonusCurrency == 2)
+            {
+                usedVehicleSales.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+            }
+            if (usedVehicleSales.SoldSalesmanBonusCurrency == 3)
+            {
+                usedVehicleSales.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+            }
+            return usedVehicleSales;
+        }
+
         public static List<ToDoLists> GetEnumName(List<ToDoLists> lists)
         {
             foreach (var list in lists)
@@ -287,136 +513,6 @@ namespace ExpenseManagement.Helpers
                 banks.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(BankVaults.AmountCurrencyEnum.GBP);
             }
             return banks;
-        }
-
-        public static List<Endorsements> GetEnumName(List<Endorsements> endorsements)
-        {
-            foreach (var endorsement in endorsements)
-            {
-                if (endorsement.AmountCurrency == 0)
-                {
-                    endorsement.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Endorsements.AmountCurrencyEnum.TRY);
-                }
-                if (endorsement.AmountCurrency == 1)
-                {
-                    endorsement.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Endorsements.AmountCurrencyEnum.USD);
-                }
-                if (endorsement.AmountCurrency == 2)
-                {
-                    endorsement.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Endorsements.AmountCurrencyEnum.EUR);
-                }
-                if (endorsement.AmountCurrency == 3)
-                {
-                    endorsement.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Endorsements.AmountCurrencyEnum.GBP);
-                }
-
-                switch (endorsement.Month)
-                {
-                    case 1:
-                        endorsement.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JANUARY);
-                        break;
-                    case 2:
-                        endorsement.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.FEBRUARY);
-                        break;
-                    case 3:
-                        endorsement.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MARCH);
-                        break;
-                    case 4:
-                        endorsement.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.APRIL);
-                        break;
-                    case 5:
-                        endorsement.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MAY);
-                        break;
-                    case 6:
-                        endorsement.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JUNE);
-                        break;
-                    case 7:
-                        endorsement.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JULY);
-                        break;
-                    case 8:
-                        endorsement.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.AUGUST);
-                        break;
-                    case 9:
-                        endorsement.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.SEPTEMBER);
-                        break;
-                    case 10:
-                        endorsement.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.OCTOBER);
-                        break;
-                    case 11:
-                        endorsement.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.NOVEMBER);
-                        break;
-                    case 12:
-                        endorsement.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.DECEMBER);
-                        break;
-                    default:
-                        break;
-                }
-            }
-            return endorsements;
-        }
-
-        public static Endorsements GetEnumName(Endorsements endorsements)
-        {
-            if (endorsements.AmountCurrency == 0)
-            {
-                endorsements.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Endorsements.AmountCurrencyEnum.TRY);
-            }
-            if (endorsements.AmountCurrency == 1)
-            {
-                endorsements.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Endorsements.AmountCurrencyEnum.USD);
-            }
-            if (endorsements.AmountCurrency == 2)
-            {
-                endorsements.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Endorsements.AmountCurrencyEnum.EUR);
-            }
-            if (endorsements.AmountCurrency == 3)
-            {
-                endorsements.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Endorsements.AmountCurrencyEnum.GBP);
-            }
-
-            switch (endorsements.Month)
-            {
-                case 1:
-                    endorsements.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JANUARY);
-                    break;
-                case 2:
-                    endorsements.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.FEBRUARY);
-                    break;
-                case 3:
-                    endorsements.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MARCH);
-                    break;
-                case 4:
-                    endorsements.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.APRIL);
-                    break;
-                case 5:
-                    endorsements.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MAY);
-                    break;
-                case 6:
-                    endorsements.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JUNE);
-                    break;
-                case 7:
-                    endorsements.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JULY);
-                    break;
-                case 8:
-                    endorsements.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.AUGUST);
-                    break;
-                case 9:
-                    endorsements.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.SEPTEMBER);
-                    break;
-                case 10:
-                    endorsements.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.OCTOBER);
-                    break;
-                case 11:
-                    endorsements.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.NOVEMBER);
-                    break;
-                case 12:
-                    endorsements.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.DECEMBER);
-                    break;
-                default:
-                    break;
-            }
-
-            return endorsements;
         }
 
         public static List<Expenses> GetEnumName(List<Expenses> expenses)
@@ -860,6 +956,24 @@ namespace ExpenseManagement.Helpers
                         break;
                     case 12:
                         generalResponse.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.DECEMBER);
+                        break;
+                    default:
+                        break;
+                }
+
+                switch (generalResponse.TotalAmountCurrency)
+                {
+                    case 0:
+                        generalResponse.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.TRY);
+                        break;
+                    case 1:
+                        generalResponse.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.USD);
+                        break;
+                    case 2:
+                        generalResponse.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.EUR);
+                        break;
+                    case 3:
+                        generalResponse.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.GBP);
                         break;
                     default:
                         break;

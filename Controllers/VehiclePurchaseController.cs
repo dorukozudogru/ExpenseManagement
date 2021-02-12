@@ -13,7 +13,7 @@ using ExpenseManagement.Helpers;
 
 namespace ExpenseManagement.Controllers
 {
-    [Authorize(Roles = ("Admin, Satış"))]
+    [Authorize]
     public class VehiclePurchaseController : Controller
     {
         private readonly ExpenseContext _context;
@@ -170,7 +170,7 @@ namespace ExpenseManagement.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var vehiclePurchases = await _context.VehiclePurchases
@@ -182,7 +182,7 @@ namespace ExpenseManagement.Controllers
 
             if (vehiclePurchases == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             return View(vehiclePurchases);
