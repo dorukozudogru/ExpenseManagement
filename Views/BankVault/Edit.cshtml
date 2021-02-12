@@ -40,7 +40,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="form-group">
-                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="update()" />
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="update()" id="updateButton" />
                             <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
                                 <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                             </a>
@@ -65,6 +65,9 @@
         amountCurrency = document.getElementById("amountCurrency").value;
         bankBranchId = document.getElementById("bankBranchId").value;
         id = document.getElementById("id").value;
+
+        $("#updateButton").attr("disabled", true);
+
         $.ajax({
             url: '/BankVault/Edit?banks.AccountTypeId=' + accountTypeId + '&banks.Amount=' + amount + '&banks.AmountCurrency=' + amountCurrency + '&banks.bankBranchId=' + bankBranchId + '&id=' + id,
             type: 'POST',
@@ -78,6 +81,9 @@
             error: function (error) {
                 document.getElementById("swalDefaultError").value = error.responseText;
                 document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#updateButton").attr("disabled", false);
+                }, 1600);
             }
         });
     }

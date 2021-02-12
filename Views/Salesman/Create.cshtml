@@ -28,7 +28,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="form-group">
-                            <input type="submit" value="Ekle" class="btn btn-success" onclick="add()" />
+                            <input type="submit" value="Ekle" class="btn btn-success" onclick="add()" id="createButton" />
                             <a class="btn btn-primary" asp-action="Index" style="margin-right: 5px;">
                                 <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                             </a>
@@ -45,6 +45,9 @@
 
     function add() {
         name = document.getElementById("name").value;
+
+        $("#createButton").attr("disabled", true);
+
         $.ajax({
             url: '/Salesman/Create?salesmans.Name=' + name,
             type: 'POST',
@@ -58,6 +61,9 @@
             error: function (error) {
                 document.getElementById("swalDefaultError").value = error.responseText;
                 document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#createButton").attr("disabled", false);
+                }, 1600);
             }
         });
     }
