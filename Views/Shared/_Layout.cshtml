@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Identity.SignInManager<AppIdentityUser> signInManager;
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -72,6 +74,14 @@
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a asp-controller="VehiclePurchase" asp-action="Index" class="nav-link">
+                                <i class="nav-icon fas fa-warehouse"></i>
+                                <p>
+                                    Araç Alış
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-car"></i>
@@ -112,25 +122,27 @@
                                         <i class="far fa-circle nav-icon text-warning"></i><p>Giderler</p>
                                     </a>
                                 </li>
+                                @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe")))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Expense" asp-action="Salary">
+                                            <i class="far fa-circle nav-icon text-warning"></i><p>Maaşlar</p>
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a asp-controller="VehiclePurchase" asp-action="Index" class="nav-link">
-                                <i class="nav-icon fas fa-warehouse"></i>
-                                <p>
-                                    Araç Alış
-                                </p>
-                            </a>
-                        </li>
-                        @*<li class="nav-item">
+                        @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe")))
+                        {
+                            <li class="nav-item">
                                 <a asp-controller="ToDoList" asp-action="Index" class="nav-link">
                                     <i class="nav-icon fas fa-hand-holding-usd"></i>
                                     <p>
                                         Alacak Listesi
                                     </p>
                                 </a>
-                            </li>*@
-                        @*<li class="nav-item has-treeview">
+                            </li>
+                            <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-university"></i>
                                     <p>
@@ -155,7 +167,8 @@
                                         </a>
                                     </li>
                                 </ul>
-                            </li>*@
+                            </li>
+                        }
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-cogs"></i>
@@ -190,45 +203,60 @@
                                         <i class="far fa-circle nav-icon text-warning"></i><p>Model Listesi</p>
                                     </a>
                                 </li>
+                                @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe")))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="AccountType" asp-action="Index">
+                                            <i class="far fa-circle nav-icon text-warning"></i><p>Hesap Türleri</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="BankBranches" asp-action="Index">
+                                            <i class="far fa-circle nav-icon text-warning"></i><p>Banka/Şube Listesi</p>
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </li>
                         @*<li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-chart-line"></i>
-                                    <p>
-                                        Raporlar
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>
+                                Raporlar
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Report" asp-action="ProfitReport">
+                                    <i class="far fa-circle nav-icon text-info"></i><p>Şirket Bazlı Kâr Raporu</p>
                                 </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a class="nav-link" asp-controller="Report" asp-action="ProfitReport">
-                                            <i class="far fa-circle nav-icon text-info"></i><p>Şirket Bazlı Kâr Raporu</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" asp-controller="Report" asp-action="ProfitReportWithInsurancePolicyType">
-                                            <i class="far fa-circle nav-icon text-info"></i><p>Poliçe Tipi Bazlı Kâr Rap.</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" asp-controller="Report" asp-action="AllProfitReport">
-                                            <i class="far fa-circle nav-icon text-info"></i><p>Kâr Raporu</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" asp-controller="Report" asp-action="GeneralInsuranceReport">
-                                            <i class="far fa-circle nav-icon text-info"></i><p>Genel Rapor</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" asp-controller="Report" asp-action="InsurancePaymentTypeReport">
-                                            <i class="far fa-circle nav-icon text-info"></i><p>Ödeme Şekli Raporu</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>*@
-                        @*<li class="nav-item has-treeview">
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Report" asp-action="ProfitReportWithInsurancePolicyType">
+                                    <i class="far fa-circle nav-icon text-info"></i><p>Poliçe Tipi Bazlı Kâr Rap.</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Report" asp-action="AllProfitReport">
+                                    <i class="far fa-circle nav-icon text-info"></i><p>Kâr Raporu</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Report" asp-action="GeneralInsuranceReport">
+                                    <i class="far fa-circle nav-icon text-info"></i><p>Genel Rapor</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Report" asp-action="InsurancePaymentTypeReport">
+                                    <i class="far fa-circle nav-icon text-info"></i><p>Ödeme Şekli Raporu</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>*@
+                        @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe")))
+                        {
+                            <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-tools"></i>
                                     <p>
@@ -248,7 +276,8 @@
                                         </a>
                                     </li>
                                 </ul>
-                            </li>*@
+                            </li>
+                        }
                     </ul>
                 </nav>
             </div>

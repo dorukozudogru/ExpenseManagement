@@ -79,6 +79,7 @@ namespace ExpenseManagement.Controllers
             var expenseContext = await _context.Expenses
                 .Where(e => e.ExpenseType != 2)
                 .Include(e => e.Sector)
+                .Include(e => e.Supplier)
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -211,6 +212,7 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
             ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name", expenses.SectorId);
+            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Name", expenses.SupplierId);
 
             if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || expenses.CreatedBy == GetLoggedUserId())
             {

@@ -31,6 +31,9 @@
                                                 @Html.DisplayNameFor(model => model.Sector.Name)
                                             </th>
                                             <th>
+                                                @Html.DisplayNameFor(model => model.Supplier.Name)
+                                            </th>
+                                            <th>
                                                 @Html.DisplayNameFor(model => model.Date)
                                             </th>
                                             <th>
@@ -96,28 +99,58 @@
                         "orderable": false
                     },
                     {
+                        "data": "supplier.name",
+                        render: function (data, type, row) {
+                            if (data != null) {
+                                return data;
+                            }
+                            return "-";
+                        },
+                        "orderable": false
+                    },
+                    {
                         "data": "date",
                         render: function (data, type, row) {
-                            return window.moment(data).format("DD-MMMM-YYYY");
+                            if (data != null) {
+                                return window.moment(data).format("DD-MMMM-YYYY");
+                            }
+                            return "-";
                         }
                     },
                     {
                         "data": "lastPaymentDate",
                         render: function (data, type, row) {
-                            return window.moment(data).format("DD-MMMM-YYYY");
+                            if (data != null) {
+                                return window.moment(data).format("DD-MMMM-YYYY");
+                            }
+                            return "-";
                         }
                     },
-                    { "data": "definition" },
+                    {
+                        "data": "definition",
+                        render: function (data, type, row) {
+                            if (data != null) {
+                                return data;
+                            }
+                            return "-";
+                        },
+                    },
                     {
                         "data": "amount",
                         "render": function (data, type, full, meta) {
-                            return full.amount + " " + full.amountCurrencyName;
+                            if (data != null) {
+                                return full.amount + " " + full.amountCurrencyName;
+                            }
+                            return "-";
                         }
                     },
                     {
                         "data": "tax",
                         "render": function (data, type, full, meta) {
-                            return full.tax + " " + full.taxCurrencyName;
+                            if (data != null) {
+                                return full.tax + " " + full.taxCurrencyName;
+                            }
+                            return "-";
                         }
                     },
                     {

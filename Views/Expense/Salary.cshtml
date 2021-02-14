@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Maaşlar";
-    Layout = "_BankLayout";
 }
 
 <section class="content">
@@ -106,7 +105,7 @@
                     },
                     {
                         "data": "actionId", render: function (data, type, row) {
-                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Expense/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="Expense/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="Expense/Delete/' + row.id + '">Sil</a></ul></div>'
+                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="Delete/' + row.id + '">Sil</a></ul></div>'
                         },
                         "orderable": false
                     }
