@@ -28,6 +28,10 @@
                                     <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
                                 </div>
                                 <div class="form-group">
+                                    <label asp-for="Supplier.Name" class="control-label"></label>
+                                    <select asp-for="SupplierId" class="form-control" asp-items="ViewBag.SupplierId" id="supplierId"></select>
+                                </div>
+                                <div class="form-group">
                                     <label asp-for="Date" class="control-label"></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
@@ -72,7 +76,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
-                                        <label class="control-label">Görüntüyü Güncelle</label>
+                                        <label asp-for="InvoiceImage" class="control-label"></label>
                                         <div class="input-group mb-3">
                                             <div class="custom-file">
                                                 <input type="file" class="custom-file-input" asp-for="InvoiceImage" accept="application/pdf,image/*" id="imageFile" name="imageFile">
@@ -104,13 +108,20 @@
                                         }
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     <label asp-for="Month" class="control-label"></label>
                                     <select asp-for="Month" class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
                                 </div>
-
-
+                                <div class="form-group">
+                                    <label asp-for="SalaryAmount" class="control-label" id="salary-title-for-salary"></label>
+                                    <div class="input-group mb-3" id="salary-for-salary">
+                                        <div class="input-group-prepend">
+                                            <select asp-for="SalaryAmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.SalaryAmountCurrencyEnum>()" id="salaryAmountCurrency"></select>
+                                        </div>
+                                        <input asp-for="SalaryAmount" class="form-control" id="salaryAmount" />
+                                        <span asp-validation-for="SalaryAmount" class="text-danger"></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

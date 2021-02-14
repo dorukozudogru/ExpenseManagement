@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ExpenseManagement.Data;
 using ExpenseManagement.Helpers;
@@ -137,7 +138,8 @@ namespace ExpenseManagement.Controllers
             }
 
             var finalTotalAmount = totalResponse
-                .GroupBy(t => new {
+                .GroupBy(t => new
+                {
                     t.Currency,
                 })
                 .Select(t => new TotalResponse
@@ -219,13 +221,45 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public IActionResult MonthlyCountReport()
+        public async Task<IActionResult> MonthlyCountReport()
         {
+            var expenses = await _context.Expenses
+                .Where(i => i.Date.Value.Month == DateTime.Now.Month && i.ExpenseType != 2)
+                .ToListAsync();
+
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
+            {
+                expenses = expenses
+                    .Where(e => e.CreatedBy == GetLoggedUserId())
+                    .ToList();
+            }
+
+            var incomes = await _context.Incomes
+                .Where(i => i.Month == DateTime.Now.Month)
+                .ToListAsync();
+
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
+            {
+                incomes = incomes
+                    .Where(e => e.CreatedBy == GetLoggedUserId())
+                    .ToList();
+            }
+
             return Ok(new List<int>
             {
-                _context.Expenses.Where(i => i.Date.Value.Month == DateTime.Now.Month && i.ExpenseType != 2).Count(),
-                _context.Incomes.Where(i => i.Month == DateTime.Now.Month).Count()
+                expenses.Count(),
+                incomes.Count()
             });
+        }
+
+        public string GetLoggedUserId()
+        {
+            return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        public string GetLoggedUserRole()
+        {
+            return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
         }
     }
 }

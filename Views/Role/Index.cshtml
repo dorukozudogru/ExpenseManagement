@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Sistem Rolleri";
-    Layout = "_BankLayout";
 }
 
 <section class="content">
@@ -42,7 +41,7 @@
                                                     @Html.DisplayFor(modelItem => item.Id)
                                                 </td>
                                                 <td>
-                                                    @if (item.Name != "Admin" && item.Name != "Muhasebe")
+                                                    @if (item.Name != "Admin" && item.Name != "Banaz" && item.Name != "Muhasebe")
                                                     {
                                                         <div class="btn-group">
                                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
