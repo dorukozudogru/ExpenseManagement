@@ -168,6 +168,42 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-solar-panel"></i>
+                                    <p>
+                                        Enerji
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Report" asp-action="Energy">
+                                            <i class="far fa-circle nav-icon text-warning"></i><p>Enerji Anasayfası</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Energy" asp-action="Daily">
+                                            <i class="far fa-circle nav-icon text-warning"></i><p>Günlük</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Energy" asp-action="Montly">
+                                            <i class="far fa-circle nav-icon text-warning"></i><p>Aylık</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Energy" asp-action="Yearly">
+                                            <i class="far fa-circle nav-icon text-warning"></i><p>Yıllık</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Energy" asp-action="Luytob">
+                                            <i class="far fa-circle nav-icon text-warning"></i><p>Lüytob/Fatura</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         }
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
@@ -219,41 +255,41 @@
                             </ul>
                         </li>
                         @*<li class="nav-item has-treeview">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-chart-line"></i>
-                            <p>
-                                Raporlar
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Report" asp-action="ProfitReport">
-                                    <i class="far fa-circle nav-icon text-info"></i><p>Şirket Bazlı Kâr Raporu</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Report" asp-action="ProfitReportWithInsurancePolicyType">
-                                    <i class="far fa-circle nav-icon text-info"></i><p>Poliçe Tipi Bazlı Kâr Rap.</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Report" asp-action="AllProfitReport">
-                                    <i class="far fa-circle nav-icon text-info"></i><p>Kâr Raporu</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Report" asp-action="GeneralInsuranceReport">
-                                    <i class="far fa-circle nav-icon text-info"></i><p>Genel Rapor</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Report" asp-action="InsurancePaymentTypeReport">
-                                    <i class="far fa-circle nav-icon text-info"></i><p>Ödeme Şekli Raporu</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>*@
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-chart-line"></i>
+                <p>
+                    Raporlar
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Report" asp-action="ProfitReport">
+                        <i class="far fa-circle nav-icon text-info"></i><p>Şirket Bazlı Kâr Raporu</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Report" asp-action="ProfitReportWithInsurancePolicyType">
+                        <i class="far fa-circle nav-icon text-info"></i><p>Poliçe Tipi Bazlı Kâr Rap.</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Report" asp-action="AllProfitReport">
+                        <i class="far fa-circle nav-icon text-info"></i><p>Kâr Raporu</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Report" asp-action="GeneralInsuranceReport">
+                        <i class="far fa-circle nav-icon text-info"></i><p>Genel Rapor</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Report" asp-action="InsurancePaymentTypeReport">
+                        <i class="far fa-circle nav-icon text-info"></i><p>Ödeme Şekli Raporu</p>
+                    </a>
+                </li>
+            </ul>
+        </li>*@
                         @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe")))
                         {
                             <li class="nav-item has-treeview">

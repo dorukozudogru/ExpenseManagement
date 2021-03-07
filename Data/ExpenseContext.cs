@@ -116,5 +116,13 @@ namespace ExpenseManagement.Data
         public DbSet<UsedVehicleSales> UsedVehicleSales { get; set; }
 
         public DbSet<DepositAccounts> DepositAccounts { get; set; }
+
+        public DbSet<EnergyDaily> EnergyDailies { get; set; }
+
+        public DbSet<EnergyMonthlies> EnergyMonthlies { get; set; }
+
+        public DbSet<EnergyYearlies> EnergyYearlies { get; set; }
+
+        public DbSet<EnergyLuytobs> EnergyLuytobs { get; set; }
     }
 }

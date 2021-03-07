@@ -114,6 +114,7 @@ namespace ExpenseManagement.Controllers
 
             var expenses = await _context.Expenses
                 .Include(e => e.Sector)
+                .Include(e => e.Supplier)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
@@ -158,7 +159,15 @@ namespace ExpenseManagement.Controllers
         public IActionResult Create()
         {
             ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name");
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Name");
+
+            var suppliers = _context.Suppliers.ToList();
+            suppliers.Add(new Suppliers
+            {
+                Id = 0,
+                Name = ""
+            });
+
+            ViewData["SupplierId"] = new SelectList(suppliers.OrderBy(s => s.Id), "Id", "Name");
             return View();
         }
 
@@ -190,6 +199,11 @@ namespace ExpenseManagement.Controllers
                 expenses.CreatedAt = DateTime.Now;
                 expenses.CreatedBy = GetLoggedUserId();
 
+                if (expenses.SupplierId == 0)
+                {
+                    expenses.SupplierId = null;
+                }
+
                 _context.Add(expenses);
                 await _context.SaveChangesAsync();
                 return Ok(new { Result = true, Message = "Gider Başarıyla Kaydedilmiştir!" });
@@ -220,6 +234,8 @@ namespace ExpenseManagement.Controllers
             }
             return View("AccessDenied");
         }
+
+        //EDİT POST YAPILMALI
 
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Expenses expenses)
@@ -277,6 +293,7 @@ namespace ExpenseManagement.Controllers
 
             var expenses = await _context.Expenses
                 .Include(e => e.Sector)
+                .Include(e => e.Supplier)
                 .FirstOrDefaultAsync(m => m.Id == id);
             expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
 
