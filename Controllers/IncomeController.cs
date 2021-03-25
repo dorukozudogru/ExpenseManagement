@@ -177,6 +177,8 @@ namespace ExpenseManagement.Controllers
             return View("AccessDenied");
         }
 
+        //EDİT POST YAPILMALI
+
         [HttpPost]
         public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Month,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Incomes incomes)
         {

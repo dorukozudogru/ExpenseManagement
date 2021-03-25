@@ -4,14 +4,16 @@ using ExpenseManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseManagement.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    partial class ExpenseContextModelSnapshot : ModelSnapshot
+    [Migration("20210306194728_energy-menu-added")]
+    partial class energymenuadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -239,7 +241,7 @@ namespace ExpenseManagement.Migrations
                     b.ToTable("DepositAccounts");
                 });
 
-            modelBuilder.Entity("ExpenseManagement.Models.EnergyDaily", b =>
+            modelBuilder.Entity("ExpenseManagement.Models.EnergyDailies", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -247,30 +249,12 @@ namespace ExpenseManagement.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<double>("Kw");
+                    b.Property<string>("Kw")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
                     b.ToTable("EnergyDailies");
-                });
-
-            modelBuilder.Entity("ExpenseManagement.Models.EnergyLuytobFiles", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<byte[]>("Invoice");
-
-                    b.Property<string>("InvoiceFormat");
-
-                    b.Property<byte[]>("Luytob");
-
-                    b.Property<string>("LuytobFormat");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EnergyLuytobFiles");
                 });
 
             modelBuilder.Entity("ExpenseManagement.Models.EnergyLuytobs", b =>
@@ -279,14 +263,20 @@ namespace ExpenseManagement.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("EnergyLuytobFileId");
+                    b.Property<byte[]>("Invoice")
+                        .IsRequired();
+
+                    b.Property<string>("InvoiceFormat");
+
+                    b.Property<byte[]>("Luytob")
+                        .IsRequired();
+
+                    b.Property<string>("LuytobFormat");
 
                     b.Property<byte?>("Month")
                         .IsRequired();
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EnergyLuytobFileId");
 
                     b.ToTable("EnergyLuytobs");
                 });
@@ -297,22 +287,44 @@ namespace ExpenseManagement.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("Amount");
+                    b.Property<double?>("Amount")
+                        .IsRequired();
 
-                    b.Property<double>("ConsumedKw");
+                    b.Property<byte?>("AmountCurrency");
 
-                    b.Property<double>("DistributionFee");
+                    b.Property<string>("Kw")
+                        .IsRequired();
 
                     b.Property<byte?>("Month")
                         .IsRequired();
 
-                    b.Property<double>("ProducedKw");
-
-                    b.Property<double>("TAX");
-
                     b.HasKey("Id");
 
                     b.ToTable("EnergyMonthlies");
+                });
+
+            modelBuilder.Entity("ExpenseManagement.Models.EnergyYearlies", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ConsumedKw")
+                        .IsRequired();
+
+                    b.Property<string>("DistributionFee")
+                        .IsRequired();
+
+                    b.Property<int>("EnergyMonthlyMonthId");
+
+                    b.Property<string>("ProducedKw")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EnergyMonthlyMonthId");
+
+                    b.ToTable("EnergyYearlies");
                 });
 
             modelBuilder.Entity("ExpenseManagement.Models.Expenses", b =>
@@ -717,11 +729,11 @@ namespace ExpenseManagement.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("ExpenseManagement.Models.EnergyLuytobs", b =>
+            modelBuilder.Entity("ExpenseManagement.Models.EnergyYearlies", b =>
                 {
-                    b.HasOne("ExpenseManagement.Models.EnergyLuytobFiles", "EnergyLuytobFile")
+                    b.HasOne("ExpenseManagement.Models.EnergyMonthlies", "EnergyMonthlyMonth")
                         .WithMany()
-                        .HasForeignKey("EnergyLuytobFileId")
+                        .HasForeignKey("EnergyMonthlyMonthId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

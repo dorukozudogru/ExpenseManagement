@@ -13,6 +13,7 @@ using System.IO;
 using System.Collections.Generic;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 namespace ExpenseManagement.Controllers
 {
@@ -33,6 +34,12 @@ namespace ExpenseManagement.Controllers
 
         [Authorize(Roles = "Admin, Banaz, Muhasebe")]
         public IActionResult Salary()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public IActionResult Paylist()
         {
             return View();
         }
@@ -105,6 +112,47 @@ namespace ExpenseManagement.Controllers
             return Ok(response);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> WeeklyPaylistPost()
+        {
+            var requestFormData = Request.Form;
+
+            DateTime baseDate = DateTime.Today;
+            var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
+            var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+
+            var expenseContext = await _context.Expenses
+                .Where(e => e.ExpenseType != 2 &&
+                            e.LastPaymentDate != null &&
+                            e.LastPaymentDate >= thisWeekStart &&
+                            e.LastPaymentDate <= thisWeekEnd)
+                .Include(e => e.Sector)
+                .Include(e => e.Supplier)
+                .AsNoTracking()
+                .ToListAsync();
+
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
+            {
+                expenseContext = expenseContext
+                    .Where(e => e.CreatedBy == GetLoggedUserId())
+                    .ToList();
+            }
+
+            expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
+
+            List<Expenses> listItems = ProcessCollection(expenseContext, requestFormData);
+
+            var response = new PaginatedResponse<Expenses>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = expenseContext.Count,
+                RecordsTotal = expenseContext.Count
+            };
+
+            return Ok(response);
+        }
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -114,6 +162,7 @@ namespace ExpenseManagement.Controllers
 
             var expenses = await _context.Expenses
                 .Include(e => e.Sector)
+                .Include(e => e.Supplier)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
@@ -158,7 +207,15 @@ namespace ExpenseManagement.Controllers
         public IActionResult Create()
         {
             ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name");
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Name");
+
+            var suppliers = _context.Suppliers.ToList();
+            suppliers.Add(new Suppliers
+            {
+                Id = 0,
+                Name = ""
+            });
+
+            ViewData["SupplierId"] = new SelectList(suppliers.OrderBy(s => s.Id), "Id", "Name");
             return View();
         }
 
@@ -190,6 +247,11 @@ namespace ExpenseManagement.Controllers
                 expenses.CreatedAt = DateTime.Now;
                 expenses.CreatedBy = GetLoggedUserId();
 
+                if (expenses.SupplierId == 0)
+                {
+                    expenses.SupplierId = null;
+                }
+
                 _context.Add(expenses);
                 await _context.SaveChangesAsync();
                 return Ok(new { Result = true, Message = "Gider Başarıyla Kaydedilmiştir!" });
@@ -220,6 +282,8 @@ namespace ExpenseManagement.Controllers
             }
             return View("AccessDenied");
         }
+
+        //EDİT POST YAPILMALI
 
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Expenses expenses)
@@ -277,6 +341,7 @@ namespace ExpenseManagement.Controllers
 
             var expenses = await _context.Expenses
                 .Include(e => e.Sector)
+                .Include(e => e.Supplier)
                 .FirstOrDefaultAsync(m => m.Id == id);
             expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
 

@@ -517,6 +517,145 @@ namespace ExpenseManagement.Helpers
             return null;
         }
 
+        public static List<EnergyDaily> ProcessCollection(List<EnergyDaily> lstElements, IFormCollection requestFormData)
+        {
+            var skip = Convert.ToInt32(requestFormData["start"].ToString());
+            var pageSize = Convert.ToInt32(requestFormData["length"].ToString());
+            Microsoft.Extensions.Primitives.StringValues tempOrder = new[] { "" };
+
+            if (requestFormData.TryGetValue("order[0][column]", out tempOrder))
+            {
+                var columnIndex = requestFormData["order[0][column]"].ToString();
+                var sortDirection = requestFormData["order[0][dir]"].ToString();
+                tempOrder = new[] { "" };
+                if (requestFormData.TryGetValue($"columns[{columnIndex}][data]", out tempOrder))
+                {
+                    var columnName = requestFormData[$"columns[{columnIndex}][data]"].ToString();
+                    string searchValue = requestFormData["search[value]"].ToString().ToUpper();
+
+                    if (pageSize > 0)
+                    {
+                        var prop = GetEnergyDailiesProperty(columnName);
+                        if (!string.IsNullOrEmpty(searchValue))
+                        {
+                            if (sortDirection == "asc")
+                            {
+                                return lstElements.Where(l => l.Kw.ToString().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                            else
+                            {
+                                return lstElements.Where(l => l.Kw.ToString().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                        }
+                        else
+                        {
+                            if (sortDirection == "asc")
+                            {
+                                return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                            else
+                            {
+                                return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return lstElements;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static List<EnergyMonthlies> ProcessCollection(List<EnergyMonthlies> lstElements, IFormCollection requestFormData)
+        {
+            var skip = Convert.ToInt32(requestFormData["start"].ToString());
+            var pageSize = Convert.ToInt32(requestFormData["length"].ToString());
+            Microsoft.Extensions.Primitives.StringValues tempOrder = new[] { "" };
+
+            if (requestFormData.TryGetValue("order[0][column]", out tempOrder))
+            {
+                var columnIndex = requestFormData["order[0][column]"].ToString();
+                var sortDirection = requestFormData["order[0][dir]"].ToString();
+                tempOrder = new[] { "" };
+                if (requestFormData.TryGetValue($"columns[{columnIndex}][data]", out tempOrder))
+                {
+                    var columnName = requestFormData[$"columns[{columnIndex}][data]"].ToString();
+                    string searchValue = requestFormData["search[value]"].ToString().ToUpper();
+
+                    if (pageSize > 0)
+                    {
+                        var prop = GetEnergyMonthliesProperty(columnName);
+                        if (!string.IsNullOrEmpty(searchValue))
+                        {
+                            if (sortDirection == "asc")
+                            {
+                                return lstElements.Where(l => l.MonthName.ToUpper().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                            else
+                            {
+                                return lstElements.Where(l => l.MonthName.ToUpper().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                        }
+                        else
+                        {
+                            if (sortDirection == "asc")
+                            {
+                                return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                            else
+                            {
+                                return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return lstElements;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static List<EnergyLuytobs> ProcessCollection(List<EnergyLuytobs> lstElements, IFormCollection requestFormData)
+        {
+            var skip = Convert.ToInt32(requestFormData["start"].ToString());
+            var pageSize = Convert.ToInt32(requestFormData["length"].ToString());
+            Microsoft.Extensions.Primitives.StringValues tempOrder = new[] { "" };
+
+            if (requestFormData.TryGetValue("order[0][column]", out tempOrder))
+            {
+                var columnIndex = requestFormData["order[0][column]"].ToString();
+                var sortDirection = requestFormData["order[0][dir]"].ToString();
+                tempOrder = new[] { "" };
+                if (requestFormData.TryGetValue($"columns[{columnIndex}][data]", out tempOrder))
+                {
+                    var columnName = requestFormData[$"columns[{columnIndex}][data]"].ToString();
+                    string searchValue = requestFormData["search[value]"].ToString().ToUpper();
+
+                    if (pageSize > 0)
+                    {
+                        var prop = GetEnergyLuytobsProperty(columnName);
+                        if (sortDirection == "asc")
+                        {
+                            return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                        }
+                        else
+                        {
+                            return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                        }
+                    }
+                    else
+                    {
+                        return lstElements;
+                    }
+                }
+            }
+            return null;
+        }
+
         private static PropertyInfo GetIncomesProperty(string name)
         {
             var properties = typeof(Incomes).GetProperties();
@@ -670,6 +809,51 @@ namespace ExpenseManagement.Helpers
         private static PropertyInfo GetDepositAccountsProperty(string name)
         {
             var properties = typeof(DepositAccounts).GetProperties();
+            PropertyInfo prop = null;
+            foreach (var item in properties)
+            {
+                if (item.Name.ToLowerInvariant().Equals(name.ToLowerInvariant()))
+                {
+                    prop = item;
+                    break;
+                }
+            }
+            return prop;
+        }
+
+        private static PropertyInfo GetEnergyDailiesProperty(string name)
+        {
+            var properties = typeof(EnergyDaily).GetProperties();
+            PropertyInfo prop = null;
+            foreach (var item in properties)
+            {
+                if (item.Name.ToLowerInvariant().Equals(name.ToLowerInvariant()))
+                {
+                    prop = item;
+                    break;
+                }
+            }
+            return prop;
+        }
+
+        private static PropertyInfo GetEnergyMonthliesProperty(string name)
+        {
+            var properties = typeof(EnergyMonthlies).GetProperties();
+            PropertyInfo prop = null;
+            foreach (var item in properties)
+            {
+                if (item.Name.ToLowerInvariant().Equals(name.ToLowerInvariant()))
+                {
+                    prop = item;
+                    break;
+                }
+            }
+            return prop;
+        }
+
+        private static PropertyInfo GetEnergyLuytobsProperty(string name)
+        {
+            var properties = typeof(EnergyLuytobs).GetProperties();
             PropertyInfo prop = null;
             foreach (var item in properties)
             {

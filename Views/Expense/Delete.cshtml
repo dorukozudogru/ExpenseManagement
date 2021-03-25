@@ -28,6 +28,8 @@
                         </div>
                     </div>
                     <hr />
+                </div>
+                <div class="invoice p-3 mb-3">
                     @if (Model.InvoiceImage != null)
                     {
                         if (Model.InvoiceImageFormat.Contains("image"))
@@ -66,6 +68,7 @@
                             </address>
                         </div>
                         <div class="col-sm-6 invoice-col">
+                            @Html.DisplayNameFor(model => model.Supplier.Name): <strong>@Html.DisplayFor(model => model.Supplier.Name)</strong><br>
                             @Html.DisplayNameFor(model => model.LastPaymentDate): <strong>@Html.DisplayFor(model => model.LastPaymentDate)</strong><br>
                             @Html.DisplayNameFor(model => model.Amount): <strong>@Html.DisplayFor(model => model.Amount) @Html.DisplayFor(model => model.AmountCurrencyName)</strong><br>
                             @Html.DisplayNameFor(model => model.TAX): <strong>@Html.DisplayFor(model => model.TAX) @Html.DisplayFor(model => model.TAXCurrencyName)</strong><br>

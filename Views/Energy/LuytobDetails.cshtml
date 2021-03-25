@@ -1,0 +1,67 @@
+﻿@model ExpenseManagement.Models.EnergyLuytobs
+@{
+    ViewData["Title"] = "Lüytob/Fatura Kaydı";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="invoice p-3 mb-3">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4>
+                                <i class="fas fa-file-invoice-dollar"></i> @Html.DisplayFor(model => model.MonthName) Ayı Dokümanları
+                            </h4>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card card-secondary">
+                                <div class="card-header">
+                                    <h5 class="box-title">
+                                        @Html.DisplayNameFor(model => Model.EnergyLuytobFile.Luytob)
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.EnergyLuytobFile.Luytob != null)
+                                    {
+                                        <div class="row invoice-info">
+                                            <object data="data:application/pdf;base64,@System.Convert.ToBase64String((Byte[])Model.EnergyLuytobFile.Luytob)" type="application/pdf" style="width:810px;height:650px" scrolling="no" frameborder="0"></object>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card card-secondary">
+                                <div class="card-header">
+                                    <h5 class="box-title">
+                                        @Html.DisplayNameFor(model => Model.EnergyLuytobFile.Invoice)
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.EnergyLuytobFile.Invoice != null)
+                                    {
+                                        <div class="row invoice-info">
+                                            <object data="data:application/pdf;base64,@System.Convert.ToBase64String((Byte[])Model.EnergyLuytobFile.Invoice)" type="application/pdf" style="width:810px;height:650px" scrolling="no" frameborder="0"></object>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row no-print">
+                        <div class="col-12">
+                            <a class="btn btn-primary float-right" asp-action="Luytob" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

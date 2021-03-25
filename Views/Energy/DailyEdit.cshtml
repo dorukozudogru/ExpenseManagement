@@ -1,0 +1,113 @@
+﻿@model ExpenseManagement.Models.EnergyDaily
+
+@{
+    ViewData["Title"] = "Günlük Üretim Kaydını Güncelle";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Günlük Üretim Kaydını Güncelle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" id="id" />
+                                <div class="form-group">
+                                    <label asp-for="Date" class="control-label"></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input asp-for="Date" type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Kw" class="control-label"></label>
+                                    <input asp-for="Kw" class="form-control" id="kw" autocomplete="off" />
+                                    <span asp-validation-for="Kw" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="update()" id="updateButton" />
+                            <a class="btn btn-primary pull-right" asp-action="Daily" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.onload = function getEnergyDaily() {
+        var id = '@Url.RouteUrl(ViewContext.RouteData.Values).Split("/").Last()';
+
+        $.ajax({
+            url: '/Energy/DailyEditPost?&id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                var start = new Date(returnvalue.date);
+
+                var dayS = start.getDate();
+                var monthS = start.getMonth() + 1;
+                var yearS = start.getFullYear();
+                dayS = dayS < 10 ? "0" + dayS : dayS;
+                monthS = monthS < 10 ? "0" + monthS : monthS;
+
+                document.getElementById("id").value = returnvalue.id;
+                document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
+                document.getElementById("kw").value = returnvalue.kw;
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = "Günlük Üretim Kaydı Bir Hata Oluştu!";
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>
+<script>
+    var date;
+    var kw;
+    var id;
+
+    function update() {
+        date = document.getElementById("datepicker").value;
+        kw = document.getElementById("kw").value;
+        id = document.getElementById("id").value;
+
+        $("#updateButton").attr("disabled", true);
+
+        $.ajax({
+            url: '/Energy/DailyEdit?energyDaily.Date=' + date + '&energyDaily.Kw=' + kw + '&id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#updateButton").attr("disabled", false);
+                }, 1600);
+            }
+        });
+    }
+</script>
