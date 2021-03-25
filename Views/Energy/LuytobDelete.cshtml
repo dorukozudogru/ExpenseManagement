@@ -1,0 +1,98 @@
+﻿@model ExpenseManagement.Models.EnergyLuytobs
+@{
+    ViewData["Title"] = "Lüytob/Fatura Kaydını Sil";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="callout callout-danger">
+                    <h4>Bu lüytob/fatura kaydını silmek istediğinizden emin misiniz?</h4>
+                    <p>
+                        Bu lüytob/fatura kaydını silerseniz işlemi geriye alamayacaksınız.
+                    </p>
+                </div>
+                <div class="invoice p-3 mb-3">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4>
+                                <i class="fas fa-file-invoice-dollar"></i> @Html.DisplayFor(model => model.MonthName) Ayı Dokümanları
+                            </h4>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card card-secondary">
+                                <div class="card-header">
+                                    <h5 class="box-title">
+                                        @Html.DisplayNameFor(model => Model.EnergyLuytobFile.Luytob)
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.EnergyLuytobFile.Luytob != null)
+                                    {
+                                        <div class="row invoice-info">
+                                            <object data="data:application/pdf;base64,@System.Convert.ToBase64String((Byte[])Model.EnergyLuytobFile.Luytob)" type="application/pdf" style="width:810px;height:650px" scrolling="no" frameborder="0"></object>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card card-secondary">
+                                <div class="card-header">
+                                    <h5 class="box-title">
+                                        @Html.DisplayNameFor(model => Model.EnergyLuytobFile.Invoice)
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.EnergyLuytobFile.Invoice != null)
+                                    {
+                                        <div class="row invoice-info">
+                                            <object data="data:application/pdf;base64,@System.Convert.ToBase64String((Byte[])Model.EnergyLuytobFile.Invoice)" type="application/pdf" style="width:810px;height:650px" scrolling="no" frameborder="0"></object>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row no-print">
+                        <div class="col-12">
+                            <input type="hidden" asp-for="Id" id="id" />
+                            <input type="submit" value="Evet" class="btn btn-danger float-right" onclick="deleted()" />
+                            <a class="btn btn-primary float-right" asp-action="Luytob" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var id;
+
+    function deleted() {
+        id = document.getElementById("id").value;
+        $.ajax({
+            url: '/Energy/LuytobDelete?id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>

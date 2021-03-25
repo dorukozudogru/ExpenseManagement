@@ -22,18 +22,22 @@ namespace ExpenseManagement.Models
         public string MonthName { get; set; }
 
         [Required]
-        [DisplayName("Fatura Tutarı (KDV Hariç)")]
-        public double? Amount { get; set; }
-
-        [DisplayName("Fatura Tutarı (KDV Hariç) Dövizi")]
-        public byte? AmountCurrency { get; set; }
-
-        [NotMapped]
-        [DisplayName("Fatura Tutarı (KDV Hariç) Dövizi")]
-        public string AmountCurrencyName { get; set; }
+        [DisplayName("Üretilen Kw")]
+        public double ProducedKw { get; set; }
 
         [Required]
-        [DisplayName("kW")]
-        public string Kw { get; set; }
+        [DisplayName("Tüketilen Kw")]
+        public double ConsumedKw { get; set; }
+
+        [Required]
+        [DisplayName("Dağıtım Bedeli")]
+        public double DistributionFee { get; set; }
+
+        [Required]
+        [DisplayName("Fatura Tutarı (KDV Hariç)")]
+        public double Amount { get; set; }
+
+        [DisplayName("KDV")]
+        public double TAX { get; set; }
     }
 }

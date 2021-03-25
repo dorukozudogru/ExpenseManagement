@@ -1,0 +1,106 @@
+﻿@model ExpenseManagement.Models.EnergyLuytobs
+
+@{
+    ViewData["Title"] = "Lüytob/Fatura Ekle";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fa fa-plus"></i>&nbsp;Lüytob/Fatura Ekle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label asp-for="Month" class="control-label"></label>
+                                    <select asp-for="Month" class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Luytob" class="control-label"></label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" asp-for="Luytob" accept="application/pdf" id="luytob" name="luytob">
+                                            <label class="custom-file-label" for="exampleInputFile">Lüytob İçin Dosya Seçiniz</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Invoice" class="control-label"></label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" asp-for="Invoice" accept="application/pdf" id="invoice" name="invoice">
+                                            <label class="custom-file-label" for="exampleInputFile">Fatura İçin Dosya Seçiniz</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Ekle" class="btn btn-success" onclick="add()" id="createButton" />
+                            <a class="btn btn-primary pull-right" asp-action="Luytob" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var month;
+
+    function add() {
+        month = document.getElementById("monthId").value;
+
+        var data = new FormData();
+
+        var fileupload = $("#luytob").get(0);
+        var files = fileupload.files;
+        for (var i = 0; i < files.length; i++) {
+            data.append(files[i].name, files[i]);
+        }
+
+        var fileupload2 = $("#invoice").get(0);
+        var files2 = fileupload2.files;
+        for (var i = 0; i < files2.length; i++) {
+            data.append(files2[i].name, files2[i]);
+        }
+
+        data.append('month', month);
+
+        $("#createButton").attr("disabled", true);
+
+        $.ajax({
+            type: 'POST',
+            url: '/Energy/LuytobCreate',
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#createButton").attr("disabled", false);
+                }, 1600);
+            }
+        });
+    }
+</script>

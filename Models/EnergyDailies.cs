@@ -18,6 +18,6 @@ namespace ExpenseManagement.Models
 
         [Required]
         [DisplayName("kW")]
-        public string Kw { get; set; }
+        public double Kw { get; set; }
     }
 }

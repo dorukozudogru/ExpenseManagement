@@ -121,8 +121,8 @@ namespace ExpenseManagement.Data
 
         public DbSet<EnergyMonthlies> EnergyMonthlies { get; set; }
 
-        public DbSet<EnergyYearlies> EnergyYearlies { get; set; }
-
         public DbSet<EnergyLuytobs> EnergyLuytobs { get; set; }
+
+        public DbSet<EnergyLuytobFiles> EnergyLuytobFiles { get; set; }
     }
 }

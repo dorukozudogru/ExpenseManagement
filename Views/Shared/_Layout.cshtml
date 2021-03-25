@@ -129,6 +129,11 @@
                                             <i class="far fa-circle nav-icon text-warning"></i><p>Maaşlar</p>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Expense" asp-action="Paylist">
+                                            <i class="far fa-circle nav-icon text-warning"></i><p>Haftalık Ödeme Listesi</p>
+                                        </a>
+                                    </li>
                                 }
                             </ul>
                         </li>
@@ -177,24 +182,19 @@
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
-                                    <li class="nav-item">
+                                    @*<li class="nav-item">
                                         <a class="nav-link" asp-controller="Report" asp-action="Energy">
                                             <i class="far fa-circle nav-icon text-warning"></i><p>Enerji Anasayfası</p>
                                         </a>
-                                    </li>
+                                    </li>*@
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="Energy" asp-action="Daily">
                                             <i class="far fa-circle nav-icon text-warning"></i><p>Günlük</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" asp-controller="Energy" asp-action="Montly">
+                                        <a class="nav-link" asp-controller="Energy" asp-action="Monthly">
                                             <i class="far fa-circle nav-icon text-warning"></i><p>Aylık</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" asp-controller="Energy" asp-action="Yearly">
-                                            <i class="far fa-circle nav-icon text-warning"></i><p>Yıllık</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">

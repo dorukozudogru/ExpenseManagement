@@ -1,0 +1,168 @@
+﻿@model IEnumerable<ExpenseManagement.Models.EnergyMonthlies>
+
+@{
+    ViewData["Title"] = "Aylık Üretim";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fa fa-calendar-alt"></i>&nbsp;Aylık Üretim
+                            <a class="btn btn-light text-primary btn-sm float-right" asp-action="MonthlyCreate"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="card-body">
+                                <table id="ItemsTable" class="table table-bordered table-striped" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Id)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Month)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.ProducedKw)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.ConsumedKw)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.DistributionFee)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Amount)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.TAX)
+                                            </th>
+                                            <th>İşlemler</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="2">Yıllık Toplam:</th>
+                                            <th id="totalProducedKw"></th>
+                                            <th id="totalConsumedKw"></th>
+                                            <th id="distributionFee"></th>
+                                            <th id="totalAmount"></th>
+                                            <th colspan="2" id="totalTAX"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script>
+        (function () {
+            var generateCustomerTable = $("#ItemsTable").DataTable({
+                "language": {
+                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                    zeroRecords: "Hiçbir kayıt bulunamadı.",
+                    emptyTable: "Kayıt bulunmamaktadır.",
+                    search: "Ara:",
+                    oPaginate: {
+                        "sFirst": "İlk",
+                        "sLast": "Son",
+                        "sNext": "Sonraki",
+                        "sPrevious": "Önceki"
+                    },
+                    sLengthMenu: "_MENU_ adet kayıt getir",
+                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                },
+                "processing": true,
+                "serverSide": true,
+                "searchDelay": 1200,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "url": "/Energy/MonthlyPost",
+                    "method": "POST"
+                },
+                "columns": [
+                    { "data": "id" },
+                    { "data": "monthName" },
+                    {
+                        "data": "producedKw",
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return full.producedKw + " kW";
+                            }
+                            return "-";
+                        }
+                    },
+                    {
+                        "data": "consumedKw",
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return full.consumedKw + " kW";
+                            }
+                            return "-";
+                        }
+                    },
+                    {
+                        "data": "distributionFee",
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return full.distributionFee + " ₺";
+                            }
+                            return "-";
+                        }
+                    },
+                    {
+                        "data": "amount",
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return full.amount + " ₺";
+                            }
+                            return "-";
+                        }
+                    },
+                    {
+                        "data": "tax",
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return full.tax + " ₺";
+                            }
+                            return "-";
+                        }
+                    },
+                    {
+                        "data": "actionId", render: function (data, type, row) {
+                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="MonthlyEdit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="MonthlyDelete/' + row.id + '">Sil</a></ul></div>'
+                        },
+                        "orderable": false
+                    }
+                ],
+                "ordering": true,
+                "paging": true,
+                "pagingType": "simple_numbers",
+                "pageLength": 100
+            });
+
+            $.ajax({
+                "url": "/Energy/YearlyPost",
+                "method": "POST"
+            }).done(function (response) {
+                $('#totalProducedKw').html(response[0] + " kW");
+                $('#totalConsumedKw').html(response[1] + " kW");
+                $('#distributionFee').html(response[2] + " ₺");
+                $('#totalAmount').html(response[3] + " ₺");
+                $('#totalTAX').html(response[4] + " ₺");
+            });
+        })(jQuery);
+    </script>
+}

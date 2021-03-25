@@ -1,0 +1,158 @@
+﻿@model ExpenseManagement.Models.EnergyMonthlies
+
+@{
+    ViewData["Title"] = "Aylık Üretim Kaydını Güncelle";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Aylık Üretim Kaydını Güncelle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" id="id" />
+                                <div class="form-group">
+                                    <label asp-for="Month" class="control-label"></label>
+                                    <select asp-for="Month" class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="ProducedKw" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <input asp-for="ProducedKw" class="form-control" id="producedKw" autocomplete="off" />
+                                    <span asp-validation-for="ProducedKw" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="ConsumedKw" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <input asp-for="ConsumedKw" class="form-control" id="consumedKw" autocomplete="off" />
+                                    <span asp-validation-for="ConsumedKw" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="DistributionFee" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                        </div>
+                                        <input asp-for="DistributionFee" class="form-control" id="distributionFee" />
+                                        <span asp-validation-for="DistributionFee" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Amount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                        </div>
+                                        <input asp-for="Amount" class="form-control" id="amount" />
+                                        <span asp-validation-for="Amount" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="TAX" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                        </div>
+                                        <input asp-for="TAX" class="form-control" id="tax" />
+                                        <span asp-validation-for="TAX" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="update()" id="updateButton" />
+                            <a class="btn btn-primary pull-right" asp-action="Monthly" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.onload = function getEnergyMonthly() {
+        var id = '@Url.RouteUrl(ViewContext.RouteData.Values).Split("/").Last()';
+
+        $.ajax({
+            url: '/Energy/MonthlyEditPost?&id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("id").value = returnvalue.id;
+                document.getElementById("monthId").value = returnvalue.month;
+                document.getElementById("producedKw").value = returnvalue.producedKw;
+                document.getElementById("consumedKw").value = returnvalue.consumedKw;
+                document.getElementById("distributionFee").value = returnvalue.distributionFee;
+                document.getElementById("amount").value = returnvalue.amount;
+                document.getElementById("tax").value = returnvalue.tax;                
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = "Aylık Üretim Kaydı Bir Hata Oluştu!";
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>
+<script>
+    var month;
+    var producedKw;
+    var consumedKw;
+    var distributionFee;
+    var amount;
+    var tax;
+    var id;
+
+    function update() {
+        month = document.getElementById("monthId").value;
+        producedKw = document.getElementById("producedKw").value;
+        consumedKw = document.getElementById("consumedKw").value;
+        distributionFee = document.getElementById("distributionFee").value;
+        amount = document.getElementById("amount").value;
+        tax = document.getElementById("tax").value;
+        id = document.getElementById("id").value;
+
+        var data = new FormData();
+
+        data.append('month', month);
+        data.append('producedKw', producedKw);
+        data.append('consumedKw', consumedKw);
+        data.append('distributionFee', distributionFee);
+        data.append('amount', amount);
+        data.append('tax', tax);
+        data.append('id', id);
+
+        $("#updateButton").attr("disabled", true);
+
+        $.ajax({
+            type: 'POST',
+            url: '/Energy/MonthlyEdit?id=' + id,
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#updateButton").attr("disabled", false);
+                }, 1600);
+            }
+        });
+    }
+</script>

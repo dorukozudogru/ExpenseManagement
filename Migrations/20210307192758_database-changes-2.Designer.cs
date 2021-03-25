@@ -4,14 +4,16 @@ using ExpenseManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseManagement.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    partial class ExpenseContextModelSnapshot : ModelSnapshot
+    [Migration("20210307192758_database-changes-2")]
+    partial class databasechanges2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,39 +256,26 @@ namespace ExpenseManagement.Migrations
                     b.ToTable("EnergyDailies");
                 });
 
-            modelBuilder.Entity("ExpenseManagement.Models.EnergyLuytobFiles", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<byte[]>("Invoice");
-
-                    b.Property<string>("InvoiceFormat");
-
-                    b.Property<byte[]>("Luytob");
-
-                    b.Property<string>("LuytobFormat");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EnergyLuytobFiles");
-                });
-
             modelBuilder.Entity("ExpenseManagement.Models.EnergyLuytobs", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("EnergyLuytobFileId");
+                    b.Property<byte[]>("Invoice")
+                        .IsRequired();
+
+                    b.Property<string>("InvoiceFormat");
+
+                    b.Property<byte[]>("Luytob")
+                        .IsRequired();
+
+                    b.Property<string>("LuytobFormat");
 
                     b.Property<byte?>("Month")
                         .IsRequired();
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EnergyLuytobFileId");
 
                     b.ToTable("EnergyLuytobs");
                 });
@@ -714,14 +703,6 @@ namespace ExpenseManagement.Migrations
                     b.HasOne("ExpenseManagement.Models.BankBranches", "BankBranch")
                         .WithMany()
                         .HasForeignKey("BankBranchId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ExpenseManagement.Models.EnergyLuytobs", b =>
-                {
-                    b.HasOne("ExpenseManagement.Models.EnergyLuytobFiles", "EnergyLuytobFile")
-                        .WithMany()
-                        .HasForeignKey("EnergyLuytobFileId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

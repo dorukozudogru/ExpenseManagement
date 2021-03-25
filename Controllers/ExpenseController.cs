@@ -13,6 +13,7 @@ using System.IO;
 using System.Collections.Generic;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 namespace ExpenseManagement.Controllers
 {
@@ -33,6 +34,12 @@ namespace ExpenseManagement.Controllers
 
         [Authorize(Roles = "Admin, Banaz, Muhasebe")]
         public IActionResult Salary()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public IActionResult Paylist()
         {
             return View();
         }
@@ -78,6 +85,47 @@ namespace ExpenseManagement.Controllers
 
             var expenseContext = await _context.Expenses
                 .Where(e => e.ExpenseType != 2)
+                .Include(e => e.Sector)
+                .Include(e => e.Supplier)
+                .AsNoTracking()
+                .ToListAsync();
+
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
+            {
+                expenseContext = expenseContext
+                    .Where(e => e.CreatedBy == GetLoggedUserId())
+                    .ToList();
+            }
+
+            expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
+
+            List<Expenses> listItems = ProcessCollection(expenseContext, requestFormData);
+
+            var response = new PaginatedResponse<Expenses>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = expenseContext.Count,
+                RecordsTotal = expenseContext.Count
+            };
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> WeeklyPaylistPost()
+        {
+            var requestFormData = Request.Form;
+
+            DateTime baseDate = DateTime.Today;
+            var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
+            var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+
+            var expenseContext = await _context.Expenses
+                .Where(e => e.ExpenseType != 2 &&
+                            e.LastPaymentDate != null &&
+                            e.LastPaymentDate >= thisWeekStart &&
+                            e.LastPaymentDate <= thisWeekEnd)
                 .Include(e => e.Sector)
                 .Include(e => e.Supplier)
                 .AsNoTracking()

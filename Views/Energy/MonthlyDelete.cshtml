@@ -1,0 +1,67 @@
+﻿@model ExpenseManagement.Models.EnergyMonthlies
+@{
+    ViewData["Title"] = "Aylık Üretim Kaydını Sil";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="callout callout-danger">
+                    <h4>Bu aylık üretim kaydını silmek istediğinizden emin misiniz?</h4>
+                    <p>
+                        Bu aylık üretim kaydını silerseniz işlemi geriye alamayacaksınız.
+                    </p>
+                </div>
+                <div class="invoice p-3 mb-3">
+                    <div class="row invoice-info">
+                        <div class="col-sm-6 invoice-col">
+                            <address>
+                                @Html.DisplayNameFor(model => model.Id): <strong>@Html.DisplayFor(model => model.Id)</strong><br>
+                                @Html.DisplayNameFor(model => model.Month): <strong>@Html.DisplayFor(model => model.MonthName)</strong><br>
+                                @Html.DisplayNameFor(model => model.ProducedKw): <strong>@Html.DisplayFor(model => model.ProducedKw) kW</strong><br>
+                                @Html.DisplayNameFor(model => model.ConsumedKw): <strong>@Html.DisplayFor(model => model.ConsumedKw) kW</strong><br>
+                                @Html.DisplayNameFor(model => model.DistributionFee): <strong>@Html.DisplayFor(model => model.DistributionFee) ₺</strong><br>
+                                @Html.DisplayNameFor(model => model.Amount): <strong>@Html.DisplayFor(model => model.Amount) ₺</strong><br>
+                                @Html.DisplayNameFor(model => model.TAX): <strong>@Html.DisplayFor(model => model.TAX) ₺</strong><br>
+                            </address>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row no-print">
+                        <div class="col-12">
+                            <input type="hidden" asp-for="Id" id="id" />
+                            <input type="submit" value="Evet" class="btn btn-danger float-right" onclick="deleted()" />
+                            <a class="btn btn-primary float-right" asp-action="Monthly" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var id;
+
+    function deleted() {
+        id = document.getElementById("id").value;
+        $.ajax({
+            url: '/Energy/MonthlyDelete?id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>

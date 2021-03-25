@@ -22,17 +22,17 @@ namespace ExpenseManagement.Models
         public string MonthName { get; set; }
 
         [Required]
+        [DisplayName("Lüytob ve Fatura")]
+        [ForeignKey(nameof(EnergyLuytobFile))]
+        public int EnergyLuytobFileId { get; set; }
+        public virtual EnergyLuytobFiles EnergyLuytobFile { get; set; }
+
+        [NotMapped]
         [DisplayName("Lüytob")]
         public byte[] Luytob { get; set; }
 
-        [DisplayName("Lüytob Formatı")]
-        public string LuytobFormat { get; set; }
-
-        [Required]
+        [NotMapped]
         [DisplayName("Fatura")]
         public byte[] Invoice { get; set; }
-
-        [DisplayName("Fatura Formatı")]
-        public string InvoiceFormat { get; set; }
     }
 }
