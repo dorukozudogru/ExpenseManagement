@@ -21,12 +21,8 @@ namespace ExpenseManagement.Models
         public string Definition { get; set; }
 
         [Required]
-        [DisplayName("Ay")]
-        public byte Month { get; set; }
-
-        [NotMapped]
-        [DisplayName("Ay")]
-        public string MonthName { get; set; }
+        [DisplayName("Gelir Tarihi")]
+        public DateTime Date { get; set; }
 
         [Required]
         [DisplayName("Tutar")]

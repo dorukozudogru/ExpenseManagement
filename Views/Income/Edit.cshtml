@@ -24,8 +24,15 @@
                                     <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="Month" class="control-label"></label>
-                                    <select asp-for="Month" class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                    <label asp-for="Date" class="control-label"></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input asp-for="Date" type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Definition" class="control-label"></label>
@@ -49,37 +56,16 @@
                                     <span asp-validation-for="TAX" class="text-danger"></span>
                                 </div>
                                 <div class="row">
-                                    <div class="col-6">
-                                        <label class="control-label">Görüntüyü Güncelle</label>
-                                        <div class="input-group mb-3">
+                                    <div class="col-3">
+                                        <a class="btn btn-secondary btn-block float-right" id="openDocument" href="#" data-toggle="modal" data-target="#modal-document" style="margin-left:10px"><i class="fa fa-file-pdf"></i>&nbsp;&nbsp;Dokümanı Görüntüle</a>
+                                    </div>
+                                    <div class="col-9">
+                                        <div class="input-group">
                                             <div class="custom-file">
                                                 <input type="file" class="custom-file-input" asp-for="InvoiceImage" accept="application/pdf,image/*" id="imageFile" name="imageFile">
                                                 <label class="custom-file-label" for="exampleInputFile">Dosya Seçiniz</label>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label">Görüntüyü Sil</label>
-                                            <br />
-                                            <a class="btn btn-danger btn-block text-white" onclick="deleteImage()"><i class="fas fa-trash"></i>&nbsp;&nbsp;Sil</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        @if (Model.InvoiceImage != null)
-                                        {
-                                            <label asp-for="InvoiceImage" class="control-label"></label>
-                                            if (Model.InvoiceImageFormat.Contains("image"))
-                                            {
-                                                <div class="row invoice-info">
-                                                    <img class="img-fluid pad" src="data:image;base64, @System.Convert.ToBase64String(Model.InvoiceImage)" />
-                                                </div>
-                                            }
-                                            if (Model.InvoiceImageFormat == "application/pdf")
-                                            {
-                                                <div class="row invoice-info">
-                                                    <object data="data:application/pdf;base64,@System.Convert.ToBase64String((Byte[])Model.InvoiceImage)" type="application/pdf" style="width:810px;height:650px" scrolling="no" frameborder="0"></object>
-                                                </div>
-                                            }
-                                        }
                                     </div>
                                 </div>
                             </div>
@@ -93,6 +79,24 @@
                             </a>
                         </div>
                     </div>
+                    <div class="modal fade" id="modal-document">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title"><strong><i class="fa fa-file-pdf"></i>&nbsp;&nbsp;Doküman</strong></h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" id="docDiv">
+                                    <iframe id="document" style="width:100%;height:100%" webkitallowfullscreen allowfullscreen></iframe>
+                                </div>
+                                <div class="modal-body" id="imgDiv">
+                                    <img id="image" style="width:100%;height:100%" webkitallowfullscreen allowfullscreen />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,6 +104,68 @@
 </section>
 
 <script>
+    window.onload = function getIncome() {
+        var id = '@Url.RouteUrl(ViewContext.RouteData.Values).Split("/").Last()';
+
+        $.ajax({
+            url: '/Income/EditPost?&id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                var start = new Date(returnvalue.date);
+
+                var dayS = start.getDate();
+                var monthS = start.getMonth() + 1;
+                var yearS = start.getFullYear();
+                dayS = dayS < 10 ? "0" + dayS : dayS;
+                monthS = monthS < 10 ? "0" + monthS : monthS;
+
+                document.getElementById("id").value = returnvalue.id;
+                document.getElementById("sectorId").value = returnvalue.sectorId;
+                document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
+                document.getElementById("definition").value = returnvalue.definition;
+                document.getElementById("amount").value = returnvalue.amount.toLocaleString("tr-TR");
+                document.getElementById("amountCurrency").value = returnvalue.amountCurrency;
+                document.getElementById("tax").value = returnvalue.tax.toLocaleString("tr-TR");
+                document.getElementById("taxCurrency").value = returnvalue.taxCurrency;
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = "Gelir Getirilirken Bir Hata Oluştu!";
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+
+        $("#openDocument").on("click", function () {
+            $.ajax({
+                url: '/Income/GetDocument?&id=' + id,
+                type: 'POST',
+                success: function (returnvalue) {
+                    if (returnvalue.invoiceImageFormat == "application/pdf") {
+                        $('#imgDiv').remove();
+                        $('#image').remove();
+                        document.getElementById("document").src = 'data:application/pdf;base64,' + returnvalue.invoiceImage;
+                    }
+                    else {
+                        $('#docDiv').remove();
+                        $('#document').remove();
+                        document.getElementById("image").src = 'data:image;base64,' + returnvalue.invoiceImage;
+                    }
+                },
+                error: function (error) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: 'Doküman Bulunmamaktadır!',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }),
+                    window.setTimeout(function () {
+                        $("#modal-document").modal('hide');
+                    }, 2000);
+                }
+            });
+        });
+    }
+
     var id;
 
     function deleteImage() {
@@ -124,7 +190,7 @@
 <script>
     var id;
     var sectorId;
-    var monthId;
+    var date;
     var definition;
     var amount;
     var amountCurrency;
@@ -133,7 +199,7 @@
 
     function update() {
         sectorId = document.getElementById("sectorId").value;
-        monthId = document.getElementById("monthId").value;
+        date = document.getElementById("datepicker").value;
         definition = document.getElementById("definition").value;
         amount = document.getElementById("amount").value;
         amountCurrency = document.getElementById("amountCurrency").value;
@@ -150,7 +216,7 @@
         }
 
         data.append('sectorId', sectorId);
-        data.append('month', monthId);
+        data.append('date', date);
         data.append('definition', definition);
         data.append('amount', amount);
         data.append('amountCurrency', amountCurrency);

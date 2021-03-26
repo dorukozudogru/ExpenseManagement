@@ -192,10 +192,10 @@ namespace ExpenseManagement.Controllers
             var requestFormData = Request.Form;
 
             var incomes = await _context.Incomes
-                .Where(i => i.Month >= DateTime.Now.AddMonths(-2).Month)
+                .Where(i => i.Date.Month >= DateTime.Now.AddMonths(-2).Month)
                 .GroupBy(i => new
                 {
-                    i.Month,
+                    i.Date.Month,
                     i.AmountCurrency
                 })
                 .Select(i => new GeneralResponse
@@ -235,7 +235,7 @@ namespace ExpenseManagement.Controllers
             }
 
             var incomes = await _context.Incomes
-                .Where(i => i.Month == DateTime.Now.Month)
+                .Where(i => i.Date.Month == DateTime.Now.Month)
                 .ToListAsync();
 
             if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
