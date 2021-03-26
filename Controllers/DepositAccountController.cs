@@ -71,21 +71,10 @@ namespace ExpenseManagement.Controllers
             return BadRequest("Vadeli Hesap Kaydı Oluşturulurken Bir Hata Oluştu!");
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit()
         {
-            if (id == null)
-            {
-                return View("Error");
-            }
-
-            var depositAccounts = await _context.DepositAccounts.FindAsync(id);
-            depositAccounts = GetAllEnumNamesHelper.GetEnumName(depositAccounts);
-            if (depositAccounts == null)
-            {
-                return View("Error");
-            }
-            ViewData["BankBranchId"] = new SelectList(_context.BankBranches, "Id", "Name", depositAccounts.BankBranchId);
-            return View(depositAccounts);
+            ViewData["BankBranchId"] = new SelectList(_context.BankBranches, "Id", "Name");
+            return View();
         }
 
         [HttpPost]

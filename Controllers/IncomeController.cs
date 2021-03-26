@@ -120,7 +120,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,SectorId,Month,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Incomes incomes)
+        public async Task<IActionResult> Create([Bind("Id,SectorId,Date,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Incomes incomes)
         {
             if (ModelState.IsValid)
             {
@@ -154,33 +154,14 @@ namespace ExpenseManagement.Controllers
             return BadRequest("Gelir Kaydedilirken Bir Hata Oluştu!");
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit()
         {
-            if (id == null)
-            {
-                return View("Error");
-            }
-
-            var incomes = await _context.Incomes.FindAsync(id);
-            incomes = GetAllEnumNamesHelper.GetEnumName(incomes);
-
-            if (incomes == null)
-            {
-                return View("Error");
-            }
-            ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name", incomes.SectorId);
-
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || incomes.CreatedBy == GetLoggedUserId())
-            {
-                return View(incomes);
-            }
-            return View("AccessDenied");
+            ViewData["SectorId"] = new SelectList(_context.Sectors.OrderBy(x => x.Name), "Id", "Name");
+            return View();
         }
 
-        //EDİT POST YAPILMALI
-
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SectorId,Month,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Incomes incomes)
+        public async Task<IActionResult> Edit(int id, Incomes incomes)
         {
             var income = await _context.Incomes.FindAsync(id);
 
@@ -208,7 +189,7 @@ namespace ExpenseManagement.Controllers
                     }
 
                     income.SectorId = incomes.SectorId;
-                    income.Month = incomes.Month;
+                    income.Date = incomes.Date;
                     income.Definition = incomes.Definition;
                     income.Amount = incomes.Amount;
                     income.AmountCurrency = incomes.AmountCurrency;
@@ -223,6 +204,51 @@ namespace ExpenseManagement.Controllers
                     return BadRequest("Tüm Alanları Doldurunuz!");
             }
             return BadRequest("Gelir Güncellenirken Bir Hata Oluştu!");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPost(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+
+            var incomes = await _context.Incomes
+                .FirstOrDefaultAsync(m => m.Id == id);
+            incomes = GetAllEnumNamesHelper.GetEnumName(incomes);
+
+            if (incomes == null)
+            {
+                return View("Error");
+            }
+
+            return Ok(incomes);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetDocument(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+
+            var document = await _context.Incomes
+                .Select(i => new Incomes
+                {
+                    Id = i.Id,
+                    InvoiceImage = i.InvoiceImage,
+                    InvoiceImageFormat = i.InvoiceImageFormat
+                })
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (document == null)
+            {
+                return View("Error");
+            }
+
+            return Ok(document);
         }
 
         public async Task<IActionResult> Delete(int? id)
