@@ -97,6 +97,26 @@ namespace ExpenseManagement.Controllers
                     .ToList();
             }
 
+            foreach (var item in expenseContext)
+            {
+                if (item.Sector != null)
+                {
+                    item.SectorName = item.Sector.Name;
+                }
+                if (item.Sector == null)
+                {
+                    item.SectorName = "EMPTY";
+                }
+                if (item.Supplier != null)
+                {
+                    item.SupplierName = item.Supplier.Name;
+                }
+                if (item.Supplier == null)
+                {
+                    item.SupplierName = "EMPTY";
+                }
+            }
+
             expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
 
             List<Expenses> listItems = ProcessCollection(expenseContext, requestFormData);
@@ -110,7 +130,7 @@ namespace ExpenseManagement.Controllers
             };
 
             return Ok(response);
-        }
+        }     
 
         [HttpPost]
         public async Task<IActionResult> WeeklyPaylistPost()
@@ -259,31 +279,12 @@ namespace ExpenseManagement.Controllers
             return BadRequest("Gider Kaydedilirken Bir Hata Oluştu!");
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit()
         {
-            if (id == null)
-            {
-                return View("Error");
-            }
-
-            var expenses = await _context.Expenses.FindAsync(id);
-            expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
-
-            if (expenses == null)
-            {
-                return View("Error");
-            }
-            ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name", expenses.SectorId);
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Name", expenses.SupplierId);
-
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || expenses.CreatedBy == GetLoggedUserId())
-            {
-                return View(expenses);
-            }
-            return View("AccessDenied");
+            ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name");
+            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Name");
+            return View();
         }
-
-        //EDİT POST YAPILMALI
 
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Expenses expenses)
@@ -330,6 +331,31 @@ namespace ExpenseManagement.Controllers
                     return BadRequest("Tüm Alanları Doldurunuz!");
             }
             return BadRequest("Gider Güncellenirken Bir Hata Oluştu!");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPost(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+
+            var expense = await _context.Expenses
+                .FirstOrDefaultAsync(m => m.Id == id);
+            expense = GetAllEnumNamesHelper.GetEnumName(expense);
+
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || expense.CreatedBy == GetLoggedUserId())
+            {
+                return Ok(expense);
+            }
+
+            if (expense == null)
+            {
+                return View("Error");
+            }
+
+            return View("AccessDenied");
         }
 
         public async Task<IActionResult> Delete(int? id)

@@ -90,17 +90,15 @@ namespace ExpenseManagement.Helpers
                         {
                             if (sortDirection == "asc")
                             {
-                                return lstElements.Where(l => l.Amount.ToString().ToUpper().Contains(searchValue)
-                                || l.Definition.ToUpper().Contains(searchValue)
-                                || l.Id.ToString().Contains(searchValue)
-                                || l.Sector.Name.ToUpper().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                                return lstElements.Where(l => l.ExpenseTypeName.ToUpper().Contains(searchValue)
+                                || l.SupplierName.ToUpper().Contains(searchValue)
+                                || l.SectorName.ToUpper().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                             }
                             else
                             {
-                                return lstElements.Where(l => l.Amount.ToString().ToUpper().Contains(searchValue)
-                                || l.Definition.ToUpper().Contains(searchValue)
-                                || l.Id.ToString().Contains(searchValue)
-                                || l.Sector.Name.ToUpper().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                                return lstElements.Where(l => l.ExpenseTypeName.ToUpper().Contains(searchValue)
+                                || l.SupplierName.ToUpper().Contains(searchValue)
+                                || l.SectorName.ToUpper().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                             }
                         }
                         else

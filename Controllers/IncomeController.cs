@@ -218,12 +218,17 @@ namespace ExpenseManagement.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             incomes = GetAllEnumNamesHelper.GetEnumName(incomes);
 
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || incomes.CreatedBy == GetLoggedUserId())
+            {
+                return Ok(incomes);
+            }
+
             if (incomes == null)
             {
                 return View("Error");
             }
 
-            return Ok(incomes);
+            return View("AccessDenied");
         }
 
         [HttpPost]
