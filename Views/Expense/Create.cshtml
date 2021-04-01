@@ -27,8 +27,9 @@
                                     <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="Supplier.Name" class="control-label"></label>
-                                    <select asp-for="SupplierId" class="form-control select2" asp-items="ViewBag.SupplierId" id="supplierId"></select>
+                                    <label asp-for="SupplierDef" class="control-label"></label>
+                                    <input asp-for="SupplierDef" class="form-control" id="supplier" autocomplete="off" />
+                                    <span asp-validation-for="SupplierDef" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Date" class="control-label"></label>
@@ -58,7 +59,7 @@
                                     <span asp-validation-for="Definition" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="Amount" class="control-label"></label>
+                                    <label asp-for="Amount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <select asp-for="AmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
@@ -67,14 +68,32 @@
                                         <span asp-validation-for="Amount" class="text-danger"></span>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="TAX" class="control-label"></label>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <select asp-for="TAXCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.TAXCurrencyEnum>()" id="taxCurrency"></select>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <label class="control-label">KDV Oranı</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" id="taxRate" onchange="calculateTax()">
+                                                        <option>% 1</option>
+                                                        <option>% 8</option>
+                                                        <option>% 18</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <input asp-for="TAX" class="form-control" id="tax" />
-                                        <span asp-validation-for="TAX" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <div class="form-group">
+                                            <label asp-for="TAX" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select asp-for="TAXCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.TAXCurrencyEnum>()" id="taxCurrency"></select>
+                                                </div>
+                                                <input asp-for="TAX" class="form-control" id="tax" />
+                                                <span asp-validation-for="TAX" class="text-danger"></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -91,7 +110,7 @@
                                     <select asp-for="Month" disabled class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="SalaryAmount" class="control-label" id="salary-title-for-salary"></label>
+                                    <label asp-for="SalaryAmount" class="control-label" id="salary-title-for-salary"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                     <div class="input-group mb-3" id="salary-for-salary">
                                         <div class="input-group-prepend">
                                             <select asp-for="SalaryAmountCurrency" class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.SalaryAmountCurrencyEnum>()" id="salaryAmountCurrency"></select>
@@ -117,21 +136,25 @@
     </div>
 </section>
 
-@*<script>
-    window.onload = SelectListChange();
+<script>
+    function calculateTax() {
+        amount = document.getElementById("amount").value;
+        taxRate = document.getElementById("taxRate").value.substring(2, 4);
+        tax = amount * taxRate / 100;
+        if (isNaN(Number(tax))) {
+            var amount = Number(amount.replace(',', '.'));
+            tax = amount * taxRate / 100;
+        }
+        document.getElementById("tax").value = tax.toLocaleString("tr-TR");
 
-    function SelectListChange()
-    {
-        $('#supplierId').prop('selectedIndex',2);
-        //$("#supplierId").val($("#supplierId option:first").val());
     }
-</script>*@
+</script>
 <script>
     function changeExpenseType() {
         if (document.getElementById("expenseType").value == 2) {
             $('#datepicker').attr('disabled', 'disabled');
             $('#datepicker2').attr('disabled', 'disabled');
-            $('#supplierId').attr('disabled', 'disabled');
+            $('#supplier').attr('disabled', 'disabled');
             $('#amount').attr('disabled', 'disabled');
             $('#amountCurrency').attr('disabled', 'disabled');
             $('#tax').attr('disabled', 'disabled');
@@ -145,7 +168,7 @@
         else {
             $('#datepicker').removeAttr('disabled');
             $('#datepicker2').removeAttr('disabled');
-            $('#supplierId').removeAttr('disabled');
+            $('#supplier').removeAttr('disabled');
             $('#amount').removeAttr('disabled');
             $('#amountCurrency').removeAttr('disabled');
             $('#tax').removeAttr('disabled');
@@ -161,7 +184,7 @@
 <script>
     var expenseType;
     var sectorId;
-    var supplierId;
+    var supplier;
     var date;
     var definition;
     var amount;
@@ -175,7 +198,7 @@
     function add() {
         expenseType = document.getElementById("expenseType").value;
         sectorId = document.getElementById("sectorId").value;
-        supplierId = document.getElementById("supplierId").value;
+        supplier = document.getElementById("supplier").value;
         date = document.getElementById("datepicker").value;
         lastPaymentDate = document.getElementById("datepicker2").value;
         definition = document.getElementById("definition").value;
@@ -196,7 +219,7 @@
 
         data.append('expenseType', expenseType);
         data.append('sectorId', sectorId);
-        data.append('supplierId', supplierId);
+        data.append('supplierDef', supplier);
         data.append('date', date);
         data.append('lastPaymentDate', lastPaymentDate);
         data.append('definition', definition);

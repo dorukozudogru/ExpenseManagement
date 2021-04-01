@@ -39,7 +39,7 @@
                                     <input asp-for="Definition" class="form-control" id="definition" />
                                     <span asp-validation-for="Definition" class="text-danger"></span>
                                 </div>
-                                <label asp-for="Amount" class="control-label"></label>
+                                <label asp-for="Amount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <select asp-for="AmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
@@ -47,7 +47,7 @@
                                     <input asp-for="Amount" class="form-control" id="amount" />
                                     <span asp-validation-for="Amount" class="text-danger"></span>
                                 </div>
-                                <label asp-for="TAX" class="control-label"></label>
+                                <label asp-for="TAX" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <select asp-for="TAXCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.TAXCurrencyEnum>()" id="taxCurrency"></select>
@@ -59,13 +59,16 @@
                                     <div class="col-3">
                                         <a class="btn btn-secondary btn-block float-right" id="openDocument" href="#" data-toggle="modal" data-target="#modal-document" style="margin-left:10px"><i class="fa fa-file-pdf"></i>&nbsp;&nbsp;Dokümanı Görüntüle</a>
                                     </div>
-                                    <div class="col-9">
+                                    <div class="col-6">
                                         <div class="input-group">
                                             <div class="custom-file">
                                                 <input type="file" class="custom-file-input" asp-for="InvoiceImage" accept="application/pdf,image/*" id="imageFile" name="imageFile">
                                                 <label class="custom-file-label" for="exampleInputFile">Dosya Seçiniz</label>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <a class="btn btn-danger btn-block text-white" onclick="deleteImage()"><i class="fas fa-trash"></i>&nbsp;&nbsp;Dokümanı Sil</a>
                                     </div>
                                 </div>
                             </div>

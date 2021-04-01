@@ -33,10 +33,17 @@ namespace ExpenseManagement.Models
         [ForeignKey(nameof(Sector))]
         public int SectorId { get; set; }
         public virtual Sectors Sector { get; set; }
+        [NotMapped]
+        public string SectorName { get; set; }
 
-        [ForeignKey(nameof(Supplier))]
-        public int? SupplierId { get; set; }
-        public virtual Suppliers Supplier { get; set; }
+        //[ForeignKey(nameof(Supplier))]
+        //public int? SupplierId { get; set; }
+        //public virtual Suppliers Supplier { get; set; }
+        //[NotMapped]
+        //public string SupplierName { get; set; }
+
+        [DisplayName("Satıcı/Tedarikçi")]
+        public string SupplierDef { get; set; }
 
         [Required]
         [DisplayName("Gider Tanımı")]
@@ -110,21 +117,21 @@ namespace ExpenseManagement.Models
         }
 
         #region ForSalary
-        [DisplayName("Ay")]
+        [DisplayName("Ay (Maaş)")]
         public byte? Month { get; set; }
 
         [NotMapped]
-        [DisplayName("Ay")]
+        [DisplayName("Ay (Maaş)")]
         public string MonthName { get; set; }
 
-        [DisplayName("Net Tutar")]
+        [DisplayName("Net Tutar (Maaş)")]
         public double? SalaryAmount { get; set; }
 
-        [DisplayName("Net Tutar Dövizi")]
+        [DisplayName("Net Tutar Dövizi (Maaş)")]
         public byte? SalaryAmountCurrency { get; set; }
 
         [NotMapped]
-        [DisplayName("Net Tutar Dövizi")]
+        [DisplayName("Net Tutar Dövizi (Maaş)")]
         public string SalaryAmountCurrencyName { get; set; }
 
         public enum SalaryAmountCurrencyEnum

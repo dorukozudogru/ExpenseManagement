@@ -86,7 +86,6 @@ namespace ExpenseManagement.Controllers
             var expenseContext = await _context.Expenses
                 .Where(e => e.ExpenseType != 2)
                 .Include(e => e.Sector)
-                .Include(e => e.Supplier)
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -95,6 +94,18 @@ namespace ExpenseManagement.Controllers
                 expenseContext = expenseContext
                     .Where(e => e.CreatedBy == GetLoggedUserId())
                     .ToList();
+            }
+
+            foreach (var item in expenseContext)
+            {
+                if (item.Sector != null)
+                {
+                    item.SectorName = item.Sector.Name;
+                }
+                if (item.Sector == null)
+                {
+                    item.SectorName = "EMPTY";
+                }
             }
 
             expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
@@ -127,7 +138,6 @@ namespace ExpenseManagement.Controllers
                             e.LastPaymentDate >= thisWeekStart &&
                             e.LastPaymentDate <= thisWeekEnd)
                 .Include(e => e.Sector)
-                .Include(e => e.Supplier)
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -162,7 +172,6 @@ namespace ExpenseManagement.Controllers
 
             var expenses = await _context.Expenses
                 .Include(e => e.Sector)
-                .Include(e => e.Supplier)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
@@ -207,15 +216,6 @@ namespace ExpenseManagement.Controllers
         public IActionResult Create()
         {
             ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name");
-
-            var suppliers = _context.Suppliers.ToList();
-            suppliers.Add(new Suppliers
-            {
-                Id = 0,
-                Name = ""
-            });
-
-            ViewData["SupplierId"] = new SelectList(suppliers.OrderBy(s => s.Id), "Id", "Name");
             return View();
         }
 
@@ -247,11 +247,6 @@ namespace ExpenseManagement.Controllers
                 expenses.CreatedAt = DateTime.Now;
                 expenses.CreatedBy = GetLoggedUserId();
 
-                if (expenses.SupplierId == 0)
-                {
-                    expenses.SupplierId = null;
-                }
-
                 _context.Add(expenses);
                 await _context.SaveChangesAsync();
                 return Ok(new { Result = true, Message = "Gider Başarıyla Kaydedilmiştir!" });
@@ -259,31 +254,11 @@ namespace ExpenseManagement.Controllers
             return BadRequest("Gider Kaydedilirken Bir Hata Oluştu!");
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit()
         {
-            if (id == null)
-            {
-                return View("Error");
-            }
-
-            var expenses = await _context.Expenses.FindAsync(id);
-            expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
-
-            if (expenses == null)
-            {
-                return View("Error");
-            }
-            ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name", expenses.SectorId);
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Name", expenses.SupplierId);
-
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || expenses.CreatedBy == GetLoggedUserId())
-            {
-                return View(expenses);
-            }
-            return View("AccessDenied");
+            ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name");
+            return View();
         }
-
-        //EDİT POST YAPILMALI
 
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Expenses expenses)
@@ -313,10 +288,12 @@ namespace ExpenseManagement.Controllers
                         }
                     }
 
+                    expense.ExpenseType = expenses.ExpenseType;
                     expense.SectorId = expenses.SectorId;
+                    expense.SupplierDef = expenses.SupplierDef;
+                    expense.Definition = expenses.Definition;
                     expense.Date = expenses.Date;
                     expense.LastPaymentDate = expenses.LastPaymentDate;
-                    expense.Definition = expenses.Definition;
                     expense.Amount = expenses.Amount;
                     expense.AmountCurrency = expenses.AmountCurrency;
                     expense.TAX = expenses.TAX;
@@ -332,6 +309,56 @@ namespace ExpenseManagement.Controllers
             return BadRequest("Gider Güncellenirken Bir Hata Oluştu!");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> EditPost(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+
+            var expense = await _context.Expenses
+                .FirstOrDefaultAsync(m => m.Id == id);
+            expense = GetAllEnumNamesHelper.GetEnumName(expense);
+
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || expense.CreatedBy == GetLoggedUserId())
+            {
+                return Ok(expense);
+            }
+
+            if (expense == null)
+            {
+                return View("Error");
+            }
+
+            return View("AccessDenied");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetDocument(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+
+            var document = await _context.Expenses
+                .Select(i => new Expenses
+                {
+                    Id = i.Id,
+                    InvoiceImage = i.InvoiceImage,
+                    InvoiceImageFormat = i.InvoiceImageFormat
+                })
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (document == null)
+            {
+                return View("Error");
+            }
+
+            return Ok(document);
+        }
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -341,7 +368,6 @@ namespace ExpenseManagement.Controllers
 
             var expenses = await _context.Expenses
                 .Include(e => e.Sector)
-                .Include(e => e.Supplier)
                 .FirstOrDefaultAsync(m => m.Id == id);
             expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
 
