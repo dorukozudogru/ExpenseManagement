@@ -93,7 +93,11 @@ namespace ExpenseManagement.Data
 
         public DbSet<Expenses> Expenses { get; set; }
 
+        public DbSet<ExpenseDocuments> ExpenseDocuments { get; set; }
+
         public DbSet<Incomes> Incomes { get; set; }
+
+        public DbSet<IncomeDocuments> IncomeDocuments { get; set; }
 
         public DbSet<Sectors> Sectors { get; set; }
 

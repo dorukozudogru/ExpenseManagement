@@ -4,14 +4,16 @@ using ExpenseManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseManagement.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    partial class ExpenseContextModelSnapshot : ModelSnapshot
+    [Migration("20210401191236_supplier-free-text-2")]
+    partial class supplierfreetext2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -315,23 +317,6 @@ namespace ExpenseManagement.Migrations
                     b.ToTable("EnergyMonthlies");
                 });
 
-            modelBuilder.Entity("ExpenseManagement.Models.ExpenseDocuments", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ExpenseId");
-
-                    b.Property<byte[]>("InvoiceImage");
-
-                    b.Property<string>("InvoiceImageFormat");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ExpenseDocuments");
-                });
-
             modelBuilder.Entity("ExpenseManagement.Models.Expenses", b =>
                 {
                     b.Property<int>("Id")
@@ -380,23 +365,6 @@ namespace ExpenseManagement.Migrations
                     b.HasIndex("SectorId");
 
                     b.ToTable("Expenses");
-                });
-
-            modelBuilder.Entity("ExpenseManagement.Models.IncomeDocuments", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("IncomeId");
-
-                    b.Property<byte[]>("InvoiceImage");
-
-                    b.Property<string>("InvoiceImageFormat");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IncomeDocuments");
                 });
 
             modelBuilder.Entity("ExpenseManagement.Models.Incomes", b =>
