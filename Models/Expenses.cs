@@ -36,11 +36,14 @@ namespace ExpenseManagement.Models
         [NotMapped]
         public string SectorName { get; set; }
 
-        [ForeignKey(nameof(Supplier))]
-        public int? SupplierId { get; set; }
-        public virtual Suppliers Supplier { get; set; }
-        [NotMapped]
-        public string SupplierName { get; set; }
+        //[ForeignKey(nameof(Supplier))]
+        //public int? SupplierId { get; set; }
+        //public virtual Suppliers Supplier { get; set; }
+        //[NotMapped]
+        //public string SupplierName { get; set; }
+
+        [DisplayName("Satıcı/Tedarikçi")]
+        public string SupplierDef { get; set; }
 
         [Required]
         [DisplayName("Gider Tanımı")]

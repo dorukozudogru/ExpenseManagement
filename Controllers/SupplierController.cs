@@ -96,17 +96,10 @@ namespace ExpenseManagement.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var hasAnyExpense = await _context.Expenses
-                .FirstOrDefaultAsync(m => m.SupplierId == id);
-
-            if (hasAnyExpense == null)
-            {
-                var suppliers = await _context.Suppliers.FindAsync(id);
-                _context.Suppliers.Remove(suppliers);
-                await _context.SaveChangesAsync();
-                return Ok(new { Result = true, Message = "Satıcı/Tedarikçi Silinmiştir!" });
-            }
-            return BadRequest("Bu Satıcıya/Tedarikçiye Ait Kayıtlar Bulunmaktadır!");
+            var suppliers = await _context.Suppliers.FindAsync(id);
+            _context.Suppliers.Remove(suppliers);
+            await _context.SaveChangesAsync();
+            return Ok(new { Result = true, Message = "Satıcı/Tedarikçi Silinmiştir!" });
         }
 
         private bool SuppliersExists(int id)

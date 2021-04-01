@@ -27,8 +27,9 @@
                                     <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="Supplier.Name" class="control-label"></label>
-                                    <select asp-for="SupplierId" class="form-control select2" style="width: 100%;" asp-items="ViewBag.SupplierId" id="supplierId"></select>
+                                    <label asp-for="SupplierDef" class="control-label"></label>
+                                    <input asp-for="SupplierDef" class="form-control" id="supplier" autocomplete="off" />
+                                    <span asp-validation-for="SupplierDef" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Date" class="control-label"></label>
@@ -153,7 +154,7 @@
         if (document.getElementById("expenseType").value == 2) {
             $('#datepicker').attr('disabled', 'disabled');
             $('#datepicker2').attr('disabled', 'disabled');
-            $('#supplierId').attr('disabled', 'disabled');
+            $('#supplier').attr('disabled', 'disabled');
             $('#amount').attr('disabled', 'disabled');
             $('#amountCurrency').attr('disabled', 'disabled');
             $('#tax').attr('disabled', 'disabled');
@@ -167,7 +168,7 @@
         else {
             $('#datepicker').removeAttr('disabled');
             $('#datepicker2').removeAttr('disabled');
-            $('#supplierId').removeAttr('disabled');
+            $('#supplier').removeAttr('disabled');
             $('#amount').removeAttr('disabled');
             $('#amountCurrency').removeAttr('disabled');
             $('#tax').removeAttr('disabled');
@@ -183,7 +184,7 @@
 <script>
     var expenseType;
     var sectorId;
-    var supplierId;
+    var supplier;
     var date;
     var definition;
     var amount;
@@ -197,7 +198,7 @@
     function add() {
         expenseType = document.getElementById("expenseType").value;
         sectorId = document.getElementById("sectorId").value;
-        supplierId = document.getElementById("supplierId").value;
+        supplier = document.getElementById("supplier").value;
         date = document.getElementById("datepicker").value;
         lastPaymentDate = document.getElementById("datepicker2").value;
         definition = document.getElementById("definition").value;
@@ -218,7 +219,7 @@
 
         data.append('expenseType', expenseType);
         data.append('sectorId', sectorId);
-        data.append('supplierId', supplierId);
+        data.append('supplierDef', supplier);
         data.append('date', date);
         data.append('lastPaymentDate', lastPaymentDate);
         data.append('definition', definition);
