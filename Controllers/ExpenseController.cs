@@ -195,20 +195,17 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            var expenses = await _context.Expenses
-                .Include(e => e.Sector)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var documents = await _context.ExpenseDocuments
+                .FirstOrDefaultAsync(m => m.ExpenseId == id);
 
-            expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
-
-            if (expenses == null)
+            if (documents == null)
             {
                 return View("Error");
             }
 
-            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz" || expenses.CreatedBy == GetLoggedUserId())
+            if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Muhasebe" || GetLoggedUserRole() == "Banaz")
             {
-                return View(expenses);
+                return View(documents);
             }
             return View("AccessDenied");
         }
@@ -222,8 +219,17 @@ namespace ExpenseManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Expenses expenses)
         {
+            ExpenseDocuments document = new ExpenseDocuments();
+
             if (ModelState.IsValid)
             {
+                expenses.State = (int)StateEnum.Active;
+                expenses.CreatedAt = DateTime.Now;
+                expenses.CreatedBy = GetLoggedUserId();
+
+                _context.Add(expenses);
+                await _context.SaveChangesAsync();
+
                 if (Request.Form.Files.Count != 0)
                 {
                     if (Request.Form.Files.First().ContentType.Contains("pdf") || Request.Form.Files.First().ContentType.Contains("image"))
@@ -234,21 +240,19 @@ namespace ExpenseManagement.Controllers
                         ms.Close();
                         ms.Dispose();
 
-                        expenses.InvoiceImage = ms.ToArray();
-                        expenses.InvoiceImageFormat = Request.Form.Files.First().ContentType;
+                        document.ExpenseId = expenses.Id;
+                        document.InvoiceImage = ms.ToArray();
+                        document.InvoiceImageFormat = Request.Form.Files.First().ContentType;
+
+                        _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+                        _context.Add(document);
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
                         return BadRequest("PDF veya Resim Dosyası Ekleyin!");
                     }
                 }
-
-                expenses.State = (int)StateEnum.Active;
-                expenses.CreatedAt = DateTime.Now;
-                expenses.CreatedBy = GetLoggedUserId();
-
-                _context.Add(expenses);
-                await _context.SaveChangesAsync();
                 return Ok(new { Result = true, Message = "Gider Başarıyla Kaydedilmiştir!" });
             }
             return BadRequest("Gider Kaydedilirken Bir Hata Oluştu!");
@@ -265,6 +269,11 @@ namespace ExpenseManagement.Controllers
         {
             var expense = await _context.Expenses.FindAsync(id);
 
+            var oldDocument = await _context.ExpenseDocuments
+                .FirstOrDefaultAsync(i => i.ExpenseId == id);
+
+            ExpenseDocuments newDocument = new ExpenseDocuments();
+
             if (expense != null)
             {
                 if (ModelState.IsValid)
@@ -279,8 +288,27 @@ namespace ExpenseManagement.Controllers
                             ms.Close();
                             ms.Dispose();
 
-                            expense.InvoiceImage = ms.ToArray();
-                            expense.InvoiceImageFormat = Request.Form.Files.First().ContentType;
+                            if (oldDocument == null)
+                            {
+                                newDocument.ExpenseId = expense.Id;
+                                newDocument.InvoiceImage = ms.ToArray();
+                                newDocument.InvoiceImageFormat = Request.Form.Files.First().ContentType;
+
+                                _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+                                _context.Add(newDocument);
+                                await _context.SaveChangesAsync();
+                            }
+
+                            if (oldDocument != null)
+                            {
+                                oldDocument.ExpenseId = expense.Id;
+                                oldDocument.InvoiceImage = ms.ToArray();
+                                oldDocument.InvoiceImageFormat = Request.Form.Files.First().ContentType;
+
+                                _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+                                _context.Update(oldDocument);
+                                await _context.SaveChangesAsync();
+                            }
                         }
                         else
                         {
@@ -299,6 +327,7 @@ namespace ExpenseManagement.Controllers
                     expense.TAX = expenses.TAX;
                     expense.TAXCurrency = expenses.TAXCurrency;
 
+                    _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
                     _context.Update(expense);
                     await _context.SaveChangesAsync();
                     return Ok(new { Result = true, Message = "Gider Başarıyla Güncellendi!" });
@@ -342,14 +371,8 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            var document = await _context.Expenses
-                .Select(i => new Expenses
-                {
-                    Id = i.Id,
-                    InvoiceImage = i.InvoiceImage,
-                    InvoiceImageFormat = i.InvoiceImageFormat
-                })
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var document = await _context.ExpenseDocuments
+                .FirstOrDefaultAsync(m => m.ExpenseId == id);
 
             if (document == null)
             {
@@ -386,10 +409,9 @@ namespace ExpenseManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteImage(int id)
         {
-            var expenses = await _context.Expenses.FindAsync(id);
-            expenses.InvoiceImage = null;
-            expenses.InvoiceImageFormat = null;
-            _context.Expenses.Update(expenses);
+            var documents = await _context.ExpenseDocuments.FirstOrDefaultAsync(ed => ed.ExpenseId == id);
+            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            _context.ExpenseDocuments.Remove(documents);
             await _context.SaveChangesAsync();
             return Ok(new { Result = true, Message = "Görüntü Silinmiştir!" });
         }
@@ -400,6 +422,12 @@ namespace ExpenseManagement.Controllers
             var expenses = await _context.Expenses.FindAsync(id);
             _context.Expenses.Remove(expenses);
             await _context.SaveChangesAsync();
+
+            var documents = await _context.ExpenseDocuments.FirstOrDefaultAsync(ed => ed.ExpenseId == id);
+            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            _context.ExpenseDocuments.Remove(documents);
+            await _context.SaveChangesAsync();
+
             return Ok(new { Result = true, Message = "Gider Silinmiştir!" });
         }
 

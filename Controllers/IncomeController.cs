@@ -120,10 +120,19 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,SectorId,Date,Definition,Amount,AmountCurrency,TAX,TAXCurrency")] Incomes incomes)
+        public async Task<IActionResult> Create(Incomes incomes)
         {
+            IncomeDocuments document = new IncomeDocuments();
+
             if (ModelState.IsValid)
             {
+                incomes.State = (int)StateEnum.Active;
+                incomes.CreatedAt = DateTime.Now;
+                incomes.CreatedBy = GetLoggedUserId();
+
+                _context.Add(incomes);
+                await _context.SaveChangesAsync();
+
                 if (Request.Form.Files.Count != 0)
                 {
                     if (Request.Form.Files.First().ContentType.Contains("pdf") || Request.Form.Files.First().ContentType.Contains("image"))
@@ -134,21 +143,19 @@ namespace ExpenseManagement.Controllers
                         ms.Close();
                         ms.Dispose();
 
-                        incomes.InvoiceImage = ms.ToArray();
-                        incomes.InvoiceImageFormat = Request.Form.Files.First().ContentType;
+                        document.IncomeId = incomes.Id;
+                        document.InvoiceImage = ms.ToArray();
+                        document.InvoiceImageFormat = Request.Form.Files.First().ContentType;
+
+                        _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+                        _context.Add(document);
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
                         return BadRequest("PDF veya Resim Dosyası Ekleyin!");
                     }
                 }
-
-                incomes.State = (int)StateEnum.Active;
-                incomes.CreatedAt = DateTime.Now;
-                incomes.CreatedBy = GetLoggedUserId();
-
-                _context.Add(incomes);
-                await _context.SaveChangesAsync();
                 return Ok(new { Result = true, Message = "Gelir Başarıyla Kaydedilmiştir!" });
             }
             return BadRequest("Gelir Kaydedilirken Bir Hata Oluştu!");
@@ -165,6 +172,11 @@ namespace ExpenseManagement.Controllers
         {
             var income = await _context.Incomes.FindAsync(id);
 
+            var oldDocument = await _context.IncomeDocuments
+                .FirstOrDefaultAsync(i => i.IncomeId == id);
+
+            IncomeDocuments newDocument = new IncomeDocuments();
+
             if (income != null)
             {
                 if (ModelState.IsValid)
@@ -179,8 +191,27 @@ namespace ExpenseManagement.Controllers
                             ms.Close();
                             ms.Dispose();
 
-                            income.InvoiceImage = ms.ToArray();
-                            income.InvoiceImageFormat = Request.Form.Files.First().ContentType;
+                            if (oldDocument == null)
+                            {
+                                newDocument.IncomeId = income.Id;
+                                newDocument.InvoiceImage = ms.ToArray();
+                                newDocument.InvoiceImageFormat = Request.Form.Files.First().ContentType;
+
+                                _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+                                _context.Add(newDocument);
+                                await _context.SaveChangesAsync();
+                            }
+
+                            if (oldDocument != null)
+                            {
+                                oldDocument.IncomeId = income.Id;
+                                oldDocument.InvoiceImage = ms.ToArray();
+                                oldDocument.InvoiceImageFormat = Request.Form.Files.First().ContentType;
+
+                                _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+                                _context.Update(oldDocument);
+                                await _context.SaveChangesAsync();
+                            }
                         }
                         else
                         {
@@ -189,13 +220,14 @@ namespace ExpenseManagement.Controllers
                     }
 
                     income.SectorId = incomes.SectorId;
-                    income.Date = incomes.Date;
                     income.Definition = incomes.Definition;
+                    income.Date = incomes.Date;
                     income.Amount = incomes.Amount;
                     income.AmountCurrency = incomes.AmountCurrency;
                     income.TAX = incomes.TAX;
                     income.TAXCurrency = incomes.TAXCurrency;
 
+                    _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
                     _context.Update(income);
                     await _context.SaveChangesAsync();
                     return Ok(new { Result = true, Message = "Gelir Başarıyla Güncellendi!" });
@@ -239,14 +271,8 @@ namespace ExpenseManagement.Controllers
                 return View("Error");
             }
 
-            var document = await _context.Incomes
-                .Select(i => new Incomes
-                {
-                    Id = i.Id,
-                    InvoiceImage = i.InvoiceImage,
-                    InvoiceImageFormat = i.InvoiceImageFormat
-                })
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var document = await _context.IncomeDocuments
+                .FirstOrDefaultAsync(m => m.IncomeId == id);
 
             if (document == null)
             {
@@ -283,10 +309,9 @@ namespace ExpenseManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteImage(int id)
         {
-            var incomes = await _context.Incomes.FindAsync(id);
-            incomes.InvoiceImage = null;
-            incomes.InvoiceImageFormat = null;
-            _context.Incomes.Update(incomes);
+            var documents = await _context.IncomeDocuments.FirstOrDefaultAsync(ed => ed.IncomeId == id);
+            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            _context.IncomeDocuments.Remove(documents);
             await _context.SaveChangesAsync();
             return Ok(new { Result = true, Message = "Görüntü Silinmiştir!" });
         }
@@ -297,6 +322,12 @@ namespace ExpenseManagement.Controllers
             var incomes = await _context.Incomes.FindAsync(id);
             _context.Incomes.Remove(incomes);
             await _context.SaveChangesAsync();
+
+            var documents = await _context.IncomeDocuments.FirstOrDefaultAsync(ed => ed.IncomeId == id);
+            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            _context.IncomeDocuments.Remove(documents);
+            await _context.SaveChangesAsync();
+
             return Ok(new { Result = true, Message = "Gelir Silinmiştir!" });
         }
 
