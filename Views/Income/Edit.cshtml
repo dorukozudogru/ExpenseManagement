@@ -59,13 +59,16 @@
                                     <div class="col-3">
                                         <a class="btn btn-secondary btn-block float-right" id="openDocument" href="#" data-toggle="modal" data-target="#modal-document" style="margin-left:10px"><i class="fa fa-file-pdf"></i>&nbsp;&nbsp;Dokümanı Görüntüle</a>
                                     </div>
-                                    <div class="col-9">
+                                    <div class="col-6">
                                         <div class="input-group">
                                             <div class="custom-file">
                                                 <input type="file" class="custom-file-input" asp-for="InvoiceImage" accept="application/pdf,image/*" id="imageFile" name="imageFile">
                                                 <label class="custom-file-label" for="exampleInputFile">Dosya Seçiniz</label>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <a class="btn btn-danger btn-block text-white" onclick="deleteImage()"><i class="fas fa-trash"></i>&nbsp;&nbsp;Dokümanı Sil</a>
                                     </div>
                                 </div>
                             </div>

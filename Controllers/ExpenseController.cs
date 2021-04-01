@@ -130,7 +130,7 @@ namespace ExpenseManagement.Controllers
             };
 
             return Ok(response);
-        }     
+        }
 
         [HttpPost]
         public async Task<IActionResult> WeeklyPaylistPost()
@@ -282,7 +282,15 @@ namespace ExpenseManagement.Controllers
         public IActionResult Edit()
         {
             ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name");
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Name");
+
+            var suppliers = _context.Suppliers.ToList();
+            suppliers.Add(new Suppliers
+            {
+                Id = 0,
+                Name = ""
+            });
+
+            ViewData["SupplierId"] = new SelectList(suppliers.OrderBy(s => s.Id), "Id", "Name");
             return View();
         }
 
@@ -356,6 +364,31 @@ namespace ExpenseManagement.Controllers
             }
 
             return View("AccessDenied");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetDocument(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+
+            var document = await _context.Expenses
+                .Select(i => new Expenses
+                {
+                    Id = i.Id,
+                    InvoiceImage = i.InvoiceImage,
+                    InvoiceImageFormat = i.InvoiceImageFormat
+                })
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (document == null)
+            {
+                return View("Error");
+            }
+
+            return Ok(document);
         }
 
         public async Task<IActionResult> Delete(int? id)

@@ -21,7 +21,7 @@
                                 <input type="hidden" asp-for="Id" id="id" />
                                 <div class="form-group">
                                     <label asp-for="ExpenseType" class="control-label"></label>
-                                    <select asp-for="ExpenseType" class="form-control" asp-items="@Html.GetEnumSelectList<Expenses.ExpenseTypeEnum>()" id="expenseType"></select>
+                                    <select asp-for="ExpenseType" class="form-control" asp-items="@Html.GetEnumSelectList<Expenses.ExpenseTypeEnum>()" id="expenseType" onchange="changeExpenseType()"></select>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Sector.Name" class="control-label"></label>
@@ -29,7 +29,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Supplier.Name" class="control-label"></label>
-                                    <select asp-for="SupplierId" class="form-control" asp-items="ViewBag.SupplierId" id="supplierId"></select>
+                                    <select asp-for="SupplierId" class="form-control select2" style="width: 100%;" asp-items="ViewBag.SupplierId" id="supplierId"></select>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Date" class="control-label"></label>
@@ -75,32 +75,32 @@
                                     <span asp-validation-for="TAX" class="text-danger"></span>
                                 </div>
                                 <div class="row">
+                                    <div class="col-3">
+                                        <a class="btn btn-secondary btn-block float-right" id="openDocument" href="#" data-toggle="modal" data-target="#modal-document" style="margin-left:10px"><i class="fa fa-file-pdf"></i>&nbsp;&nbsp;Dokümanı Görüntüle</a>
+                                    </div>
                                     <div class="col-6">
-                                        <label asp-for="InvoiceImage" class="control-label"></label>
-                                        <div class="input-group mb-3">
+                                        <div class="input-group">
                                             <div class="custom-file">
                                                 <input type="file" class="custom-file-input" asp-for="InvoiceImage" accept="application/pdf,image/*" id="imageFile" name="imageFile">
                                                 <label class="custom-file-label" for="exampleInputFile">Dosya Seçiniz</label>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label">Görüntüyü Sil</label>
-                                            <br />
-                                            <a class="btn btn-danger btn-block text-white" onclick="deleteImage()"><i class="fas fa-trash"></i>&nbsp;&nbsp;Sil</a>
-                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <a class="btn btn-danger btn-block text-white" id="deleteDocument" onclick="deleteImage()"><i class="fas fa-trash"></i>&nbsp;&nbsp;Dokümanı Sil</a>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Month" class="control-label"></label>
-                                    <select asp-for="Month" class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                    <select asp-for="Month" disabled class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="SalaryAmount" class="control-label" id="salary-title-for-salary"></label>
                                     <div class="input-group mb-3" id="salary-for-salary">
                                         <div class="input-group-prepend">
-                                            <select asp-for="SalaryAmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.SalaryAmountCurrencyEnum>()" id="salaryAmountCurrency"></select>
+                                            <select asp-for="SalaryAmountCurrency" class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.SalaryAmountCurrencyEnum>()" id="salaryAmountCurrency"></select>
                                         </div>
-                                        <input asp-for="SalaryAmount" class="form-control" id="salaryAmount" />
+                                        <input asp-for="SalaryAmount" disabled class="form-control" id="salaryAmount" />
                                         <span asp-validation-for="SalaryAmount" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -113,6 +113,24 @@
                             <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
                                 <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                             </a>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="modal-document">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title"><strong><i class="fa fa-file-pdf"></i>&nbsp;&nbsp;Doküman</strong></h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" id="docDiv">
+                                    <iframe id="document" style="width:100%;height:100%" webkitallowfullscreen allowfullscreen></iframe>
+                                </div>
+                                <div class="modal-body" id="imgDiv">
+                                    <img id="image" style="width:100%;height:100%" webkitallowfullscreen allowfullscreen />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -144,16 +162,36 @@
                 dayL = dayL < 10 ? "0" + dayL : dayL;
                 monthL = monthL < 10 ? "0" + monthL : monthL;
 
-                document.getElementById("id").value = returnvalue.id;
-                document.getElementById("expenseType").value = returnvalue.expenseType;
-                document.getElementById("sectorId").value = returnvalue.sectorId;
-                document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
-                document.getElementById("datepicker2").value = yearL + "/" + monthL + "/" + dayL;
-                document.getElementById("definition").value = returnvalue.definition;
-                document.getElementById("amount").value = returnvalue.amount.toLocaleString("tr-TR");
-                document.getElementById("amountCurrency").value = returnvalue.amountCurrency;
-                document.getElementById("tax").value = returnvalue.tax.toLocaleString("tr-TR");
-                document.getElementById("taxCurrency").value = returnvalue.taxCurrency;
+                if (returnvalue.salaryAmount == null) {
+                    document.getElementById("id").value = returnvalue.id;
+                    document.getElementById("expenseType").value = returnvalue.expenseType;
+                    document.getElementById("sectorId").value = returnvalue.sectorId;
+                    document.getElementById("supplierId").value = returnvalue.supplierId;
+                    document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
+                    document.getElementById("datepicker2").value = yearL + "/" + monthL + "/" + dayL;
+                    document.getElementById("definition").value = returnvalue.definition;
+                    document.getElementById("amount").value = returnvalue.amount.toLocaleString("tr-TR");
+                    document.getElementById("amountCurrency").value = returnvalue.amountCurrency;
+                    document.getElementById("tax").value = returnvalue.tax.toLocaleString("tr-TR");
+                    document.getElementById("taxCurrency").value = returnvalue.taxCurrency;
+
+                    //Satıcı/Tedarikçi free text olacağı için yapılmayacak
+                    console.log(returnvalue.supplierId);
+
+                    //Maaş Düzeltme Silindi
+                    $('#monthId').attr('disabled', 'disabled');
+                    $('#salaryAmount').attr('disabled', 'disabled');
+                    $('#salaryAmountCurrency').attr('disabled', 'disabled');
+                }
+                if (returnvalue.salaryAmount != null) {
+                    document.getElementById("monthId").value = returnvalue.monthId;
+                    document.getElementById("salaryAmountCurrency").value = returnvalue.salaryAmountCurrency;
+                    document.getElementById("salaryAmount").value = returnvalue.salaryAmount;
+
+                    $('#monthId').removeAttr('disabled');
+                    $('#salaryAmount').removeAttr('disabled');
+                    $('#salaryAmountCurrency').removeAttr('disabled');
+                }
             },
             error: function (error) {
                 document.getElementById("swalDefaultError").value = "Gider Getirilirken Bir Hata Oluştu!";
@@ -161,36 +199,68 @@
             }
         });
 
-        //$("#openDocument").on("click", function () {
-        //    $.ajax({
-        //        url: '/Income/GetDocument?&id=' + id,
-        //        type: 'POST',
-        //        success: function (returnvalue) {
-        //            if (returnvalue.invoiceImageFormat == "application/pdf") {
-        //                $('#imgDiv').remove();
-        //                $('#image').remove();
-        //                document.getElementById("document").src = 'data:application/pdf;base64,' + returnvalue.invoiceImage;
-        //            }
-        //            else {
-        //                $('#docDiv').remove();
-        //                $('#document').remove();
-        //                document.getElementById("image").src = 'data:image;base64,' + returnvalue.invoiceImage;
-        //            }
-        //        },
-        //        error: function (error) {
-        //            Swal.fire({
-        //                position: 'center',
-        //                icon: 'warning',
-        //                title: 'Doküman Bulunmamaktadır!',
-        //                showConfirmButton: false,
-        //                timer: 2000
-        //            }),
-        //            window.setTimeout(function () {
-        //                $("#modal-document").modal('hide');
-        //            }, 2000);
-        //        }
-        //    });
-        //});
+        $("#openDocument").on("click", function () {
+            $.ajax({
+                url: '/Expense/GetDocument?&id=' + id,
+                type: 'POST',
+                success: function (returnvalue) {
+                    if (returnvalue.invoiceImageFormat == "application/pdf") {
+                        $('#imgDiv').remove();
+                        $('#image').remove();
+                        document.getElementById("document").src = 'data:application/pdf;base64,' + returnvalue.invoiceImage;
+                    }
+                    else {
+                        $('#docDiv').remove();
+                        $('#document').remove();
+                        document.getElementById("image").src = 'data:image;base64,' + returnvalue.invoiceImage;
+                    }
+                },
+                error: function (error) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: 'Doküman Bulunmamaktadır!',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }),
+                    window.setTimeout(function () {
+                        $("#modal-document").modal('hide');
+                    }, 2000);
+                }
+            });
+        });
+    }
+</script>
+<script>
+    function changeExpenseType() {
+        if (document.getElementById("expenseType").value == 2) {
+            $('#datepicker').attr('disabled', 'disabled');
+            $('#datepicker2').attr('disabled', 'disabled');
+            $('#supplierId').attr('disabled', 'disabled');
+            $('#amount').attr('disabled', 'disabled');
+            $('#amountCurrency').attr('disabled', 'disabled');
+            $('#tax').attr('disabled', 'disabled');
+            $('#taxCurrency').attr('disabled', 'disabled');
+            $('#imageFile').attr('disabled', 'disabled');
+
+            $('#monthId').removeAttr('disabled');
+            $('#salaryAmount').removeAttr('disabled');
+            $('#salaryAmountCurrency').removeAttr('disabled');
+        }
+        else {
+            $('#datepicker').removeAttr('disabled');
+            $('#datepicker2').removeAttr('disabled');
+            $('#supplierId').removeAttr('disabled');
+            $('#amount').removeAttr('disabled');
+            $('#amountCurrency').removeAttr('disabled');
+            $('#tax').removeAttr('disabled');
+            $('#taxCurrency').removeAttr('disabled');
+            $('#imageFile').removeAttr('disabled');
+
+            $('#monthId').attr('disabled', 'disabled');
+            $('#salaryAmount').attr('disabled', 'disabled');
+            $('#salaryAmountCurrency').attr('disabled', 'disabled');
+        }
     }
 </script>
 <script>
@@ -217,7 +287,9 @@
 </script>
 <script>
     var id;
+    var expenseType;
     var sectorId;
+    var supplierId;
     var date;
     var lastPaymentDate;
     var definition;
@@ -227,7 +299,9 @@
     var taxCurrency;
 
     function update() {
+        expenseType = document.getElementById("expenseType").value;
         sectorId = document.getElementById("sectorId").value;
+        supplierId = document.getElementById("supplierId").value;
         date = document.getElementById("datepicker").value;
         lastPaymentDate = document.getElementById("datepicker2").value;
         definition = document.getElementById("definition").value;
@@ -237,6 +311,9 @@
         taxCurrency = document.getElementById("taxCurrency").value;
         id = document.getElementById("id").value;
 
+        monthId = document.getElementById("monthId").value;
+        salaryAmountCurrency = document.getElementById("salaryAmountCurrency").value;
+        salaryAmount = document.getElementById("salaryAmount").value;
 
         var fileupload = $("#imageFile").get(0);
         var files = fileupload.files;
@@ -245,7 +322,9 @@
             data.append(files[i].name, files[i]);
         }
 
+        data.append('expenseType', expenseType);
         data.append('sectorId', sectorId);
+        data.append('supplierId', supplierId);
         data.append('date', date);
         data.append('lastPaymentDate', lastPaymentDate);
         data.append('definition', definition);
@@ -254,6 +333,10 @@
         data.append('tax', tax);
         data.append('taxCurrency', taxCurrency);
         data.append('id', id);
+
+        data.append('monthId', monthId);
+        data.append('salaryAmountCurrency', salaryAmountCurrency);
+        data.append('salaryAmount', salaryAmount);
 
         $("#updateButton").attr("disabled", true);
 
