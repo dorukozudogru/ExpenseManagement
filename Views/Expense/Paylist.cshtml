@@ -12,6 +12,7 @@
                     <div class="card-header">
                         <h5 class="box-title">
                             <i class="fas fa-credit-card"></i>&nbsp;Haftalık Ödeme Listesi
+                            <a class="btn btn-light text-primary btn-sm float-right" asp-controller="Expense" asp-action="ExportPaylist" style="margin-left:10px"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
                         </h5>
                     </div>
                     <div class="card-body">
@@ -48,6 +49,14 @@
                                                 @Html.DisplayNameFor(model => model.TAX)
                                         </tr>
                                     </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="6"></th>
+                                            <th>Toplam:</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -81,6 +90,40 @@
                 "searchDelay": 1200,
                 "stateSave": true,
                 "stateDuration": -1,
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api(), data;
+
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+
+                    pageAmountTotal = api
+                        .column(7, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0)
+                        .toFixed(2);
+
+                    $(api.column(7).footer()).html(
+                        pageAmountTotal + ' ₺'
+                    );
+
+                    pageTAXTotal = api
+                        .column(8, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0)
+                        .toFixed(2);
+
+                    $(api.column(8).footer()).html(
+                        pageTAXTotal + ' ₺'
+                    );
+                },
                 "ajax": {
                     "url": "/Expense/WeeklyPaylistPost",
                     "method": "POST"

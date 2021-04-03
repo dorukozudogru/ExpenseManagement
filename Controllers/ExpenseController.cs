@@ -14,6 +14,9 @@ using System.Collections.Generic;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
 using Microsoft.AspNetCore.Authorization;
 using System.Globalization;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
 
 namespace ExpenseManagement.Controllers
 {
@@ -131,6 +134,12 @@ namespace ExpenseManagement.Controllers
             DateTime baseDate = DateTime.Today;
             var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
             var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+
+            if (baseDate.DayOfWeek.ToString() == "Sunday")
+            {
+                thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek - 6);
+                thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+            }
 
             var expenseContext = await _context.Expenses
                 .Where(e => e.ExpenseType != 2 &&
@@ -439,6 +448,120 @@ namespace ExpenseManagement.Controllers
         public string GetLoggedUserRole()
         {
             return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
+        }
+
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public ActionResult ExportPaylist()
+        {
+            DateTime baseDate = DateTime.Today;
+            var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
+            var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+
+            if (baseDate.DayOfWeek.ToString() == "Sunday")
+            {
+                thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek - 6);
+                thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+            }
+
+            var stream = ExportAllPaylist(_context.Expenses
+                .Where(e => e.ExpenseType != 2 &&
+                            e.LastPaymentDate != null &&
+                            e.LastPaymentDate >= thisWeekStart &&
+                            e.LastPaymentDate <= thisWeekEnd)
+                .Include(e => e.Sector)
+                .AsNoTracking()
+                .ToList(), "Haftalık Ödeme Listesi");
+            string fileName = String.Format("{0}.xlsx", "Haftalık Ödeme Listesi");
+            string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            stream.Position = 0;
+            return File(stream, fileType, fileName);
+        }
+
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public MemoryStream ExportAllPaylist(List<Expenses> items, string pageName)
+        {
+            var stream = new System.IO.MemoryStream();
+
+            items = GetAllEnumNamesHelper.GetEnumName(items);
+
+            using (var p = new ExcelPackage(stream))
+            {
+                var ws = p.Workbook.Worksheets.Add("Ödemeler");
+
+                using (var range = ws.Cells[1, 1, 1, 9])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                ws.Cells[1, 1].Value = "ID";
+                ws.Cells[1, 2].Value = "Gider Türü";
+                ws.Cells[1, 3].Value = "Sektör/İş Kolu";
+                ws.Cells[1, 4].Value = "Satıcı/Tedariçi";
+                ws.Cells[1, 5].Value = "Gider Tarihi";
+                ws.Cells[1, 6].Value = "Son Ödeme Tarihi";
+                ws.Cells[1, 7].Value = "Gider Tanımı";
+                ws.Cells[1, 8].Value = "Tutar";
+                ws.Cells[1, 9].Value = "KDV";
+
+                ws.Column(5).Style.Numberformat.Format = "dd-mmmm-yyyy";
+                ws.Column(6).Style.Numberformat.Format = "dd-mmmm-yyyy";
+
+                ws.Row(1).Style.Font.Bold = true;
+
+                for (int c = 2; c < items.Count + 2; c++)
+                {
+                    ws.Cells[c, 1].Value = items[c - 2].Id;
+                    ws.Cells[c, 2].Value = items[c - 2].ExpenseTypeName;
+                    ws.Cells[c, 3].Value = items[c - 2].Sector.Name;
+                    ws.Cells[c, 4].Value = items[c - 2].SupplierDef;
+                    ws.Cells[c, 5].Value = items[c - 2].Date;
+                    ws.Cells[c, 6].Value = items[c - 2].LastPaymentDate;
+                    ws.Cells[c, 7].Value = items[c - 2].Definition;
+                    ws.Cells[c, 8].Value = items[c - 2].Amount + " " + items[c - 2].AmountCurrencyName;
+                    ws.Cells[c, 9].Value = items[c - 2].TAX + " " + items[c - 2].TAXCurrencyName;
+
+                    ws.Column(8).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].AmountCurrencyName);
+                    ws.Column(9).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].TAXCurrencyName);
+                }
+
+                //var lastRow = ws.Dimension.End.Row;
+                //var lastColumn = ws.Dimension.End.Column;
+
+                //ws.Cells[lastRow + 1, 7].Value = "Toplam:";
+                //ws.Cells[lastRow + 1, 8].Formula = String.Format("SUM(H2:H{0})", lastRow);
+                //ws.Cells[lastRow + 1, 9].Formula = String.Format("SUM(I2:I{0})", lastRow);
+
+                ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                ws.Cells["A1:I" + items.Count + 2].AutoFilter = true;
+
+                ws.Column(9).PageBreak = true;
+                ws.PrinterSettings.PaperSize = ePaperSize.A4;
+                ws.PrinterSettings.Orientation = eOrientation.Landscape;
+                ws.PrinterSettings.Scale = 100;
+
+                p.Save();
+            }
+            AddExportAudit(pageName);
+            return stream;
+        }
+
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public void AddExportAudit(string pageName)
+        {
+            Audit audit = new Audit()
+            {
+                Action = "Exported",
+                DateTime = DateTime.Now.ToUniversalTime(),
+                KeyValues = "{\"Id\":\"-\"}",
+                NewValues = "{\"PageName\":\"" + pageName + "\"}",
+                TableName = pageName,
+                Username = HttpContext?.User?.Identity?.Name
+            };
+            _context.Add(audit);
+            _context.SaveChanges();
         }
 
         private bool ExpensesExists(int id)
