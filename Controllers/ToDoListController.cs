@@ -157,7 +157,7 @@ namespace ExpenseManagement.Controllers
         {
             var stream = ExportToDo(_context.ToDoLists
                 .Include(s => s.Sector)
-                .Where(s => s.State == false).ToList(), 0, "Alacak Listesi");
+                .Where(s => s.State == false).ToList(), "Alacak Listesi");
             string fileName = String.Format("{0}.xlsx", "Alacak Listesi");
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;
@@ -165,7 +165,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public MemoryStream ExportToDo(List<ToDoLists> items, byte type, string pageName)
+        public MemoryStream ExportToDo(List<ToDoLists> items, string pageName)
         {
             var stream = new System.IO.MemoryStream();
 
