@@ -37,7 +37,13 @@
                                                 @Html.DisplayNameFor(model => model.VehiclePurchase.Chassis)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.Salesman.Name)
+                                                @Html.DisplayNameFor(model => model.LicencePlate)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.PurchasedSalesman)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Salesman)
                                             </th>
                                             <th>
                                                 @Html.DisplayNameFor(model => model.SaleAmount)
@@ -114,6 +120,30 @@
                     {
                         "data": "vehiclePurchase.chassis",
                         "orderable": false
+                    },
+                    {
+                        "data": "licencePlate",
+                        "orderable": false,
+                        render: function (data, type, full, meta) {
+                            if (data != null) {
+                                return data;
+                            }
+                            else {
+                                return "-";
+                            }
+                        }
+                    },
+                    {
+                        "data": "purchasedSalesman.name",
+                        "orderable": false,
+                        render: function (data, type, full, meta) {
+                            if (data != null) {
+                                return data;
+                            }
+                            else {
+                                return "-";
+                            }
+                        }
                     },
                     {
                         "data": "salesman.name",

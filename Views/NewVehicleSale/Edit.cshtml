@@ -33,6 +33,16 @@
                                     <span asp-validation-for="VehiclePurchaseId" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
+                                    <label asp-for="LicencePlate" class="control-label"></label>
+                                    <input asp-for="LicencePlate" class="form-control" id="licencePlate" autocomplete="off" />
+                                    <span asp-validation-for="LicencePlate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="PurchasedSalesmanId" class="control-label"></label>
+                                    <select asp-for="PurchasedSalesmanId" class="form-control" asp-items="ViewBag.PurchasedSalesmanId" id="purchasedSalesmanId"></select>
+                                    <span asp-validation-for="PurchasedSalesmanId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
                                     <label asp-for="SalesmanId" class="control-label"></label>
                                     <select asp-for="SalesmanId" class="form-control" asp-items="ViewBag.SalesmanId" id="salesmanId"></select>
                                     <span asp-validation-for="SalesmanId" class="text-danger"></span>
@@ -145,14 +155,16 @@
                 document.getElementById("vehiclePurchaseCarBrandId").value = returnvalue.vehiclePurchase.carModel.carBrand.id;
                 document.getElementById("vehiclePurchaseCarModelId").value = returnvalue.vehiclePurchase.carModel.id;
                 document.getElementById("vehiclePurchaseId").value = returnvalue.vehiclePurchaseId;
+                document.getElementById("licencePlate").value = returnvalue.licencePlate;
+                document.getElementById("purchasedSalesmanId").value = returnvalue.purchasedSalesmanId;
                 document.getElementById("salesmanId").value = returnvalue.salesmanId;
-                document.getElementById("saleAmount").value = returnvalue.saleAmount.toLocaleString("tr-TR");
+                document.getElementById("saleAmount").value = currency(returnvalue.saleAmount, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("saleAmountCurrency").value = returnvalue.saleAmountCurrency;
                 document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;;
                 document.getElementById("datepicker2").value = yearF + "/" + monthF + "/" + dayF;
-                document.getElementById("vehicleCost").value = returnvalue.vehicleCost.toLocaleString("tr-TR");
+                document.getElementById("vehicleCost").value = currency(returnvalue.vehicleCost, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("vehicleCostCurrency").value = returnvalue.vehicleCostCurrency;
-                document.getElementById("salesmanBonus").value = returnvalue.salesmanBonus.toLocaleString("tr-TR");
+                document.getElementById("salesmanBonus").value = currency(returnvalue.salesmanBonus, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("salesmanBonusCurrency").value = returnvalue.salesmanBonusCurrency;
                 document.getElementById("warrantyPlus").value = returnvalue.warrantyPlus;
                 document.getElementById("description").value = returnvalue.description;
@@ -168,6 +180,8 @@
     function updateNewVehicleSales() {
         var Id = document.getElementById("id").value;
         var VehiclePurchaseId = document.getElementById("vehiclePurchaseId").value;
+        var LicencePlate = document.getElementById("licencePlate").value;
+        var PurchasedSalesmanId = document.getElementById("purchasedSalesmanId").value;
         var SalesmanId = document.getElementById("salesmanId").value;
         var SaleAmount = document.getElementById("saleAmount").value;
         var SaleAmountCurrency = document.getElementById("saleAmountCurrency").value;
@@ -183,6 +197,8 @@
         var data = new FormData();
 
         data.append('VehiclePurchaseId', VehiclePurchaseId);
+        data.append('LicencePlate', LicencePlate);
+        data.append('PurchasedSalesmanId', PurchasedSalesmanId);
         data.append('SalesmanId', SalesmanId);
         data.append('SaleAmount', SaleAmount);
         data.append('SaleAmountCurrency', SaleAmountCurrency);

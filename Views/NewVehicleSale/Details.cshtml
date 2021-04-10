@@ -26,15 +26,16 @@
                                 @Html.DisplayNameFor(model => model.VehiclePurchase.CarModel.CarBrand.Name): <strong>@Html.DisplayFor(model => model.VehiclePurchase.CarModel.CarBrand.Name)</strong><br>
                                 @Html.DisplayNameFor(model => model.VehiclePurchase.CarModel.Name): <strong>@Html.DisplayFor(model => model.VehiclePurchase.CarModel.Name)</strong><br>
                                 @Html.DisplayNameFor(model => model.VehiclePurchase.Chassis): <strong>@Html.DisplayFor(model => model.VehiclePurchase.Chassis)</strong><br>
-                                @Html.DisplayNameFor(model => model.PurchaseDate): <strong>@Html.DisplayFor(model => model.PurchaseDate)</strong><br>
-                                @Html.DisplayNameFor(model => model.VehicleCost): <strong>@Html.DisplayFor(model => model.VehicleCost) @Html.DisplayFor(model => model.VehicleCostCurrencyName)</strong><br>
+                                @Html.DisplayNameFor(model => model.PurchasedSalesman): <strong>@Html.DisplayFor(model => model.PurchasedSalesman.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.Salesman): <strong>@Html.DisplayFor(model => model.Salesman.Name)</strong><br>
                             </address>
                         </div>
                         <div class="col-sm-4 invoice-col">
                             <address>
-                                @Html.DisplayNameFor(model => model.Salesman): <strong>@Html.DisplayFor(model => model.Salesman.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.PurchaseDate): <strong>@Html.DisplayFor(model => model.PurchaseDate)</strong><br>
                                 @Html.DisplayNameFor(model => model.SaleDate): <strong>@Html.DisplayFor(model => model.SaleDate)</strong><br>
                                 @Html.DisplayNameFor(model => model.SaleAmount): <strong>@Html.DisplayFor(model => model.SaleAmount) @Html.DisplayFor(model => model.SaleAmountCurrencyName)</strong><br>
+                                @Html.DisplayNameFor(model => model.VehicleCost): <strong>@Html.DisplayFor(model => model.VehicleCost) @Html.DisplayFor(model => model.VehicleCostCurrencyName)</strong><br>
                                 @Html.DisplayNameFor(model => model.SalesmanBonus): <strong>@Html.DisplayFor(model => model.SalesmanBonus) @Html.DisplayFor(model => model.SalesmanBonusCurrencyName)</strong><br>
                             </address>
                         </div>

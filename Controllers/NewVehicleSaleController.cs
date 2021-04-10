@@ -34,6 +34,7 @@ namespace ExpenseManagement.Controllers
             var requestFormData = Request.Form;
 
             var newVehicleSale = await _context.NewVehicleSales
+                .Include(n => n.PurchasedSalesman)
                 .Include(n => n.Salesman)
                 .Include(n => n.VehiclePurchase)
                 .Include(n => n.VehiclePurchase.CarModel)
@@ -59,6 +60,7 @@ namespace ExpenseManagement.Controllers
         public IActionResult Create()
         {
             ViewData["SalesmanId"] = new SelectList(_context.Salesmans, "Id", "Name");
+            ViewData["PurchasedSalesmanId"] = new SelectList(_context.Salesmans, "Id", "Name");
 
             var newCars = _context.VehiclePurchases
                 .Include(cm => cm.CarModel)
@@ -111,6 +113,7 @@ namespace ExpenseManagement.Controllers
             }
 
             var newVehicleSales = await _context.NewVehicleSales
+                .Include(n => n.PurchasedSalesman)
                 .Include(n => n.Salesman)
                 .Include(n => n.VehiclePurchase)
                 .Include(n => n.VehiclePurchase.CarModel)
@@ -130,6 +133,7 @@ namespace ExpenseManagement.Controllers
         public IActionResult Edit()
         {
             ViewData["SalesmanId"] = new SelectList(_context.Salesmans, "Id", "Name");
+            ViewData["PurchasedSalesmanId"] = new SelectList(_context.Salesmans, "Id", "Name");
             ViewData["VehiclePurchaseCarBrandId"] = new SelectList(_context.CarBrands, "Id", "Name");
             ViewData["VehiclePurchaseCarModelId"] = new SelectList(_context.CarModels, "Id", "Name");
             ViewData["VehiclePurchaseId"] = new SelectList(_context.VehiclePurchases.OrderBy(vp => vp.FullInfo), "Id", "FullInfo");
@@ -145,6 +149,7 @@ namespace ExpenseManagement.Controllers
             }
 
             var newVehicleSales = await _context.NewVehicleSales
+                .Include(n => n.PurchasedSalesman)
                 .Include(n => n.Salesman)
                 .Include(n => n.VehiclePurchase)
                 .Include(n => n.VehiclePurchase.CarModel)
@@ -163,6 +168,7 @@ namespace ExpenseManagement.Controllers
         public async Task<IActionResult> Edit(int id, NewVehicleSales newVehicleSales)
         {
             var newVehicleSale = await _context.NewVehicleSales
+                .Include(n => n.PurchasedSalesman)
                 .Include(n => n.Salesman)
                 .Include(n => n.VehiclePurchase)
                 .Include(n => n.VehiclePurchase.CarModel)
@@ -187,6 +193,8 @@ namespace ExpenseManagement.Controllers
                     newVehicleSale.SaleDate = newVehicleSales.SaleDate;
                     newVehicleSale.SalesmanBonus = newVehicleSales.SalesmanBonus;
                     newVehicleSale.SalesmanBonusCurrency = newVehicleSales.SalesmanBonusCurrency;
+                    newVehicleSale.PurchasedSalesmanId = newVehicleSales.PurchasedSalesmanId;
+                    newVehicleSale.LicencePlate = newVehicleSales.LicencePlate;
                     newVehicleSale.SalesmanId = newVehicleSales.SalesmanId;
                     newVehicleSale.VehicleCost = newVehicleSales.VehicleCost;
                     newVehicleSale.VehicleCostCurrency = newVehicleSales.VehicleCostCurrency;
@@ -212,6 +220,7 @@ namespace ExpenseManagement.Controllers
             }
 
             var newVehicleSales = await _context.NewVehicleSales
+                .Include(n => n.PurchasedSalesman)
                 .Include(n => n.Salesman)
                 .Include(n => n.VehiclePurchase)
                 .Include(n => n.VehiclePurchase.CarModel)
