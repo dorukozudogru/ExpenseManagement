@@ -10,6 +10,8 @@
     <Compile Remove="Migrations\20210306192730_energy-menu-added.Designer.cs" />
     <Compile Remove="Migrations\20210401204619_expense-income-document-table-divided.cs" />
     <Compile Remove="Migrations\20210401204619_expense-income-document-table-divided.Designer.cs" />
+    <Compile Remove="Migrations\20210403223607_tax-rates-added-to-purchase.cs" />
+    <Compile Remove="Migrations\20210403223607_tax-rates-added-to-purchase.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

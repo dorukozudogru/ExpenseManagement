@@ -69,6 +69,21 @@ namespace ExpenseManagement.Models
         [DisplayName("Alış Fiyatı Dövizi")]
         public string PurchaseAmountCurrencyName { get; set; }
 
+        [DisplayName("ÖTV Oranı (%)")]
+        public int? OTVPercent { get; set; }
+
+        [DisplayName("ÖTV Dahil Fiyatı")]
+        public double? OTV { get; set; }
+
+        [DisplayName("KDV Dahil Fiyatı")]
+        public double? KDV { get; set; }
+
+        [DisplayName("Trafik Tescil Bedeli")]
+        public int? RegistrationFee { get; set; }
+
+        [DisplayName("Trafik Tescil Bedeli Dahil Fiyatı")]
+        public double? IncludingRegistrationFee { get; set; }
+
         [DisplayName("Satış Fiyatı")]
         public double? SaleAmount { get; set; }
 

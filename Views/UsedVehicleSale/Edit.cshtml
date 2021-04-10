@@ -82,7 +82,6 @@
                                                     <select asp-for="PurchaseAmountCurrency" class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="purchaseAmountCurrency"></select>
                                                 </div>
                                                 <input asp-for="PurchaseAmount" class="form-control" autocomplete="off" id="purchaseAmount" type="text" disabled />
-                                                <input asp-for="PurchaseAmount" class="form-control" autocomplete="off" id="purchaseAmount2" type="text" disabled hidden />
                                                 <span asp-validation-for="PurchaseAmount" class="text-danger"></span>
                                             </div>
                                         </div>
@@ -116,13 +115,12 @@
                                             <span asp-validation-for="SoldSalesmanId" class="text-danger"></span>
                                         </div>
                                         <div class="form-group">
-                                            <label asp-for="SaleAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için nokta (.) kullanınız. Değer girildikten sonra sistem virgül (,) olarak değiştirecektir.)</strong></label>
+                                            <label asp-for="SaleAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
                                                     <select asp-for="SaleAmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="saleAmountCurrency"></select>
                                                 </div>
                                                 <input asp-for="SaleAmount" class="form-control" autocomplete="off" id="saleAmount" type="text" />
-                                                <input asp-for="SaleAmount" class="form-control" autocomplete="off" id="saleAmount2" type="text" hidden />
                                                 <span asp-validation-for="SaleAmount" class="text-danger"></span>
                                             </div>
                                         </div>
@@ -194,13 +192,13 @@
                 document.getElementById("datepicker2").value = yearF + "/" + monthF + "/" + dayF;
                 document.getElementById("purchasedSalesmanId").value = returnvalue.purchasedSalesmanId;
                 document.getElementById("soldSalesmanId").value = returnvalue.soldSalesmanId;
-                document.getElementById("purchaseAmount").value = returnvalue.purchaseAmount;
+                document.getElementById("purchaseAmount").value = currency(returnvalue.purchaseAmount, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("purchaseAmountCurrency").value = returnvalue.purchaseAmountCurrency;
-                document.getElementById("saleAmount").value = returnvalue.saleAmount;
+                document.getElementById("saleAmount").value = currency(returnvalue.saleAmount, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("saleAmountCurrency").value = returnvalue.saleAmountCurrency;
-                document.getElementById("purchasedSalesmanBonus").value = returnvalue.purchasedSalesmanBonus.toLocaleString("tr-TR");
+                document.getElementById("purchasedSalesmanBonus").value = currency(returnvalue.purchasedSalesmanBonus, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("purchasedSalesmanBonusCurrency").value = returnvalue.purchasedSalesmanBonusCurrency;
-                document.getElementById("soldSalesmanBonus").value = returnvalue.soldSalesmanBonus.toLocaleString("tr-TR");
+                document.getElementById("soldSalesmanBonus").value = currency(returnvalue.soldSalesmanBonus, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("soldSalesmanBonusCurrency").value = returnvalue.soldSalesmanBonusCurrency;
                 document.getElementById("description").value = returnvalue.description;
             },
@@ -211,19 +209,20 @@
         });
 
         $("#saleAmount").on("change", function (e) {
-            var purchaseAmountVariable = +document.getElementById("purchaseAmount").value;
-            var saleAmountVariable = +document.getElementById("saleAmount").value;
-
+            var purchaseAmountVariable = parseFloat(document.getElementById("purchaseAmount").value);
+            var saleAmountVariable = parseFloat(document.getElementById("saleAmount").value);
             var bonus = (saleAmountVariable - purchaseAmountVariable) / 40;
 
-            var paLocal = purchaseAmountVariable.toLocaleString("tr-TR");
-            var saLocal = saleAmountVariable.toLocaleString("tr-TR");
+            document.getElementById("purchasedSalesmanBonus").value = currency(bonus, { decimal: ',', separator: '', symbol: '' }).format();
+            document.getElementById("soldSalesmanBonus").value = currency(bonus, { decimal: ',', separator: '', symbol: '' }).format();
 
-            document.getElementById("purchasedSalesmanBonus").value = bonus.toLocaleString("tr-TR")
-            document.getElementById("soldSalesmanBonus").value = bonus.toLocaleString("tr-TR")
-            document.getElementById("purchaseAmount").value = paLocal;
-            document.getElementById("saleAmount").value = saLocal;
-            $("#isChange").attr('value', 'Changed')
+            document.getElementById("saleAmount").value = "";
+
+            window.setTimeout(function () {
+                document.getElementById("saleAmount").value = currency(saleAmountVariable, { decimal: ',', separator: '', symbol: '' }).format();
+            }, 100);
+
+            $("#isChange").attr('value', 'Changed');
         })
         $("#saleAmountCurrency").on("change", function (e) {
             var saleAmountCurrencyVariable = document.getElementById("saleAmountCurrency").value;

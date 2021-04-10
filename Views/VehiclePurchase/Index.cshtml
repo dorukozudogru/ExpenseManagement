@@ -49,6 +49,9 @@
                                                 @Html.DisplayNameFor(model => model.PurchaseAmount)
                                             </th>
                                             <th>
+                                                @Html.DisplayNameFor(model => model.IncludingRegistrationFee)
+                                            </th>
+                                            <th>
                                                 @Html.DisplayNameFor(model => model.SaleAmount)
                                             </th>
                                             <th></th>
@@ -142,6 +145,17 @@
                         "data": "purchaseAmount",
                         "render": function (data, type, full, meta) {
                             return full.purchaseAmount + " " + full.purchaseAmountCurrencyName;
+                        }
+                    },
+                    {
+                        "data": "includingRegistrationFee",
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return full.includingRegistrationFee + " ₺";
+                            }
+                            else {
+                                return "-";
+                            }
                         }
                     },
                     {

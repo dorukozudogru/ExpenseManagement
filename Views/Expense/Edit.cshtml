@@ -59,36 +59,61 @@
                                     <input asp-for="Definition" class="form-control" id="definition" />
                                     <span asp-validation-for="Definition" class="text-danger"></span>
                                 </div>
-                                <label asp-for="Amount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <select asp-for="AmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
+                                <div class="form-group">
+                                    <label asp-for="Amount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select asp-for="AmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
+                                        </div>
+                                        <input asp-for="Amount" class="form-control" id="amount" />
+                                        <span asp-validation-for="Amount" class="text-danger"></span>
                                     </div>
-                                    <input asp-for="Amount" class="form-control" id="amount" />
-                                    <span asp-validation-for="Amount" class="text-danger"></span>
-                                </div>
-                                <label asp-for="TAX" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <select asp-for="TAXCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.TAXCurrencyEnum>()" id="taxCurrency"></select>
-                                    </div>
-                                    <input asp-for="TAX" class="form-control" id="tax" />
-                                    <span asp-validation-for="TAX" class="text-danger"></span>
                                 </div>
                                 <div class="row">
-                                    <div class="col-3">
-                                        <a class="btn btn-secondary btn-block float-right" id="openDocument" href="#" data-toggle="modal" data-target="#modal-document" style="margin-left:10px"><i class="fa fa-file-pdf"></i>&nbsp;&nbsp;Dokümanı Görüntüle</a>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="input-group">
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input" asp-for="InvoiceImage" accept="application/pdf,image/*" id="imageFile" name="imageFile">
-                                                <label class="custom-file-label" for="exampleInputFile">Dosya Seçiniz</label>
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <label class="control-label">KDV Oranı</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" id="taxRate" onchange="calculateTax()">
+                                                        <option>% 1</option>
+                                                        <option>% 8</option>
+                                                        <option>% 18</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-3">
-                                        <a class="btn btn-danger btn-block text-white" id="deleteDocument" onclick="deleteImage()"><i class="fas fa-trash"></i>&nbsp;&nbsp;Dokümanı Sil</a>
+                                    <div class="col-md-11">
+                                        <div class="form-group">
+                                            <label asp-for="TAX" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select asp-for="TAXCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.TAXCurrencyEnum>()" id="taxCurrency"></select>
+                                                </div>
+                                                <input asp-for="TAX" class="form-control" id="tax" />
+                                                <span asp-validation-for="TAX" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="InvoiceImage" class="control-label"></label>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <a class="btn btn-secondary btn-block float-right" id="openDocument" href="#" data-toggle="modal" data-target="#modal-document" style="margin-left:10px"><i class="fa fa-file-pdf"></i>&nbsp;&nbsp;Dokümanı Görüntüle</a>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="input-group">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" asp-for="InvoiceImage" accept="application/pdf,image/*" id="imageFile" name="imageFile">
+                                                    <label class="custom-file-label" for="exampleInputFile">Dosya Seçiniz</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <a class="btn btn-danger btn-block text-white" id="deleteDocument" onclick="deleteImage()"><i class="fas fa-trash"></i>&nbsp;&nbsp;Dokümanı Sil</a>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -96,7 +121,7 @@
                                     <select asp-for="Month" disabled class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="SalaryAmount" class="control-label" id="salary-title-for-salary"></label>
+                                    <label asp-for="SalaryAmount" class="control-label" id="salary-title-for-salary"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                     <div class="input-group mb-3" id="salary-for-salary">
                                         <div class="input-group-prepend">
                                             <select asp-for="SalaryAmountCurrency" class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.SalaryAmountCurrencyEnum>()" id="salaryAmountCurrency"></select>
@@ -141,6 +166,18 @@
 </section>
 
 <script>
+    function calculateTax() {
+        amount = document.getElementById("amount").value;
+        taxRate = document.getElementById("taxRate").value.substring(2, 4);
+        tax = amount * taxRate / 100;
+        if (isNaN(Number(tax))) {
+            var amount = Number(amount.replace(',', '.'));
+            tax = amount * taxRate / 100;
+        }
+        document.getElementById("tax").value = currency(tax, { decimal: ',', separator: '', symbol: '' }).format();
+    }
+</script>
+<script>
     window.onload = function getExpense() {
         var id = '@Url.RouteUrl(ViewContext.RouteData.Values).Split("/").Last()';
 
@@ -171,9 +208,9 @@
                     document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
                     document.getElementById("datepicker2").value = yearL + "/" + monthL + "/" + dayL;
                     document.getElementById("definition").value = returnvalue.definition;
-                    document.getElementById("amount").value = returnvalue.amount.toLocaleString("tr-TR");
+                    document.getElementById("amount").value = currency(returnvalue.amount, { decimal: ',', separator: '', symbol: '' }).format();
                     document.getElementById("amountCurrency").value = returnvalue.amountCurrency;
-                    document.getElementById("tax").value = returnvalue.tax.toLocaleString("tr-TR");
+                    document.getElementById("tax").value = currency(returnvalue.tax, { decimal: ',', separator: '', symbol: '' }).format();
                     document.getElementById("taxCurrency").value = returnvalue.taxCurrency;
 
                     //Maaş Düzeltme Silindi

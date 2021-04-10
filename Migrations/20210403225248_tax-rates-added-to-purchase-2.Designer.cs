@@ -4,14 +4,16 @@ using ExpenseManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseManagement.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    partial class ExpenseContextModelSnapshot : ModelSnapshot
+    [Migration("20210403225248_tax-rates-added-to-purchase-2")]
+    partial class taxratesaddedtopurchase2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -610,8 +612,6 @@ namespace ExpenseManagement.Migrations
                     b.Property<string>("Chassis")
                         .IsRequired();
 
-                    b.Property<double?>("IncludingRegistrationFee");
-
                     b.Property<bool>("IsNew");
 
                     b.Property<bool>("IsSold");
@@ -628,7 +628,7 @@ namespace ExpenseManagement.Migrations
 
                     b.Property<DateTime>("PurchaseDate");
 
-                    b.Property<int?>("RegistrationFee");
+                    b.Property<double?>("RegistrationFee");
 
                     b.Property<double?>("SaleAmount");
 
