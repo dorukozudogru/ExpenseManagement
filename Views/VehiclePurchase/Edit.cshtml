@@ -80,7 +80,7 @@
                                     <span asp-validation-for="Chassis" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="PurchaseAmount" class="control-label"></label>
+                                    <label asp-for="PurchaseAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <select asp-for="PurchaseAmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="purchaseAmountCurrency"></select>
@@ -89,8 +89,65 @@
                                         <span asp-validation-for="PurchaseAmount" class="text-danger"></span>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <label asp-for="OTVPercent" class="control-label"></label>
+                                            <select id="otvPercent" asp-for="OTVPercent" class="form-control" onchange="calculateOTV()">
+                                                <option>50</option>
+                                                <option>80</option>
+                                                <option>130</option>
+                                                <option>150</option>
+                                                <option>200</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <div class="form-group">
+                                            <label asp-for="OTV" class="control-label"></label>
+                                            <input asp-for="OTV" class="form-control" autocomplete="off" id="otv" />
+                                            <span asp-validation-for="OTV" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <label class="control-label">KDV Oranı (%)</label>
+                                            <select class="form-control" disabled>
+                                                <option>18</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <div class="form-group">
+                                            <label asp-for="KDV" class="control-label"></label>
+                                            <input asp-for="KDV" class="form-control" autocomplete="off" id="kdv" />
+                                            <span asp-validation-for="KDV" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <label class="control-label">Tescil Bedeli (₺)</label>
+                                            <select id="feeAmount" asp-for="RegistrationFee" class="form-control" onchange="calculateFinalAmount()">
+                                                <option>0</option>
+                                                <option>1350</option>
+                                                <option>1800</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <div class="form-group">
+                                            <label asp-for="IncludingRegistrationFee" class="control-label"></label>
+                                            <input asp-for="IncludingRegistrationFee" class="form-control" autocomplete="off" id="includingRegistrationFee" />
+                                            <span asp-validation-for="IncludingRegistrationFee" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group">
-                                    <label asp-for="SaleAmount" class="control-label"></label>
+                                    <label asp-for="SaleAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <select asp-for="SaleAmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="saleAmountCurrency"></select>
@@ -116,6 +173,38 @@
     </div>
 </section>
 
+<script>
+    function calculateOTV() {
+        var percent = document.getElementById("otvPercent").value;
+        var amount = document.getElementById("purchaseAmount").value;
+        var totalTax = amount * percent / 100;
+        if (isNaN(Number(totalTax))) {
+            amount = Number(amount.replace(',', '.'));
+            totalTax = amount * percent / 100;
+        }
+
+        incOtv = +totalTax + +amount;
+        Kdv = incOtv * 18 / 100;
+        incKDV = +incOtv + +Kdv
+
+        document.getElementById("otv").value = currency(incOtv, { decimal: ',', separator: '', symbol: '' }).format();
+        document.getElementById("kdv").value = currency(incKDV, { decimal: ',', separator: '', symbol: '' }).format();
+    }
+
+    function calculateFinalAmount() {
+        var amount = document.getElementById("purchaseAmount").value;
+        var incKdv = document.getElementById("kdv").value;
+        var fee = document.getElementById("feeAmount").value;
+
+        var final = +incKdv + +fee
+
+        if (isNaN(Number(final))) {
+            incKdv = Number(incKdv.replace(',', '.'));
+            final = +incKdv + +fee
+        }
+        document.getElementById("includingRegistrationFee").value = currency(final, { decimal: ',', separator: '', symbol: '' }).format();
+    }
+</script>
 <script>
     window.onload = function getVehiclePurchase() {
         $("#isSold").on('change', function () {
@@ -186,11 +275,17 @@
                 document.getElementById("isSold").checked = returnvalue.isSold;
                 document.getElementById("chassis").value = returnvalue.chassis;
                 document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
-                document.getElementById("purchaseAmount").value = returnvalue.purchaseAmount.toLocaleString("tr-TR");
+                document.getElementById("purchaseAmount").value = currency(returnvalue.purchaseAmount, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("purchaseAmountCurrency").value = returnvalue.purchaseAmountCurrency;
 
+                document.getElementById("otvPercent").value = returnvalue.otvPercent;
+                document.getElementById("otv").value = currency(returnvalue.otv, { decimal: ',', separator: '', symbol: '' }).format();
+                document.getElementById("kdv").value = currency(returnvalue.kdv, { decimal: ',', separator: '', symbol: '' }).format();
+                document.getElementById("feeAmount").value = returnvalue.registrationFee;
+                document.getElementById("includingRegistrationFee").value = currency(returnvalue.includingRegistrationFee, { decimal: ',', separator: '', symbol: '' }).format();
+
                 if (returnvalue.isSold == true) {
-                    document.getElementById("saleAmount").value = returnvalue.saleAmount.toLocaleString("tr-TR");
+                    document.getElementById("saleAmount").value = currency(returnvalue.saleAmount, { decimal: ',', separator: '', symbol: '' }).format();
                     document.getElementById("saleAmountCurrency").value = returnvalue.saleAmountCurrency;
                     document.getElementById("warningSuccessMessage").value = "Devam Et";
                     document.getElementById("swalDefaultWarning").value = "Bu araç satılmıştır. Lütfen değişiklik yapmadan önce satış kaydını kontrol ediniz.";
@@ -211,24 +306,38 @@
         var Model = document.getElementById("Model").value;
         var IsNew = document.getElementById("isNew").value;
         var IsSold = document.getElementById("isSold").value;
+        var Chassis = document.getElementById("chassis").value;
         var PurchaseDate = document.getElementById("datepicker").value;
         var SaleDate = document.getElementById("datepicker2").value;
-        var Chassis = document.getElementById("chassis").value;
         var PurchaseAmount = document.getElementById("purchaseAmount").value;
         var PurchaseAmountCurrency = document.getElementById("purchaseAmountCurrency").value;
+
+        var OTVPercent = document.getElementById("otvPercent").value;
+        var OTV = document.getElementById("otv").value;
+        var KDV = document.getElementById("kdv").value;
+        var RegistrationFee = document.getElementById("feeAmount").value;
+        var IncludingRegistrationFee = document.getElementById("includingRegistrationFee").value;
+
         var SaleAmount = document.getElementById("saleAmount").value;
         var SaleAmountCurrency = document.getElementById("saleAmountCurrency").value;
 
         var data = new FormData();
 
         data.append('CarModel.Name', Model);
-        data.append('PurchaseDate', PurchaseDate);
         data.append('IsNew', IsNew);
         data.append('IsSold', IsSold);
-        data.append('SaleDate', SaleDate);
         data.append('Chassis', Chassis);
+        data.append('PurchaseDate', PurchaseDate);
+        data.append('SaleDate', SaleDate);
         data.append('PurchaseAmount', PurchaseAmount);
         data.append('PurchaseAmountCurrency', PurchaseAmountCurrency);
+
+        data.append('OTVPercent', OTVPercent);
+        data.append('OTV', OTV);
+        data.append('KDV', KDV);
+        data.append('RegistrationFee', RegistrationFee);
+        data.append('IncludingRegistrationFee', IncludingRegistrationFee);
+        
         data.append('SaleAmount', SaleAmount);
         data.append('SaleAmountCurrency', SaleAmountCurrency);
 

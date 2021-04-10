@@ -148,11 +148,18 @@ namespace ExpenseManagement.Controllers
                     vehiclePurchase.CarModelId = _context.CarModels.FirstOrDefault(x => x.Name == vehiclePurchases.CarModel.Name).Id;
                     vehiclePurchase.IsNew = vehiclePurchases.IsNew;
                     vehiclePurchase.IsSold = vehiclePurchases.IsSold;
+                    vehiclePurchase.Chassis = vehiclePurchases.Chassis;
                     vehiclePurchase.PurchaseDate = vehiclePurchases.PurchaseDate;
                     vehiclePurchase.SaleDate = vehiclePurchases.SaleDate;
-                    vehiclePurchase.Chassis = vehiclePurchases.Chassis;
                     vehiclePurchase.PurchaseAmount = vehiclePurchases.PurchaseAmount;
                     vehiclePurchase.PurchaseAmountCurrency = vehiclePurchases.PurchaseAmountCurrency;
+
+                    vehiclePurchase.OTVPercent = vehiclePurchases.OTVPercent;
+                    vehiclePurchase.OTV = vehiclePurchases.OTV;
+                    vehiclePurchase.KDV = vehiclePurchases.KDV;
+                    vehiclePurchase.RegistrationFee = vehiclePurchases.RegistrationFee;
+                    vehiclePurchase.IncludingRegistrationFee = vehiclePurchases.IncludingRegistrationFee;
+
                     vehiclePurchase.SaleAmount = vehiclePurchases.SaleAmount;
                     vehiclePurchase.SaleAmountCurrency = vehiclePurchases.SaleAmountCurrency;
 

@@ -75,9 +75,9 @@
                                     <label asp-for="VehicleCost" class="control-label"></label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
-                                            <select asp-for="VehicleCostCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="vehicleCostCurrency"></select>
+                                            <select asp-for="VehicleCostCurrency" disabled class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="vehicleCostCurrency"></select>
                                         </div>
-                                        <input asp-for="VehicleCost" class="form-control" autocomplete="off" id="vehicleCost" />
+                                        <input asp-for="VehicleCost" disabled class="form-control" autocomplete="off" id="vehicleCost" />
                                         <span asp-validation-for="VehicleCost" class="text-danger"></span>
                                     </div>
                                 </div>

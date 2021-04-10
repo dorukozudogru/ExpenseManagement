@@ -145,8 +145,7 @@
             var amount = Number(amount.replace(',', '.'));
             tax = amount * taxRate / 100;
         }
-        document.getElementById("tax").value = tax.toLocaleString("tr-TR");
-
+        document.getElementById("tax").value = currency(tax, { decimal: ',', separator: '', symbol: '' }).format();
     }
 </script>
 <script>

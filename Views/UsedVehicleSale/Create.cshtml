@@ -158,26 +158,27 @@
                 $.getJSON('@Url.Action("GetPurchaseDate", "UsedVehicleSale")' + "?vehiclePurchaseName=" + vehiclePurchaseName, function (result) {
                     for (var i = 0; i < result.length; i++) {
                         $("#datepicker").attr('value', moment(result[i].purchaseDate).format("YYYY/MM/DD"))
-                        $("#purchaseAmount").attr('value', result[i].purchaseAmount)
+                        $("#purchaseAmount").attr('value', currency(result[i].purchaseAmount, { decimal: ',', separator: '', symbol: '' }).format())
                     }
                 })
             }
         </script>
         <script>
             $("#saleAmount").on("change", function (e) {
-                var purchaseAmountVariable = +document.getElementById("purchaseAmount").value;
-                var saleAmountVariable = +document.getElementById("saleAmount").value;
-
+                var purchaseAmountVariable = parseFloat(document.getElementById("purchaseAmount").value);
+                var saleAmountVariable = parseFloat(document.getElementById("saleAmount").value);
                 var bonus = (saleAmountVariable - purchaseAmountVariable) / 40;
 
-                var paLocal = purchaseAmountVariable.toLocaleString("tr-TR");
-                var saLocal = saleAmountVariable.toLocaleString("tr-TR");
+                document.getElementById("purchasedSalesmanBonus").value = currency(bonus, { decimal: ',', separator: '', symbol: '' }).format();
+                document.getElementById("soldSalesmanBonus").value = currency(bonus, { decimal: ',', separator: '', symbol: '' }).format();
 
-                $("#purchasedSalesmanBonus").attr('value', bonus.toLocaleString("tr-TR"))
-                $("#soldSalesmanBonus").attr('value', bonus.toLocaleString("tr-TR"))
+                document.getElementById("saleAmount").value = "";
 
-                $("#purchaseAmount2").attr('value', paLocal)
-                $("#saleAmount2").attr('value', saLocal)
+                window.setTimeout(function () {
+                    document.getElementById("saleAmount").value = currency(saleAmountVariable, { decimal: ',', separator: '', symbol: '' }).format();
+                }, 100);
+
+                $("#isChange").attr('value', 'Changed');
             })
             $("#saleAmountCurrency").on("change", function (e) {
                 var saleAmountCurrencyVariable = document.getElementById("saleAmountCurrency").value;
@@ -194,9 +195,9 @@
                 var SaleDate = document.getElementById("datepicker2").value;
                 var PurchasedSalesmanId = document.getElementById("purchasedSalesmanId").value;
                 var SoldSalesmanId = document.getElementById("soldSalesmanId").value;
-                var PurchaseAmount = document.getElementById("purchaseAmount2").value;
+                var PurchaseAmount = document.getElementById("purchaseAmount").value;
                 var PurchaseAmountCurrency = document.getElementById("purchaseAmountCurrency").value;
-                var SaleAmount = document.getElementById("saleAmount2").value;
+                var SaleAmount = document.getElementById("saleAmount").value;
                 var SaleAmountCurrency = document.getElementById("saleAmountCurrency").value;
                 var PurchasedSalesmanBonus = document.getElementById("purchasedSalesmanBonus").value;
                 var PurchasedSalesmanBonusCurrency = document.getElementById("purchasedSalesmanBonusCurrency").value;
@@ -224,6 +225,9 @@
                 data.append('Description', Description);
 
                 $("#createButton").attr("disabled", true);
+
+                console.log(PurchaseAmount);
+                console.log(SaleAmount);
 
                 $.ajax({
                     url: '/UsedVehicleSale/Create',
