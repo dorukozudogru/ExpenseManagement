@@ -12,6 +12,16 @@
     <Compile Remove="Migrations\20210401204619_expense-income-document-table-divided.Designer.cs" />
     <Compile Remove="Migrations\20210403223607_tax-rates-added-to-purchase.cs" />
     <Compile Remove="Migrations\20210403223607_tax-rates-added-to-purchase.Designer.cs" />
+    <Compile Remove="Migrations\20210410214940_plate-and-purchased-salesman-added-to-new-vehicle-sale.cs" />
+    <Compile Remove="Migrations\20210410214940_plate-and-purchased-salesman-added-to-new-vehicle-sale.Designer.cs" />
+    <Compile Remove="Migrations\20210410215027_plate-and-purchased-salesman-added.cs" />
+    <Compile Remove="Migrations\20210410215027_plate-and-purchased-salesman-added.Designer.cs" />
+    <Compile Remove="Migrations\20210410215204_plate-and-purchased-salesman-added.cs" />
+    <Compile Remove="Migrations\20210410215204_plate-and-purchased-salesman-added.Designer.cs" />
+    <Compile Remove="Migrations\20210410215249_plate-and-purchased-salesman-added.cs" />
+    <Compile Remove="Migrations\20210410215249_plate-and-purchased-salesman-added.Designer.cs" />
+    <Compile Remove="Migrations\20210410215951_plate-and-purchased-salesman-added.cs" />
+    <Compile Remove="Migrations\20210410215951_plate-and-purchased-salesman-added.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

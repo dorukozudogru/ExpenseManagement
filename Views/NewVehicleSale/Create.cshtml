@@ -24,12 +24,22 @@
                                     <span asp-validation-for="VehiclePurchaseId" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
+                                    <label asp-for="LicencePlate" class="control-label"></label>
+                                    <input asp-for="LicencePlate" class="form-control" id="licencePlate" autocomplete="off" />
+                                    <span asp-validation-for="LicencePlate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="PurchasedSalesmanId" class="control-label"></label>
+                                    <select asp-for="PurchasedSalesmanId" class="form-control" asp-items="ViewBag.PurchasedSalesmanId" id="purchasedSalesmanId"></select>
+                                    <span asp-validation-for="PurchasedSalesmanId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
                                     <label asp-for="SalesmanId" class="control-label"></label>
                                     <select asp-for="SalesmanId" class="form-control" asp-items="ViewBag.SalesmanId" id="salesmanId"></select>
                                     <span asp-validation-for="SalesmanId" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="SaleAmount" class="control-label"></label>
+                                    <label asp-for="SaleAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <select asp-for="SaleAmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="saleAmountCurrency"></select>
@@ -73,7 +83,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="SalesmanBonus" class="control-label"></label>
+                                    <label asp-for="SalesmanBonus" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <select asp-for="SalesmanBonusCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="salesmanBonusCurrency"></select>
@@ -125,7 +135,7 @@
                     for (var i = 0; i < result.length; i++) {
                         $("#datepicker").attr('value', moment(result[i].purchaseDate).format("YYYY/MM/DD"));
                         if (result[i].includingRegistrationFee != null) {
-                            $("#vehicleCost").attr('value', result[i].includingRegistrationFee.toLocaleString("tr-TR"));
+                            $("#vehicleCost").attr('value', currency(result[i].includingRegistrationFee, { decimal: ',', separator: '', symbol: '' }).format());
                         }
                         else {
                             $("#vehicleCost").attr('value', "");
@@ -137,6 +147,8 @@
         <script>
             function createNewVehicleSales() {
                 var VehiclePurchaseId = document.getElementById("vehiclePurchaseId").value;
+                var LicencePlate = document.getElementById("licencePlate").value;
+                var PurchasedSalesmanId = document.getElementById("purchasedSalesmanId").value;
                 var SalesmanId = document.getElementById("salesmanId").value;
                 var SaleAmount = document.getElementById("saleAmount").value;
                 var SaleAmountCurrency = document.getElementById("saleAmountCurrency").value;
@@ -152,6 +164,8 @@
                 var data = new FormData();
 
                 data.append('VehiclePurchaseId', VehiclePurchaseId);
+                data.append('LicencePlate', LicencePlate);
+                data.append('PurchasedSalesmanId', PurchasedSalesmanId);
                 data.append('SalesmanId', SalesmanId);
                 data.append('SaleAmount', SaleAmount);
                 data.append('SaleAmountCurrency', SaleAmountCurrency);

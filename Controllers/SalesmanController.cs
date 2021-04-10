@@ -97,7 +97,7 @@ namespace ExpenseManagement.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var hasAnyNewSale = await _context.NewVehicleSales
-                .FirstOrDefaultAsync(m => m.SalesmanId == id);
+                .FirstOrDefaultAsync(m => m.PurchasedSalesmanId == id || m.SalesmanId == id);
 
             var hasAnyUsedSale = await _context.UsedVehicleSales
                 .FirstOrDefaultAsync(m => m.PurchasedSalesmanId == id || m.SoldSalesmanId == id);
