@@ -18,65 +18,94 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                <div class="form-group">
-                                    <label asp-for="CarModel.CarBrandName" class="control-label"></label>
-                                    <select id="Brand" asp-for="CarModel.CarBrand.Name" class="form-control"></select>
-                                    <span asp-validation-for="CarModel.CarBrand.Name" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="CarModel.Name" class="control-label"></label>
-                                    <select id="Model" asp-for="CarModel.Name" class="form-control"></select>
-                                    <span asp-validation-for="CarModel.Name" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label" asp-for="IsNew"></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <input type="checkbox" asp-for="IsNew" id="isNew">
-                                            </span>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="CarModel.CarBrandName" class="control-label"></label>
+                                            <select id="Brand" asp-for="CarModel.CarBrand.Name" class="form-control"></select>
+                                            <span asp-validation-for="CarModel.CarBrand.Name" class="text-danger"></span>
                                         </div>
-                                        <input type="text" class="form-control" disabled>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="CarModel.Name" class="control-label"></label>
+                                            <select id="Model" asp-for="CarModel.Name" class="form-control"></select>
+                                            <span asp-validation-for="CarModel.Name" class="text-danger"></span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="control-label" asp-for="IsSold"></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <input type="checkbox" asp-for="IsSold" id="isSold">
-                                            </span>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label" asp-for="IsNew"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <input type="checkbox" asp-for="IsNew" id="isNew">
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control" disabled>
+                                            </div>
                                         </div>
-                                        <input type="text" class="form-control" disabled>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label" asp-for="IsSold"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <input type="checkbox" asp-for="IsSold" id="isSold">
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control" disabled>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="PurchaseDate" class="control-label"></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="far fa-calendar-alt"></i>
-                                            </span>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="PurchaseDate" class="control-label"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input asp-for="PurchaseDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker" />
+                                            </div>
+                                            <span asp-validation-for="PurchaseDate" class="text-danger"></span>
                                         </div>
-                                        <input asp-for="PurchaseDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker" />
                                     </div>
-                                    <span asp-validation-for="PurchaseDate" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="SaleDate" class="control-label"></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="far fa-calendar-alt"></i>
-                                            </span>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="SaleDate" class="control-label"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input asp-for="SaleDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker2" disabled />
+                                            </div>
                                         </div>
-                                        <input asp-for="SaleDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker2" disabled />
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="Chassis" class="control-label"></label>
-                                    <input asp-for="Chassis" class="form-control" id="chassis" />
-                                    <span asp-validation-for="Chassis" class="text-danger"></span>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="ValorDate" class="control-label"></label>
+                                            <input asp-for="ValorDate" class="form-control" id="valorDate" autocomplete="off" />
+                                            <span asp-validation-for="ValorDate" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="Chassis" class="control-label"></label>
+                                            <input asp-for="Chassis" class="form-control" autocomplete="off" id="chassis" />
+                                            <span asp-validation-for="Chassis" class="text-danger"></span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="PurchaseAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
@@ -89,70 +118,82 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-1">
-                                        <div class="form-group">
-                                            <label asp-for="OTVPercent" class="control-label"></label>
-                                            <select id="otvPercent" asp-for="OTVPercent" class="form-control" onchange="calculateOTV()">
-                                                <option>50</option>
-                                                <option>80</option>
-                                                <option>130</option>
-                                                <option>150</option>
-                                                <option>200</option>
-                                            </select>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label asp-for="OTVPercent" class="control-label"></label>
+                                                    <select id="otvPercent" asp-for="OTVPercent" class="form-control" onchange="calculateOTV()">
+                                                        <option>50</option>
+                                                        <option>80</option>
+                                                        <option>130</option>
+                                                        <option>150</option>
+                                                        <option>200</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <div class="form-group">
+                                                    <label asp-for="OTV" class="control-label"></label>
+                                                    <input asp-for="OTV" class="form-control" autocomplete="off" id="otv" />
+                                                    <span asp-validation-for="OTV" class="text-danger"></span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-11">
-                                        <div class="form-group">
-                                            <label asp-for="OTV" class="control-label"></label>
-                                            <input asp-for="OTV" class="form-control" autocomplete="off" id="otv" />
-                                            <span asp-validation-for="OTV" class="text-danger"></span>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label class="control-label">KDV Oranı (%)</label>
+                                                    <select class="form-control" disabled>
+                                                        <option>18</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <div class="form-group">
+                                                    <label asp-for="KDV" class="control-label"></label>
+                                                    <input asp-for="KDV" class="form-control" autocomplete="off" id="kdv" />
+                                                    <span asp-validation-for="KDV" class="text-danger"></span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-1">
-                                        <div class="form-group">
-                                            <label class="control-label">KDV Oranı (%)</label>
-                                            <select class="form-control" disabled>
-                                                <option>18</option>
-                                            </select>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label class="control-label">Tescil Bedeli (₺)</label>
+                                                    <select id="feeAmount" asp-for="RegistrationFee" class="form-control" onchange="calculateFinalAmount()">
+                                                        <option>0</option>
+                                                        <option>1350</option>
+                                                        <option>1800</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <div class="form-group">
+                                                    <label asp-for="IncludingRegistrationFee" class="control-label"></label>
+                                                    <input asp-for="IncludingRegistrationFee" class="form-control" autocomplete="off" id="includingRegistrationFee" />
+                                                    <span asp-validation-for="IncludingRegistrationFee" class="text-danger"></span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-11">
+                                    <div class="col-md-6">
                                         <div class="form-group">
-                                            <label asp-for="KDV" class="control-label"></label>
-                                            <input asp-for="KDV" class="form-control" autocomplete="off" id="kdv" />
-                                            <span asp-validation-for="KDV" class="text-danger"></span>
+                                            <label asp-for="SaleAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select asp-for="SaleAmountCurrency" class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="saleAmountCurrency"></select>
+                                                </div>
+                                                <input asp-for="SaleAmount" class="form-control" autocomplete="off" id="saleAmount" type="text" disabled />
+                                                <span asp-validation-for="SaleAmount" class="text-danger"></span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-1">
-                                        <div class="form-group">
-                                            <label class="control-label">Tescil Bedeli (₺)</label>
-                                            <select id="feeAmount" asp-for="RegistrationFee" class="form-control" onchange="calculateFinalAmount()">
-                                                <option>0</option>
-                                                <option>1350</option>
-                                                <option>1800</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-11">
-                                        <div class="form-group">
-                                            <label asp-for="IncludingRegistrationFee" class="control-label"></label>
-                                            <input asp-for="IncludingRegistrationFee" class="form-control" autocomplete="off" id="includingRegistrationFee" />
-                                            <span asp-validation-for="IncludingRegistrationFee" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="SaleAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <select asp-for="SaleAmountCurrency" class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="saleAmountCurrency"></select>
-                                        </div>
-                                        <input asp-for="SaleAmount" class="form-control" autocomplete="off" id="saleAmount" type="text" disabled />
-                                        <span asp-validation-for="SaleAmount" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
@@ -266,6 +307,7 @@
                 var IsSold = document.getElementById("isSold").value;
                 var PurchaseDate = document.getElementById("datepicker").value;
                 var SaleDate = document.getElementById("datepicker2").value;
+                var ValorDate = document.getElementById("valorDate").value;
                 var Chassis = document.getElementById("chassis").value;
                 var PurchaseAmount = document.getElementById("purchaseAmount").value;
                 var PurchaseAmountCurrency = document.getElementById("purchaseAmountCurrency").value;
@@ -284,6 +326,7 @@
                 data.append('IsSold', IsSold);
                 data.append('PurchaseDate', PurchaseDate);
                 data.append('SaleDate', SaleDate);
+                data.append('ValorDate', ValorDate);
                 data.append('Chassis', Chassis);
                 data.append('PurchaseAmount', PurchaseAmount);
                 data.append('PurchaseAmountCurrency', PurchaseAmountCurrency);
