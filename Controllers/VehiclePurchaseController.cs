@@ -151,6 +151,7 @@ namespace ExpenseManagement.Controllers
                     vehiclePurchase.Chassis = vehiclePurchases.Chassis;
                     vehiclePurchase.PurchaseDate = vehiclePurchases.PurchaseDate;
                     vehiclePurchase.SaleDate = vehiclePurchases.SaleDate;
+                    vehiclePurchase.ValorDate = vehiclePurchases.ValorDate;
                     vehiclePurchase.PurchaseAmount = vehiclePurchases.PurchaseAmount;
                     vehiclePurchase.PurchaseAmountCurrency = vehiclePurchases.PurchaseAmountCurrency;
 
@@ -209,6 +210,40 @@ namespace ExpenseManagement.Controllers
                 return Ok(new { Result = true, Message = "Araç Alımı Silinmiştir!" });
             }
             return BadRequest("Araç Satışı Bulunduğundan Dolayı Silinemez!");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FinishingValorsPost()
+        {
+            var requestFormData = Request.Form;
+
+            var vehiclePurchaseContext = await _context.VehiclePurchases
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Where(vp => vp.ValorDate != null)
+                .AsNoTracking()
+                .ToListAsync();
+
+            List<VehiclePurchases> listItems = ProcessCollection(vehiclePurchaseContext, requestFormData);
+
+            foreach (var item in listItems)
+            {
+                item.ValorEndDate = item.PurchaseDate.AddDays((double)item.ValorDate);
+            }
+
+            listItems = listItems.Where(li => li.ValorEndDate.AddDays(-2) <= DateTime.Now.Date && li.ValorEndDate >= DateTime.Now.Date).ToList();
+
+            var response = new PaginatedResponse<VehiclePurchases>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = vehiclePurchaseContext.Count,
+                RecordsTotal = vehiclePurchaseContext.Count
+            };
+
+            ViewBag.NotificationCount = listItems.Count;
+
+            return Ok(response);
         }
 
         private bool VehiclePurchasesExists(int id)

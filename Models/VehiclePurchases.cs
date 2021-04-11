@@ -33,6 +33,13 @@ namespace ExpenseManagement.Models
         [DisplayName("Satış Tarihi")]
         public DateTime? SaleDate { get; set; }
 
+        [DisplayName("Valör")]
+        public int? ValorDate { get; set; }
+
+        [NotMapped]
+        [DisplayName("Valör Bitiş Tarihi")]
+        public DateTime ValorEndDate { get; set; }
+
         [Required]
         [DisplayName("Şase No")]
         public string Chassis { get; set; }

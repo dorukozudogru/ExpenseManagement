@@ -22,37 +22,49 @@
                                     <label asp-for="Sector.Name" class="control-label"></label>
                                     <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="Date" class="control-label"></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="far fa-calendar-alt"></i>
-                                            </span>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="Date" class="control-label"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input asp-for="Date" type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                            </div>
                                         </div>
-                                        <input asp-for="Date" type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="Definition" class="control-label"></label>
+                                            <input asp-for="Definition" class="form-control" id="definition" />
+                                            <span asp-validation-for="Definition" class="text-danger"></span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="Definition" class="control-label"></label>
-                                    <input asp-for="Definition" class="form-control" id="definition" />
-                                    <span asp-validation-for="Definition" class="text-danger"></span>
-                                </div>
-                                <label asp-for="Amount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <select asp-for="AmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label asp-for="Amount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <select asp-for="AmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
+                                            </div>
+                                            <input asp-for="Amount" class="form-control" id="amount" />
+                                            <span asp-validation-for="Amount" class="text-danger"></span>
+                                        </div>
                                     </div>
-                                    <input asp-for="Amount" class="form-control" id="amount" />
-                                    <span asp-validation-for="Amount" class="text-danger"></span>
-                                </div>
-                                <label asp-for="TAX" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <select asp-for="TAXCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.TAXCurrencyEnum>()" id="taxCurrency"></select>
+                                    <div class="col-md-6">
+                                        <label asp-for="TAX" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <select asp-for="TAXCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.TAXCurrencyEnum>()" id="taxCurrency"></select>
+                                            </div>
+                                            <input asp-for="TAX" class="form-control" id="tax" />
+                                            <span asp-validation-for="TAX" class="text-danger"></span>
+                                        </div>
                                     </div>
-                                    <input asp-for="TAX" class="form-control" id="tax" />
-                                    <span asp-validation-for="TAX" class="text-danger"></span>
                                 </div>
                                 <label asp-for="InvoiceImage" class="control-label"></label>
                                 <div class="input-group">

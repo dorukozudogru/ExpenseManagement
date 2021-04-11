@@ -19,92 +19,124 @@
                             <div class="col-md-12">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 <input asp-for="Id" class="form-control" id="id" hidden />
-                                <div class="form-group">
-                                    <label asp-for="VehiclePurchase.CarModel.CarBrand.Name" class="control-label"></label>
-                                    <select asp-for="VehiclePurchase.CarModel.CarBrand.Id" class="form-control" style="width: 100%;" asp-items="@ViewBag.VehiclePurchaseCarBrandId" id="vehiclePurchaseCarBrandId" disabled></select>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="VehiclePurchase.CarModel.Name" class="control-label"></label>
-                                    <select asp-for="VehiclePurchase.CarModel.Id" class="form-control" style="width: 100%;" asp-items="@ViewBag.VehiclePurchaseCarModelId" id="vehiclePurchaseCarModelId" disabled></select>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="VehiclePurchaseId" class="control-label"></label>
-                                    <select asp-for="VehiclePurchaseId" class="form-control" style="width: 100%;" asp-items="@ViewBag.VehiclePurchaseId" id="vehiclePurchaseId" disabled></select>
-                                    <span asp-validation-for="VehiclePurchaseId" class="text-danger"></span>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label asp-for="VehiclePurchase.CarModel.CarBrand.Name" class="control-label"></label>
+                                            <select asp-for="VehiclePurchase.CarModel.CarBrand.Id" class="form-control" style="width: 100%;" asp-items="@ViewBag.VehiclePurchaseCarBrandId" id="vehiclePurchaseCarBrandId" disabled></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label asp-for="VehiclePurchase.CarModel.Name" class="control-label"></label>
+                                            <select asp-for="VehiclePurchase.CarModel.Id" class="form-control" style="width: 100%;" asp-items="@ViewBag.VehiclePurchaseCarModelId" id="vehiclePurchaseCarModelId" disabled></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label asp-for="VehiclePurchaseId" class="control-label"></label>
+                                            <select asp-for="VehiclePurchaseId" class="form-control" style="width: 100%;" asp-items="@ViewBag.VehiclePurchaseId" id="vehiclePurchaseId" disabled></select>
+                                            <span asp-validation-for="VehiclePurchaseId" class="text-danger"></span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="LicencePlate" class="control-label"></label>
                                     <input asp-for="LicencePlate" class="form-control" id="licencePlate" autocomplete="off" />
                                     <span asp-validation-for="LicencePlate" class="text-danger"></span>
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="PurchasedSalesmanId" class="control-label"></label>
-                                    <select asp-for="PurchasedSalesmanId" class="form-control" asp-items="ViewBag.PurchasedSalesmanId" id="purchasedSalesmanId"></select>
-                                    <span asp-validation-for="PurchasedSalesmanId" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="SalesmanId" class="control-label"></label>
-                                    <select asp-for="SalesmanId" class="form-control" asp-items="ViewBag.SalesmanId" id="salesmanId"></select>
-                                    <span asp-validation-for="SalesmanId" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="SaleAmount" class="control-label"></label>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <select asp-for="SaleAmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="saleAmountCurrency"></select>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="PurchasedSalesmanId" class="control-label"></label>
+                                            <select asp-for="PurchasedSalesmanId" class="form-control" asp-items="ViewBag.PurchasedSalesmanId" id="purchasedSalesmanId"></select>
+                                            <span asp-validation-for="PurchasedSalesmanId" class="text-danger"></span>
                                         </div>
-                                        <input asp-for="SaleAmount" class="form-control" autocomplete="off" id="saleAmount" type="text" />
-                                        <span asp-validation-for="SaleAmount" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="SalesmanId" class="control-label"></label>
+                                            <select asp-for="SalesmanId" class="form-control" asp-items="ViewBag.SalesmanId" id="salesmanId"></select>
+                                            <span asp-validation-for="SalesmanId" class="text-danger"></span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="PurchaseDate" class="control-label"></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="far fa-calendar-alt"></i>
-                                            </span>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="PurchaseDate" class="control-label"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input asp-for="PurchaseDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker" disabled />
+                                            </div>
+                                            <span asp-validation-for="PurchaseDate" class="text-danger"></span>
                                         </div>
-                                        <input asp-for="PurchaseDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker" disabled />
                                     </div>
-                                    <span asp-validation-for="PurchaseDate" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="SaleDate" class="control-label"></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="far fa-calendar-alt"></i>
-                                            </span>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="VehicleCost" class="control-label"></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select asp-for="VehicleCostCurrency" disabled class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="vehicleCostCurrency"></select>
+                                                </div>
+                                                <input asp-for="VehicleCost" disabled class="form-control" autocomplete="off" id="vehicleCost" />
+                                                <span asp-validation-for="VehicleCost" class="text-danger"></span>
+                                            </div>
                                         </div>
-                                        <input asp-for="SaleDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker2" />
-                                    </div>
-                                    <span asp-validation-for="SaleDate" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="VehicleCost" class="control-label"></label>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <select asp-for="VehicleCostCurrency" disabled class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="vehicleCostCurrency"></select>
-                                        </div>
-                                        <input asp-for="VehicleCost" disabled class="form-control" autocomplete="off" id="vehicleCost" />
-                                        <span asp-validation-for="VehicleCost" class="text-danger"></span>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="SalesmanBonus" class="control-label"></label>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <select asp-for="SalesmanBonusCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="salesmanBonusCurrency"></select>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="SaleDate" class="control-label"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input asp-for="SaleDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker2" />
+                                            </div>
+                                            <span asp-validation-for="SaleDate" class="text-danger"></span>
                                         </div>
-                                        <input asp-for="SalesmanBonus" class="form-control" autocomplete="off" id="salesmanBonus" />
-                                        <span asp-validation-for="SalesmanBonus" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="SaleAmount" class="control-label"></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select asp-for="SaleAmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="saleAmountCurrency"></select>
+                                                </div>
+                                                <input asp-for="SaleAmount" class="form-control" autocomplete="off" id="saleAmount" type="text" />
+                                                <span asp-validation-for="SaleAmount" class="text-danger"></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="WarrantyPlus" class="control-label"></label>
-                                    <input asp-for="WarrantyPlus" class="form-control" id="warrantyPlus" autocomplete="off" />
-                                    <span asp-validation-for="WarrantyPlus" class="text-danger"></span>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="SalesmanBonus" class="control-label"></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select asp-for="SalesmanBonusCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="salesmanBonusCurrency"></select>
+                                                </div>
+                                                <input asp-for="SalesmanBonus" class="form-control" autocomplete="off" id="salesmanBonus" />
+                                                <span asp-validation-for="SalesmanBonus" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="WarrantyPlus" class="control-label"></label>
+                                            <input asp-for="WarrantyPlus" class="form-control" id="warrantyPlus" autocomplete="off" />
+                                            <span asp-validation-for="WarrantyPlus" class="text-danger"></span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Description" class="control-label"></label>
