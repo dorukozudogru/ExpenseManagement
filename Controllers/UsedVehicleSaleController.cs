@@ -10,6 +10,10 @@ using ExpenseManagement.Models;
 using Microsoft.AspNetCore.Authorization;
 using ExpenseManagement.Helpers;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
+using System.IO;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
 
 namespace ExpenseManagement.Controllers
 {
@@ -257,9 +261,115 @@ namespace ExpenseManagement.Controllers
             return BadRequest("2. El Araç Satışı Silinirken Bir Hata Oluştu!");
         }
 
-        private bool UsedVehicleSalesExists(int id)
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public ActionResult ExportSales()
         {
-            return _context.UsedVehicleSales.Any(e => e.Id == id);
+            var stream = ExportAllSales(_context.UsedVehicleSales
+                .Include(n => n.PurchasedSalesman)
+                .Include(n => n.SoldSalesman)
+                .Include(n => n.VehiclePurchase)
+                .Include(n => n.VehiclePurchase.CarModel)
+                .Include(n => n.VehiclePurchase.CarModel.CarBrand)
+                .AsNoTracking()
+                .ToList(), "2. El Araç Satışı");
+            string fileName = String.Format("{0}.xlsx", "2. El Araç Satışı Listesi");
+            string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            stream.Position = 0;
+            return File(stream, fileType, fileName);
+        }
+
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public MemoryStream ExportAllSales(List<UsedVehicleSales> items, string pageName)
+        {
+            var stream = new System.IO.MemoryStream();
+
+            items = GetAllEnumNamesHelper.GetEnumName(items);
+
+            using (var p = new ExcelPackage(stream))
+            {
+                var ws = p.Workbook.Worksheets.Add("2. El Araç Satışı");
+
+                using (var range = ws.Cells[1, 1, 1, 15])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                ws.Cells[1, 1].Value = "ID";
+                ws.Cells[1, 2].Value = "Marka";
+                ws.Cells[1, 3].Value = "Model";
+                ws.Cells[1, 4].Value = "Şase No";
+                ws.Cells[1, 5].Value = "Plaka";
+                ws.Cells[1, 6].Value = "KM";
+                ws.Cells[1, 7].Value = "Alış Tarihi";
+                ws.Cells[1, 8].Value = "Satış Tarihi";
+                ws.Cells[1, 9].Value = "Alan Danışman";
+                ws.Cells[1, 10].Value = "Satan Danışman";
+                ws.Cells[1, 11].Value = "Araç Alış Fiyatı";
+                ws.Cells[1, 12].Value = "Araç Satış Fiyatı";
+                ws.Cells[1, 13].Value = "Alan Danışman Primi";
+                ws.Cells[1, 14].Value = "Satan Danışman Primi";
+                ws.Cells[1, 15].Value = "Açıklama";
+
+                ws.Column(7).Style.Numberformat.Format = "dd-mmmm-yyyy";
+                ws.Column(8).Style.Numberformat.Format = "dd-mmmm-yyyy";
+
+                ws.Row(1).Style.Font.Bold = true;
+
+                for (int c = 2; c < items.Count + 2; c++)
+                {
+                    ws.Cells[c, 1].Value = items[c - 2].Id;
+                    ws.Cells[c, 2].Value = items[c - 2].VehiclePurchase.CarModel.CarBrand.Name;
+                    ws.Cells[c, 3].Value = items[c - 2].VehiclePurchase.CarModel.Name;
+                    ws.Cells[c, 4].Value = items[c - 2].VehiclePurchase.Chassis;
+                    ws.Cells[c, 5].Value = items[c - 2].LicencePlate;
+                    ws.Cells[c, 6].Value = items[c - 2].KM;
+                    ws.Cells[c, 7].Value = items[c - 2].PurchaseDate;
+                    ws.Cells[c, 8].Value = items[c - 2].SaleDate;
+                    ws.Cells[c, 9].Value = items[c - 2].PurchasedSalesman.Name;
+                    ws.Cells[c, 10].Value = items[c - 2].SoldSalesman.Name;
+                    ws.Cells[c, 11].Value = items[c - 2].PurchaseAmount + " " + items[c - 2].PurchaseAmountCurrencyName;
+                    ws.Cells[c, 12].Value = items[c - 2].SaleAmount + " " + items[c - 2].SaleAmountCurrencyName;
+                    ws.Cells[c, 13].Value = items[c - 2].PurchasedSalesmanBonus + " " + items[c - 2].PurchasedSalesmanBonusCurrencyName;
+                    ws.Cells[c, 14].Value = items[c - 2].SoldSalesmanBonus + " " + items[c - 2].SoldSalesmanBonusCurrencyName;
+                    ws.Cells[c, 15].Value = items[c - 2].Description;
+
+                    ws.Column(11).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].PurchaseAmountCurrencyName);
+                    ws.Column(12).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SaleAmountCurrencyName);
+                    ws.Column(13).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].PurchasedSalesmanBonusCurrencyName);
+                    ws.Column(14).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SoldSalesmanBonus);
+                }
+
+                ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                ws.Cells["A1:O" + items.Count + 2].AutoFilter = true;
+
+                ws.Column(15).PageBreak = true;
+                ws.PrinterSettings.PaperSize = ePaperSize.A4;
+                ws.PrinterSettings.Orientation = eOrientation.Landscape;
+                ws.PrinterSettings.Scale = 100;
+
+                p.Save();
+            }
+            AddExportAudit(pageName);
+            return stream;
+        }
+
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public void AddExportAudit(string pageName)
+        {
+            Audit audit = new Audit()
+            {
+                Action = "Exported",
+                DateTime = DateTime.Now.ToUniversalTime(),
+                KeyValues = "{\"Id\":\"-\"}",
+                NewValues = "{\"PageName\":\"" + pageName + "\"}",
+                TableName = pageName,
+                Username = HttpContext?.User?.Identity?.Name
+            };
+            _context.Add(audit);
+            _context.SaveChanges();
         }
     }
 }

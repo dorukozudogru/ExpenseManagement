@@ -169,8 +169,8 @@
                                                     <label class="control-label">Tescil Bedeli (₺)</label>
                                                     <select id="feeAmount" asp-for="RegistrationFee" class="form-control" onchange="calculateFinalAmount()">
                                                         <option>0</option>
-                                                        <option>1350</option>
-                                                        <option>1800</option>
+                                                        <option>920,5</option>
+                                                        <option>1388,5</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -242,6 +242,7 @@
 
                 if (isNaN(Number(final))) {
                     incKdv = Number(incKdv.replace(',', '.'));
+                    fee = Number(fee.replace(',', '.'));
                     final = +incKdv + +fee
                 }
                 document.getElementById("includingRegistrationFee").value = currency(final, { decimal: ',', separator: '', symbol: '' }).format();
