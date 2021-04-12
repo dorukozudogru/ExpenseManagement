@@ -86,7 +86,7 @@ namespace ExpenseManagement.Models
         public double? KDV { get; set; }
 
         [DisplayName("Trafik Tescil Bedeli")]
-        public int? RegistrationFee { get; set; }
+        public double? RegistrationFee { get; set; }
 
         [DisplayName("Trafik Tescil Bedeli Dahil Fiyatı")]
         public double? IncludingRegistrationFee { get; set; }

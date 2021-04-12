@@ -10,6 +10,10 @@ using ExpenseManagement.Models;
 using Microsoft.AspNetCore.Authorization;
 using ExpenseManagement.Helpers;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
+using System.IO;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
 
 namespace ExpenseManagement.Controllers
 {
@@ -260,6 +264,120 @@ namespace ExpenseManagement.Controllers
                 return Ok(new { Result = true, Message = "Sıfır Araç Satışı Silinmiştir!" });
             }
             return BadRequest("Sıfır Araç Satışı Silinirken Bir Hata Oluştu!");
+        }
+
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public ActionResult ExportSales()
+        {
+            var stream = ExportAllSales(_context.NewVehicleSales
+                .Include(n => n.PurchasedSalesman)
+                .Include(n => n.Salesman)
+                .Include(n => n.VehiclePurchase)
+                .Include(n => n.VehiclePurchase.CarModel)
+                .Include(n => n.VehiclePurchase.CarModel.CarBrand)
+                .AsNoTracking()
+                .ToList(), "Sıfır Araç Satışı");
+            string fileName = String.Format("{0}.xlsx", "Sıfır Araç Satışı Listesi");
+            string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            stream.Position = 0;
+            return File(stream, fileType, fileName);
+        }
+
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public MemoryStream ExportAllSales(List<NewVehicleSales> items, string pageName)
+        {
+            var stream = new System.IO.MemoryStream();
+
+            items = GetAllEnumNamesHelper.GetEnumName(items);
+
+            using (var p = new ExcelPackage(stream))
+            {
+                var ws = p.Workbook.Worksheets.Add("Sıfır Araç Satışı");
+
+                using (var range = ws.Cells[1, 1, 1, 14])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                ws.Cells[1, 1].Value = "ID";
+                ws.Cells[1, 2].Value = "Marka";
+                ws.Cells[1, 3].Value = "Model";
+                ws.Cells[1, 4].Value = "Şase No";
+                ws.Cells[1, 5].Value = "Plaka";
+                ws.Cells[1, 6].Value = "Alan Danışman";
+                ws.Cells[1, 7].Value = "Satan Danışman";
+                ws.Cells[1, 8].Value = "Araç Satış Fiyatı";
+                ws.Cells[1, 9].Value = "Alış Tarihi";
+                ws.Cells[1, 10].Value = "Satış Tarihi";
+                ws.Cells[1, 11].Value = "Araç Maliyeti";
+                ws.Cells[1, 12].Value = "Danışman Primi";
+                ws.Cells[1, 13].Value = "Artı Garanti";
+                ws.Cells[1, 14].Value = "Açıklama";
+
+                ws.Column(9).Style.Numberformat.Format = "dd-mmmm-yyyy";
+                ws.Column(10).Style.Numberformat.Format = "dd-mmmm-yyyy";
+
+                ws.Row(1).Style.Font.Bold = true;
+
+                for (int c = 2; c < items.Count + 2; c++)
+                {
+                    ws.Cells[c, 1].Value = items[c - 2].Id;
+                    ws.Cells[c, 2].Value = items[c - 2].VehiclePurchase.CarModel.CarBrand.Name;
+                    ws.Cells[c, 3].Value = items[c - 2].VehiclePurchase.CarModel.Name;
+                    ws.Cells[c, 4].Value = items[c - 2].VehiclePurchase.Chassis;
+                    ws.Cells[c, 5].Value = items[c - 2].LicencePlate;
+                    if (items[c - 2].PurchasedSalesman != null)
+                    {
+                        ws.Cells[c, 6].Value = items[c - 2].PurchasedSalesman.Name;
+                    }
+                    if (items[c - 2].Salesman != null)
+                    {
+                        ws.Cells[c, 7].Value = items[c - 2].Salesman.Name;
+                    }
+                    ws.Cells[c, 8].Value = items[c - 2].SaleAmount + " " + items[c - 2].SaleAmountCurrencyName;
+                    ws.Cells[c, 9].Value = items[c - 2].PurchaseDate;
+                    ws.Cells[c, 10].Value = items[c - 2].SaleDate;
+                    ws.Cells[c, 11].Value = items[c - 2].VehicleCost + " " + items[c - 2].VehicleCostCurrencyName;
+                    ws.Cells[c, 12].Value = items[c - 2].SalesmanBonus + " " + items[c - 2].SalesmanBonusCurrencyName;
+                    ws.Cells[c, 13].Value = items[c - 2].WarrantyPlus;
+                    ws.Cells[c, 14].Value = items[c - 2].Description;
+
+                    ws.Column(8).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SaleAmountCurrencyName);
+                    ws.Column(11).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].VehicleCostCurrencyName);
+                    ws.Column(12).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SalesmanBonusCurrencyName);
+                }
+
+                ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                ws.Cells["A1:N" + items.Count + 2].AutoFilter = true;
+
+                ws.Column(14).PageBreak = true;
+                ws.PrinterSettings.PaperSize = ePaperSize.A4;
+                ws.PrinterSettings.Orientation = eOrientation.Landscape;
+                ws.PrinterSettings.Scale = 100;
+
+                p.Save();
+            }
+            AddExportAudit(pageName);
+            return stream;
+        }
+
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public void AddExportAudit(string pageName)
+        {
+            Audit audit = new Audit()
+            {
+                Action = "Exported",
+                DateTime = DateTime.Now.ToUniversalTime(),
+                KeyValues = "{\"Id\":\"-\"}",
+                NewValues = "{\"PageName\":\"" + pageName + "\"}",
+                TableName = pageName,
+                Username = HttpContext?.User?.Identity?.Name
+            };
+            _context.Add(audit);
+            _context.SaveChanges();
         }
     }
 }
