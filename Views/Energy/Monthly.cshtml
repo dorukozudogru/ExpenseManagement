@@ -117,7 +117,7 @@
                         "data": "distributionFee",
                         "render": function (data, type, full, meta) {
                             if (data != null) {
-                                return full.distributionFee + " ₺";
+                                return currency(full.distributionFee, { decimal: ',', separator: '', symbol: '' }).format() + " ₺";
                             }
                             return "-";
                         }
@@ -126,7 +126,7 @@
                         "data": "amount",
                         "render": function (data, type, full, meta) {
                             if (data != null) {
-                                return full.amount + " ₺";
+                                return currency(full.amount, { decimal: ',', separator: '', symbol: '' }).format() + " ₺";
                             }
                             return "-";
                         }
@@ -135,7 +135,7 @@
                         "data": "tax",
                         "render": function (data, type, full, meta) {
                             if (data != null) {
-                                return full.tax + " ₺";
+                                return currency(full.tax, { decimal: ',', separator: '', symbol: '' }).format() + " ₺";
                             }
                             return "-";
                         }
@@ -159,9 +159,9 @@
             }).done(function (response) {
                 $('#totalProducedKw').html(response[0] + " kW");
                 $('#totalConsumedKw').html(response[1] + " kW");
-                $('#distributionFee').html(response[2] + " ₺");
-                $('#totalAmount').html(response[3] + " ₺");
-                $('#totalTAX').html(response[4] + " ₺");
+                $('#distributionFee').html(currency(response[2], { decimal: ',', separator: '', symbol: '' }).format() + " ₺");
+                $('#totalAmount').html(currency(response[3], { decimal: ',', separator: '', symbol: '' }).format() + " ₺");
+                $('#totalTAX').html(currency(response[4], { decimal: ',', separator: '', symbol: '' }).format() + " ₺");
             });
         })(jQuery);
     </script>

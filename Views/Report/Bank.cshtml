@@ -145,7 +145,7 @@
                         + '<div class="info-box-content">'
                         + '<span class="info-box-text">' + element.bankBranchName + '</span>'
                         + '<span class="info-box-text">' + element.accountTypeName + '</span>'
-                        + '<span class="info-box-number">' + element.totalAmount.toLocaleString("tr-TR") + ' ' + element.amountCurrencyName + '</span>'
+                        + '<span class="info-box-number">' + currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + ' ' + element.amountCurrencyName + '</span>'
                         + '</div>'
                         + '</div>'
                         + '</div>';
@@ -169,7 +169,7 @@
                         + '<span class="info-box-icon"><i class="fas fa-university"></i></span>'
                         + '<div class="info-box-content">'
                         + '<span class="info-box-text">' + element.bankBranchName + '</span>'
-                        + '<span class="info-box-number">' + element.totalAmount.toLocaleString("tr-TR") + ' ' + element.amountCurrencyName + '</span>'
+                        + '<span class="info-box-number">' + currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + ' ' + element.amountCurrencyName + '</span>'
                         + '</div>'
                         + '</div>'
                         + '</div>';
@@ -185,22 +185,22 @@
                 response.forEach(element => {
                     if (element.currency == "₺") {
                         if (element.totalAmount != null) {
-                            $('#lira').html(element.totalAmount.toLocaleString("tr-TR"));
+                            $('#lira').html(currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format());
                         }
                     }
                     if (element.currency == "$") {
                         if (element.totalAmount != null) {
-                            $('#dollar').html(element.totalAmount.toLocaleString("tr-TR"));
+                            $('#dollar').html(currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format());
                         }
                     }
                     if (element.currency == "€") {
                         if (element.totalAmount != null) {
-                            $('#euro').html(element.totalAmount.toLocaleString("tr-TR"));
+                            $('#euro').html(currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format());
                         }
                     }
                     if (element.currency == "£") {
                         if (element.totalAmount != null) {
-                            $('#pound').html(element.totalAmount.toLocaleString("tr-TR"));
+                            $('#pound').html(currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format());
                         }
                     }
                 });

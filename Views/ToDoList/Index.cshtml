@@ -115,7 +115,7 @@
                             + '<div class="icheck-primary d-inline ml-2">'
                             + '<input class="checkbox" type="checkbox" asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
                             + '<span class="text">'
-                            + item.sector.name + ' - ' + item.debtor + ' - ' + item.amount + ' ' + item.amountCurrencyName
+                            + item.sector.name + ' - ' + item.debtor + ' - ' + currency(item.amount, { decimal: ',', separator: '', symbol: '' }).format() + ' ' + item.amountCurrencyName
                             + '</span><div class="tools">'
                             //+ '<a asp-action="Edit" asp-route-id="' + item.id + '"><i class="fas fa-edit"></i></a>'
                             + '<a href="ToDoList/Edit?Id=' + item.id + '"><i class="fas fa-edit"></i></a>'
@@ -139,7 +139,7 @@
                             + '<div class="icheck-primary d-inline ml-2">'
                             + '<input class="checkbox" type="checkbox" checked asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
                             + '<span class="text">'
-                            + item.sector.name + ' - ' + item.debtor + ' - ' + item.amount + ' ' + item.amountCurrencyName
+                            + item.sector.name + ' - ' + item.debtor + ' - ' + currency(item.amount, { decimal: ',', separator: '', symbol: '' }).format() + ' ' + item.amountCurrencyName
                             + '</span><div class="tools">'
                             + '</div>'
                             + '</li>'

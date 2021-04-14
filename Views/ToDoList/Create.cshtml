@@ -27,7 +27,7 @@
                                     <input asp-for="Debtor" class="form-control" id="debtor" />
                                     <span asp-validation-for="Debtor" class="text-danger"></span>
                                 </div>
-                                <label asp-for="Amount" class="control-label"></label>
+                                <label asp-for="Amount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <select asp-for="AmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>

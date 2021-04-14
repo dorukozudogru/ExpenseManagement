@@ -94,7 +94,7 @@
                     {
                         "data": "amount",
                         "render": function (data, type, full, meta) {
-                            return full.amount + " " + full.amountCurrencyName;
+                            return currency(full.amount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.amountCurrencyName;
                         }
                     },
                     {
@@ -111,7 +111,7 @@
                      {
                         "data": "profit",
                         "render": function (data, type, full, meta) {
-                            return full.profit + " " + full.profitCurrencyName;
+                            return currency(full.profit, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.profitCurrencyName;
                         }
                     },
                     {

@@ -100,7 +100,7 @@
                     {
                         "data": "salaryAmount",
                         "render": function (data, type, full, meta) {
-                            return full.salaryAmount + " " + full.salaryAmountCurrencyName;
+                            return currency(full.salaryAmount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.salaryAmountCurrencyName;
                         }
                     },
                     {

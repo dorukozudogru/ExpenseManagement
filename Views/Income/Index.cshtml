@@ -98,13 +98,13 @@
                     {
                         "data": "amount",
                         "render": function (data, type, full, meta) {
-                            return full.amount + " " + full.amountCurrencyName;
+                            return currency(full.amount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.amountCurrencyName;
                         }
                     },
                     {
                         "data": "tax",
                         "render": function (data, type, full, meta) {
-                            return full.tax + " " + full.taxCurrencyName;
+                            return currency(full.tax, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.taxCurrencyName;
                         }
                     },
                     {
