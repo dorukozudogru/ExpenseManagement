@@ -47,6 +47,9 @@
                                                 @Html.DisplayNameFor(model => model.Salesman)
                                             </th>
                                             <th>
+                                                @Html.DisplayNameFor(model => model.VehicleCost)
+                                            </th>
+                                            <th>
                                                 @Html.DisplayNameFor(model => model.SaleAmount)
                                             </th>
                                             <th>
@@ -54,12 +57,6 @@
                                             </th>
                                             <th>
                                                 @Html.DisplayNameFor(model => model.SaleDate)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.VehicleCost)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.SalesmanBonus)
                                             </th>
                                             <th>
                                                 @Html.DisplayNameFor(model => model.WarrantyPlus)
@@ -151,6 +148,13 @@
                         "orderable": false
                     },
                     {
+                        "data": "vehicleCost",
+                        "render": function (data, type, full, meta) {
+                            return full.vehicleCost + " " + full.vehicleCostCurrencyName;
+                        },
+                        "orderable": false
+                    },
+                    {
                         "data": "saleAmount",
                         "render": function (data, type, full, meta) {
                             return full.saleAmount + " " + full.saleAmountCurrencyName;
@@ -168,20 +172,6 @@
                         "data": "saleDate",
                         render: function (data, type, row) {
                             return window.moment(data).format("DD-MMMM-YYYY");
-                        },
-                        "orderable": false
-                    },
-                    {
-                        "data": "vehicleCost",
-                        "render": function (data, type, full, meta) {
-                            return full.vehicleCost + " " + full.vehicleCostCurrencyName;
-                        },
-                        "orderable": false
-                    },
-                    {
-                        "data": "salesmanBonus",
-                        "render": function (data, type, full, meta) {
-                            return full.salesmanBonus + " " + full.salesmanBonusCurrencyName;
                         },
                         "orderable": false
                     },

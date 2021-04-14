@@ -62,12 +62,6 @@
                                                 @Html.DisplayNameFor(model => model.SaleAmount)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.PurchasedSalesmanBonus)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.SoldSalesmanBonus)
-                                            </th>
-                                            <th>
                                                 @Html.DisplayNameFor(model => model.Description)
                                             </th>
                                             <th>İşlemler</th>
@@ -166,20 +160,6 @@
                         "data": "saleAmount",
                         "render": function (data, type, full, meta) {
                             return full.saleAmount + " " + full.saleAmountCurrencyName;
-                        },
-                        "orderable": false
-                    },
-                    {
-                        "data": "purchasedSalesmanBonus",
-                        "render": function (data, type, full, meta) {
-                            return full.purchasedSalesmanBonus + " " + full.purchasedSalesmanBonusCurrencyName;
-                        },
-                        "orderable": false
-                    },
-                    {
-                        "data": "soldSalesmanBonus",
-                        "render": function (data, type, full, meta) {
-                            return full.soldSalesmanBonus + " " + full.soldSalesmanBonusCurrencyName;
                         },
                         "orderable": false
                     },

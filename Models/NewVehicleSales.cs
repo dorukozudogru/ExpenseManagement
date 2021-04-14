@@ -64,18 +64,6 @@ namespace ExpenseManagement.Models
         [DisplayName("Araç Maliyeti Dövizi")]
         public string VehicleCostCurrencyName { get; set; }
 
-        [Required]
-        [DisplayName("Danışman Primi")]
-        public double SalesmanBonus { get; set; }
-
-        [Required]
-        [DisplayName("Danışman Primi Dövizi")]
-        public byte SalesmanBonusCurrency { get; set; }
-
-        [NotMapped]
-        [DisplayName("Danışman Primi Dövizi")]
-        public string SalesmanBonusCurrencyName { get; set; }
-
         [DisplayName("Artı Garanti")]
         public string WarrantyPlus { get; set; }
 
