@@ -194,10 +194,6 @@ namespace ExpenseManagement.Controllers
                     usedVehicleSale.SoldSalesmanId = usedVehicleSales.SoldSalesmanId;
                     usedVehicleSale.SaleAmount = usedVehicleSales.SaleAmount;
                     usedVehicleSale.SaleAmountCurrency = usedVehicleSales.SaleAmountCurrency;
-                    usedVehicleSale.PurchasedSalesmanBonus = usedVehicleSales.PurchasedSalesmanBonus;
-                    usedVehicleSale.PurchasedSalesmanBonusCurrency = usedVehicleSales.PurchasedSalesmanBonusCurrency;
-                    usedVehicleSale.SoldSalesmanBonus = usedVehicleSales.SoldSalesmanBonus;
-                    usedVehicleSale.SoldSalesmanBonusCurrency = usedVehicleSales.SoldSalesmanBonusCurrency;
                     usedVehicleSale.Description = usedVehicleSales.Description;
 
                     _context.Update(vehiclePurchase);
@@ -289,7 +285,7 @@ namespace ExpenseManagement.Controllers
             {
                 var ws = p.Workbook.Worksheets.Add("2. El Araç Satışı");
 
-                using (var range = ws.Cells[1, 1, 1, 15])
+                using (var range = ws.Cells[1, 1, 1, 13])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -309,9 +305,7 @@ namespace ExpenseManagement.Controllers
                 ws.Cells[1, 10].Value = "Satan Danışman";
                 ws.Cells[1, 11].Value = "Araç Alış Fiyatı";
                 ws.Cells[1, 12].Value = "Araç Satış Fiyatı";
-                ws.Cells[1, 13].Value = "Alan Danışman Primi";
-                ws.Cells[1, 14].Value = "Satan Danışman Primi";
-                ws.Cells[1, 15].Value = "Açıklama";
+                ws.Cells[1, 13].Value = "Açıklama";
 
                 ws.Column(7).Style.Numberformat.Format = "dd-mmmm-yyyy";
                 ws.Column(8).Style.Numberformat.Format = "dd-mmmm-yyyy";
@@ -332,20 +326,16 @@ namespace ExpenseManagement.Controllers
                     ws.Cells[c, 10].Value = items[c - 2].SoldSalesman.Name;
                     ws.Cells[c, 11].Value = items[c - 2].PurchaseAmount + " " + items[c - 2].PurchaseAmountCurrencyName;
                     ws.Cells[c, 12].Value = items[c - 2].SaleAmount + " " + items[c - 2].SaleAmountCurrencyName;
-                    ws.Cells[c, 13].Value = items[c - 2].PurchasedSalesmanBonus + " " + items[c - 2].PurchasedSalesmanBonusCurrencyName;
-                    ws.Cells[c, 14].Value = items[c - 2].SoldSalesmanBonus + " " + items[c - 2].SoldSalesmanBonusCurrencyName;
-                    ws.Cells[c, 15].Value = items[c - 2].Description;
+                    ws.Cells[c, 13].Value = items[c - 2].Description;
 
                     ws.Column(11).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].PurchaseAmountCurrencyName);
                     ws.Column(12).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SaleAmountCurrencyName);
-                    ws.Column(13).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].PurchasedSalesmanBonusCurrencyName);
-                    ws.Column(14).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SoldSalesmanBonus);
                 }
 
                 ws.Cells[ws.Dimension.Address].AutoFitColumns();
-                ws.Cells["A1:O" + items.Count + 2].AutoFilter = true;
+                ws.Cells["A1:M" + items.Count + 2].AutoFilter = true;
 
-                ws.Column(15).PageBreak = true;
+                ws.Column(13).PageBreak = true;
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Landscape;
                 ws.PrinterSettings.Scale = 100;

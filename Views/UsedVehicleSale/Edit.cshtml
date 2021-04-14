@@ -85,16 +85,6 @@
                                                 <span asp-validation-for="PurchaseAmount" class="text-danger"></span>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label asp-for="PurchasedSalesmanBonus" class="control-label"></label>
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <select asp-for="PurchasedSalesmanBonusCurrency" class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="purchasedSalesmanBonusCurrency"></select>
-                                                </div>
-                                                <input asp-for="PurchasedSalesmanBonus" class="form-control" autocomplete="off" disabled id="purchasedSalesmanBonus" type="text" />
-                                                <span asp-validation-for="PurchasedSalesmanBonus" class="text-danger"></span>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -124,16 +114,6 @@
                                                 <span asp-validation-for="SaleAmount" class="text-danger"></span>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label asp-for="SoldSalesmanBonus" class="control-label"></label>
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <select asp-for="SoldSalesmanBonusCurrency" class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="soldSalesmanBonusCurrency"></select>
-                                                </div>
-                                                <input asp-for="SoldSalesmanBonus" class="form-control" autocomplete="off" disabled id="soldSalesmanBonus" type="text" />
-                                                <span asp-validation-for="SoldSalesmanBonus" class="text-danger"></span>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -141,7 +121,6 @@
                                     <input asp-for="Description" class="form-control" id="description" autocomplete="off" />
                                     <span asp-validation-for="Description" class="text-danger"></span>
                                 </div>
-                                <input class="form-control" autocomplete="off" id="isChange" type="text" disabled hidden />
                             </div>
                         </div>
                     </div>
@@ -196,10 +175,6 @@
                 document.getElementById("purchaseAmountCurrency").value = returnvalue.purchaseAmountCurrency;
                 document.getElementById("saleAmount").value = currency(returnvalue.saleAmount, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("saleAmountCurrency").value = returnvalue.saleAmountCurrency;
-                document.getElementById("purchasedSalesmanBonus").value = currency(returnvalue.purchasedSalesmanBonus, { decimal: ',', separator: '', symbol: '' }).format();
-                document.getElementById("purchasedSalesmanBonusCurrency").value = returnvalue.purchasedSalesmanBonusCurrency;
-                document.getElementById("soldSalesmanBonus").value = currency(returnvalue.soldSalesmanBonus, { decimal: ',', separator: '', symbol: '' }).format();
-                document.getElementById("soldSalesmanBonusCurrency").value = returnvalue.soldSalesmanBonusCurrency;
                 document.getElementById("description").value = returnvalue.description;
             },
             error: function (error) {
@@ -207,43 +182,10 @@
                 document.getElementById("swalDefaultError").click();
             }
         });
-
-        $("#saleAmount").on("change", function (e) {
-            var purchaseAmountVariable = parseFloat(document.getElementById("purchaseAmount").value);
-            var saleAmountVariable = parseFloat(document.getElementById("saleAmount").value);
-            var bonus = (saleAmountVariable - purchaseAmountVariable) / 40;
-
-            document.getElementById("purchasedSalesmanBonus").value = currency(bonus, { decimal: ',', separator: '', symbol: '' }).format();
-            document.getElementById("soldSalesmanBonus").value = currency(bonus, { decimal: ',', separator: '', symbol: '' }).format();
-
-            document.getElementById("saleAmount").value = "";
-
-            window.setTimeout(function () {
-                document.getElementById("saleAmount").value = currency(saleAmountVariable, { decimal: ',', separator: '', symbol: '' }).format();
-            }, 100);
-
-            $("#isChange").attr('value', 'Changed');
-        })
-        $("#saleAmountCurrency").on("change", function (e) {
-            var saleAmountCurrencyVariable = document.getElementById("saleAmountCurrency").value;
-            $("#purchasedSalesmanBonusCurrency").val(saleAmountCurrencyVariable).change()
-            $("#soldSalesmanBonusCurrency").val(saleAmountCurrencyVariable).change()
-        })
     }
 </script>
 <script>
     function updateUsedVehicleSales() {
-        if (document.getElementById("isChange").value != "Changed") {
-            var purchaseAmountVariable = +document.getElementById("purchaseAmount").value;
-            var saleAmountVariable = +document.getElementById("saleAmount").value;
-
-            var paLocal = purchaseAmountVariable.toLocaleString("tr-TR");
-            var saLocal = saleAmountVariable.toLocaleString("tr-TR");
-
-            document.getElementById("purchaseAmount").value = paLocal;
-            document.getElementById("saleAmount").value = saLocal;
-        }
-
         var Id = document.getElementById("id").value;
         var VehiclePurchaseId = document.getElementById("vehiclePurchaseId").value;
         var LicencePlate = document.getElementById("licencePlate").value;
@@ -256,10 +198,6 @@
         var PurchaseAmountCurrency = document.getElementById("purchaseAmountCurrency").value;
         var SaleAmount = document.getElementById("saleAmount").value;
         var SaleAmountCurrency = document.getElementById("saleAmountCurrency").value;
-        var PurchasedSalesmanBonus = document.getElementById("purchasedSalesmanBonus").value;
-        var PurchasedSalesmanBonusCurrency = document.getElementById("purchasedSalesmanBonusCurrency").value;
-        var SoldSalesmanBonus = document.getElementById("soldSalesmanBonus").value;
-        var SoldSalesmanBonusCurrency = document.getElementById("soldSalesmanBonusCurrency").value;
         var Description = document.getElementById("description").value;
 
         var data = new FormData();
@@ -275,10 +213,6 @@
         data.append('PurchaseAmountCurrency', PurchaseAmountCurrency);
         data.append('SaleAmount', SaleAmount);
         data.append('SaleAmountCurrency', SaleAmountCurrency);
-        data.append('PurchasedSalesmanBonus', PurchasedSalesmanBonus);
-        data.append('PurchasedSalesmanBonusCurrency', PurchasedSalesmanBonusCurrency);
-        data.append('SoldSalesmanBonus', SoldSalesmanBonus);
-        data.append('SoldSalesmanBonusCurrency', SoldSalesmanBonusCurrency);
         data.append('Description', Description);
 
         $("#updateButton").attr("disabled", true);

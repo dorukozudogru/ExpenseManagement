@@ -109,28 +109,18 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label asp-for="SalesmanBonus" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <select asp-for="SalesmanBonusCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="salesmanBonusCurrency"></select>
-                                                </div>
-                                                <input asp-for="SalesmanBonus" class="form-control" autocomplete="off" id="salesmanBonus" />
-                                                <span asp-validation-for="SalesmanBonus" class="text-danger"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
                                             <label asp-for="WarrantyPlus" class="control-label"></label>
                                             <input asp-for="WarrantyPlus" class="form-control" id="warrantyPlus" autocomplete="off" />
                                             <span asp-validation-for="WarrantyPlus" class="text-danger"></span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="Description" class="control-label"></label>
-                                    <input asp-for="Description" class="form-control" id="description" autocomplete="off" />
-                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="Description" class="control-label"></label>
+                                            <input asp-for="Description" class="form-control" id="description" autocomplete="off" />
+                                            <span asp-validation-for="Description" class="text-danger"></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -186,8 +176,6 @@
                 var SaleDate = document.getElementById("datepicker2").value;
                 var VehicleCost = document.getElementById("vehicleCost").value;
                 var VehicleCostCurrency = document.getElementById("vehicleCostCurrency").value;
-                var SalesmanBonus = document.getElementById("salesmanBonus").value;
-                var SalesmanBonusCurrency = document.getElementById("salesmanBonusCurrency").value;
                 var WarrantyPlus = document.getElementById("warrantyPlus").value;
                 var Description = document.getElementById("description").value;
 
@@ -203,8 +191,6 @@
                 data.append('SaleDate', SaleDate);
                 data.append('VehicleCost', VehicleCost);
                 data.append('VehicleCostCurrency', VehicleCostCurrency);
-                data.append('SalesmanBonus', SalesmanBonus);
-                data.append('SalesmanBonusCurrency', SalesmanBonusCurrency);
                 data.append('WarrantyPlus', WarrantyPlus);
                 data.append('Description', Description);
 

@@ -65,26 +65,6 @@ namespace ExpenseManagement.Models
         [DisplayName("Araç Satış Fiyatı Dövizi")]
         public string SaleAmountCurrencyName { get; set; }
 
-        [DisplayName("Alan Danışman Primi")]
-        public double PurchasedSalesmanBonus { get; set; }
-
-        [DisplayName("Alan Danışman Primi Dövizi")]
-        public byte PurchasedSalesmanBonusCurrency { get; set; }
-
-        [NotMapped]
-        [DisplayName("Alan Danışman Primi Dövizi")]
-        public string PurchasedSalesmanBonusCurrencyName { get; set; }
-
-        [DisplayName("Satan Danışman Primi")]
-        public double SoldSalesmanBonus { get; set; }
-
-        [DisplayName("Satan Danışman Primi Dövizi")]
-        public byte SoldSalesmanBonusCurrency { get; set; }
-
-        [NotMapped]
-        [DisplayName("Satan Danışman Primi Dövizi")]
-        public string SoldSalesmanBonusCurrencyName { get; set; }
-
         [DisplayName("Açıklama")]
         public string Description { get; set; }
     }

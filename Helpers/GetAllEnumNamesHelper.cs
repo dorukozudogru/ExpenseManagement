@@ -202,23 +202,6 @@ namespace ExpenseManagement.Helpers
                 {
                     newVehicleSale.VehicleCostCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
                 }
-
-                if (newVehicleSale.SalesmanBonusCurrency == 0)
-                {
-                    newVehicleSale.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
-                }
-                if (newVehicleSale.SalesmanBonusCurrency == 1)
-                {
-                    newVehicleSale.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
-                }
-                if (newVehicleSale.SalesmanBonusCurrency == 2)
-                {
-                    newVehicleSale.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
-                }
-                if (newVehicleSale.SalesmanBonusCurrency == 3)
-                {
-                    newVehicleSale.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
-                }
             }
             return newVehicleSales;
         }
@@ -259,22 +242,6 @@ namespace ExpenseManagement.Helpers
                 newVehicleSales.VehicleCostCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
             }
 
-            if (newVehicleSales.SalesmanBonusCurrency == 0)
-            {
-                newVehicleSales.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
-            }
-            if (newVehicleSales.SalesmanBonusCurrency == 1)
-            {
-                newVehicleSales.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
-            }
-            if (newVehicleSales.SalesmanBonusCurrency == 2)
-            {
-                newVehicleSales.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
-            }
-            if (newVehicleSales.SalesmanBonusCurrency == 3)
-            {
-                newVehicleSales.SalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
-            }
             return newVehicleSales;
         }
 
@@ -314,40 +281,6 @@ namespace ExpenseManagement.Helpers
                 if (usedVehicleSale.PurchaseAmountCurrency == 3)
                 {
                     usedVehicleSale.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
-                }
-
-                if (usedVehicleSale.PurchasedSalesmanBonusCurrency == 0)
-                {
-                    usedVehicleSale.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
-                }
-                if (usedVehicleSale.PurchasedSalesmanBonusCurrency == 1)
-                {
-                    usedVehicleSale.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
-                }
-                if (usedVehicleSale.PurchasedSalesmanBonusCurrency == 2)
-                {
-                    usedVehicleSale.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
-                }
-                if (usedVehicleSale.PurchasedSalesmanBonusCurrency == 3)
-                {
-                    usedVehicleSale.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
-                }
-
-                if (usedVehicleSale.SoldSalesmanBonusCurrency == 0)
-                {
-                    usedVehicleSale.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
-                }
-                if (usedVehicleSale.SoldSalesmanBonusCurrency == 1)
-                {
-                    usedVehicleSale.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
-                }
-                if (usedVehicleSale.SoldSalesmanBonusCurrency == 2)
-                {
-                    usedVehicleSale.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
-                }
-                if (usedVehicleSale.SoldSalesmanBonusCurrency == 3)
-                {
-                    usedVehicleSale.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
                 }
             }
             return usedVehicleSales;
@@ -389,39 +322,6 @@ namespace ExpenseManagement.Helpers
                 usedVehicleSales.PurchaseAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
             }
 
-            if (usedVehicleSales.PurchasedSalesmanBonusCurrency == 0)
-            {
-                usedVehicleSales.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
-            }
-            if (usedVehicleSales.PurchasedSalesmanBonusCurrency == 1)
-            {
-                usedVehicleSales.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
-            }
-            if (usedVehicleSales.PurchasedSalesmanBonusCurrency == 2)
-            {
-                usedVehicleSales.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
-            }
-            if (usedVehicleSales.PurchasedSalesmanBonusCurrency == 3)
-            {
-                usedVehicleSales.PurchasedSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
-            }
-
-            if (usedVehicleSales.SoldSalesmanBonusCurrency == 0)
-            {
-                usedVehicleSales.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
-            }
-            if (usedVehicleSales.SoldSalesmanBonusCurrency == 1)
-            {
-                usedVehicleSales.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
-            }
-            if (usedVehicleSales.SoldSalesmanBonusCurrency == 2)
-            {
-                usedVehicleSales.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
-            }
-            if (usedVehicleSales.SoldSalesmanBonusCurrency == 3)
-            {
-                usedVehicleSales.SoldSalesmanBonusCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
-            }
             return usedVehicleSales;
         }
 

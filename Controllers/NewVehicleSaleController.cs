@@ -195,8 +195,6 @@ namespace ExpenseManagement.Controllers
                     newVehicleSale.SaleAmount = newVehicleSales.SaleAmount;
                     newVehicleSale.SaleAmountCurrency = newVehicleSales.SaleAmountCurrency;
                     newVehicleSale.SaleDate = newVehicleSales.SaleDate;
-                    newVehicleSale.SalesmanBonus = newVehicleSales.SalesmanBonus;
-                    newVehicleSale.SalesmanBonusCurrency = newVehicleSales.SalesmanBonusCurrency;
                     newVehicleSale.PurchasedSalesmanId = newVehicleSales.PurchasedSalesmanId;
                     newVehicleSale.LicencePlate = newVehicleSales.LicencePlate;
                     newVehicleSale.SalesmanId = newVehicleSales.SalesmanId;
@@ -294,7 +292,7 @@ namespace ExpenseManagement.Controllers
             {
                 var ws = p.Workbook.Worksheets.Add("Sıfır Araç Satışı");
 
-                using (var range = ws.Cells[1, 1, 1, 14])
+                using (var range = ws.Cells[1, 1, 1, 13])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -313,9 +311,8 @@ namespace ExpenseManagement.Controllers
                 ws.Cells[1, 9].Value = "Alış Tarihi";
                 ws.Cells[1, 10].Value = "Satış Tarihi";
                 ws.Cells[1, 11].Value = "Araç Maliyeti";
-                ws.Cells[1, 12].Value = "Danışman Primi";
-                ws.Cells[1, 13].Value = "Artı Garanti";
-                ws.Cells[1, 14].Value = "Açıklama";
+                ws.Cells[1, 12].Value = "Artı Garanti";
+                ws.Cells[1, 13].Value = "Açıklama";
 
                 ws.Column(9).Style.Numberformat.Format = "dd-mmmm-yyyy";
                 ws.Column(10).Style.Numberformat.Format = "dd-mmmm-yyyy";
@@ -341,19 +338,17 @@ namespace ExpenseManagement.Controllers
                     ws.Cells[c, 9].Value = items[c - 2].PurchaseDate;
                     ws.Cells[c, 10].Value = items[c - 2].SaleDate;
                     ws.Cells[c, 11].Value = items[c - 2].VehicleCost + " " + items[c - 2].VehicleCostCurrencyName;
-                    ws.Cells[c, 12].Value = items[c - 2].SalesmanBonus + " " + items[c - 2].SalesmanBonusCurrencyName;
-                    ws.Cells[c, 13].Value = items[c - 2].WarrantyPlus;
-                    ws.Cells[c, 14].Value = items[c - 2].Description;
+                    ws.Cells[c, 12].Value = items[c - 2].WarrantyPlus;
+                    ws.Cells[c, 13].Value = items[c - 2].Description;
 
                     ws.Column(8).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SaleAmountCurrencyName);
                     ws.Column(11).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].VehicleCostCurrencyName);
-                    ws.Column(12).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SalesmanBonusCurrencyName);
                 }
 
                 ws.Cells[ws.Dimension.Address].AutoFitColumns();
-                ws.Cells["A1:N" + items.Count + 2].AutoFilter = true;
+                ws.Cells["A1:M" + items.Count + 2].AutoFilter = true;
 
-                ws.Column(14).PageBreak = true;
+                ws.Column(13).PageBreak = true;
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Landscape;
                 ws.PrinterSettings.Scale = 100;
