@@ -152,14 +152,14 @@
                     {
                         "data": "purchaseAmount",
                         "render": function (data, type, full, meta) {
-                            return full.purchaseAmount + " " + full.purchaseAmountCurrencyName;
+                            return currency(full.purchaseAmount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.purchaseAmountCurrencyName;
                         },
                         "orderable": false
                     },
                     {
                         "data": "saleAmount",
                         "render": function (data, type, full, meta) {
-                            return full.saleAmount + " " + full.saleAmountCurrencyName;
+                            return currency(full.saleAmount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.saleAmountCurrencyName;
                         },
                         "orderable": false
                     },

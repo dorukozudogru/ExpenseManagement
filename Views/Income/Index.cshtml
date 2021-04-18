@@ -12,6 +12,7 @@
                     <div class="card-header">
                         <h5 class="box-title">
                             <i class="fas fa-coins"></i>&nbsp;Gelirler
+                            <a class="btn btn-light text-primary btn-sm float-right" asp-controller="Income" asp-action="ExportIncomes" style="margin-left:10px"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
                             <a class="btn btn-light text-primary btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
                         </h5>
                     </div>
@@ -98,13 +99,13 @@
                     {
                         "data": "amount",
                         "render": function (data, type, full, meta) {
-                            return full.amount + " " + full.amountCurrencyName;
+                            return currency(full.amount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.amountCurrencyName;
                         }
                     },
                     {
                         "data": "tax",
                         "render": function (data, type, full, meta) {
-                            return full.tax + " " + full.taxCurrencyName;
+                            return currency(full.tax, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.taxCurrencyName;
                         }
                     },
                     {

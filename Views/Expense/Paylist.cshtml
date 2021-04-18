@@ -105,11 +105,10 @@
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0)
-                        .toFixed(2);
+                        }, 0);
 
                     $(api.column(7).footer()).html(
-                        pageAmountTotal + ' ₺'
+                        currency(pageAmountTotal, { decimal: ',', separator: '', symbol: '' }).format() + ' ₺'
                     );
 
                     pageTAXTotal = api
@@ -117,11 +116,10 @@
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0)
-                        .toFixed(2);
+                        }, 0);
 
                     $(api.column(8).footer()).html(
-                        pageTAXTotal + ' ₺'
+                        currency(pageTAXTotal, { decimal: ',', separator: '', symbol: '' }).format() + ' ₺'
                     );
                 },
                 "ajax": {
@@ -179,7 +177,7 @@
                         "data": "amount",
                         "render": function (data, type, full, meta) {
                             if (data != null) {
-                                return full.amount + " " + full.amountCurrencyName;
+                                return currency(full.amount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.amountCurrencyName;
                             }
                             return "-";
                         }
@@ -188,7 +186,7 @@
                         "data": "tax",
                         "render": function (data, type, full, meta) {
                             if (data != null) {
-                                return full.tax + " " + full.taxCurrencyName;
+                                return currency(full.tax, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.taxCurrencyName;
                             }
                             return "-";
                         }

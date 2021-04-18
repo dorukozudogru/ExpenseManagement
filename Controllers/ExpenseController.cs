@@ -450,6 +450,7 @@ namespace ExpenseManagement.Controllers
             return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
         }
 
+        #region ExportPaylist
         [Authorize(Roles = "Admin, Banaz, Muhasebe")]
         public ActionResult ExportPaylist()
         {
@@ -463,14 +464,23 @@ namespace ExpenseManagement.Controllers
                 thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
             }
 
-            var stream = ExportAllPaylist(_context.Expenses
+            var expenseContext = _context.Expenses
                 .Where(e => e.ExpenseType != 2 &&
                             e.LastPaymentDate != null &&
                             e.LastPaymentDate >= thisWeekStart &&
                             e.LastPaymentDate <= thisWeekEnd)
                 .Include(e => e.Sector)
                 .AsNoTracking()
-                .ToList(), "Haftalık Ödeme Listesi");
+                .ToList();
+
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
+            {
+                expenseContext = expenseContext
+                    .Where(e => e.CreatedBy == GetLoggedUserId())
+                    .ToList();
+            }
+
+            var stream = ExportAllPaylist(expenseContext, "Haftalık Ödeme Listesi");
             string fileName = String.Format("{0}.xlsx", "Haftalık Ödeme Listesi");
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;
@@ -547,6 +557,86 @@ namespace ExpenseManagement.Controllers
             AddExportAudit(pageName);
             return stream;
         }
+        #endregion
+
+        #region ExportSalary
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public ActionResult ExportSalary()
+        {
+            var expenseContext = _context.Expenses
+                .Where(e => e.ExpenseType == 2)
+                .Include(e => e.Sector)
+                .AsNoTracking()
+                .ToList();
+
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
+            {
+                expenseContext = expenseContext
+                    .Where(e => e.CreatedBy == GetLoggedUserId())
+                    .ToList();
+            }
+
+            var stream = ExportAllSalary(expenseContext, "Maaşlar");
+            string fileName = String.Format("{0}.xlsx", "Maaşlar");
+            string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            stream.Position = 0;
+            return File(stream, fileType, fileName);
+        }
+
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public MemoryStream ExportAllSalary(List<Expenses> items, string pageName)
+        {
+            var stream = new System.IO.MemoryStream();
+
+            items = GetAllEnumNamesHelper.GetEnumName(items);
+
+            using (var p = new ExcelPackage(stream))
+            {
+                var ws = p.Workbook.Worksheets.Add("Maaşlar");
+
+                using (var range = ws.Cells[1, 1, 1, 6])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                ws.Cells[1, 1].Value = "ID";
+                ws.Cells[1, 2].Value = "Gider Türü";
+                ws.Cells[1, 3].Value = "Sektör/İş Kolu";
+                ws.Cells[1, 4].Value = "Ay (Maaş)";
+                ws.Cells[1, 5].Value = "Gider Tanımı";
+                ws.Cells[1, 6].Value = "Net Tutar";
+
+                ws.Row(1).Style.Font.Bold = true;
+
+                for (int c = 2; c < items.Count + 2; c++)
+                {
+                    ws.Cells[c, 1].Value = items[c - 2].Id;
+                    ws.Cells[c, 2].Value = items[c - 2].ExpenseTypeName;
+                    ws.Cells[c, 3].Value = items[c - 2].Sector.Name;
+                    ws.Cells[c, 4].Value = items[c - 2].MonthName;
+                    ws.Cells[c, 5].Value = items[c - 2].Definition;
+                    ws.Cells[c, 6].Value = items[c - 2].SalaryAmount + " " + items[c - 2].SalaryAmountCurrencyName;
+
+                    ws.Column(6).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SalaryAmountCurrencyName);
+                }
+
+                ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                ws.Cells["A1:F" + items.Count + 2].AutoFilter = true;
+
+                ws.Column(6).PageBreak = true;
+                ws.PrinterSettings.PaperSize = ePaperSize.A4;
+                ws.PrinterSettings.Orientation = eOrientation.Landscape;
+                ws.PrinterSettings.Scale = 100;
+
+                p.Save();
+            }
+            AddExportAudit(pageName);
+            return stream;
+        }
+        #endregion
 
         [Authorize(Roles = "Admin, Banaz, Muhasebe")]
         public void AddExportAudit(string pageName)

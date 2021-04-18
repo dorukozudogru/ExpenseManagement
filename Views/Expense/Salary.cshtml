@@ -12,7 +12,7 @@
                     <div class="card-header">
                         <h5 class="box-title">
                             <i class="fas fa-wallet"></i>&nbsp;Maaşlar
-                            @*<a class="btn btn-light text-primary btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>*@
+                            <a class="btn btn-light text-primary btn-sm float-right" asp-controller="Expense" asp-action="ExportSalary" style="margin-left:10px"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
                         </h5>
                     </div>
                     <div class="card-body">
@@ -100,7 +100,7 @@
                     {
                         "data": "salaryAmount",
                         "render": function (data, type, full, meta) {
-                            return full.salaryAmount + " " + full.salaryAmountCurrencyName;
+                            return currency(full.salaryAmount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.salaryAmountCurrencyName;
                         }
                     },
                     {

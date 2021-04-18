@@ -12,6 +12,7 @@
                     <div class="card-header">
                         <h5 class="box-title">
                             <i class="fas fa-warehouse"></i>&nbsp;Araç Alımı
+                            <a class="btn btn-light text-primary btn-sm float-right" asp-controller="VehiclePurchase" asp-action="ExportPurchases" style="margin-left:10px"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
                             <a class="btn btn-light text-primary btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
                         </h5>
                     </div>
@@ -159,14 +160,14 @@
                     {
                         "data": "purchaseAmount",
                         "render": function (data, type, full, meta) {
-                            return full.purchaseAmount + " " + full.purchaseAmountCurrencyName;
+                            return currency(full.purchaseAmount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.purchaseAmountCurrencyName;
                         }
                     },
                     {
                         "data": "includingRegistrationFee",
                         "render": function (data, type, full, meta) {
                             if (data != null) {
-                                return full.includingRegistrationFee + " ₺";
+                                return currency(full.includingRegistrationFee, { decimal: ',', separator: '', symbol: '' }).format() + " ₺";
                             }
                             else {
                                 return "-";
@@ -177,7 +178,7 @@
                         "data": "saleAmount",
                         render: function (data, type, full, meta) {
                             if (data != null) {
-                                return full.saleAmount + " " + full.saleAmountCurrencyName;
+                                return currency(full.saleAmount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.saleAmountCurrencyName;
                             }
                             else {
                                 return "-";
