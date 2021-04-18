@@ -10,6 +10,10 @@ using ExpenseManagement.Models;
 using Microsoft.AspNetCore.Authorization;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
 using ExpenseManagement.Helpers;
+using System.IO;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
 
 namespace ExpenseManagement.Controllers
 {
@@ -237,8 +241,8 @@ namespace ExpenseManagement.Controllers
             {
                 Data = listItems,
                 Draw = int.Parse(requestFormData["draw"]),
-                RecordsFiltered = vehiclePurchaseContext.Count,
-                RecordsTotal = vehiclePurchaseContext.Count
+                RecordsFiltered = listItems.Count,
+                RecordsTotal = listItems.Count
             };
 
             ViewBag.NotificationCount = listItems.Count;
@@ -246,9 +250,134 @@ namespace ExpenseManagement.Controllers
             return Ok(response);
         }
 
-        private bool VehiclePurchasesExists(int id)
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public ActionResult ExportPurchases()
         {
-            return _context.VehiclePurchases.Any(e => e.Id == id);
+            var stream = ExportAllSales(_context.VehiclePurchases
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .AsNoTracking()
+                .ToList(), "Araç Alış Listesi");
+            string fileName = String.Format("{0}.xlsx", "Araç Alış Listesi");
+            string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            stream.Position = 0;
+            return File(stream, fileType, fileName);
+        }
+
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public MemoryStream ExportAllSales(List<VehiclePurchases> items, string pageName)
+        {
+            var stream = new System.IO.MemoryStream();
+
+            items = GetAllEnumNamesHelper.GetEnumName(items);
+
+            using (var p = new ExcelPackage(stream))
+            {
+                var ws = p.Workbook.Worksheets.Add("Araç Alış Listesi");
+
+                using (var range = ws.Cells[1, 1, 1, 13])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                ws.Cells[1, 1].Value = "ID";
+                ws.Cells[1, 2].Value = "Marka";
+                ws.Cells[1, 3].Value = "Model";
+                ws.Cells[1, 4].Value = "Araç Sıfır Mı?";
+                ws.Cells[1, 5].Value = "Araç Satıldı Mı?";
+                ws.Cells[1, 6].Value = "Alış Tarihi";
+                ws.Cells[1, 7].Value = "Satış Tarihi";
+                ws.Cells[1, 8].Value = "Valör";
+                ws.Cells[1, 9].Value = "Valör Bitiş Tarihi";
+                ws.Cells[1, 10].Value = "Şase No";
+                ws.Cells[1, 11].Value = "Araç Alış Fiyatı";
+                ws.Cells[1, 12].Value = "Trafik Tescil Bedeli Dahil Fiyatı";
+                ws.Cells[1, 13].Value = "Araç Satış Fiyatı";
+
+                ws.Column(6).Style.Numberformat.Format = "dd-mmmm-yyyy";
+                ws.Column(7).Style.Numberformat.Format = "dd-mmmm-yyyy";
+                ws.Column(9).Style.Numberformat.Format = "dd-mmmm-yyyy";
+
+                ws.Row(1).Style.Font.Bold = true;
+
+                for (int c = 2; c < items.Count + 2; c++)
+                {
+                    ws.Cells[c, 1].Value = items[c - 2].Id;
+                    ws.Cells[c, 2].Value = items[c - 2].CarModel.CarBrand.Name;
+                    ws.Cells[c, 3].Value = items[c - 2].CarModel.Name;
+                    ws.Cells[c, 4].Value = items[c - 2].IsNew;
+                    ws.Cells[c, 5].Value = items[c - 2].IsSold;
+                    ws.Cells[c, 6].Value = items[c - 2].PurchaseDate;
+                    ws.Cells[c, 7].Value = items[c - 2].SaleDate;
+                    ws.Cells[c, 8].Value = items[c - 2].ValorDate;
+
+                    if (items[c - 2].ValorDate != null)
+                    {
+                        items[c - 2].ValorEndDate = items[c - 2].PurchaseDate.AddDays((double)items[c - 2].ValorDate);
+                        ws.Cells[c, 9].Value = items[c - 2].ValorEndDate;
+                    }
+                    else
+                    {
+                        ws.Cells[c, 9].Value = "";
+                    }
+                                        
+                    ws.Cells[c, 10].Value = items[c - 2].Chassis;
+                    ws.Cells[c, 11].Value = items[c - 2].PurchaseAmount + " " + items[c - 2].PurchaseAmountCurrencyName;
+
+                    if (items[c - 2].IncludingRegistrationFee != null)
+                    {
+                        ws.Cells[c, 12].Value = items[c - 2].IncludingRegistrationFee + " ₺";
+                    }
+                    else
+                    {
+                        ws.Cells[c, 12].Value = "";
+                    }
+
+                    if (items[c - 2].SaleAmount != null)
+                    {
+                        ws.Cells[c, 13].Value = items[c - 2].SaleAmount + " " + items[c - 2].SaleAmountCurrencyName;
+                    }
+                    else
+                    {
+                        ws.Cells[c, 13].Value = "";
+                    }
+
+                    ws.Column(11).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].PurchaseAmountCurrencyName);
+                    ws.Column(12).Style.Numberformat.Format = String.Format("#,##0.00 {0}", "₺");
+                    ws.Column(13).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SaleAmountCurrencyName);
+                }
+
+                ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                ws.Cells["A1:M" + items.Count + 2].AutoFilter = true;
+
+                ws.Column(13).PageBreak = true;
+                ws.PrinterSettings.PaperSize = ePaperSize.A4;
+                ws.PrinterSettings.Orientation = eOrientation.Landscape;
+                ws.PrinterSettings.Scale = 100;
+
+                p.Save();
+            }
+            AddExportAudit(pageName);
+            return stream;
+        }
+
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public void AddExportAudit(string pageName)
+        {
+            Audit audit = new Audit()
+            {
+                Action = "Exported",
+                DateTime = DateTime.Now.ToUniversalTime(),
+                KeyValues = "{\"Id\":\"-\"}",
+                NewValues = "{\"PageName\":\"" + pageName + "\"}",
+                TableName = pageName,
+                Username = HttpContext?.User?.Identity?.Name
+            };
+            _context.Add(audit);
+            _context.SaveChanges();
         }
     }
 }

@@ -13,6 +13,9 @@ using System.IO;
 using System.Collections.Generic;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
 using Microsoft.AspNetCore.Authorization;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
 
 namespace ExpenseManagement.Controllers
 {
@@ -341,9 +344,99 @@ namespace ExpenseManagement.Controllers
             return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
         }
 
-        private bool IncomesExists(int id)
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public ActionResult ExportIncomes()
         {
-            return _context.Incomes.Any(e => e.Id == id);
+            var incomeContext = _context.Incomes
+                .Include(e => e.Sector)
+                .AsNoTracking()
+                .ToList();
+
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
+            {
+                incomeContext = incomeContext
+                    .Where(e => e.CreatedBy == GetLoggedUserId())
+                    .ToList();
+            }
+
+            var stream = ExportAllIncomes(incomeContext, "Gelirler");
+            string fileName = String.Format("{0}.xlsx", "Gelirler");
+            string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            stream.Position = 0;
+            return File(stream, fileType, fileName);
+        }
+
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public MemoryStream ExportAllIncomes(List<Incomes> items, string pageName)
+        {
+            var stream = new System.IO.MemoryStream();
+
+            items = GetAllEnumNamesHelper.GetEnumName(items);
+
+            using (var p = new ExcelPackage(stream))
+            {
+                var ws = p.Workbook.Worksheets.Add("Gelirler");
+
+                using (var range = ws.Cells[1, 1, 1, 6])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                ws.Cells[1, 1].Value = "ID";
+                ws.Cells[1, 2].Value = "Sektör/İş Kolu";
+                ws.Cells[1, 3].Value = "Gelir Tarihi";
+                ws.Cells[1, 4].Value = "Fatura Tanımı";
+                ws.Cells[1, 5].Value = "Tutar";
+                ws.Cells[1, 6].Value = "KDV";
+
+                ws.Column(3).Style.Numberformat.Format = "dd-mmmm-yyyy";
+
+                ws.Row(1).Style.Font.Bold = true;
+
+                for (int c = 2; c < items.Count + 2; c++)
+                {
+                    ws.Cells[c, 1].Value = items[c - 2].Id;
+                    ws.Cells[c, 2].Value = items[c - 2].Sector.Name;
+                    ws.Cells[c, 3].Value = items[c - 2].Date;
+                    ws.Cells[c, 4].Value = items[c - 2].Definition;
+                    ws.Cells[c, 5].Value = items[c - 2].Amount + " " + items[c - 2].AmountCurrencyName;
+                    ws.Cells[c, 6].Value = items[c - 2].TAX + " " + items[c - 2].TAXCurrencyName;
+
+                    ws.Column(5).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].AmountCurrencyName);
+                    ws.Column(6).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].TAXCurrencyName);
+                }
+
+                ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                ws.Cells["A1:F" + items.Count + 2].AutoFilter = true;
+
+                ws.Column(6).PageBreak = true;
+                ws.PrinterSettings.PaperSize = ePaperSize.A4;
+                ws.PrinterSettings.Orientation = eOrientation.Landscape;
+                ws.PrinterSettings.Scale = 100;
+
+                p.Save();
+            }
+            AddExportAudit(pageName);
+            return stream;
+        }
+
+        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
+        public void AddExportAudit(string pageName)
+        {
+            Audit audit = new Audit()
+            {
+                Action = "Exported",
+                DateTime = DateTime.Now.ToUniversalTime(),
+                KeyValues = "{\"Id\":\"-\"}",
+                NewValues = "{\"PageName\":\"" + pageName + "\"}",
+                TableName = pageName,
+                Username = HttpContext?.User?.Identity?.Name
+            };
+            _context.Add(audit);
+            _context.SaveChanges();
         }
     }
 }
