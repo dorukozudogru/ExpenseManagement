@@ -1,5 +1,6 @@
 ﻿using ExpenseManagement.Enums;
 using ExpenseManagement.Models;
+using ExpenseManagement.Models.ViewModels;
 using System.Collections.Generic;
 using static ExpenseManagement.Models.ViewModels.ReportViewModel;
 
@@ -986,6 +987,30 @@ namespace ExpenseManagement.Helpers
                     break;
             }
             return energyLuytobs;
+        }
+
+        public static List<ExpenseReportViewModel> GetEnumName(List<ExpenseReportViewModel> expenseReportViewModel)
+        {
+            foreach (var item in expenseReportViewModel)
+            {
+                if (item.TotalAmountCurrency == 0)
+                {
+                    item.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                }
+                if (item.TotalAmountCurrency == 1)
+                {
+                    item.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                }
+                if (item.TotalAmountCurrency == 2)
+                {
+                    item.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                }
+                if (item.TotalAmountCurrency == 3)
+                {
+                    item.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                }
+            }
+            return expenseReportViewModel;
         }
     }
 }

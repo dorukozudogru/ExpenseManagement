@@ -152,5 +152,13 @@ namespace ExpenseManagement.Models
 
         [DisplayName("Oluşturan Kişi")]
         public string CreatedBy { get; set; }
+
+        [NotMapped]
+        [DisplayName("Başlangıç Tarihi")]
+        public DateTime? StartDate { get; set; }
+
+        [NotMapped]
+        [DisplayName("Bitiş Tarihi")]
+        public DateTime? FinishDate { get; set; }
     }
 }
