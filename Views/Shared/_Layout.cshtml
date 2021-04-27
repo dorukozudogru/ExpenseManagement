@@ -93,12 +93,12 @@
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="NewVehicleSale" asp-action="Index">
-                                        <i class="far fa-circle nav-icon text-warning"></i><p>Sıfır Araç Satışı</p>
+                                        <i class="far fa-circle nav-icon text-blue"></i><p>Sıfır Araç Satışı</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="UsedVehicleSale" asp-action="Index">
-                                        <i class="far fa-circle nav-icon text-warning"></i><p>2. El Araç Satışı</p>
+                                        <i class="far fa-circle nav-icon text-blue"></i><p>2. El Araç Satışı</p>
                                     </a>
                                 </li>
                             </ul>
@@ -114,24 +114,24 @@
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Income" asp-action="Index">
-                                        <i class="far fa-circle nav-icon text-warning"></i><p>Gelirler</p>
+                                        <i class="far fa-circle nav-icon text-success"></i><p>Gelirler</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Expense" asp-action="Index">
-                                        <i class="far fa-circle nav-icon text-warning"></i><p>Giderler</p>
+                                        <i class="far fa-circle nav-icon text-success"></i><p>Giderler</p>
                                     </a>
                                 </li>
                                 @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe")))
                                 {
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="Expense" asp-action="Salary">
-                                            <i class="far fa-circle nav-icon text-warning"></i><p>Maaşlar</p>
+                                            <i class="far fa-circle nav-icon text-success"></i><p>Maaşlar</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="Expense" asp-action="Paylist">
-                                            <i class="far fa-circle nav-icon text-warning"></i><p>Haftalık Ödeme Listesi</p>
+                                            <i class="far fa-circle nav-icon text-success"></i><p>Haftalık Ödeme Listesi</p>
                                         </a>
                                     </li>
                                 }
@@ -184,22 +184,22 @@
                                 <ul class="nav nav-treeview">
                                     @*<li class="nav-item">
                                             <a class="nav-link" asp-controller="Report" asp-action="Energy">
-                                                <i class="far fa-circle nav-icon text-warning"></i><p>Enerji Anasayfası</p>
+                                                <i class="far fa-circle nav-icon text-fuchsia"></i><p>Enerji Anasayfası</p>
                                             </a>
                                         </li>*@
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="Energy" asp-action="Daily">
-                                            <i class="far fa-circle nav-icon text-warning"></i><p>Günlük</p>
+                                            <i class="far fa-circle nav-icon text-fuchsia"></i><p>Günlük</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="Energy" asp-action="Monthly">
-                                            <i class="far fa-circle nav-icon text-warning"></i><p>Aylık</p>
+                                            <i class="far fa-circle nav-icon text-fuchsia"></i><p>Aylık</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="Energy" asp-action="Luytob">
-                                            <i class="far fa-circle nav-icon text-warning"></i><p>Lüytob/Fatura</p>
+                                            <i class="far fa-circle nav-icon text-fuchsia"></i><p>Lüytob/Fatura</p>
                                         </a>
                                     </li>
                                 </ul>
@@ -216,39 +216,39 @@
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Sector" asp-action="Index">
-                                        <i class="far fa-circle nav-icon text-warning"></i><p>İş Kolları Listesi</p>
+                                        <i class="far fa-circle nav-icon text-indigo"></i><p>İş Kolları Listesi</p>
                                     </a>
                                 </li>
                                 @*<li class="nav-item">
                                         <a class="nav-link" asp-controller="Supplier" asp-action="Index">
-                                            <i class="far fa-circle nav-icon text-warning"></i><p>Satıcı/Tedarikçi Listesi</p>
+                                            <i class="far fa-circle nav-icon text-indigo"></i><p>Satıcı/Tedarikçi Listesi</p>
                                         </a>
                                     </li>*@
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Salesman" asp-action="Index">
-                                        <i class="far fa-circle nav-icon text-warning"></i><p>Danışman Listesi</p>
+                                        <i class="far fa-circle nav-icon text-indigo"></i><p>Danışman Listesi</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="CarBrand" asp-action="Index">
-                                        <i class="far fa-circle nav-icon text-warning"></i><p>Marka Listesi</p>
+                                        <i class="far fa-circle nav-icon text-indigo"></i><p>Marka Listesi</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="CarModel" asp-action="Index">
-                                        <i class="far fa-circle nav-icon text-warning"></i><p>Model Listesi</p>
+                                        <i class="far fa-circle nav-icon text-indigo"></i><p>Model Listesi</p>
                                     </a>
                                 </li>
                                 @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe")))
                                 {
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="AccountType" asp-action="Index">
-                                            <i class="far fa-circle nav-icon text-warning"></i><p>Hesap Türleri</p>
+                                            <i class="far fa-circle nav-icon text-indigo"></i><p>Hesap Türleri</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="BankBranches" asp-action="Index">
-                                            <i class="far fa-circle nav-icon text-warning"></i><p>Banka/Şube Listesi</p>
+                                            <i class="far fa-circle nav-icon text-indigo"></i><p>Banka/Şube Listesi</p>
                                         </a>
                                     </li>
                                 }
@@ -257,45 +257,38 @@
                         @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe")))
                         {
                             <li class="nav-item has-treeview">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon fas fa-chart-line"></i>
-                                        <p>
-                                            Raporlar
-                                            <i class="fas fa-angle-left right"></i>
-                                        </p>
-                                    </a>
-                                    <ul class="nav nav-treeview">
-                                        <li class="nav-item">
-                                            <a class="nav-link" asp-controller="Report" asp-action="ExpenseReport">
-                                                <i class="far fa-circle nav-icon text-info"></i><p>Satınalma Raporu</p>
-                                            </a>
-                                        </li>
-                                        @*<li class="nav-item">
-                                            <a class="nav-link" asp-controller="Report" asp-action="ProfitReportWithInsurancePolicyType">
-                                                <i class="far fa-circle nav-icon text-info"></i><p>Poliçe Tipi Bazlı Kâr Rap.</p>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" asp-controller="Report" asp-action="AllProfitReport">
-                                                <i class="far fa-circle nav-icon text-info"></i><p>Kâr Raporu</p>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" asp-controller="Report" asp-action="GeneralInsuranceReport">
-                                                <i class="far fa-circle nav-icon text-info"></i><p>Genel Rapor</p>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" asp-controller="Report" asp-action="InsurancePaymentTypeReport">
-                                                <i class="far fa-circle nav-icon text-info"></i><p>Ödeme Şekli Raporu</p>
-                                            </a>
-                                        </li>*@
-                                    </ul>
-                                </li>
-                        }
-
-                        @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe")))
-                        {
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-chart-line"></i>
+                                    <p>
+                                        Raporlar
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item has-treeview">
+                                        <a href="#" class="nav-link">
+                                            <i class="far fa-circle nav-icon text-danger"></i>
+                                            <p>
+                                                Gelir - Gider
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-controller="Report" asp-action="ExpenseReport">
+                                                    <i class="far fa-dot-circle nav-icon text-danger"></i><p>Satınalma Raporu</p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    @*<li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <i class="far fa-circle nav-icon text-danger"></i>
+                                            <p>Level 2</p>
+                                        </a>
+                                    </li>*@
+                                </ul>
+                            </li>
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-tools"></i>
@@ -307,12 +300,12 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="Account" asp-action="Index">
-                                            <i class="far fa-circle nav-icon text-success"></i><p>Sistem Kullanıcıları</p>
+                                            <i class="far fa-circle nav-icon text-orange"></i><p>Sistem Kullanıcıları</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="Role" asp-action="Index">
-                                            <i class="far fa-circle nav-icon text-success"></i><p>Sistem Rolleri</p>
+                                            <i class="far fa-circle nav-icon text-orange"></i><p>Sistem Rolleri</p>
                                         </a>
                                     </li>
                                 </ul>
@@ -451,6 +444,10 @@
                 currentLink[0].closest(".has-treeview").classList.add("active");
                 currentLink[0].parentElement.parentElement.parentElement.children[0].classList.add("active");
                 currentLink[0].parentElement.parentElement.parentElement.classList.add("menu-open");
+                if (currentLink[0].parentElement.parentElement.parentElement.parentElement.parentElement != null) {
+                    currentLink[0].parentElement.parentElement.parentElement.parentElement.parentElement.children[0].classList.add("active");
+                    currentLink[0].parentElement.parentElement.parentElement.parentElement.parentElement.classList.add("menu-open");
+                }
             }
         }
     </script>
