@@ -45,6 +45,12 @@ namespace ExpenseManagement.Controllers
             return View();
         }
 
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        public IActionResult EndorsementReport()
+        {
+            return View();
+        }
+
         [HttpPost]
         [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
         public async Task<IActionResult> BankVaultsReport()
@@ -331,6 +337,140 @@ namespace ExpenseManagement.Controllers
             };
 
             return Ok(expenseContext);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        public async Task<IActionResult> EndorsementReportPost(int year)
+        {
+            var usedVehicleSale = await _context.UsedVehicleSales
+                .Where(e => e.SaleDate.Year == year)
+                .GroupBy(e => new
+                {
+                    e.SaleDate.Month,
+                    e.SaleAmountCurrency
+                })
+                .Select(e => new EndorsementReportViewModel
+                {
+                    Month = e.Key.Month,
+                    TotalAmount = e.Sum(i => i.SaleAmount),
+                    TotalAmountCurrency = e.Key.SaleAmountCurrency
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
+            var newVehicleSale = await _context.NewVehicleSales
+                .Where(e => e.SaleDate.Year == year)
+                .GroupBy(e => new
+                {
+                    e.SaleDate.Month,
+                    e.SaleAmountCurrency
+                })
+                .Select(e => new EndorsementReportViewModel
+                {
+                    Month = e.Key.Month,
+                    TotalAmount = e.Sum(i => i.SaleAmount),
+                    TotalAmountCurrency = e.Key.SaleAmountCurrency
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
+            foreach (var item in usedVehicleSale)
+            {
+                newVehicleSale.Add(item);
+            }
+
+            var totalSale = newVehicleSale
+                .GroupBy(e => new
+                {
+                    e.Month,
+                    e.TotalAmountCurrency
+                })
+                .Select(e => new EndorsementReportViewModel
+                {
+                    Month = e.Key.Month,
+                    TotalAmount = e.Sum(i => i.TotalAmount),
+                    TotalAmountCurrency = e.Key.TotalAmountCurrency
+                })
+                .OrderBy(i => i.Month)
+                .ToList();
+
+            totalSale = GetAllEnumNamesHelper.GetEnumName(totalSale);
+
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(totalSale);
+
+            var response = new PaginatedResponse<EndorsementReportViewModel>
+            {
+                Data = totalSale,
+                Draw = 1,
+                RecordsFiltered = 0,
+                RecordsTotal = 0
+            };
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        public async Task<IActionResult> EndorsementReportTotalPost(int year)
+        {
+            var usedVehicleSale = await _context.UsedVehicleSales
+                .Where(e => e.SaleDate.Year == year)
+                .GroupBy(e => new
+                {
+                    e.SaleAmountCurrency
+                })
+                .Select(e => new EndorsementReportViewModel
+                {
+                    TotalAmount = e.Sum(i => i.SaleAmount),
+                    TotalAmountCurrency = e.Key.SaleAmountCurrency
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
+            var newVehicleSale = await _context.NewVehicleSales
+                .Where(e => e.SaleDate.Year == year)
+                .GroupBy(e => new
+                {
+                    e.SaleAmountCurrency
+                })
+                .Select(e => new EndorsementReportViewModel
+                {
+                    TotalAmount = e.Sum(i => i.SaleAmount),
+                    TotalAmountCurrency = e.Key.SaleAmountCurrency
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
+            foreach (var item in usedVehicleSale)
+            {
+                newVehicleSale.Add(item);
+            }
+
+            var totalSale = newVehicleSale
+                .GroupBy(e => new
+                {
+                    e.TotalAmountCurrency
+                })
+                .Select(e => new EndorsementReportViewModel
+                {
+                    TotalAmount = e.Sum(i => i.TotalAmount),
+                    TotalAmountCurrency = e.Key.TotalAmountCurrency
+                })
+                .OrderBy(i => i.Month)
+                .ToList();
+
+            totalSale = GetAllEnumNamesHelper.GetEnumName(totalSale);
+
+            var response = new PaginatedResponse<EndorsementReportViewModel>
+            {
+                Data = totalSale,
+                Draw = 1,
+                RecordsFiltered = 0,
+                RecordsTotal = 0
+            };
+
+            return Ok(totalSale);
         }
 
         [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]

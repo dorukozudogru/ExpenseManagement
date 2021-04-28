@@ -1,7 +1,5 @@
-﻿@model ExpenseManagement.Models.Expenses
-
-@{
-    ViewData["Title"] = "Giderler Raporu";
+﻿@{
+    ViewData["Title"] = "Ciro Raporu";
 }
 
 <section class="content">
@@ -11,41 +9,25 @@
                 <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
-                            <i class="fas fa-credit-card"></i>&nbsp;Giderler Raporu
+                            <i class="fas fa-hand-holding-usd"></i>&nbsp;Ciro Raporu
                         </h5>
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label asp-for="ExpenseType" class="control-label"></label>
-                            <select asp-for="ExpenseType" class="form-control" asp-items="@Html.GetEnumSelectList<Expenses.ExpenseTypeEnum>()" id="expenseType"></select>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label asp-for="@Model.StartDate" class="control-label"></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="far fa-calendar-alt"></i>
-                                            </span>
-                                        </div>
-                                        <input asp-for="@Model.StartDate" type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <span asp-validation-for="@Model.StartDate" class="text-danger"></span>
-                                <div class="form-group">
-                                    <label asp-for="@Model.FinishDate" class="control-label"></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="far fa-calendar-alt"></i>
-                                            </span>
-                                        </div>
-                                        <input asp-for="@Model.FinishDate" type="text" class="form-control float-right" id="datepicker2" autocomplete="off" />
-                                    </div>
-                                    <span asp-validation-for="@Model.FinishDate" class="text-danger"></span>
+                            <div class="form-group">
+                                <label class="control-label">Yıl</label>
+                                <div class="input-group-prepend">
+                                    <select class="form-control btn btn-default" id="year">
+                                        <option>2021</option>
+                                        <option>2022</option>
+                                        <option>2023</option>
+                                        <option>2024</option>
+                                        <option>2025</option>
+                                        <option>2026</option>
+                                        <option>2027</option>
+                                        <option>2028</option>
+                                        <option>2029</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -99,7 +81,7 @@
             $("#resultRow").show();
             $("#exportButton").show();
             $.ajax({
-                "url": "/Report/ExpenseReportTotalPost?startDate=" + $('#datepicker').val() + "&finishDate=" + $('#datepicker2').val() + "&expenseType=" + $('#expenseType').val(),
+                "url": "/Report/EndorsementReportTotalPost?year=" + $('#year').val(),
                 "method": "POST"
             }).done(function (response) {
                 var data = "";
@@ -133,14 +115,14 @@
                 "searching": false,
                 "stateDuration": -1,
                 "ajax": {
-                    "url": "/Report/ExpenseReportPost?startDate=" + $('#datepicker').val() + "&finishDate=" + $('#datepicker2').val() + "&expenseType=" + $('#expenseType').val(),
+                    "url": "/Report/EndorsementReportPost?year=" + $('#year').val(),
                     "method": "POST"
                 },
                 "destroy": true,
                 "columns": [
                     {
                         "data": "monthName",
-                        "orderable": false
+                        "orderable": true
                     },
                     {
                         "data": "totalAmount",

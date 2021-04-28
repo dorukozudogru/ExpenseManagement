@@ -1012,5 +1012,29 @@ namespace ExpenseManagement.Helpers
             }
             return expenseReportViewModel;
         }
+
+        public static List<EndorsementReportViewModel> GetEnumName(List<EndorsementReportViewModel> endorsementReportViewModel)
+        {
+            foreach (var item in endorsementReportViewModel)
+            {
+                if (item.TotalAmountCurrency == 0)
+                {
+                    item.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                }
+                if (item.TotalAmountCurrency == 1)
+                {
+                    item.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                }
+                if (item.TotalAmountCurrency == 2)
+                {
+                    item.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                }
+                if (item.TotalAmountCurrency == 3)
+                {
+                    item.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                }
+            }
+            return endorsementReportViewModel;
+        }
     }
 }
