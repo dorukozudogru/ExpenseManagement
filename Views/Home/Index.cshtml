@@ -272,7 +272,7 @@
                     {
                         "data": "totalAmount",
                         "render": function (data, type, full, meta) {
-                            return currency(full.totalAmount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.totalAmountCurrencyName;
+                            return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.totalAmountCurrencyName;
                         },
                         "orderable": false
                     }
@@ -327,7 +327,7 @@
                     {
                         "data": "totalAmount",
                         "render": function (data, type, full, meta) {
-                            return currency(full.totalAmount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.totalAmountCurrencyName;
+                            return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.totalAmountCurrencyName;
                         },
                         "orderable": false
                     }

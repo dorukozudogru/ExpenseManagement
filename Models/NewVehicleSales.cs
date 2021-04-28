@@ -64,7 +64,7 @@ namespace ExpenseManagement.Models
         [DisplayName("Araç Maliyeti Dövizi")]
         public string VehicleCostCurrencyName { get; set; }
 
-        [DisplayName("Artı Garanti")]
+        [DisplayName("Bandrol")]
         public string WarrantyPlus { get; set; }
 
         [DisplayName("Açıklama")]

@@ -1,0 +1,163 @@
+﻿@model ExpenseManagement.Models.Expenses
+
+@{
+    ViewData["Title"] = "Giderler Raporu";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-credit-card"></i>&nbsp;Giderler Raporu
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label asp-for="ExpenseType" class="control-label"></label>
+                            <select asp-for="ExpenseType" class="form-control" asp-items="@Html.GetEnumSelectList<Expenses.ExpenseTypeEnum>()" id="expenseType"></select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="@Model.StartDate" class="control-label"></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input asp-for="@Model.StartDate" type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <span asp-validation-for="@Model.StartDate" class="text-danger"></span>
+                                <div class="form-group">
+                                    <label asp-for="@Model.FinishDate" class="control-label"></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input asp-for="@Model.FinishDate" type="text" class="form-control float-right" id="datepicker2" autocomplete="off" />
+                                    </div>
+                                    <span asp-validation-for="@Model.FinishDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="submit" id="getResult" value="Getir" class="btn btn-success btn-block" />
+                                </div>
+                            </div>
+                            <div id="exportButton" class="col-md-6">
+                                <div class="form-group">
+                                    <a class="btn btn-info btn-block float-right" asp-controller="Report" asp-action="ExportReport"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive" id="resultRow">
+                        <div class="card-body">
+                            <table id="ItemsTable" class="table table-bordered table-striped" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Ay
+                                        </th>
+                                        <th>
+                                            Toplam Miktar
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Toplam:</th>
+                                        <th id="totalAmount"></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script src="~/js/datatables.min.js"></script>
+    <script>
+        $('#getResult').click(function () {
+            $("#resultRow").show();
+            $("#exportButton").show();
+            $.ajax({
+                "url": "/Report/ExpenseReportTotalPost?startDate=" + $('#datepicker').val() + "&finishDate=" + $('#datepicker2').val() + "&expenseType=" + $('#expenseType').val(),
+                "method": "POST"
+            }).done(function (response) {
+                var data = "";
+                response.forEach(element => {
+                    data += currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + element.totalAmountCurrencyName + " + ";
+                });
+                data = data.substring(0, data.length - 3);
+                $('#totalAmount').html(data);
+            });
+            $("#ItemsTable").DataTable({
+                "language": {
+                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                    zeroRecords: "Hiçbir kayıt bulunamadı.",
+                    emptyTable: "Kayıt bulunmamaktadır.",
+                    search: "Ara:",
+                    oPaginate: {
+                        "sFirst": "",
+                        "sLast": "",
+                        "sNext": "",
+                        "sPrevious": ""
+                    },
+                    sLengthMenu: "",
+                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                },
+                "info": false,
+                "processing": true,
+                "serverSide": true,
+                "searchDelay": 1200,
+                "stateSave": true,
+                "lengthChange": false,
+                "searching": false,
+                "stateDuration": -1,
+                "ajax": {
+                    "url": "/Report/ExpenseReportPost?startDate=" + $('#datepicker').val() + "&finishDate=" + $('#datepicker2').val() + "&expenseType=" + $('#expenseType').val(),
+                    "method": "POST"
+                },
+                "destroy": true,
+                "columns": [
+                    {
+                        "data": "monthName",
+                        "orderable": false
+                    },
+                    {
+                        "data": "totalAmount",
+                        "orderable": false,
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.totalAmountCurrencyName;
+                            }
+                            return "-";
+                        }
+                    }
+                ],
+                "ordering": true,
+                "paging": true,
+                "pagingType": "simple_numbers",
+                "pageLength": 100
+            });
+        });
+    </script>
+}
