@@ -278,13 +278,13 @@ namespace ExpenseManagement.Controllers
         public async Task<IActionResult> ExpenseReportPost(DateTime startDate, DateTime finishDate, byte expenseType)
         {
             var expenseContext = await _context.Expenses
-                .Where(e => e.ExpenseType == expenseType && e.Date >= startDate && e.Date <= finishDate)
+                .Where(e => e.ExpenseType == expenseType && e.Date >= startDate && e.Date <= finishDate && e.Amount != null)
                 .GroupBy(e => new
                 {
                     e.Date.Value.Month,
                     e.AmountCurrency
                 })
-                .Select(e => new ExpenseReportViewModel
+                .Select(e => new ExpenseEndorsementProfitReport
                 {
                     Month = e.Key.Month,
                     TotalAmount = e.Sum(i => (double)i.Amount),
@@ -297,7 +297,7 @@ namespace ExpenseManagement.Controllers
 
             FakeSession.Instance.Obj = JsonConvert.SerializeObject(expenseContext);
 
-            var response = new PaginatedResponse<ExpenseReportViewModel>
+            var response = new PaginatedResponse<ExpenseEndorsementProfitReport>
             {
                 Data = expenseContext,
                 Draw = 1,
@@ -313,12 +313,12 @@ namespace ExpenseManagement.Controllers
         public async Task<IActionResult> ExpenseReportTotalPost(DateTime startDate, DateTime finishDate, byte expenseType)
         {
             var expenseContext = await _context.Expenses
-                .Where(e => e.ExpenseType == expenseType && e.Date >= startDate && e.Date <= finishDate)
+                .Where(e => e.ExpenseType == expenseType && e.Date >= startDate && e.Date <= finishDate && e.Amount != null)
                 .GroupBy(e => new
                 {
                     e.AmountCurrency
                 })
-                .Select(e => new ExpenseReportViewModel
+                .Select(e => new ExpenseEndorsementProfitReport
                 {
                     TotalAmount = e.Sum(i => (double)i.Amount),
                     TotalAmountCurrency = (byte)e.Key.AmountCurrency
@@ -327,14 +327,6 @@ namespace ExpenseManagement.Controllers
                 .ToListAsync();
 
             expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
-
-            var response = new PaginatedResponse<ExpenseReportViewModel>
-            {
-                Data = expenseContext,
-                Draw = 1,
-                RecordsFiltered = 0,
-                RecordsTotal = 0
-            };
 
             return Ok(expenseContext);
         }
@@ -350,11 +342,13 @@ namespace ExpenseManagement.Controllers
                     e.SaleDate.Month,
                     e.SaleAmountCurrency
                 })
-                .Select(e => new EndorsementReportViewModel
+                .Select(e => new ExpenseEndorsementProfitReport
                 {
                     Month = e.Key.Month,
                     TotalAmount = e.Sum(i => i.SaleAmount),
-                    TotalAmountCurrency = e.Key.SaleAmountCurrency
+                    TotalAmountCurrency = e.Key.SaleAmountCurrency,
+                    TotalProfit = e.Sum(i => i.SaleAmount) - e.Sum(i => i.PurchaseAmount),
+                    TotalProfitCurrency = e.Key.SaleAmountCurrency
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -366,11 +360,13 @@ namespace ExpenseManagement.Controllers
                     e.SaleDate.Month,
                     e.SaleAmountCurrency
                 })
-                .Select(e => new EndorsementReportViewModel
+                .Select(e => new ExpenseEndorsementProfitReport
                 {
                     Month = e.Key.Month,
                     TotalAmount = e.Sum(i => i.SaleAmount),
-                    TotalAmountCurrency = e.Key.SaleAmountCurrency
+                    TotalAmountCurrency = e.Key.SaleAmountCurrency,
+                    TotalProfit = e.Sum(i => i.SaleAmount) - e.Sum(i => i.VehicleCost),
+                    TotalProfitCurrency = e.Key.SaleAmountCurrency
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -384,22 +380,30 @@ namespace ExpenseManagement.Controllers
                 .GroupBy(e => new
                 {
                     e.Month,
-                    e.TotalAmountCurrency
+                    e.TotalAmountCurrency,
+                    e.TotalProfitCurrency
                 })
-                .Select(e => new EndorsementReportViewModel
+                .Select(e => new ExpenseEndorsementProfitReport
                 {
                     Month = e.Key.Month,
                     TotalAmount = e.Sum(i => i.TotalAmount),
-                    TotalAmountCurrency = e.Key.TotalAmountCurrency
+                    TotalAmountCurrency = e.Key.TotalAmountCurrency,
+                    TotalProfit = e.Sum(i => i.TotalProfit),
+                    TotalProfitCurrency = e.Key.TotalProfitCurrency
                 })
                 .OrderBy(i => i.Month)
                 .ToList();
 
             totalSale = GetAllEnumNamesHelper.GetEnumName(totalSale);
 
+            foreach (var item in totalSale)
+            {
+                item.Percent = (item.TotalProfit * 100) / item.TotalAmount;
+            }
+
             FakeSession.Instance.Obj = JsonConvert.SerializeObject(totalSale);
 
-            var response = new PaginatedResponse<EndorsementReportViewModel>
+            var response = new PaginatedResponse<ExpenseEndorsementProfitReport>
             {
                 Data = totalSale,
                 Draw = 1,
@@ -420,10 +424,12 @@ namespace ExpenseManagement.Controllers
                 {
                     e.SaleAmountCurrency
                 })
-                .Select(e => new EndorsementReportViewModel
+                .Select(e => new ExpenseEndorsementProfitReport
                 {
                     TotalAmount = e.Sum(i => i.SaleAmount),
-                    TotalAmountCurrency = e.Key.SaleAmountCurrency
+                    TotalAmountCurrency = e.Key.SaleAmountCurrency,
+                    TotalProfit = e.Sum(i => i.SaleAmount) - e.Sum(i => i.PurchaseAmount),
+                    TotalProfitCurrency = e.Key.SaleAmountCurrency
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -434,10 +440,12 @@ namespace ExpenseManagement.Controllers
                 {
                     e.SaleAmountCurrency
                 })
-                .Select(e => new EndorsementReportViewModel
+                .Select(e => new ExpenseEndorsementProfitReport
                 {
                     TotalAmount = e.Sum(i => i.SaleAmount),
-                    TotalAmountCurrency = e.Key.SaleAmountCurrency
+                    TotalAmountCurrency = e.Key.SaleAmountCurrency,
+                    TotalProfit = e.Sum(i => i.SaleAmount) - e.Sum(i => i.VehicleCost),
+                    TotalProfitCurrency = e.Key.SaleAmountCurrency
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -450,41 +458,171 @@ namespace ExpenseManagement.Controllers
             var totalSale = newVehicleSale
                 .GroupBy(e => new
                 {
-                    e.TotalAmountCurrency
+                    e.TotalAmountCurrency,
+                    e.TotalProfitCurrency
                 })
-                .Select(e => new EndorsementReportViewModel
+                .Select(e => new ExpenseEndorsementProfitReport
                 {
                     TotalAmount = e.Sum(i => i.TotalAmount),
-                    TotalAmountCurrency = e.Key.TotalAmountCurrency
+                    TotalAmountCurrency = e.Key.TotalAmountCurrency,
+                    TotalProfit = e.Sum(i => i.TotalProfit),
+                    TotalProfitCurrency = e.Key.TotalProfitCurrency
                 })
                 .OrderBy(i => i.Month)
                 .ToList();
 
             totalSale = GetAllEnumNamesHelper.GetEnumName(totalSale);
 
-            var response = new PaginatedResponse<EndorsementReportViewModel>
+            foreach (var item in totalSale)
             {
-                Data = totalSale,
-                Draw = 1,
-                RecordsFiltered = 0,
-                RecordsTotal = 0
-            };
+                item.Percent = (item.TotalProfit * 100) / item.TotalAmount;
+            }
 
             return Ok(totalSale);
         }
+
+        //[HttpPost]
+        //[Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        //public async Task<IActionResult> ProfitReportPost(int year)
+        //{
+        //    var usedVehicleProfit = await _context.UsedVehicleSales
+        //        .Where(e => e.SaleDate.Year == year)
+        //        .GroupBy(e => new
+        //        {
+        //            e.SaleDate.Month,
+        //            e.SaleAmountCurrency,
+        //            e.PurchaseAmountCurrency
+        //        })
+        //        .Select(e => new ExpenseEndorsementProfitReport
+        //        {
+        //            Month = e.Key.Month,
+        //            TotalAmount = e.Sum(i => i.SaleAmount) - e.Sum(i => i.PurchaseAmount),
+        //            TotalAmountCurrency = e.Key.SaleAmountCurrency
+        //        })
+        //        .AsNoTracking()
+        //        .ToListAsync();
+
+        //    var newVehicleProfit = await _context.NewVehicleSales
+        //        .Where(e => e.SaleDate.Year == year)
+        //        .GroupBy(e => new
+        //        {
+        //            e.SaleDate.Month,
+        //            e.SaleAmountCurrency,
+        //            e.VehicleCost
+        //        })
+        //        .Select(e => new ExpenseEndorsementProfitReport
+        //        {
+        //            Month = e.Key.Month,
+        //            TotalAmount = e.Sum(i => i.SaleAmount) - e.Sum(i => i.VehicleCost),
+        //            TotalAmountCurrency = e.Key.SaleAmountCurrency
+        //        })
+        //        .AsNoTracking()
+        //        .ToListAsync();
+
+        //    foreach (var item in usedVehicleProfit)
+        //    {
+        //        newVehicleProfit.Add(item);
+        //    }
+
+        //    var totalProfit = newVehicleProfit
+        //        .GroupBy(e => new
+        //        {
+        //            e.Month,
+        //            e.TotalAmountCurrency
+        //        })
+        //        .Select(e => new ExpenseEndorsementProfitReport
+        //        {
+        //            Month = e.Key.Month,
+        //            TotalAmount = e.Sum(i => i.TotalAmount),
+        //            TotalAmountCurrency = e.Key.TotalAmountCurrency
+        //        })
+        //        .OrderBy(i => i.Month)
+        //        .ToList();
+
+        //    totalProfit = GetAllEnumNamesHelper.GetEnumName(totalProfit);
+
+        //    FakeSession.Instance.Obj = JsonConvert.SerializeObject(totalProfit);
+
+        //    var response = new PaginatedResponse<ExpenseEndorsementProfitReport>
+        //    {
+        //        Data = totalProfit,
+        //        Draw = 1,
+        //        RecordsFiltered = 0,
+        //        RecordsTotal = 0
+        //    };
+
+        //    return Ok(response);
+        //}
+
+        //[HttpPost]
+        //[Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        //public async Task<IActionResult> ProfitReportTotalPost(int year)
+        //{
+        //    var usedVehicleProfit = await _context.UsedVehicleSales
+        //        .Where(e => e.SaleDate.Year == year)
+        //        .GroupBy(e => new
+        //        {
+        //            e.SaleAmountCurrency,
+        //            e.PurchaseAmountCurrency
+        //        })
+        //        .Select(e => new ExpenseEndorsementProfitReport
+        //        {
+        //            TotalAmount = e.Sum(i => i.SaleAmount) - e.Sum(i => i.PurchaseAmount),
+        //            TotalAmountCurrency = e.Key.SaleAmountCurrency
+        //        })
+        //        .AsNoTracking()
+        //        .ToListAsync();
+
+        //    var newVehicleProfit = await _context.NewVehicleSales
+        //        .Where(e => e.SaleDate.Year == year)
+        //        .GroupBy(e => new
+        //        {
+        //            e.SaleAmountCurrency,
+        //            e.VehicleCost
+        //        })
+        //        .Select(e => new ExpenseEndorsementProfitReport
+        //        {
+        //            TotalAmount = e.Sum(i => i.SaleAmount) - e.Sum(i => i.VehicleCost),
+        //            TotalAmountCurrency = e.Key.SaleAmountCurrency
+        //        })
+        //        .AsNoTracking()
+        //        .ToListAsync();
+
+        //    foreach (var item in usedVehicleProfit)
+        //    {
+        //        newVehicleProfit.Add(item);
+        //    }
+
+        //    var totalProfit = newVehicleProfit
+        //        .GroupBy(e => new
+        //        {
+        //            e.TotalAmountCurrency
+        //        })
+        //        .Select(e => new ExpenseEndorsementProfitReport
+        //        {
+        //            TotalAmount = e.Sum(i => i.TotalAmount),
+        //            TotalAmountCurrency = e.Key.TotalAmountCurrency
+        //        })
+        //        .OrderBy(i => i.Month)
+        //        .ToList();
+
+        //    totalProfit = GetAllEnumNamesHelper.GetEnumName(totalProfit);
+
+        //    return Ok(totalProfit);
+        //}
 
         [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
         public ActionResult ExportReport()
         {
             var pageName = Request.Headers["Referer"].ToString()?.Split("/");
-            var stream = ExportAllReport(JsonConvert.DeserializeObject<List<ExpenseReportViewModel>>(FakeSession.Instance.Obj), 1, pageName.Last());
+            var stream = ExportAllReport(JsonConvert.DeserializeObject<List<ExpenseEndorsementProfitReport>>(FakeSession.Instance.Obj), 1, pageName.Last());
             string fileName = String.Format("{0}.xlsx", pageName.Last().ToString());
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;
             return File(stream, fileType, fileName);
         }
 
-        public MemoryStream ExportAllReport(List<ExpenseReportViewModel> items, byte type, string pageName)
+        public MemoryStream ExportAllReport(List<ExpenseEndorsementProfitReport> items, byte type, string pageName)
         {
             var stream = new System.IO.MemoryStream();
 
@@ -492,7 +630,7 @@ namespace ExpenseManagement.Controllers
             {
                 var ws = p.Workbook.Worksheets.Add(pageName);
 
-                using (var range = ws.Cells[1, 1, 1, 2])
+                using (var range = ws.Cells[1, 1, 1, 4])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -500,8 +638,15 @@ namespace ExpenseManagement.Controllers
                     range.Style.Font.Color.SetColor(Color.White);
                 }
 
+                foreach (var item in items)
+                {
+                    item.Percent = (item.TotalProfit * 100) / item.TotalAmount;
+                }
+
                 ws.Cells[1, 1].Value = "Ay";
-                ws.Cells[1, 2].Value = "Toplam Miktar";
+                ws.Cells[1, 2].Value = "Toplam Ciro";
+                ws.Cells[1, 3].Value = "Toplam Kâr";
+                ws.Cells[1, 4].Value = "Ciro-Kâr Yüzdesi";
 
                 ws.Row(1).Style.Font.Bold = true;
 
@@ -525,9 +670,29 @@ namespace ExpenseManagement.Controllers
                     {
                         ws.Cells[c, 2].Value = items[c - 2].TotalAmount.ToString("C2", new CultureInfo("en-GB"));
                     }
+
+                    if (items[c - 2].TotalProfitCurrencyName == "₺")
+                    {
+                        ws.Cells[c, 3].Value = items[c - 2].TotalProfit.ToString("C2", new CultureInfo("tr-TR"));
+                    }
+                    if (items[c - 2].TotalProfitCurrencyName == "$")
+                    {
+                        ws.Cells[c, 3].Value = items[c - 2].TotalProfit.ToString("C2", new CultureInfo("en-US"));
+                    }
+                    if (items[c - 2].TotalProfitCurrencyName == "€")
+                    {
+                        ws.Cells[c, 3].Value = items[c - 2].TotalProfit.ToString("C2", new CultureInfo("de-DE"));
+                    }
+                    if (items[c - 2].TotalProfitCurrencyName == "£")
+                    {
+                        ws.Cells[c, 3].Value = items[c - 2].TotalProfit.ToString("C2", new CultureInfo("en-GB"));
+                    }
+
+                    ws.Cells[c, 4].Value = "% " + Math.Round(items[c - 2].Percent, 2);
                 }
 
                 ws.Column(2).Style.Numberformat.Format = "#,##0.00 ₺";
+                ws.Column(3).Style.Numberformat.Format = "#,##0.00 ₺";
 
                 var lastRow = ws.Dimension.End.Row;
                 var lastColumn = ws.Dimension.End.Column;
@@ -542,11 +707,12 @@ namespace ExpenseManagement.Controllers
 
                 ws.Cells[lastRow + 1, 1].Value = "Toplam:";
                 ws.Cells[lastRow + 1, 2].Formula = String.Format("SUM(B2:B{0})", lastRow);
+                ws.Cells[lastRow + 1, 3].Formula = String.Format("SUM(C2:C{0})", lastRow);
 
                 ws.Cells[ws.Dimension.Address].AutoFitColumns();
-                ws.Cells["A1:B" + items.Count + 2].AutoFilter = true;
+                ws.Cells["A1:D" + items.Count + 2].AutoFilter = true;
 
-                ws.Column(2).PageBreak = true;
+                ws.Column(4).PageBreak = true;
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Landscape;
                 ws.PrinterSettings.Scale = 100;

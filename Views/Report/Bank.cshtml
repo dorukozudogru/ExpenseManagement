@@ -181,7 +181,7 @@
                 "url": "/Report/TotalAccountReport",
                 "method": "POST"
             }).done(function (response) {
-                console.log(response);
+                //console.log(response);
                 response.forEach(element => {
                     if (element.currency == "₺") {
                         if (element.totalAmount != null) {

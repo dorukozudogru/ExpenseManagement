@@ -55,7 +55,13 @@
                                             Ay
                                         </th>
                                         <th>
-                                            Toplam Miktar
+                                            Toplam Ciro
+                                        </th>
+                                        <th>
+                                            Toplam Kâr
+                                        </th>
+                                        <th>
+                                            Ciro-Kâr Yüzdesi
                                         </th>
                                     </tr>
                                 </thead>
@@ -63,6 +69,8 @@
                                     <tr>
                                         <th>Toplam:</th>
                                         <th id="totalAmount"></th>
+                                        <th id="totalProfit"></th>
+                                        <th id="total"></th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -85,11 +93,20 @@
                 "method": "POST"
             }).done(function (response) {
                 var data = "";
+                var data2 = "";
+                var data3 = "";
+                console.log(response);
                 response.forEach(element => {
                     data += currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + element.totalAmountCurrencyName + " + ";
+                    data2 += currency(element.totalProfit, { decimal: ',', separator: '.', symbol: '' }).format() + " " + element.totalProfitCurrencyName + " + ";
+                    data3 += currency(element.percent, { decimal: ',', separator: '.', symbol: '%' }).format() + "(" + element.totalProfitCurrencyName + ")" + " + ";
                 });
                 data = data.substring(0, data.length - 3);
+                data2 = data2.substring(0, data2.length - 3);
+                data3 = data3.substring(0, data3.length - 3);
                 $('#totalAmount').html(data);
+                $('#totalProfit').html(data2);
+                $('#total').html(data3);
             });
             $("#ItemsTable").DataTable({
                 "language": {
@@ -122,7 +139,7 @@
                 "columns": [
                     {
                         "data": "monthName",
-                        "orderable": true
+                        "orderable": false
                     },
                     {
                         "data": "totalAmount",
@@ -132,6 +149,23 @@
                                 return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.totalAmountCurrencyName;
                             }
                             return "-";
+                        }
+                    },
+                    {
+                        "data": "totalProfit",
+                        "orderable": false,
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return currency(full.totalProfit, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.totalProfitCurrencyName;
+                            }
+                            return "-";
+                        }
+                    },
+                    {
+                        "data": "percent",
+                        "orderable": false,
+                        "render": function (data, type, full, meta) {
+                            return currency(full.percent, { decimal: ',', separator: '.', symbol: '%' }).format();
                         }
                     }
                 ],
