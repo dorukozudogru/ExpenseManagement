@@ -989,7 +989,7 @@ namespace ExpenseManagement.Helpers
             return energyLuytobs;
         }
 
-        public static List<ExpenseReportViewModel> GetEnumName(List<ExpenseReportViewModel> expenseReportViewModel)
+        public static List<ExpenseEndorsementProfitReport> GetEnumName(List<ExpenseEndorsementProfitReport> expenseReportViewModel)
         {
             foreach (var item in expenseReportViewModel)
             {
@@ -1009,32 +1009,25 @@ namespace ExpenseManagement.Helpers
                 {
                     item.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
                 }
+
+                if (item.TotalProfitCurrency == 0)
+                {
+                    item.TotalProfitCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                }
+                if (item.TotalProfitCurrency == 1)
+                {
+                    item.TotalProfitCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                }
+                if (item.TotalProfitCurrency == 2)
+                {
+                    item.TotalProfitCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                }
+                if (item.TotalProfitCurrency == 3)
+                {
+                    item.TotalProfitCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                }
             }
             return expenseReportViewModel;
-        }
-
-        public static List<EndorsementReportViewModel> GetEnumName(List<EndorsementReportViewModel> endorsementReportViewModel)
-        {
-            foreach (var item in endorsementReportViewModel)
-            {
-                if (item.TotalAmountCurrency == 0)
-                {
-                    item.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
-                }
-                if (item.TotalAmountCurrency == 1)
-                {
-                    item.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
-                }
-                if (item.TotalAmountCurrency == 2)
-                {
-                    item.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
-                }
-                if (item.TotalAmountCurrency == 3)
-                {
-                    item.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
-                }
-            }
-            return endorsementReportViewModel;
         }
     }
 }

@@ -714,21 +714,6 @@ namespace ExpenseManagement.Helpers
             return prop;
         }
 
-        private static PropertyInfo GetEndorsementResponseProperty(string name)
-        {
-            var properties = typeof(EndorsementResponse).GetProperties();
-            PropertyInfo prop = null;
-            foreach (var item in properties)
-            {
-                if (item.Name.ToLowerInvariant().Equals(name.ToLowerInvariant()))
-                {
-                    prop = item;
-                    break;
-                }
-            }
-            return prop;
-        }
-
         private static PropertyInfo GetToDoListsProperty(string name)
         {
             var properties = typeof(ToDoLists).GetProperties();
