@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
+using static ExpenseManagement.Helpers.AddExportAuditHelper;
 using static ExpenseManagement.Models.ViewModels.ReportViewModel;
 
 namespace ExpenseManagement.Controllers
@@ -719,24 +720,8 @@ namespace ExpenseManagement.Controllers
 
                 p.Save();
             }
-            AddExportAudit(pageName);
+            AddExportAudit(pageName, HttpContext?.User?.Identity?.Name, _context);
             return stream;
-        }
-
-        [Authorize]
-        public void AddExportAudit(string pageName)
-        {
-            Audit audit = new Audit()
-            {
-                Action = "Exported",
-                DateTime = DateTime.Now.ToUniversalTime(),
-                KeyValues = "{\"Id\":\"-\"}",
-                NewValues = "{\"PageName\":\"" + pageName + "\"}",
-                TableName = pageName,
-                Username = HttpContext?.User?.Identity?.Name
-            };
-            _context.Add(audit);
-            _context.SaveChanges();
         }
 
         public string GetLoggedUserId()

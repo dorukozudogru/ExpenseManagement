@@ -10,6 +10,7 @@ using ExpenseManagement.Models;
 using Microsoft.AspNetCore.Authorization;
 using ExpenseManagement.Helpers;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
+using static ExpenseManagement.Helpers.AddExportAuditHelper;
 using System.IO;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -355,24 +356,8 @@ namespace ExpenseManagement.Controllers
 
                 p.Save();
             }
-            AddExportAudit(pageName);
+            AddExportAudit(pageName, HttpContext?.User?.Identity?.Name, _context);
             return stream;
-        }
-
-        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
-        public void AddExportAudit(string pageName)
-        {
-            Audit audit = new Audit()
-            {
-                Action = "Exported",
-                DateTime = DateTime.Now.ToUniversalTime(),
-                KeyValues = "{\"Id\":\"-\"}",
-                NewValues = "{\"PageName\":\"" + pageName + "\"}",
-                TableName = pageName,
-                Username = HttpContext?.User?.Identity?.Name
-            };
-            _context.Add(audit);
-            _context.SaveChanges();
         }
     }
 }

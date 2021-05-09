@@ -8,6 +8,63 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
+                <div class="card card-primary collapsed-card">
+                    <div class="card-header border-0">
+                        <h5 class="card-title">
+                            <i class="fas fa-filter mr-1"></i>&nbsp;Filtreler
+                        </h5>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Gider Türü</label>
+                                    <select class="form-control" asp-items="ViewBag.ExpenseType" id="expenseType"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Satıcı/Tedarikçi</label>
+                                    <input class="form-control" id="supplier" autocomplete="off" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Tutar Aralığı</label>
+                                    <input id="range_1" type="text" name="range_1" value="">
+                                    <input hidden id="from" />
+                                    <input hidden id="to" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Sektör/İş Kolu Adı</label>
+                                    <select class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Gider Tanımı</label>
+                                    <input class="form-control" id="definition" autocomplete="off" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Ay</label>
+                                    <select class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Filtreyi Uygula" class="btn btn-success btn-block" onclick="getResult()" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
                 <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
@@ -69,142 +126,301 @@
     </div>
 </section>
 
-@section Scripts{
-    <script>
-        (function () {
-            var generateCustomerTable = $("#ItemsTable").DataTable({
-                "language": {
-                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
-                    zeroRecords: "Hiçbir kayıt bulunamadı.",
-                    emptyTable: "Kayıt bulunmamaktadır.",
-                    search: "Ara:",
-                    oPaginate: {
-                        "sFirst": "İlk",
-                        "sLast": "Son",
-                        "sNext": "Sonraki",
-                        "sPrevious": "Önceki"
-                    },
-                    sLengthMenu: "_MENU_ adet kayıt getir",
-                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+<script>
+    window.onload = function getAll() {
+        $("#ItemsTable").DataTable({
+            "language": {
+                processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                zeroRecords: "Hiçbir kayıt bulunamadı.",
+                emptyTable: "Kayıt bulunmamaktadır.",
+                search: "Ara:",
+                oPaginate: {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "Sonraki",
+                    "sPrevious": "Önceki"
                 },
-                "processing": true,
-                "serverSide": true,
-                "searchDelay": 1200,
-                "stateSave": true,
-                "stateDuration": -1,
-                "footerCallback": function (row, data, start, end, display) {
-                    var api = this.api(), data;
+                sLengthMenu: "_MENU_ adet kayıt getir",
+                sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+            },
+            "processing": true,
+            "serverSide": true,
+            "searchDelay": 1200,
+            "stateSave": true,
+            "stateDuration": -1,
+            "destroy": true,
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
 
-                    var intVal = function (i) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '') * 1 :
-                            typeof i === 'number' ?
-                                i : 0;
-                    };
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
 
-                    pageAmountTotal = api
-                        .column(7, { page: 'current' })
-                        .data()
-                        .reduce(function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                pageAmountTotal = api
+                    .column(7, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
 
-                    $(api.column(7).footer()).html(
-                        currency(pageAmountTotal, { decimal: ',', separator: '', symbol: '' }).format() + ' ₺'
-                    );
+                $(api.column(7).footer()).html(
+                    currency(pageAmountTotal, { decimal: ',', separator: '', symbol: '' }).format() + ' ₺'
+                );
 
-                    pageTAXTotal = api
-                        .column(8, { page: 'current' })
-                        .data()
-                        .reduce(function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                pageTAXTotal = api
+                    .column(8, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
 
-                    $(api.column(8).footer()).html(
-                        currency(pageTAXTotal, { decimal: ',', separator: '', symbol: '' }).format() + ' ₺'
-                    );
+                $(api.column(8).footer()).html(
+                    currency(pageTAXTotal, { decimal: ',', separator: '', symbol: '' }).format() + ' ₺'
+                );
+            },
+            "ajax": {
+                "url": "/Expense/Post",
+                "method": "POST"
+            },
+            "columns": [
+                { "data": "id" },
+                {
+                    "data": "expenseTypeName",
+                    "orderable": false
                 },
-                "ajax": {
-                    "url": "/Expense/Post",
-                    "method": "POST"
+                {
+                    "data": "sector.name",
+                    "orderable": false
                 },
-                "columns": [
-                    { "data": "id" },
-                    {
-                        "data": "expenseTypeName",
-                        "orderable": false
-                    },
-                    {
-                        "data": "sector.name",
-                        "orderable": false
-                    },
-                    {
-                        "data": "supplierDef",
-                        render: function (data, type, row) {
-                            if (data != null) {
-                                return data;
-                            }
-                            return "-";
-                        },
-                        "orderable": false
-                    },
-                    {
-                        "data": "date",
-                        render: function (data, type, row) {
-                            if (data != null) {
-                                return window.moment(data).format("DD-MMMM-YYYY");
-                            }
-                            return "-";
+                {
+                    "data": "supplierDef",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            return data;
                         }
+                        return "-";
                     },
-                    {
-                        "data": "lastPaymentDate",
-                        render: function (data, type, row) {
-                            if (data != null) {
-                                return window.moment(data).format("DD-MMMM-YYYY");
-                            }
-                            return "-";
+                    "orderable": false
+                },
+                {
+                    "data": "date",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
                         }
-                    },
-                    {
-                        "data": "definition",
-                        render: function (data, type, row) {
-                            if (data != null) {
-                                return data;
-                            }
-                            return "-";
-                        },
-                    },
-                    {
-                        "data": "amount",
-                        "render": function (data, type, full, meta) {
-                            if (data != null) {
-                                return currency(full.amount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.amountCurrencyName;
-                            }
-                            return "-";
-                        }
-                    },
-                    {
-                        "data": "tax",
-                        "render": function (data, type, full, meta) {
-                            if (data != null) {
-                                return currency(full.tax, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.taxCurrencyName;
-                            }
-                            return "-";
-                        }
-                    },
-                    {
-                        "data": "actionId", render: function (data, type, row) {
-                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Expense/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="Expense/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="Expense/Delete/' + row.id + '">Sil</a></ul></div>'
-                        },
-                        "orderable": false
+                        return "-";
                     }
-                ],
-                "ordering": true,
-                "paging": true,
-                "pagingType": "simple_numbers",
-                "pageLength": 100
-            });
-        })(jQuery);
-    </script>
-}
+                },
+                {
+                    "data": "lastPaymentDate",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                        return "-";
+                    }
+                },
+                {
+                    "data": "definition",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            return data;
+                        }
+                        return "-";
+                    },
+                },
+                {
+                    "data": "amount",
+                    "render": function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.amount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.amountCurrencyName;
+                        }
+                        return "-";
+                    }
+                },
+                {
+                    "data": "tax",
+                    "render": function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.tax, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.taxCurrencyName;
+                        }
+                        return "-";
+                    }
+                },
+                {
+                    "data": "actionId", render: function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Expense/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="Expense/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="Expense/Delete/' + row.id + '">Sil</a></ul></div>'
+                    },
+                    "orderable": false
+                }
+            ],
+            "ordering": true,
+            "paging": true,
+            "pagingType": "simple_numbers",
+            "pageLength": 100
+        });
+
+        $('#range_1').ionRangeSlider({
+            min: 1,
+            max: 500000,
+            from: 230000,
+            to: 270000,
+            type: 'double',
+            step: 1,
+            prefix: '₺',
+            prettify: false,
+            hasGrid: true,
+            onChange: function (data) {
+                document.getElementById("from").value = data.from;
+                document.getElementById("to").value = data.to;
+            }
+        })
+    };
+
+    function getResult() {
+        $("#ItemsTable").DataTable({
+            "language": {
+                processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                zeroRecords: "Hiçbir kayıt bulunamadı.",
+                emptyTable: "Kayıt bulunmamaktadır.",
+                search: "Ara:",
+                oPaginate: {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "Sonraki",
+                    "sPrevious": "Önceki"
+                },
+                sLengthMenu: "_MENU_ adet kayıt getir",
+                sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+            },
+            "processing": true,
+            "serverSide": true,
+            "searchDelay": 1200,
+            "stateSave": true,
+            "stateDuration": -1,
+            "destroy": true,
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+
+                pageAmountTotal = api
+                    .column(7, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(7).footer()).html(
+                    currency(pageAmountTotal, { decimal: ',', separator: '', symbol: '' }).format() + ' ₺'
+                );
+
+                pageTAXTotal = api
+                    .column(8, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(8).footer()).html(
+                    currency(pageTAXTotal, { decimal: ',', separator: '', symbol: '' }).format() + ' ₺'
+                );
+            },
+            "ajax": {
+                "url": "/Expense/Post?isFiltered=true"
+                    + "&expenseType=" + document.getElementById("expenseType").value
+                    + "&supplier=" + document.getElementById("supplier").value
+                    + "&sectorId=" + document.getElementById("sectorId").value
+                    + "&definition=" + document.getElementById("definition").value
+                    + "&from=" + document.getElementById("from").value
+                    + "&to=" + document.getElementById("to").value
+                    + "&monthId=" + document.getElementById("monthId").value,
+                "method": "POST"
+            },
+            "columns": [
+                { "data": "id" },
+                {
+                    "data": "expenseTypeName",
+                    "orderable": false
+                },
+                {
+                    "data": "sector.name",
+                    "orderable": false
+                },
+                {
+                    "data": "supplierDef",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            return data;
+                        }
+                        return "-";
+                    },
+                    "orderable": false
+                },
+                {
+                    "data": "date",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                        return "-";
+                    }
+                },
+                {
+                    "data": "lastPaymentDate",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                        return "-";
+                    }
+                },
+                {
+                    "data": "definition",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            return data;
+                        }
+                        return "-";
+                    },
+                },
+                {
+                    "data": "amount",
+                    "render": function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.amount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.amountCurrencyName;
+                        }
+                        return "-";
+                    }
+                },
+                {
+                    "data": "tax",
+                    "render": function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.tax, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.taxCurrencyName;
+                        }
+                        return "-";
+                    }
+                },
+                {
+                    "data": "actionId", render: function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Expense/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="Expense/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="Expense/Delete/' + row.id + '">Sil</a></ul></div>'
+                    },
+                    "orderable": false
+                }
+            ],
+            "ordering": true,
+            "paging": true,
+            "pagingType": "simple_numbers",
+            "pageLength": 100
+        });
+    }
+</script>

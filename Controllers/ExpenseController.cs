@@ -12,6 +12,7 @@ using System.Security.Claims;
 using System.IO;
 using System.Collections.Generic;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
+using static ExpenseManagement.Helpers.AddExportAuditHelper;
 using Microsoft.AspNetCore.Authorization;
 using System.Globalization;
 using OfficeOpenXml;
@@ -32,6 +33,30 @@ namespace ExpenseManagement.Controllers
 
         public IActionResult Index()
         {
+            var sectors = _context.Sectors.ToList();
+            sectors.Add(new Sectors
+            {
+                Id = 0,
+                Name = ""
+            });
+
+            var expenseTypes = Enum.GetValues(typeof(Expenses.ExpenseTypeEnum)).Cast<Expenses.ExpenseTypeEnum>().ToList();
+            List<string> types = new List<string>();
+
+            foreach (var item in expenseTypes)
+            {
+                if (EnumExtensionsHelper.GetDisplayName(item) == "Maaş")
+                {
+                    types.Add("");
+                }
+                else
+                {
+                    types.Add(EnumExtensionsHelper.GetDisplayName(item));
+                }
+            }
+
+            ViewData["SectorId"] = new SelectList(sectors.OrderBy(s => s.Id), "Id", "Name");
+            ViewData["ExpenseType"] = new SelectList(types.OrderBy(t => t));
             return View();
         }
 
@@ -82,7 +107,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post(bool isFiltered, string expenseType, string supplier, int sectorId, string definition, double from, double to, int monthId)
         {
             var requestFormData = Request.Form;
 
@@ -91,6 +116,44 @@ namespace ExpenseManagement.Controllers
                 .Include(e => e.Sector)
                 .AsNoTracking()
                 .ToListAsync();
+
+            var Id = 999999;
+
+            if (isFiltered != false)
+            {
+                if (expenseType != null)
+                {
+                    var expenseTypes = Enum.GetValues(typeof(Expenses.ExpenseTypeEnum)).Cast<Expenses.ExpenseTypeEnum>().ToList();
+                    for (int i = 0; i < expenseTypes.Count; i++)
+                    {
+                        if (EnumExtensionsHelper.GetDisplayName(expenseTypes[i]).ToString() == expenseType)
+                        {
+                            Id = i;
+                        }
+                    }
+                    expenseContext = expenseContext.Where(e => e.ExpenseType == Id).ToList();
+                }
+                if (supplier != null)
+                {
+                    expenseContext = expenseContext.Where(e => e.SupplierDef != null && e.SupplierDef.ToUpper().Contains(supplier.ToUpper())).ToList();
+                }
+                if (sectorId != 0)
+                {
+                    expenseContext = expenseContext.Where(e => e.SectorId == sectorId).ToList();
+                }
+                if (definition != null)
+                {
+                    expenseContext = expenseContext.Where(e => e.Definition.ToUpper().Contains(definition.ToUpper())).ToList();
+                }
+                if (from != 0 && to != 0)
+                {
+                    expenseContext = expenseContext.Where(e => e.Amount >= from && e.Amount <= to).ToList();
+                }
+                if (monthId != 0)
+                {
+                    expenseContext = expenseContext.Where(e => e.Date != null && e.Date.Value.Month == monthId).ToList();
+                }
+            }
 
             if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
             {
@@ -554,7 +617,7 @@ namespace ExpenseManagement.Controllers
 
                 p.Save();
             }
-            AddExportAudit(pageName);
+            AddExportAudit(pageName, HttpContext?.User?.Identity?.Name, _context);
             return stream;
         }
         #endregion
@@ -633,26 +696,10 @@ namespace ExpenseManagement.Controllers
 
                 p.Save();
             }
-            AddExportAudit(pageName);
+            AddExportAudit(pageName, HttpContext?.User?.Identity?.Name, _context);
             return stream;
         }
         #endregion
-
-        [Authorize(Roles = "Admin, Banaz, Muhasebe")]
-        public void AddExportAudit(string pageName)
-        {
-            Audit audit = new Audit()
-            {
-                Action = "Exported",
-                DateTime = DateTime.Now.ToUniversalTime(),
-                KeyValues = "{\"Id\":\"-\"}",
-                NewValues = "{\"PageName\":\"" + pageName + "\"}",
-                TableName = pageName,
-                Username = HttpContext?.User?.Identity?.Name
-            };
-            _context.Add(audit);
-            _context.SaveChanges();
-        }
 
         private bool ExpensesExists(int id)
         {
