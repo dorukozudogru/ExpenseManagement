@@ -4,6 +4,8 @@ namespace ExpenseManagement.Enums
 {
     public enum MonthEnum
     {
+        [Display(Name = "")]
+        ZERO = 0,
         [Display(Name = "Ocak")]
         JANUARY = 1,
         [Display(Name = "Şubat")]

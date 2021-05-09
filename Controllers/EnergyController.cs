@@ -180,9 +180,12 @@ namespace ExpenseManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(energyMonthly);
-                await _context.SaveChangesAsync();
-                return Ok(new { Result = true, Message = "Aylık Üretim Başarıyla Kaydedilmiştir!" });
+                if (energyMonthly.Month != 0)
+                {
+                    _context.Add(energyMonthly);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Result = true, Message = "Aylık Üretim Başarıyla Kaydedilmiştir!" });
+                }
             }
             return BadRequest("Aylık Üretim Kaydedilirken Bir Hata Oluştu!");
         }
@@ -326,46 +329,49 @@ namespace ExpenseManagement.Controllers
 
             if (ModelState.IsValid)
             {
-                if (Request.Form.Files.Count == 2)
+                if (energyLuytobs.Month != 0)
                 {
-                    for (int i = 0; i < Request.Form.Files.Count; i++)
+                    if (Request.Form.Files.Count == 2)
                     {
-                        if (Request.Form.Files[i].ContentType.Contains("pdf"))
+                        for (int i = 0; i < Request.Form.Files.Count; i++)
                         {
-                            MemoryStream ms = new MemoryStream();
-                            Request.Form.Files[i].CopyTo(ms);
-
-                            ms.Close();
-                            ms.Dispose();
-
-                            if (i == 0)
+                            if (Request.Form.Files[i].ContentType.Contains("pdf"))
                             {
-                                files.Luytob = ms.ToArray();
-                                files.LuytobFormat = Request.Form.Files[i].ContentType;
+                                MemoryStream ms = new MemoryStream();
+                                Request.Form.Files[i].CopyTo(ms);
+
+                                ms.Close();
+                                ms.Dispose();
+
+                                if (i == 0)
+                                {
+                                    files.Luytob = ms.ToArray();
+                                    files.LuytobFormat = Request.Form.Files[i].ContentType;
+                                }
+                                if (i == 1)
+                                {
+                                    files.Invoice = ms.ToArray();
+                                    files.InvoiceFormat = Request.Form.Files[i].ContentType;
+                                }
                             }
-                            if (i == 1)
+                            else
                             {
-                                files.Invoice = ms.ToArray();
-                                files.InvoiceFormat = Request.Form.Files[i].ContentType;
+                                return BadRequest("PDF Dosyası Ekleyin!");
                             }
                         }
-                        else
-                        {
-                            return BadRequest("PDF Dosyası Ekleyin!");
-                        }
+                        _context.Add(files);
+                        await _context.SaveChangesAsync();
                     }
-                    _context.Add(files);
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return BadRequest("Hem Lüytob Hem de Faturayı Yükleyiniz!");
-                }
+                    else
+                    {
+                        return BadRequest("Hem Lüytob Hem de Faturayı Yükleyiniz!");
+                    }
 
-                energyLuytobs.EnergyLuytobFileId = files.Id;
-                _context.Add(energyLuytobs);
-                await _context.SaveChangesAsync();
-                return Ok(new { Result = true, Message = "Lüytob/Fatura Başarıyla Kaydedilmiştir!" });
+                    energyLuytobs.EnergyLuytobFileId = files.Id;
+                    _context.Add(energyLuytobs);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Result = true, Message = "Lüytob/Fatura Başarıyla Kaydedilmiştir!" });
+                }
             }
             return BadRequest("Lüytob/Fatura Kaydedilirken Bir Hata Oluştu!");
         }

@@ -95,7 +95,7 @@
                 var data = "";
                 var data2 = "";
                 var data3 = "";
-                console.log(response);
+                //console.log(response);
                 response.forEach(element => {
                     data += currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + element.totalAmountCurrencyName + " + ";
                     data2 += currency(element.totalProfit, { decimal: ',', separator: '.', symbol: '' }).format() + " " + element.totalProfitCurrencyName + " + ";
