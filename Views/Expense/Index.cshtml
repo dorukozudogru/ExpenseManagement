@@ -55,7 +55,14 @@
                     </div>
                     <div class="card-footer">
                         <div class="form-group">
-                            <input type="submit" value="Filtreyi Uygula" class="btn btn-success btn-block" onclick="getResult()" />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="submit" value="Filtreyi Uygula" class="btn btn-success btn-block" onclick="getResult()" />
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="submit" value="Temizle" class="btn btn-danger btn-block" onclick="clearFilter()" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -147,6 +154,7 @@
             "serverSide": true,
             "searchDelay": 1200,
             "stateSave": true,
+            "searching": false,
             "stateDuration": -1,
             "destroy": true,
             "footerCallback": function (row, data, start, end, display) {
@@ -167,7 +175,7 @@
                     }, 0);
 
                 $(api.column(7).footer()).html(
-                    currency(pageAmountTotal, { decimal: ',', separator: '', symbol: '' }).format() + ' ₺'
+                    currency(pageAmountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
                 );
 
                 pageTAXTotal = api
@@ -178,7 +186,7 @@
                     }, 0);
 
                 $(api.column(8).footer()).html(
-                    currency(pageTAXTotal, { decimal: ',', separator: '', symbol: '' }).format() + ' ₺'
+                    currency(pageTAXTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
                 );
             },
             "ajax": {
@@ -265,9 +273,9 @@
 
         $('#range_1').ionRangeSlider({
             min: 1,
-            max: 500000,
-            from: 230000,
-            to: 270000,
+            max: 200000,
+            from: 80000,
+            to: 120000,
             type: 'double',
             step: 1,
             prefix: '₺',
@@ -279,6 +287,10 @@
             }
         })
     };
+
+    function clearFilter() {
+        location.reload();
+    }
 
     function getResult() {
         $("#ItemsTable").DataTable({
@@ -300,6 +312,7 @@
             "serverSide": true,
             "searchDelay": 1200,
             "stateSave": true,
+            "searching": false,
             "stateDuration": -1,
             "destroy": true,
             "footerCallback": function (row, data, start, end, display) {

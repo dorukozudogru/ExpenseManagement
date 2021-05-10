@@ -24,38 +24,17 @@ namespace ExpenseManagement.Helpers
                 if (requestFormData.TryGetValue($"columns[{columnIndex}][data]", out tempOrder))
                 {
                     var columnName = requestFormData[$"columns[{columnIndex}][data]"].ToString();
-                    string searchValue = requestFormData["search[value]"].ToString().ToUpper();
 
                     if (pageSize > 0)
                     {
                         var prop = GetIncomesProperty(columnName);
-                        if (!string.IsNullOrEmpty(searchValue))
+                        if (sortDirection == "asc")
                         {
-                            if (sortDirection == "asc")
-                            {
-                                return lstElements.Where(l => l.Amount.ToString().ToUpper().Contains(searchValue)
-                                || l.Definition.ToUpper().Contains(searchValue)
-                                || l.Id.ToString().Contains(searchValue)
-                                || l.Sector.Name.ToUpper().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                            else
-                            {
-                                return lstElements.Where(l => l.Amount.ToString().ToUpper().Contains(searchValue)
-                                || l.Definition.ToUpper().Contains(searchValue)
-                                || l.Id.ToString().Contains(searchValue)
-                                || l.Sector.Name.ToUpper().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
+                            return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                         }
                         else
                         {
-                            if (sortDirection == "asc")
-                            {
-                                return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                            else
-                            {
-                                return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
+                            return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                         }
                     }
                     else
@@ -81,36 +60,17 @@ namespace ExpenseManagement.Helpers
                 if (requestFormData.TryGetValue($"columns[{columnIndex}][data]", out tempOrder))
                 {
                     var columnName = requestFormData[$"columns[{columnIndex}][data]"].ToString();
-                    string searchValue = requestFormData["search[value]"].ToString().ToUpper();
 
                     if (pageSize > 0)
                     {
                         var prop = GetExpensesProperty(columnName);
-                        if (!string.IsNullOrEmpty(searchValue))
+                        if (sortDirection == "asc")
                         {
-                            if (sortDirection == "asc")
-                            {
-                                return lstElements.Where(l => l.ExpenseTypeName.ToUpper().Contains(searchValue)
-                                || l.SupplierDef.ToUpper().Contains(searchValue)
-                                || l.SectorName.ToUpper().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                            else
-                            {
-                                return lstElements.Where(l => l.ExpenseTypeName.ToUpper().Contains(searchValue)
-                                || l.SupplierDef.ToUpper().Contains(searchValue)
-                                || l.SectorName.ToUpper().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
+                            return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                         }
                         else
                         {
-                            if (sortDirection == "asc")
-                            {
-                                return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                            else
-                            {
-                                return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
+                            return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                         }
                     }
                     else
@@ -240,42 +200,17 @@ namespace ExpenseManagement.Helpers
                 if (requestFormData.TryGetValue($"columns[{columnIndex}][data]", out tempOrder))
                 {
                     var columnName = requestFormData[$"columns[{columnIndex}][data]"].ToString();
-                    string searchValue = requestFormData["search[value]"].ToString().ToUpper();
 
                     if (pageSize > 0)
                     {
                         var prop = GetVehicleProperty(columnName);
-                        if (!string.IsNullOrEmpty(searchValue))
+                        if (sortDirection == "asc")
                         {
-                            if (sortDirection == "asc")
-                            {
-                                return lstElements.Where(l => l.Chassis.ToUpper().Contains(searchValue)
-                                || l.CarModel.Name.ToUpper().Contains(searchValue)
-                                || l.CarModel.CarBrand.Name.ToUpper().Contains(searchValue)
-                                || l.PurchaseDate.ToString().Contains(searchValue)
-                                || l.Id.ToString().Contains(searchValue)
-                                || l.SaleDate.ToString().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                            else
-                            {
-                                return lstElements.Where(l => l.Chassis.ToUpper().Contains(searchValue)
-                                || l.CarModel.Name.ToUpper().Contains(searchValue)
-                                || l.CarModel.CarBrand.Name.ToUpper().Contains(searchValue)
-                                || l.PurchaseDate.ToString().Contains(searchValue)
-                                || l.Id.ToString().Contains(searchValue)
-                                || l.SaleDate.ToString().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
+                            return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                         }
                         else
                         {
-                            if (sortDirection == "asc")
-                            {
-                                return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                            else
-                            {
-                                return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
+                            return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                         }
                     }
                     else

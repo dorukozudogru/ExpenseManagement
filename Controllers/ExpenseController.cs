@@ -117,6 +117,13 @@ namespace ExpenseManagement.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
+            {
+                expenseContext = expenseContext
+                    .Where(e => e.CreatedBy == GetLoggedUserId())
+                    .ToList();
+            }
+
             var Id = 999999;
 
             if (isFiltered != false)
@@ -153,13 +160,6 @@ namespace ExpenseManagement.Controllers
                 {
                     expenseContext = expenseContext.Where(e => e.Date != null && e.Date.Value.Month == monthId).ToList();
                 }
-            }
-
-            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
-            {
-                expenseContext = expenseContext
-                    .Where(e => e.CreatedBy == GetLoggedUserId())
-                    .ToList();
             }
 
             foreach (var item in expenseContext)

@@ -34,7 +34,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post(bool isFiltered, DateTime startDate, DateTime finishDate, double from, double to, int monthId, string model, string chassis)
         {
             var requestFormData = Request.Form;
 
@@ -43,6 +43,31 @@ namespace ExpenseManagement.Controllers
                 .Include(cb => cb.CarModel.CarBrand)
                 .AsNoTracking()
                 .ToListAsync();
+
+            if (isFiltered != false)
+            {
+                if (startDate != DateTime.MinValue && finishDate != DateTime.MinValue)
+                {
+                    vehiclePurchaseContext = vehiclePurchaseContext.Where(e => e.PurchaseDate >= startDate && e.PurchaseDate <= finishDate).ToList();
+                }
+                if (from != 0 && to != 0)
+                {
+                    vehiclePurchaseContext = vehiclePurchaseContext.Where(e => e.PurchaseAmount >= from && e.PurchaseAmount <= to).ToList();
+                }
+                if (monthId != 0)
+                {
+                    vehiclePurchaseContext = vehiclePurchaseContext.Where(e => e.PurchaseDate != null && e.PurchaseDate.Month == monthId).ToList();
+                }
+                if (model != null)
+                {
+                    var modelId = await _context.CarModels.FirstOrDefaultAsync(c => c.Name == model);
+                    vehiclePurchaseContext = vehiclePurchaseContext.Where(e => e.CarModelId == modelId.Id).ToList();
+                }
+                if (chassis != null)
+                {
+                    vehiclePurchaseContext = vehiclePurchaseContext.Where(e => e.Chassis.ToUpper().Contains(chassis.ToUpper())).ToList();
+                }
+            }
 
             vehiclePurchaseContext = GetAllEnumNamesHelper.GetEnumName(vehiclePurchaseContext);
 
@@ -324,7 +349,7 @@ namespace ExpenseManagement.Controllers
                     {
                         ws.Cells[c, 9].Value = "";
                     }
-                                        
+
                     ws.Cells[c, 10].Value = items[c - 2].Chassis;
                     ws.Cells[c, 11].Value = items[c - 2].PurchaseAmount + " " + items[c - 2].PurchaseAmountCurrencyName;
 
@@ -363,6 +388,34 @@ namespace ExpenseManagement.Controllers
             }
             AddExportAudit(pageName, HttpContext?.User?.Identity?.Name, _context);
             return stream;
+        }
+
+        public ActionResult GetCarBrands()
+        {
+            var brand = _context.CarBrands.ToList();
+            brand.Add(new CarBrands
+            {
+                Id = 0,
+                Name = ""
+            });
+            brand = brand.OrderBy(b => b.Id).ToList();
+            return Json(brand);
+        }
+
+        public ActionResult GetCarModelsById(int Id)
+        {
+            var model = _context.CarModels.Where(x => x.CarBrandId == Id).ToList();
+            if (Id == 0)
+            {
+                model.Add(new CarModels
+                {
+                    Id = 0,
+                    Name = "",
+                    CarBrandId = 0
+                });
+            }
+            model = model.OrderBy(m => m.Id).ToList();
+            return Json(model);
         }
     }
 }
