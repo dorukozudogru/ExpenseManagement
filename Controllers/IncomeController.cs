@@ -32,11 +32,18 @@ namespace ExpenseManagement.Controllers
 
         public IActionResult Index()
         {
+            var sectors = _context.Sectors.ToList();
+            sectors.Add(new Sectors
+            {
+                Id = 0,
+                Name = ""
+            });
+            ViewData["SectorId"] = new SelectList(sectors.OrderBy(s => s.Id), "Id", "Name");
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post(bool isFiltered, int sectorId, string definition, double from, double to, int monthId)
         {
             var requestFormData = Request.Form;
 
@@ -50,6 +57,26 @@ namespace ExpenseManagement.Controllers
                 incomeContext = incomeContext
                     .Where(e => e.CreatedBy == GetLoggedUserId())
                     .ToList();
+            }
+
+            if (isFiltered != false)
+            {
+                if (sectorId != 0)
+                {
+                    incomeContext = incomeContext.Where(e => e.SectorId == sectorId).ToList();
+                }
+                if (definition != null)
+                {
+                    incomeContext = incomeContext.Where(e => e.Definition.ToUpper().Contains(definition.ToUpper())).ToList();
+                }
+                if (from != 0 && to != 0)
+                {
+                    incomeContext = incomeContext.Where(e => e.Amount >= from && e.Amount <= to).ToList();
+                }
+                if (monthId != 0)
+                {
+                    incomeContext = incomeContext.Where(e => e.Date != null && e.Date.Month == monthId).ToList();
+                }
             }
 
             incomeContext = GetAllEnumNamesHelper.GetEnumName(incomeContext);
