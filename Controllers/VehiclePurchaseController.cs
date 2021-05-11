@@ -389,33 +389,5 @@ namespace ExpenseManagement.Controllers
             AddExportAudit(pageName, HttpContext?.User?.Identity?.Name, _context);
             return stream;
         }
-
-        public ActionResult GetCarBrands()
-        {
-            var brand = _context.CarBrands.ToList();
-            brand.Add(new CarBrands
-            {
-                Id = 0,
-                Name = ""
-            });
-            brand = brand.OrderBy(b => b.Id).ToList();
-            return Json(brand);
-        }
-
-        public ActionResult GetCarModelsById(int Id)
-        {
-            var model = _context.CarModels.Where(x => x.CarBrandId == Id).ToList();
-            if (Id == 0)
-            {
-                model.Add(new CarModels
-                {
-                    Id = 0,
-                    Name = "",
-                    CarBrandId = 0
-                });
-            }
-            model = model.OrderBy(m => m.Id).ToList();
-            return Json(model);
-        }
     }
 }

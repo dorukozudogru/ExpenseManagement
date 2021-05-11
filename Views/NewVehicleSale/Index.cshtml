@@ -26,10 +26,14 @@
                                     <label class="control-label">Marka Adı</label>
                                     <select class="form-control" id="brand"></select>
                                 </div>
+                                <div class="form-group">
+                                    <label class="control-label">Plaka</label>
+                                    <input class="form-control" id="licencePlate" autocomplete="off" />
+                                </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="control-label">Araç Alış Başlangıç Tarihi</label>
+                                            <label class="control-label">Araç Satış Başlangıç Tarihi</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">
@@ -42,7 +46,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="control-label">Araç Alış Bitiş Tarihi</label>
+                                            <label class="control-label">Araç Satış Bitiş Tarihi</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">
@@ -53,12 +57,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Alış Fiyatı Tutar Aralığı</label>
-                                    <input id="range_1" type="text" name="range_1" value="">
-                                    <input hidden id="from" />
-                                    <input hidden id="to" />
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -71,8 +69,16 @@
                                     <input class="form-control" id="chassis" autocomplete="off" />
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label">Alınan Ay</label>
+                                    <label class="control-label">Satılan Ay</label>
                                     <select class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Satış Fiyatı Tutar Aralığı</label>
+                                    <input id="range_1" type="text" name="range_1" value="">
+                                    <input hidden id="from" />
+                                    <input hidden id="to" />
                                 </div>
                             </div>
                         </div>
@@ -165,140 +171,328 @@
     </div>
 </section>
 
-@section Scripts{
-    <script>
-        (function () {
-            var generateCustomerTable = $("#ItemsTable").DataTable({
-                "language": {
-                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
-                    zeroRecords: "Hiçbir kayıt bulunamadı.",
-                    emptyTable: "Kayıt bulunmamaktadır.",
-                    search: "Ara:",
-                    oPaginate: {
-                        "sFirst": "İlk",
-                        "sLast": "Son",
-                        "sNext": "Sonraki",
-                        "sPrevious": "Önceki"
-                    },
-                    sLengthMenu: "_MENU_ adet kayıt getir",
-                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+<script>
+    window.onload = function getAll() {
+        $("#ItemsTable").DataTable({
+            "language": {
+                processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                zeroRecords: "Hiçbir kayıt bulunamadı.",
+                emptyTable: "Kayıt bulunmamaktadır.",
+                search: "Ara:",
+                oPaginate: {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "Sonraki",
+                    "sPrevious": "Önceki"
                 },
-                "processing": true,
-                "serverSide": true,
-                "searchDelay": 1200,
-                "stateSave": true,
-                "stateDuration": -1,
-                "ajax": {
-                    "url": "/NewVehicleSale/Post",
-                    "method": "POST"
+                sLengthMenu: "_MENU_ adet kayıt getir",
+                sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+            },
+            "processing": true,
+            "serverSide": true,
+            "searchDelay": 1200,
+            "stateSave": true,
+            "stateDuration": -1,
+            "destroy": true,
+            "ajax": {
+                "url": "/NewVehicleSale/Post",
+                "method": "POST"
+            },
+            "columns": [
+                { "data": "id" },
+                { "data": "vehiclePurchase.id" },
+                {
+                    "data": "vehiclePurchase.carModel.carBrand.name",
+                    "orderable": false
                 },
-                "columns": [
-                    { "data": "id" },
-                    { "data": "vehiclePurchase.id" },
-                    {
-                        "data": "vehiclePurchase.carModel.carBrand.name",
-                        "orderable": false
-                    },
-                    {
-                        "data": "vehiclePurchase.carModel.name",
-                        "orderable": false
-                    },
-                    {
-                        "data": "vehiclePurchase.chassis",
-                        "orderable": false
-                    },
-                    {
-                        "data": "licencePlate",
-                        "orderable": false,
-                        render: function (data, type, full, meta) {
-                            if (data != null) {
-                                return data;
-                            }
-                            else {
-                                return "-";
-                            }
+                {
+                    "data": "vehiclePurchase.carModel.name",
+                    "orderable": false
+                },
+                {
+                    "data": "vehiclePurchase.chassis",
+                    "orderable": false
+                },
+                {
+                    "data": "licencePlate",
+                    "orderable": false,
+                    render: function (data, type, full, meta) {
+                        if (data != null) {
+                            return data;
                         }
-                    },
-                    {
-                        "data": "purchasedSalesman.name",
-                        "orderable": false,
-                        render: function (data, type, full, meta) {
-                            if (data != null) {
-                                return data;
-                            }
-                            else {
-                                return "-";
-                            }
+                        else {
+                            return "-";
                         }
-                    },
-                    {
-                        "data": "salesman.name",
-                        "orderable": false
-                    },
-                    {
-                        "data": "vehicleCost",
-                        "render": function (data, type, full, meta) {
-                            return currency(full.vehicleCost, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.vehicleCostCurrencyName;
-                        },
-                        "orderable": false
-                    },
-                    {
-                        "data": "saleAmount",
-                        "render": function (data, type, full, meta) {
-                            return currency(full.saleAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.saleAmountCurrencyName;
-                        },
-                        "orderable": false
-                    },
-                    {
-                        "data": "purchaseDate",
-                        render: function (data, type, row) {
-                            return window.moment(data).format("DD-MMMM-YYYY");
-                        },
-                        "orderable": false
-                    },
-                    {
-                        "data": "saleDate",
-                        render: function (data, type, row) {
-                            return window.moment(data).format("DD-MMMM-YYYY");
-                        },
-                        "orderable": false
-                    },
-                    {
-                        "data": "warrantyPlus",
-                        "orderable": false,
-                        render: function (data, type, full, meta) {
-                            if (data != null) {
-                                return data;
-                            }
-                            else {
-                                return "-";
-                            }
-                        }
-                    },
-                    {
-                        "data": "description",
-                        "orderable": false,
-                        render: function (data, type, full, meta) {
-                            if (data != null) {
-                                return data;
-                            }
-                            else {
-                                return "-";
-                            }
-                        }
-                    },
-                    {
-                        "data": "actionId", render: function (data, type, row) {
-                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="NewVehicleSale/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="NewVehicleSale/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="NewVehicleSale/Delete/' + row.id + '">Sil</a></ul></div>'
-                        },
-                        "orderable": false
                     }
-                ],
-                "ordering": true,
-                "paging": true,
-                "pagingType": "simple_numbers",
-                "pageLength": 100
-            });
-        })(jQuery);
-    </script>
-}
+                },
+                {
+                    "data": "purchasedSalesman.name",
+                    "orderable": false,
+                    render: function (data, type, full, meta) {
+                        if (data != null) {
+                            return data;
+                        }
+                        else {
+                            return "-";
+                        }
+                    }
+                },
+                {
+                    "data": "salesman.name",
+                    "orderable": false
+                },
+                {
+                    "data": "vehicleCost",
+                    "render": function (data, type, full, meta) {
+                        return currency(full.vehicleCost, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.vehicleCostCurrencyName;
+                    },
+                    "orderable": false
+                },
+                {
+                    "data": "saleAmount",
+                    "render": function (data, type, full, meta) {
+                        return currency(full.saleAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.saleAmountCurrencyName;
+                    },
+                    "orderable": false
+                },
+                {
+                    "data": "purchaseDate",
+                    render: function (data, type, row) {
+                        return window.moment(data).format("DD-MMMM-YYYY");
+                    },
+                    "orderable": false
+                },
+                {
+                    "data": "saleDate",
+                    render: function (data, type, row) {
+                        return window.moment(data).format("DD-MMMM-YYYY");
+                    },
+                    "orderable": false
+                },
+                {
+                    "data": "warrantyPlus",
+                    "orderable": false,
+                    render: function (data, type, full, meta) {
+                        if (data != null) {
+                            return data;
+                        }
+                        else {
+                            return "-";
+                        }
+                    }
+                },
+                {
+                    "data": "description",
+                    "orderable": false,
+                    render: function (data, type, full, meta) {
+                        if (data != null) {
+                            return data;
+                        }
+                        else {
+                            return "-";
+                        }
+                    }
+                },
+                {
+                    "data": "actionId", render: function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="NewVehicleSale/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="NewVehicleSale/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="NewVehicleSale/Delete/' + row.id + '">Sil</a></ul></div>'
+                    },
+                    "orderable": false
+                }
+            ],
+            "ordering": true,
+            "paging": true,
+            "pagingType": "simple_numbers",
+            "pageLength": 100
+        });
+
+        $('#range_1').ionRangeSlider({
+            min: 100000,
+            max: 2000000,
+            from: 180000,
+            to: 800000,
+            type: 'double',
+            step: 1,
+            prefix: '₺',
+            prettify: false,
+            hasGrid: true,
+            onChange: function (data) {
+                document.getElementById("from").value = data.from;
+                document.getElementById("to").value = data.to;
+            }
+        });
+
+        window.onload = brandLoad();
+
+        function brandLoad() {
+                $('#brand').html('');
+                $.getJSON('@Url.Action("GetCarBrandsForFilters", "CarBrand")', function (result) {
+                    for (var i = 0; i < result.length; i++) {
+                        $("#brand").append("<option id='" + result[i].id + "'>" + result[i].name + "</option>")
+                    }
+                    showValue(result[0].id);
+                })
+        };
+
+        $("#brand").on("change", function (e) {
+            showValue(e.target.selectedOptions[0].id);
+        });
+
+        function showValue(brandId)
+        {
+            $('#model').html('');
+            $.getJSON('@Url.Action("GetCarModelsByIdForFilters", "CarModel")' + "?Id=" + brandId, function (result) {
+                for (var i = 0; i < result.length; i++) {
+                    $("#model").append("<option id='" + result[i].id + "'>" + result[i].name + "</option>")
+                }
+            })
+        }
+    };
+
+    function clearFilter() {
+        location.reload();
+    }
+
+    function getResult() {
+        $("#ItemsTable").DataTable({
+            "language": {
+                processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                zeroRecords: "Hiçbir kayıt bulunamadı.",
+                emptyTable: "Kayıt bulunmamaktadır.",
+                search: "Ara:",
+                oPaginate: {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "Sonraki",
+                    "sPrevious": "Önceki"
+                },
+                sLengthMenu: "_MENU_ adet kayıt getir",
+                sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+            },
+            "processing": true,
+            "serverSide": true,
+            "searchDelay": 1200,
+            "stateSave": true,
+            "stateDuration": -1,
+            "destroy": true,
+            "ajax": {
+                "url": "/NewVehicleSale/Post?isFiltered=true"
+                    + "&startDate=" + document.getElementById("datepicker").value
+                    + "&finishDate=" + document.getElementById("datepicker2").value
+                    + "&from=" + document.getElementById("from").value
+                    + "&to=" + document.getElementById("to").value
+                    + "&model=" + document.getElementById("model").value
+                    + "&chassis=" + document.getElementById("chassis").value
+                    + "&licencePlate=" + document.getElementById("licencePlate").value
+                    + "&monthId=" + document.getElementById("monthId").value,
+                "method": "POST"
+            },
+            "columns": [
+                { "data": "id" },
+                { "data": "vehiclePurchase.id" },
+                {
+                    "data": "vehiclePurchase.carModel.carBrand.name",
+                    "orderable": false
+                },
+                {
+                    "data": "vehiclePurchase.carModel.name",
+                    "orderable": false
+                },
+                {
+                    "data": "vehiclePurchase.chassis",
+                    "orderable": false
+                },
+                {
+                    "data": "licencePlate",
+                    "orderable": false,
+                    render: function (data, type, full, meta) {
+                        if (data != null) {
+                            return data;
+                        }
+                        else {
+                            return "-";
+                        }
+                    }
+                },
+                {
+                    "data": "purchasedSalesman.name",
+                    "orderable": false,
+                    render: function (data, type, full, meta) {
+                        if (data != null) {
+                            return data;
+                        }
+                        else {
+                            return "-";
+                        }
+                    }
+                },
+                {
+                    "data": "salesman.name",
+                    "orderable": false
+                },
+                {
+                    "data": "vehicleCost",
+                    "render": function (data, type, full, meta) {
+                        return currency(full.vehicleCost, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.vehicleCostCurrencyName;
+                    },
+                    "orderable": false
+                },
+                {
+                    "data": "saleAmount",
+                    "render": function (data, type, full, meta) {
+                        return currency(full.saleAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.saleAmountCurrencyName;
+                    },
+                    "orderable": false
+                },
+                {
+                    "data": "purchaseDate",
+                    render: function (data, type, row) {
+                        return window.moment(data).format("DD-MMMM-YYYY");
+                    },
+                    "orderable": false
+                },
+                {
+                    "data": "saleDate",
+                    render: function (data, type, row) {
+                        return window.moment(data).format("DD-MMMM-YYYY");
+                    },
+                    "orderable": false
+                },
+                {
+                    "data": "warrantyPlus",
+                    "orderable": false,
+                    render: function (data, type, full, meta) {
+                        if (data != null) {
+                            return data;
+                        }
+                        else {
+                            return "-";
+                        }
+                    }
+                },
+                {
+                    "data": "description",
+                    "orderable": false,
+                    render: function (data, type, full, meta) {
+                        if (data != null) {
+                            return data;
+                        }
+                        else {
+                            return "-";
+                        }
+                    }
+                },
+                {
+                    "data": "actionId", render: function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="NewVehicleSale/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="NewVehicleSale/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="NewVehicleSale/Delete/' + row.id + '">Sil</a></ul></div>'
+                    },
+                    "orderable": false
+                }
+            ],
+            "ordering": true,
+            "paging": true,
+            "pagingType": "simple_numbers",
+            "pageLength": 100
+        });
+    }
+</script>

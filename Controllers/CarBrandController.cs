@@ -118,5 +118,17 @@ namespace ExpenseManagement.Controllers
         {
             return Json(_context.CarBrands.OrderBy(x => x.Name).ToList());
         }
+
+        public ActionResult GetCarBrandsForFilters()
+        {
+            var brand = _context.CarBrands.ToList();
+            brand.Add(new CarBrands
+            {
+                Id = 0,
+                Name = ""
+            });
+            brand = brand.OrderBy(b => b.Id).ToList();
+            return Json(brand);
+        }
     }
 }

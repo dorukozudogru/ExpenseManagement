@@ -304,7 +304,7 @@
 
         function brandLoad() {
                 $('#brand').html('');
-                $.getJSON('@Url.Action("GetCarBrands", "VehiclePurchase")', function (result) {
+                $.getJSON('@Url.Action("GetCarBrandsForFilters", "CarBrand")', function (result) {
                     for (var i = 0; i < result.length; i++) {
                         $("#brand").append("<option id='" + result[i].id + "'>" + result[i].name + "</option>")
                     }
@@ -319,7 +319,7 @@
         function showValue(brandId)
         {
             $('#model').html('');
-            $.getJSON('@Url.Action("GetCarModelsById", "VehiclePurchase")' + "?Id=" + brandId, function (result) {
+            $.getJSON('@Url.Action("GetCarModelsByIdForFilters", "CarModel")' + "?Id=" + brandId, function (result) {
                 for (var i = 0; i < result.length; i++) {
                     $("#model").append("<option id='" + result[i].id + "'>" + result[i].name + "</option>")
                 }
