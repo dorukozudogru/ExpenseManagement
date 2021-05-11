@@ -15,6 +15,8 @@ using System.IO;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Drawing;
+using ExpenseManagement.Models.ViewModels;
+using Newtonsoft.Json;
 
 namespace ExpenseManagement.Controllers
 {
@@ -72,6 +74,8 @@ namespace ExpenseManagement.Controllers
             vehiclePurchaseContext = GetAllEnumNamesHelper.GetEnumName(vehiclePurchaseContext);
 
             List<VehiclePurchases> listItems = ProcessCollection(vehiclePurchaseContext, requestFormData);
+
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(vehiclePurchaseContext);
 
             var response = new PaginatedResponse<VehiclePurchases>
             {
@@ -279,11 +283,7 @@ namespace ExpenseManagement.Controllers
         [Authorize(Roles = "Admin, Banaz, Muhasebe")]
         public ActionResult ExportPurchases()
         {
-            var stream = ExportAllSales(_context.VehiclePurchases
-                .Include(c => c.CarModel)
-                .Include(cb => cb.CarModel.CarBrand)
-                .AsNoTracking()
-                .ToList(), "Araç Alış Listesi");
+            var stream = ExportAllSales(JsonConvert.DeserializeObject<List<VehiclePurchases>>(FakeSession.Instance.Obj), "Araç Alış Listesi");
             string fileName = String.Format("{0}.xlsx", "Araç Alış Listesi");
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;

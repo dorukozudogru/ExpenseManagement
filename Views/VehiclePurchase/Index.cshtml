@@ -247,14 +247,14 @@
                 {
                     "data": "purchaseAmount",
                     "render": function (data, type, full, meta) {
-                        return currency(full.purchaseAmount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.purchaseAmountCurrencyName;
+                        return currency(full.purchaseAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.purchaseAmountCurrencyName;
                     }
                 },
                 {
                     "data": "includingRegistrationFee",
                     "render": function (data, type, full, meta) {
                         if (data != null) {
-                            return currency(full.includingRegistrationFee, { decimal: ',', separator: '', symbol: '' }).format() + " ₺";
+                            return currency(full.includingRegistrationFee, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                         }
                         else {
                             return "-";
@@ -265,7 +265,7 @@
                     "data": "saleAmount",
                     render: function (data, type, full, meta) {
                         if (data != null) {
-                            return currency(full.saleAmount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.saleAmountCurrencyName;
+                            return currency(full.saleAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.saleAmountCurrencyName;
                         }
                         else {
                             return "-";
@@ -424,14 +424,14 @@
                 {
                     "data": "purchaseAmount",
                     "render": function (data, type, full, meta) {
-                        return currency(full.purchaseAmount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.purchaseAmountCurrencyName;
+                        return currency(full.purchaseAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.purchaseAmountCurrencyName;
                     }
                 },
                 {
                     "data": "includingRegistrationFee",
                     "render": function (data, type, full, meta) {
                         if (data != null) {
-                            return currency(full.includingRegistrationFee, { decimal: ',', separator: '', symbol: '' }).format() + " ₺";
+                            return currency(full.includingRegistrationFee, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                         }
                         else {
                             return "-";
@@ -442,7 +442,7 @@
                     "data": "saleAmount",
                     render: function (data, type, full, meta) {
                         if (data != null) {
-                            return currency(full.saleAmount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.saleAmountCurrencyName;
+                            return currency(full.saleAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.saleAmountCurrencyName;
                         }
                         else {
                             return "-";

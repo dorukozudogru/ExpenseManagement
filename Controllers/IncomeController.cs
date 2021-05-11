@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Authorization;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Drawing;
+using ExpenseManagement.Models.ViewModels;
+using Newtonsoft.Json;
 
 namespace ExpenseManagement.Controllers
 {
@@ -82,6 +84,8 @@ namespace ExpenseManagement.Controllers
             incomeContext = GetAllEnumNamesHelper.GetEnumName(incomeContext);
 
             List<Incomes> listItems = ProcessCollection(incomeContext, requestFormData);
+
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(incomeContext);
 
             var response = new PaginatedResponse<Incomes>
             {
@@ -375,19 +379,7 @@ namespace ExpenseManagement.Controllers
         [Authorize(Roles = "Admin, Banaz, Muhasebe")]
         public ActionResult ExportIncomes()
         {
-            var incomeContext = _context.Incomes
-                .Include(e => e.Sector)
-                .AsNoTracking()
-                .ToList();
-
-            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
-            {
-                incomeContext = incomeContext
-                    .Where(e => e.CreatedBy == GetLoggedUserId())
-                    .ToList();
-            }
-
-            var stream = ExportAllIncomes(incomeContext, "Gelirler");
+            var stream = ExportAllIncomes(JsonConvert.DeserializeObject<List<Incomes>>(FakeSession.Instance.Obj), "Gelirler");
             string fileName = String.Format("{0}.xlsx", "Gelirler");
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;
