@@ -23,17 +23,17 @@
                                     <select asp-for="Month" class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="ProducedKw" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <label asp-for="ProducedKw" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen küsürat için virgül (,) kullanınız.)</strong></label>
                                     <input asp-for="ProducedKw" class="form-control" id="producedKw" autocomplete="off" />
                                     <span asp-validation-for="ProducedKw" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="ConsumedKw" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <label asp-for="ConsumedKw" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen küsürat için virgül (,) kullanınız.)</strong></label>
                                     <input asp-for="ConsumedKw" class="form-control" id="consumedKw" autocomplete="off" />
                                     <span asp-validation-for="ConsumedKw" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="DistributionFee" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <label asp-for="DistributionFee" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen küsürat için virgül (,) kullanınız.)</strong></label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
@@ -43,7 +43,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="Amount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <label asp-for="Amount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen küsürat için virgül (,) kullanınız.)</strong></label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
@@ -53,7 +53,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="TAX" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <label asp-for="TAX" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen küsürat için virgül (,) kullanınız.)</strong></label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>

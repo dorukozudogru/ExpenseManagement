@@ -244,7 +244,7 @@
                     "data": "amount",
                     "render": function (data, type, full, meta) {
                         if (data != null) {
-                            return currency(full.amount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.amountCurrencyName;
+                            return currency(full.amount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.amountCurrencyName;
                         }
                         return "-";
                     }
@@ -253,7 +253,7 @@
                     "data": "tax",
                     "render": function (data, type, full, meta) {
                         if (data != null) {
-                            return currency(full.tax, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.taxCurrencyName;
+                            return currency(full.tax, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.taxCurrencyName;
                         }
                         return "-";
                     }

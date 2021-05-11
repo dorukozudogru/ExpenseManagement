@@ -150,14 +150,14 @@
                     {
                         "data": "vehicleCost",
                         "render": function (data, type, full, meta) {
-                            return currency(full.vehicleCost, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.vehicleCostCurrencyName;
+                            return currency(full.vehicleCost, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.vehicleCostCurrencyName;
                         },
                         "orderable": false
                     },
                     {
                         "data": "saleAmount",
                         "render": function (data, type, full, meta) {
-                            return currency(full.saleAmount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.saleAmountCurrencyName;
+                            return currency(full.saleAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.saleAmountCurrencyName;
                         },
                         "orderable": false
                     },

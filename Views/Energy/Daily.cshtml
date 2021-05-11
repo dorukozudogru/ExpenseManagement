@@ -33,6 +33,13 @@
                                             <th>İşlemler</th>
                                         </tr>
                                     </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th>Toplam:</th>
+                                            <th colspan="2"></th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -66,6 +73,27 @@
                 "searchDelay": 1200,
                 "stateSave": true,
                 "stateDuration": -1,
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api(), data;
+
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+
+                    pageAmountTotal = api
+                        .column(2, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    $(api.column(2).footer()).html(
+                        currency(pageAmountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' kW'
+                    );
+                },
                 "ajax": {
                     "url": "/Energy/DailyPost",
                     "method": "POST"
@@ -82,7 +110,13 @@
                         }
                     },
                     {
-                        "data": "kw"
+                        "data": "kw",
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return currency(full.kw, { decimal: ',', separator: '.', symbol: '' }).format() + " kW";
+                            }
+                            return "-";
+                        }
                     },
                     {
                         "data": "actionId", render: function (data, type, row) {

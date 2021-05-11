@@ -31,7 +31,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="Kw" class="control-label"></label>
+                                    <label asp-for="Kw" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen küsürat için virgül (,) kullanınız.)</strong></label>
                                     <input asp-for="Kw" class="form-control" id="kw" autocomplete="off" />
                                     <span asp-validation-for="Kw" class="text-danger"></span>
                                 </div>
@@ -70,7 +70,7 @@
 
                 document.getElementById("id").value = returnvalue.id;
                 document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
-                document.getElementById("kw").value = returnvalue.kw;
+                document.getElementById("kw").value = currency(returnvalue.kw, { decimal: ',', separator: '', symbol: '' }).format();
             },
             error: function (error) {
                 document.getElementById("swalDefaultError").value = "Günlük Üretim Kaydı Bir Hata Oluştu!";
@@ -89,10 +89,12 @@
         kw = document.getElementById("kw").value;
         id = document.getElementById("id").value;
 
+        kw2 = kw.replace(/,/g, '.');
+
         $("#updateButton").attr("disabled", true);
 
         $.ajax({
-            url: '/Energy/DailyEdit?energyDaily.Date=' + date + '&energyDaily.Kw=' + kw + '&id=' + id,
+            url: '/Energy/DailyEdit?energyDaily.Date=' + date + '&energyDaily.Kw=' + kw2 + '&id=' + id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

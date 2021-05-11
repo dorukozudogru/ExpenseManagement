@@ -94,7 +94,7 @@
                     {
                         "data": "amount",
                         "render": function (data, type, full, meta) {
-                            return currency(full.amount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.amountCurrencyName;
+                            return currency(full.amount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.amountCurrencyName;
                         }
                     },
                     {
@@ -105,13 +105,13 @@
                         "data": "interest",
                         "orderable": false,
                         "render": function (data, type, full, meta) {
-                            return "%" + full.interest;
+                            return "%" + currency(full.interest, { decimal: ',', separator: '.', symbol: '' }).format();
                         }
                     },
                      {
                         "data": "profit",
                         "render": function (data, type, full, meta) {
-                            return currency(full.profit, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.profitCurrencyName;
+                            return currency(full.profit, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.profitCurrencyName;
                         }
                     },
                     {

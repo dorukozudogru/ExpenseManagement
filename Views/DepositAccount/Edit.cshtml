@@ -122,11 +122,11 @@
 
                 document.getElementById("id").value = returnvalue.id;
                 document.getElementById("bankBranchId").value = returnvalue.bankBranchId;
-                document.getElementById("amount").value = returnvalue.amount.toLocaleString("tr-TR");
+                document.getElementById("amount").value = currency(returnvalue.amount, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("amountCurrency").value = returnvalue.amountCurrency;
                 document.getElementById("dayOfDeposit").value = returnvalue.dayOfDeposit;
-                document.getElementById("interest").value = returnvalue.interest;
-                document.getElementById("profit").value = returnvalue.profit.toLocaleString("tr-TR");
+                document.getElementById("interest").value = currency(returnvalue.interest, { decimal: ',', separator: '', symbol: '' }).format();
+                document.getElementById("profit").value = currency(returnvalue.profit, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("profitCurrency").value = returnvalue.profitCurrency;
                 document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
                 document.getElementById("datepicker2").value = yearF + "/" + monthF + "/" + dayF;

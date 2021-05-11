@@ -90,11 +90,11 @@
             success: function (returnvalue) {
                 document.getElementById("id").value = returnvalue.id;
                 document.getElementById("monthId").value = returnvalue.month;
-                document.getElementById("producedKw").value = returnvalue.producedKw;
-                document.getElementById("consumedKw").value = returnvalue.consumedKw;
-                document.getElementById("distributionFee").value = returnvalue.distributionFee;
-                document.getElementById("amount").value = returnvalue.amount;
-                document.getElementById("tax").value = returnvalue.tax;                
+                document.getElementById("producedKw").value = currency(returnvalue.producedKw, { decimal: ',', separator: '', symbol: '' }).format()
+                document.getElementById("consumedKw").value = currency(returnvalue.consumedKw, { decimal: ',', separator: '', symbol: '' }).format()
+                document.getElementById("distributionFee").value = currency(returnvalue.distributionFee, { decimal: ',', separator: '', symbol: '' }).format()
+                document.getElementById("amount").value = currency(returnvalue.amount, { decimal: ',', separator: '', symbol: '' }).format()
+                document.getElementById("tax").value = currency(returnvalue.tax, { decimal: ',', separator: '', symbol: '' }).format();
             },
             error: function (error) {
                 document.getElementById("swalDefaultError").value = "Aylık Üretim Kaydı Bir Hata Oluştu!";

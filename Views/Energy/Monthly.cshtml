@@ -99,7 +99,7 @@
                         "data": "producedKw",
                         "render": function (data, type, full, meta) {
                             if (data != null) {
-                                return full.producedKw + " kW";
+                                return currency(full.producedKw, { decimal: ',', separator: '.', symbol: '' }).format() + " kW";
                             }
                             return "-";
                         }
@@ -108,7 +108,7 @@
                         "data": "consumedKw",
                         "render": function (data, type, full, meta) {
                             if (data != null) {
-                                return full.consumedKw + " kW";
+                                return currency(full.consumedKw, { decimal: ',', separator: '.', symbol: '' }).format() + " kW";
                             }
                             return "-";
                         }
@@ -117,7 +117,7 @@
                         "data": "distributionFee",
                         "render": function (data, type, full, meta) {
                             if (data != null) {
-                                return currency(full.distributionFee, { decimal: ',', separator: '', symbol: '' }).format() + " ₺";
+                                return currency(full.distributionFee, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                             }
                             return "-";
                         }
@@ -126,7 +126,7 @@
                         "data": "amount",
                         "render": function (data, type, full, meta) {
                             if (data != null) {
-                                return currency(full.amount, { decimal: ',', separator: '', symbol: '' }).format() + " ₺";
+                                return currency(full.amount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                             }
                             return "-";
                         }
@@ -135,7 +135,7 @@
                         "data": "tax",
                         "render": function (data, type, full, meta) {
                             if (data != null) {
-                                return currency(full.tax, { decimal: ',', separator: '', symbol: '' }).format() + " ₺";
+                                return currency(full.tax, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                             }
                             return "-";
                         }
@@ -157,11 +157,11 @@
                 "url": "/Energy/YearlyPost",
                 "method": "POST"
             }).done(function (response) {
-                $('#totalProducedKw').html(response[0] + " kW");
-                $('#totalConsumedKw').html(response[1] + " kW");
-                $('#distributionFee').html(currency(response[2], { decimal: ',', separator: '', symbol: '' }).format() + " ₺");
-                $('#totalAmount').html(currency(response[3], { decimal: ',', separator: '', symbol: '' }).format() + " ₺");
-                $('#totalTAX').html(currency(response[4], { decimal: ',', separator: '', symbol: '' }).format() + " ₺");
+                $('#totalProducedKw').html(currency(response[0], { decimal: ',', separator: '.', symbol: '' }).format() + " kW");
+                $('#totalConsumedKw').html(currency(response[1], { decimal: ',', separator: '.', symbol: '' }).format() + " kW");
+                $('#distributionFee').html(currency(response[2], { decimal: ',', separator: '.', symbol: '' }).format() + " ₺");
+                $('#totalAmount').html(currency(response[3], { decimal: ',', separator: '.', symbol: '' }).format() + " ₺");
+                $('#totalTAX').html(currency(response[4], { decimal: ',', separator: '.', symbol: '' }).format() + " ₺");
             });
         })(jQuery);
     </script>
