@@ -196,13 +196,13 @@
                 {
                     "data": "amount",
                     "render": function (data, type, full, meta) {
-                        return currency(full.amount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.amountCurrencyName;
+                        return currency(full.amount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.amountCurrencyName;
                     }
                 },
                 {
                     "data": "tax",
                     "render": function (data, type, full, meta) {
-                        return currency(full.tax, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.taxCurrencyName;
+                        return currency(full.tax, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.taxCurrencyName;
                     }
                 },
                 {
@@ -322,13 +322,13 @@
                 {
                     "data": "amount",
                     "render": function (data, type, full, meta) {
-                        return currency(full.amount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.amountCurrencyName;
+                        return currency(full.amount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.amountCurrencyName;
                     }
                 },
                 {
                     "data": "tax",
                     "render": function (data, type, full, meta) {
-                        return currency(full.tax, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.taxCurrencyName;
+                        return currency(full.tax, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.taxCurrencyName;
                     }
                 },
                 {

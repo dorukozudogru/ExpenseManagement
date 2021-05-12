@@ -22,6 +22,9 @@
                                     <thead>
                                         <tr>
                                             <th>
+                                                @Html.DisplayNameFor(model => model.Id)
+                                            </th>
+                                            <th>
                                                 @Html.DisplayNameFor(model => model.Amount)
                                             </th>
                                             <th>
@@ -71,10 +74,11 @@
                     "method": "POST"
                 },
                 "columns": [
+                    { "data": "id" },
                     {
                         "data": "amount",
                         "render": function (data, type, full, meta) {
-                            return currency(full.amount, { decimal: ',', separator: '', symbol: '' }).format() + " " + full.amountCurrencyName;
+                            return currency(full.amount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.amountCurrencyName;
                         }
                     },
                     { "data": "accountType.name" },

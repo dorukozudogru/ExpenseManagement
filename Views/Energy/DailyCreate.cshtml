@@ -30,7 +30,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="Kw" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <label asp-for="Kw" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen küsürat için virgül (,) kullanınız.)</strong></label>
                                     <input asp-for="Kw" class="form-control" id="kw" autocomplete="off" />
                                     <span asp-validation-for="Kw" class="text-danger"></span>
                                 </div>
@@ -59,10 +59,12 @@
         date = document.getElementById("datepicker").value;
         kw = document.getElementById("kw").value;
 
+        kw2 = kw.replace(/,/g, '.');
+
         $("#createButton").attr("disabled", true);
 
         $.ajax({
-            url: '/Energy/DailyCreate?energyDaily.Date=' + date + '&energyDaily.Kw=' + kw,
+            url: '/Energy/DailyCreate?energyDaily.Date=' + date + '&energyDaily.Kw=' + kw2,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

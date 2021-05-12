@@ -18,6 +18,8 @@ using System.Globalization;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Drawing;
+using ExpenseManagement.Models.ViewModels;
+using Newtonsoft.Json;
 
 namespace ExpenseManagement.Controllers
 {
@@ -94,6 +96,8 @@ namespace ExpenseManagement.Controllers
             expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
 
             List<Expenses> listItems = ProcessCollection(expenseContext, requestFormData);
+
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(expenseContext);
 
             var response = new PaginatedResponse<Expenses>
             {
@@ -178,6 +182,8 @@ namespace ExpenseManagement.Controllers
 
             List<Expenses> listItems = ProcessCollection(expenseContext, requestFormData);
 
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(expenseContext);
+
             var response = new PaginatedResponse<Expenses>
             {
                 Data = listItems,
@@ -223,6 +229,8 @@ namespace ExpenseManagement.Controllers
             expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
 
             List<Expenses> listItems = ProcessCollection(expenseContext, requestFormData);
+
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(expenseContext);
 
             var response = new PaginatedResponse<Expenses>
             {
@@ -517,33 +525,7 @@ namespace ExpenseManagement.Controllers
         [Authorize(Roles = "Admin, Banaz, Muhasebe")]
         public ActionResult ExportPaylist()
         {
-            DateTime baseDate = DateTime.Today;
-            var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
-            var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
-
-            if (baseDate.DayOfWeek.ToString() == "Sunday")
-            {
-                thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek - 6);
-                thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
-            }
-
-            var expenseContext = _context.Expenses
-                .Where(e => e.ExpenseType != 2 &&
-                            e.LastPaymentDate != null &&
-                            e.LastPaymentDate >= thisWeekStart &&
-                            e.LastPaymentDate <= thisWeekEnd)
-                .Include(e => e.Sector)
-                .AsNoTracking()
-                .ToList();
-
-            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
-            {
-                expenseContext = expenseContext
-                    .Where(e => e.CreatedBy == GetLoggedUserId())
-                    .ToList();
-            }
-
-            var stream = ExportAllPaylist(expenseContext, "Haftalık Ödeme Listesi");
+            var stream = ExportAllPaylist(JsonConvert.DeserializeObject<List<Expenses>>(FakeSession.Instance.Obj), "Haftalık Ödeme Listesi");
             string fileName = String.Format("{0}.xlsx", "Haftalık Ödeme Listesi");
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;
@@ -626,20 +608,7 @@ namespace ExpenseManagement.Controllers
         [Authorize(Roles = "Admin, Banaz, Muhasebe")]
         public ActionResult ExportSalary()
         {
-            var expenseContext = _context.Expenses
-                .Where(e => e.ExpenseType == 2)
-                .Include(e => e.Sector)
-                .AsNoTracking()
-                .ToList();
-
-            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
-            {
-                expenseContext = expenseContext
-                    .Where(e => e.CreatedBy == GetLoggedUserId())
-                    .ToList();
-            }
-
-            var stream = ExportAllSalary(expenseContext, "Maaşlar");
+            var stream = ExportAllSalary(JsonConvert.DeserializeObject<List<Expenses>>(FakeSession.Instance.Obj), "Maaşlar");
             string fileName = String.Format("{0}.xlsx", "Maaşlar");
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;

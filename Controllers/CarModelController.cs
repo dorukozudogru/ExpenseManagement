@@ -124,5 +124,21 @@ namespace ExpenseManagement.Controllers
         {
             return Json(_context.CarModels.Where(x => x.CarBrandId == Id).OrderBy(x => x.Name).ToList());
         }
+
+        public ActionResult GetCarModelsByIdForFilters(int Id)
+        {
+            var model = _context.CarModels.Where(x => x.CarBrandId == Id).ToList();
+            if (Id == 0)
+            {
+                model.Add(new CarModels
+                {
+                    Id = 0,
+                    Name = "",
+                    CarBrandId = 0
+                });
+            }
+            model = model.OrderBy(m => m.Id).ToList();
+            return Json(model);
+        }
     }
 }

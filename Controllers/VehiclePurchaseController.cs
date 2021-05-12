@@ -15,6 +15,8 @@ using System.IO;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Drawing;
+using ExpenseManagement.Models.ViewModels;
+using Newtonsoft.Json;
 
 namespace ExpenseManagement.Controllers
 {
@@ -72,6 +74,8 @@ namespace ExpenseManagement.Controllers
             vehiclePurchaseContext = GetAllEnumNamesHelper.GetEnumName(vehiclePurchaseContext);
 
             List<VehiclePurchases> listItems = ProcessCollection(vehiclePurchaseContext, requestFormData);
+
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(vehiclePurchaseContext);
 
             var response = new PaginatedResponse<VehiclePurchases>
             {
@@ -279,11 +283,7 @@ namespace ExpenseManagement.Controllers
         [Authorize(Roles = "Admin, Banaz, Muhasebe")]
         public ActionResult ExportPurchases()
         {
-            var stream = ExportAllSales(_context.VehiclePurchases
-                .Include(c => c.CarModel)
-                .Include(cb => cb.CarModel.CarBrand)
-                .AsNoTracking()
-                .ToList(), "Araç Alış Listesi");
+            var stream = ExportAllSales(JsonConvert.DeserializeObject<List<VehiclePurchases>>(FakeSession.Instance.Obj), "Araç Alış Listesi");
             string fileName = String.Format("{0}.xlsx", "Araç Alış Listesi");
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;
@@ -388,34 +388,6 @@ namespace ExpenseManagement.Controllers
             }
             AddExportAudit(pageName, HttpContext?.User?.Identity?.Name, _context);
             return stream;
-        }
-
-        public ActionResult GetCarBrands()
-        {
-            var brand = _context.CarBrands.ToList();
-            brand.Add(new CarBrands
-            {
-                Id = 0,
-                Name = ""
-            });
-            brand = brand.OrderBy(b => b.Id).ToList();
-            return Json(brand);
-        }
-
-        public ActionResult GetCarModelsById(int Id)
-        {
-            var model = _context.CarModels.Where(x => x.CarBrandId == Id).ToList();
-            if (Id == 0)
-            {
-                model.Add(new CarModels
-                {
-                    Id = 0,
-                    Name = "",
-                    CarBrandId = 0
-                });
-            }
-            model = model.OrderBy(m => m.Id).ToList();
-            return Json(model);
         }
     }
 }

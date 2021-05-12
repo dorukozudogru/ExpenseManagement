@@ -15,6 +15,8 @@ using System.IO;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Drawing;
+using ExpenseManagement.Models.ViewModels;
+using Newtonsoft.Json;
 
 namespace ExpenseManagement.Controllers
 {
@@ -34,7 +36,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post(bool isFiltered, DateTime startDate, DateTime finishDate, double from, double to, int monthId, string model, string chassis, string licencePlate)
         {
             var requestFormData = Request.Form;
 
@@ -47,9 +49,40 @@ namespace ExpenseManagement.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
+            if (isFiltered != false)
+            {
+                if (startDate != DateTime.MinValue && finishDate != DateTime.MinValue)
+                {
+                    newVehicleSale = newVehicleSale.Where(e => e.SaleDate >= startDate && e.SaleDate <= finishDate).ToList();
+                }
+                if (from != 0 && to != 0)
+                {
+                    newVehicleSale = newVehicleSale.Where(e => e.SaleAmount >= from && e.SaleAmount <= to).ToList();
+                }
+                if (monthId != 0)
+                {
+                    newVehicleSale = newVehicleSale.Where(e => e.SaleDate != null && e.SaleDate.Month == monthId).ToList();
+                }
+                if (model != null)
+                {
+                    var modelId = await _context.CarModels.FirstOrDefaultAsync(c => c.Name == model);
+                    newVehicleSale = newVehicleSale.Where(e => e.VehiclePurchase.CarModelId == modelId.Id).ToList();
+                }
+                if (chassis != null)
+                {
+                    newVehicleSale = newVehicleSale.Where(e => e.VehiclePurchase.Chassis != null && e.VehiclePurchase.Chassis.ToUpper().Contains(chassis.ToUpper())).ToList();
+                }
+                if (licencePlate != null)
+                {
+                    newVehicleSale = newVehicleSale.Where(e => e.LicencePlate != null && e.LicencePlate.ToUpper().Contains(licencePlate.ToUpper())).ToList();
+                }
+            }
+
             newVehicleSale = GetAllEnumNamesHelper.GetEnumName(newVehicleSale);
 
             List<NewVehicleSales> listItems = ProcessCollection(newVehicleSale, requestFormData);
+
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(newVehicleSale);
 
             var response = new PaginatedResponse<NewVehicleSales>
             {
@@ -268,14 +301,7 @@ namespace ExpenseManagement.Controllers
         [Authorize(Roles = "Admin, Banaz, Muhasebe")]
         public ActionResult ExportSales()
         {
-            var stream = ExportAllSales(_context.NewVehicleSales
-                .Include(n => n.PurchasedSalesman)
-                .Include(n => n.Salesman)
-                .Include(n => n.VehiclePurchase)
-                .Include(n => n.VehiclePurchase.CarModel)
-                .Include(n => n.VehiclePurchase.CarModel.CarBrand)
-                .AsNoTracking()
-                .ToList(), "Sıfır Araç Satışı");
+            var stream = ExportAllSales(JsonConvert.DeserializeObject<List<NewVehicleSales>>(FakeSession.Instance.Obj), "Sıfır Araç Satışı");
             string fileName = String.Format("{0}.xlsx", "Sıfır Araç Satışı Listesi");
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;

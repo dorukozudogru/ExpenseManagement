@@ -52,6 +52,12 @@ namespace ExpenseManagement.Controllers
             return View();
         }
 
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        public IActionResult EnergyProfitReport()
+        {
+            return View();
+        }
+
         [HttpPost]
         [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
         public async Task<IActionResult> BankVaultsReport()
@@ -480,6 +486,43 @@ namespace ExpenseManagement.Controllers
             }
 
             return Ok(totalSale);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        public async Task<IActionResult> EnergyProfitReportPost(int year)
+        {
+            //var usedVehicleSale = await _context.UsedVehicleSales
+            //    .Where(e => e.SaleDate.Year == year)
+            //    .GroupBy(e => new
+            //    {
+            //        e.SaleDate.Month,
+            //        e.SaleAmountCurrency
+            //    })
+            //    .Select(e => new ExpenseEndorsementProfitReport
+            //    {
+            //        Month = e.Key.Month,
+            //        TotalAmount = e.Sum(i => i.SaleAmount),
+            //        TotalAmountCurrency = e.Key.SaleAmountCurrency,
+            //        TotalProfit = e.Sum(i => i.SaleAmount) - e.Sum(i => i.PurchaseAmount),
+            //        TotalProfitCurrency = e.Key.SaleAmountCurrency
+            //    })
+            //    .AsNoTracking()
+            //    .ToListAsync();
+
+            //expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
+
+            //FakeSession.Instance.Obj = JsonConvert.SerializeObject(expenseContext);
+
+            //var response = new PaginatedResponse<ExpenseEndorsementProfitReport>
+            //{
+            //    Data = expenseContext,
+            //    Draw = 1,
+            //    RecordsFiltered = 0,
+            //    RecordsTotal = 0
+            //};
+
+            return Ok(/*response*/);
         }
 
         //[HttpPost]

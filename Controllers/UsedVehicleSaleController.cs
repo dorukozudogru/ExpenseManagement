@@ -15,6 +15,8 @@ using System.IO;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Drawing;
+using ExpenseManagement.Models.ViewModels;
+using Newtonsoft.Json;
 
 namespace ExpenseManagement.Controllers
 {
@@ -34,7 +36,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post(bool isFiltered, DateTime startDate, DateTime finishDate, double from, double to, int monthId, string model, string chassis, string licencePlate)
         {
             var requestFormData = Request.Form;
 
@@ -47,9 +49,40 @@ namespace ExpenseManagement.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
+            if (isFiltered != false)
+            {
+                if (startDate != DateTime.MinValue && finishDate != DateTime.MinValue)
+                {
+                    usedVehicleSale = usedVehicleSale.Where(e => e.SaleDate >= startDate && e.SaleDate <= finishDate).ToList();
+                }
+                if (from != 0 && to != 0)
+                {
+                    usedVehicleSale = usedVehicleSale.Where(e => e.SaleAmount >= from && e.SaleAmount <= to).ToList();
+                }
+                if (monthId != 0)
+                {
+                    usedVehicleSale = usedVehicleSale.Where(e => e.SaleDate != null && e.SaleDate.Month == monthId).ToList();
+                }
+                if (model != null)
+                {
+                    var modelId = await _context.CarModels.FirstOrDefaultAsync(c => c.Name == model);
+                    usedVehicleSale = usedVehicleSale.Where(e => e.VehiclePurchase.CarModelId == modelId.Id).ToList();
+                }
+                if (chassis != null)
+                {
+                    usedVehicleSale = usedVehicleSale.Where(e => e.VehiclePurchase.Chassis != null && e.VehiclePurchase.Chassis.ToUpper().Contains(chassis.ToUpper())).ToList();
+                }
+                if (licencePlate != null)
+                {
+                    usedVehicleSale = usedVehicleSale.Where(e => e.LicencePlate != null && e.LicencePlate.ToUpper().Contains(licencePlate.ToUpper())).ToList();
+                }
+            }
+
             usedVehicleSale = GetAllEnumNamesHelper.GetEnumName(usedVehicleSale);
 
             List<UsedVehicleSales> listItems = ProcessCollection(usedVehicleSale, requestFormData);
+
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(usedVehicleSale);
 
             var response = new PaginatedResponse<UsedVehicleSales>
             {
@@ -261,14 +294,7 @@ namespace ExpenseManagement.Controllers
         [Authorize(Roles = "Admin, Banaz, Muhasebe")]
         public ActionResult ExportSales()
         {
-            var stream = ExportAllSales(_context.UsedVehicleSales
-                .Include(n => n.PurchasedSalesman)
-                .Include(n => n.SoldSalesman)
-                .Include(n => n.VehiclePurchase)
-                .Include(n => n.VehiclePurchase.CarModel)
-                .Include(n => n.VehiclePurchase.CarModel.CarBrand)
-                .AsNoTracking()
-                .ToList(), "2. El Araç Satışı");
+            var stream = ExportAllSales(JsonConvert.DeserializeObject<List<UsedVehicleSales>>(FakeSession.Instance.Obj), "2. El Araç Satışı");
             string fileName = String.Format("{0}.xlsx", "2. El Araç Satışı Listesi");
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;
