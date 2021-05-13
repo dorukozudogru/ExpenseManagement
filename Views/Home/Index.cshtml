@@ -363,11 +363,15 @@
                         "method": "POST"
                     },
                     "columns": [
-                        { "data": "id" },
+                        {
+                            "data": "id",
+                            "orderable": false
+                        },
                         { "data": "carModel.carBrand.name", "orderable": false },
                         { "data": "carModel.name", "orderable": false },
                         {
                             "data": "purchaseDate",
+                            "orderable": false,
                             render: function (data, type, row) {
                                 return window.moment(data).format("DD-MMMM-YYYY");
                             }
@@ -386,11 +390,15 @@
                         },
                         {
                             "data": "valorEndDate",
+                            "orderable": false,
                             render: function (data, type, row) {
                                 return window.moment(data).format("DD-MMMM-YYYY");
                             }
                         },
-                        { "data": "chassis" },
+                        {
+                            "data": "chassis",
+                            "orderable": false
+                        },
                         {
                             "data": "actionId", render: function (data, type, row) {
                                 return '<a href="VehiclePurchase/Details/' + row.id + '" class="text-muted"><i class="fas fa-search"></i></a>'

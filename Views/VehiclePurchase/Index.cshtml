@@ -146,7 +146,7 @@
                                             <th>
                                                 @Html.DisplayNameFor(model => model.SaleAmount)
                                             </th>
-                                            <th></th>
+                                            <th>İşlemler</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -274,7 +274,7 @@
                 },
                 {
                     "data": "actionId", "orderable": false, render: function (data, type, row) {
-                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="VehiclePurchase/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="VehiclePurchase/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="VehiclePurchase/Delete/' + row.id + '">Sil</a></ul></div>'
+                        return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="VehiclePurchase/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="VehiclePurchase/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="VehiclePurchase/Delete/' + row.id + '">Sil</a></ul></div>'
                     }
                 }
             ],
@@ -451,7 +451,7 @@
                 },
                 {
                     "data": "actionId", "orderable": false, render: function (data, type, row) {
-                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="VehiclePurchase/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="VehiclePurchase/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="VehiclePurchase/Delete/' + row.id + '">Sil</a></ul></div>'
+                        return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="VehiclePurchase/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="VehiclePurchase/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="VehiclePurchase/Delete/' + row.id + '">Sil</a></ul></div>'
                     }
                 }
             ],
