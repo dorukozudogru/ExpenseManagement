@@ -35,9 +35,10 @@
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th></th>
-                                            <th>Toplam:</th>
-                                            <th colspan="2"></th>
+                                            <td></td>
+                                            <td style="font-weight:bold">Toplam:</td>
+                                            <td style="font-weight:bold"></td>
+                                            <td></td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -62,10 +63,10 @@
                     oPaginate: {
                         "sFirst": "İlk",
                         "sLast": "Son",
-                        "sNext": "Sonraki",
-                        "sPrevious": "Önceki"
+                        "sNext": "»",
+                        "sPrevious": "«"
                     },
-                    sLengthMenu: "_MENU_ adet kayıt getir",
+                    sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
                     sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
                 },
                 "processing": true,
@@ -120,7 +121,7 @@
                     },
                     {
                         "data": "actionId", render: function (data, type, row) {
-                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="DailyEdit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="DailyDelete/' + row.id + '">Sil</a></ul></div>'
+                            return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="DailyEdit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="DailyDelete/' + row.id + '">Sil</a></ul></div>'
                         },
                         "orderable": false
                     }

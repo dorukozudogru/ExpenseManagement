@@ -39,7 +39,7 @@
                                         <div class="input-group-prepend">
                                             <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
                                         </div>
-                                        <input asp-for="DistributionFee" class="form-control" id="distributionFee" />
+                                        <input asp-for="DistributionFee" class="form-control" id="distributionFee" autocomplete="off" />
                                         <span asp-validation-for="DistributionFee" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -49,7 +49,7 @@
                                         <div class="input-group-prepend">
                                             <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
                                         </div>
-                                        <input asp-for="Amount" class="form-control" id="amount" />
+                                        <input asp-for="Amount" class="form-control" id="amount" autocomplete="off" />
                                         <span asp-validation-for="Amount" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -59,7 +59,7 @@
                                         <div class="input-group-prepend">
                                             <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
                                         </div>
-                                        <input asp-for="TAX" class="form-control" id="tax" />
+                                        <input asp-for="TAX" class="form-control" id="tax" autocomplete="off" />
                                         <span asp-validation-for="TAX" class="text-danger"></span>
                                     </div>
                                 </div>

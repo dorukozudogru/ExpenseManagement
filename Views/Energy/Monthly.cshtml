@@ -47,12 +47,13 @@
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="2">Yıllık Toplam:</th>
-                                            <th id="totalProducedKw"></th>
-                                            <th id="totalConsumedKw"></th>
-                                            <th id="distributionFee"></th>
-                                            <th id="totalAmount"></th>
-                                            <th colspan="2" id="totalTAX"></th>
+                                            <td style="font-weight:bold" colspan="2">Yıllık Toplam:</td>
+                                            <td style="font-weight:bold" id="totalProducedKw"></td>
+                                            <td style="font-weight:bold" id="totalConsumedKw"></td>
+                                            <td style="font-weight:bold" id="distributionFee"></td>
+                                            <td style="font-weight:bold" id="totalAmount"></td>
+                                            <td style="font-weight:bold" id="totalTAX"></td>
+                                            <td style="font-weight:bold"></td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -77,10 +78,10 @@
                     oPaginate: {
                         "sFirst": "İlk",
                         "sLast": "Son",
-                        "sNext": "Sonraki",
-                        "sPrevious": "Önceki"
+                        "sNext": "»",
+                        "sPrevious": "«"
                     },
-                    sLengthMenu: "_MENU_ adet kayıt getir",
+                    sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
                     sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
                 },
                 "processing": true,
@@ -142,7 +143,7 @@
                     },
                     {
                         "data": "actionId", render: function (data, type, row) {
-                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="MonthlyEdit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="MonthlyDelete/' + row.id + '">Sil</a></ul></div>'
+                            return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="MonthlyEdit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="MonthlyDelete/' + row.id + '">Sil</a></ul></div>'
                         },
                         "orderable": false
                     }

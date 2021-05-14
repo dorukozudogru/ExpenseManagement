@@ -28,7 +28,7 @@
                                     <div class="input-group-prepend">
                                         <select asp-for="AmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<BankVaults.AmountCurrencyEnum>()" id="amountCurrency"></select>
                                     </div>
-                                    <input asp-for="Amount" class="form-control" id="amount" />
+                                    <input asp-for="Amount" class="form-control" id="amount" autocomplete="off" />
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="BankBranch.Name" class="control-label"></label>
@@ -65,10 +65,12 @@
         bankBranchId = document.getElementById("bankBranchId").value;
         id = document.getElementById("id").value;
 
+        amount2 = amount.replace(/,/g, '.');
+
         $("#updateButton").attr("disabled", true);
 
         $.ajax({
-            url: '/BankVault/Edit?banks.AccountTypeId=' + accountTypeId + '&banks.Amount=' + amount + '&banks.AmountCurrency=' + amountCurrency + '&banks.bankBranchId=' + bankBranchId + '&id=' + id,
+            url: '/BankVault/Edit?banks.AccountTypeId=' + accountTypeId + '&banks.Amount=' + amount2 + '&banks.AmountCurrency=' + amountCurrency + '&banks.bankBranchId=' + bankBranchId + '&id=' + id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

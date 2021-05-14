@@ -504,10 +504,12 @@ namespace ExpenseManagement.Controllers
             await _context.SaveChangesAsync();
 
             var documents = await _context.ExpenseDocuments.FirstOrDefaultAsync(ed => ed.ExpenseId == id);
-            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-            _context.ExpenseDocuments.Remove(documents);
-            await _context.SaveChangesAsync();
-
+            if (documents != null)
+            {
+                _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+                _context.ExpenseDocuments.Remove(documents);
+                await _context.SaveChangesAsync();
+            }
             return Ok(new { Result = true, Message = "Gider Silinmiştir!" });
         }
 

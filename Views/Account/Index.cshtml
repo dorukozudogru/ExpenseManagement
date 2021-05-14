@@ -210,10 +210,10 @@
                         oPaginate: {
                             "sFirst": "İlk",
                             "sLast": "Son",
-                            "sNext": "Sonraki",
-                            "sPrevious": "Önceki"
+                            "sNext": "»",
+                            "sPrevious": "«"
                         },
-                        sLengthMenu: "_MENU_ adet kayıt getir",
+                        sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
                         sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
                     },
                     "processing": true,
@@ -233,10 +233,10 @@
                             "data": "isActive",
                             render: function (data, type, row) {
                                 if (data === true) {
-                                    return '<input type="checkbox" checked disabled>'
+                                    return '<div class="form-group clearfix"><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess1" checked disabled><label for="checkboxSuccess1"></label></div></div>'
                                 }
                                 else if (data === false) {
-                                    return '<input type="checkbox" disabled>'
+                                    return '<div class="form-group clearfix"><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess1" disabled><label for="checkboxSuccess1"></label></div></div>'
                                 }
                             }
                         },
@@ -244,20 +244,22 @@
                             "data": "isAdmin",
                             render: function (data, type, row) {
                                 if (data === true) {
-                                    return '<input type="checkbox" checked disabled>'
+                                    return '<div class="form-group clearfix"><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess1" checked disabled><label for="checkboxSuccess1"></label></div></div>'
                                 }
                                 else if (data === false) {
-                                    return '<input type="checkbox" disabled>'
+                                    return '<div class="form-group clearfix"><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess1" disabled><label for="checkboxSuccess1"></label></div></div>'
                                 }
                             }
                         },
                         {
-                            "data": "actionId", render: function (data, type, row) {
+                            "data": "actionId",
+                            "orderable": false,
+                            render: function (data, type, row) {
                                 if (row.isActive) {
-                                    return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Account/Edit/' + row.id + '">Şifre Güncelle</a> <a class="dropdown-item" href="Role/RoleAssign/' + row.id + '">Rol Ata</a> <a href="#" data-toggle="modal" data-target="#modal-passive" class="setPassive dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setPassive">Pasif Yap</a> </ul></div>'
+                                    return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Account/Edit/' + row.id + '">Şifre Güncelle</a> <a class="dropdown-item" href="Role/RoleAssign/' + row.id + '">Rol Ata</a> <a href="#" data-toggle="modal" data-target="#modal-passive" class="setPassive dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setPassive">Pasif Yap</a> </ul></div>'
                                 }
                                 else {
-                                    return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Account/Edit/' + row.id + '">Şifre Güncelle</a> <a class="dropdown-item" href="Role/RoleAssign/' + row.id + '">Rol Ata</a> <a href="#" data-toggle="modal" data-target="#modal-active" class="setActive dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setActive">Aktif Yap</a> </ul></div>'
+                                    return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Account/Edit/' + row.id + '">Şifre Güncelle</a> <a class="dropdown-item" href="Role/RoleAssign/' + row.id + '">Rol Ata</a> <a href="#" data-toggle="modal" data-target="#modal-active" class="setActive dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setActive">Aktif Yap</a> </ul></div>'
                                 }
                             }
                         }
