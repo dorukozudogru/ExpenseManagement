@@ -29,13 +29,13 @@
                                         <div class="input-group-prepend">
                                             <select asp-for="AmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
                                         </div>
-                                        <input asp-for="Amount" class="form-control" id="amount" />
+                                        <input asp-for="Amount" class="form-control" id="amount" autocomplete="off" />
                                         <span asp-validation-for="Amount" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="DayOfDeposit" class="control-label"></label>
-                                    <input asp-for="DayOfDeposit" class="form-control" id="dayOfDeposit" />
+                                    <input asp-for="DayOfDeposit" class="form-control" id="dayOfDeposit" autocomplete="off" />
                                     <span asp-validation-for="DayOfDeposit" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
@@ -44,7 +44,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-percentage"></i></span>
                                         </div>
-                                        <input asp-for="Interest" class="form-control" id="interest" />
+                                        <input asp-for="Interest" class="form-control" id="interest" autocomplete="off" />
                                         <span asp-validation-for="Interest" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -54,7 +54,7 @@
                                         <div class="input-group-prepend">
                                             <select asp-for="ProfitCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="profitCurrency"></select>
                                         </div>
-                                        <input asp-for="Profit" class="form-control" id="profit" />
+                                        <input asp-for="Profit" class="form-control" id="profit" autocomplete="off" />
                                         <span asp-validation-for="Profit" class="text-danger"></span>
                                     </div>
                                 </div>

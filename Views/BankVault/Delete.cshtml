@@ -46,7 +46,7 @@
     function deleted() {
         id = document.getElementById("id").value;
         $.ajax({
-            url: '/BankVaults/Delete?id=' + id,
+            url: '/BankVault/Delete?id=' + id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

@@ -51,7 +51,7 @@
                                             <div class="input-group-prepend">
                                                 <select asp-for="AmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
                                             </div>
-                                            <input asp-for="Amount" class="form-control" id="amount" />
+                                            <input asp-for="Amount" class="form-control" id="amount" autocomplete="off" />
                                             <span asp-validation-for="Amount" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -61,7 +61,7 @@
                                             <div class="input-group-prepend">
                                                 <select asp-for="TAXCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.TAXCurrencyEnum>()" id="taxCurrency"></select>
                                             </div>
-                                            <input asp-for="TAX" class="form-control" id="tax" />
+                                            <input asp-for="TAX" class="form-control" id="tax" autocomplete="off" />
                                             <span asp-validation-for="TAX" class="text-danger"></span>
                                         </div>
                                     </div>

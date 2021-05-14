@@ -28,7 +28,7 @@
                                     <div class="input-group-prepend">
                                         <select asp-for="AmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<BankVaults.AmountCurrencyEnum>()" id="amountCurrency"></select>
                                     </div>
-                                    <input asp-for="Amount" class="form-control" id="amount" />
+                                    <input asp-for="Amount" class="form-control" id="amount" autocomplete="off" />
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="BankBranch.Name" class="control-label"></label>
