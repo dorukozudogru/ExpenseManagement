@@ -62,10 +62,12 @@
         amountCurrency = document.getElementById("amountCurrency").value;
         bankBranchId = document.getElementById("bankBranchId").value;
 
+        amount2 = amount.replace(/,/g, '.');
+
         $("#createButton").attr("disabled", true);
 
         $.ajax({
-            url: '/BankVault/Create?banks.AccountTypeId=' + accountTypeId + '&banks.Amount=' + amount + '&banks.AmountCurrency=' + amountCurrency + '&banks.BankBranchId=' + bankBranchId,
+            url: '/BankVault/Create?banks.AccountTypeId=' + accountTypeId + '&banks.Amount=' + amount2 + '&banks.AmountCurrency=' + amountCurrency + '&banks.BankBranchId=' + bankBranchId,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

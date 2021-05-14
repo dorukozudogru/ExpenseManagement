@@ -65,10 +65,12 @@
         bankBranchId = document.getElementById("bankBranchId").value;
         id = document.getElementById("id").value;
 
+        amount2 = amount.replace(/,/g, '.');
+
         $("#updateButton").attr("disabled", true);
 
         $.ajax({
-            url: '/BankVault/Edit?banks.AccountTypeId=' + accountTypeId + '&banks.Amount=' + amount + '&banks.AmountCurrency=' + amountCurrency + '&banks.bankBranchId=' + bankBranchId + '&id=' + id,
+            url: '/BankVault/Edit?banks.AccountTypeId=' + accountTypeId + '&banks.Amount=' + amount2 + '&banks.AmountCurrency=' + amountCurrency + '&banks.bankBranchId=' + bankBranchId + '&id=' + id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;
