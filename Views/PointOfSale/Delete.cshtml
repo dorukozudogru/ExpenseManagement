@@ -1,7 +1,7 @@
-﻿@model ExpenseManagement.Models.Sectors
+﻿@model ExpenseManagement.Models.PointOfSale
 
 @{
-    ViewData["Title"] = "Sektörü/İş Kolunu Sil";
+    ViewData["Title"] = "POS Toplamını Sil";
 }
 
 <section class="content">
@@ -9,18 +9,30 @@
         <div class="row">
             <div class="col-12">
                 <div class="callout callout-danger">
-                    <h4>Bu sektörü/iş kolunu silmek istediğinizden emin misiniz?</h4>
+                    <h4>Bu kaydı silmek istediğinizden emin misiniz?</h4>
                     <p>
-                        Bu sektörü/iş kolunu silerseniz işlemi geriye alamayacaksınız.
+                        Bu kaydı silerseniz işlemi geriye alamayacaksınız.
                     </p>
                 </div>
                 <div class="invoice p-3 mb-3">
                     <div class="row">
                         <div class="col-12">
                             <h4>
-                                <i class="fas fa-sitemap"></i> @Html.DisplayFor(model => model.Id) | @Html.DisplayFor(model => model.Name)
+                                <i class="fas fa-credit-card"></i> @Html.DisplayFor(model => model.Id)
                                 <br />
                             </h4>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row invoice-info">
+                        <div class="col-sm-12 invoice-col">
+                            <address>
+                                @Html.DisplayNameFor(model => model.Year) - @Html.DisplayNameFor(model => model.Month): <strong>@Html.DisplayFor(model => model.Year) - @Html.DisplayFor(model => model.MonthName)</strong><br>
+                                @Html.DisplayNameFor(model => model.Sector.Name): <strong>@Html.DisplayFor(model => model.Sector.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.Date): <strong>@Html.DisplayFor(model => model.Date)</strong><br>
+                                @Html.DisplayNameFor(model => model.BankBranch.Name): <strong>@Html.DisplayFor(model => model.BankBranch.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.Amount): <strong>@Html.DisplayFor(model => model.Amount) @Html.DisplayFor(model => model.AmountCurrencyName)</strong><br>
+                            </address>
                         </div>
                     </div>
                     <hr />
@@ -45,7 +57,7 @@
     function deleted() {
         id = document.getElementById("id").value;
         $.ajax({
-            url: '/Sector/Delete?id=' + id,
+            url: '/PointOfSale/Delete?id=' + id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

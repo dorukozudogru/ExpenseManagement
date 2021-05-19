@@ -4,14 +4,16 @@ using ExpenseManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseManagement.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    partial class ExpenseContextModelSnapshot : ModelSnapshot
+    [Migration("20210514222809_petrol-added")]
+    partial class petroladded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -382,49 +384,6 @@ namespace ExpenseManagement.Migrations
                     b.ToTable("Expenses");
                 });
 
-            modelBuilder.Entity("ExpenseManagement.Models.FuelSales", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<double>("FuelPurchase");
-
-                    b.Property<double>("FuelSale");
-
-                    b.Property<int>("FuelTypeId");
-
-                    b.Property<double>("NetLiterPurchase");
-
-                    b.Property<double>("NetLiterSale");
-
-                    b.Property<int>("SectorId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FuelTypeId");
-
-                    b.HasIndex("SectorId");
-
-                    b.ToTable("FuelSales");
-                });
-
-            modelBuilder.Entity("ExpenseManagement.Models.FuelTypes", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FuelTypes");
-                });
-
             modelBuilder.Entity("ExpenseManagement.Models.IncomeDocuments", b =>
                 {
                     b.Property<int>("Id")
@@ -526,10 +485,6 @@ namespace ExpenseManagement.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<double>("Amount");
-
-                    b.Property<byte>("AmountCurrency");
 
                     b.Property<int>("BankBranchId");
 
@@ -837,19 +792,6 @@ namespace ExpenseManagement.Migrations
 
             modelBuilder.Entity("ExpenseManagement.Models.Expenses", b =>
                 {
-                    b.HasOne("ExpenseManagement.Models.Sectors", "Sector")
-                        .WithMany()
-                        .HasForeignKey("SectorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ExpenseManagement.Models.FuelSales", b =>
-                {
-                    b.HasOne("ExpenseManagement.Models.FuelTypes", "FuelType")
-                        .WithMany()
-                        .HasForeignKey("FuelTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("ExpenseManagement.Models.Sectors", "Sector")
                         .WithMany()
                         .HasForeignKey("SectorId")

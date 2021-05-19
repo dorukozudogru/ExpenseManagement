@@ -128,5 +128,11 @@ namespace ExpenseManagement.Data
         public DbSet<EnergyLuytobs> EnergyLuytobs { get; set; }
 
         public DbSet<EnergyLuytobFiles> EnergyLuytobFiles { get; set; }
+
+        public DbSet<PointOfSale> PointOfSale { get; set; }
+
+        public DbSet<FuelTypes> FuelTypes { get; set; }
+
+        public DbSet<FuelSales> FuelSales { get; set; }
     }
 }

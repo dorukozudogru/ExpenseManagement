@@ -1,0 +1,363 @@
+﻿@model IEnumerable<ExpenseManagement.Models.PointOfSale>
+
+@{
+    ViewData["Title"] = "POS Toplamları";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary collapsed-card">
+                    <div class="card-header border-0">
+                        <h5 class="card-title">
+                            <i class="fas fa-filter mr-1"></i>&nbsp;Filtreler
+                        </h5>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Yıl</label>
+                                    <div class="input-group-prepend">
+                                        <select class="form-control btn btn-default" id="year">
+                                            <option></option>
+                                            <option>2021</option>
+                                            <option>2022</option>
+                                            <option>2023</option>
+                                            <option>2024</option>
+                                            <option>2025</option>
+                                            <option>2026</option>
+                                            <option>2027</option>
+                                            <option>2028</option>
+                                            <option>2029</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Sektör/İş Kolu Adı</label>
+                                    <select class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Ay</label>
+                                    <select class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Banka/Şube Adı</label>
+                                    <select class="form-control" asp-items="ViewBag.BankId" id="bankId"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Tutar Aralığı</label>
+                                    <input id="range_1" type="text" name="range_1" value="">
+                                    <input hidden id="from" />
+                                    <input hidden id="to" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="submit" value="Filtreyi Uygula" class="btn btn-success btn-block" onclick="getResult()" />
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="submit" value="Temizle" class="btn btn-danger btn-block" onclick="clearFilter()" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-cash-register"></i>&nbsp;POS Toplamları
+                            <a class="btn btn-light text-primary btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="card-body">
+                                <table id="ItemsTable" class="table table-bordered table-striped" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Id)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Year)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Month)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Sector.Name)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Date)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.BankBranch.Name)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Amount)
+                                            </th>
+                                            <th>İşlemler</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="5"></td>
+                                            <td style="font-weight:bold">Toplam:</td>
+                                            <td style="font-weight:bold"></td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.onload = function getAll() {
+        $("#ItemsTable").DataTable({
+            "language": {
+                processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                zeroRecords: "Hiçbir kayıt bulunamadı.",
+                emptyTable: "Kayıt bulunmamaktadır.",
+                search: "Ara:",
+                oPaginate: {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "»",
+                    "sPrevious": "«"
+                },
+                sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
+                sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+            },
+            "processing": true,
+            "serverSide": true,
+            "searchDelay": 1200,
+            "stateSave": true,
+            "searching": false,
+            "stateDuration": -1,
+            "destroy": true,
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+
+                pageAmountTotal = api
+                    .column(6, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(6).footer()).html(
+                    currency(pageAmountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
+                );
+            },
+            "ajax": {
+                "url": "/PointOfSale/Post",
+                "method": "POST"
+            },
+            "columns": [
+                { "data": "id" },
+                {
+                    "data": "year",
+                    "orderable": false
+                },
+                {
+                    "data": "monthName",
+                    "orderable": false
+                },
+                {
+                    "data": "sector.name",
+                    "orderable": false
+                },
+                {
+                    "data": "date",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                        return "-";
+                    }
+                },
+                {
+                    "data": "bankBranch.name",
+                    "orderable": false
+                },
+                {
+                    "data": "amount",
+                    "render": function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.amount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.amountCurrencyName;
+                        }
+                        return "-";
+                    }
+                },
+                {
+                    "data": "actionId", render: function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="PointOfSale/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="PointOfSale/Delete/' + row.id + '">Sil</a></ul></div>'
+                    },
+                    "orderable": false
+                }
+            ],
+            "ordering": true,
+            "paging": true,
+            "pagingType": "simple_numbers",
+            "pageLength": 100
+        });
+
+        $('#range_1').ionRangeSlider({
+            min: 1,
+            max: 200000,
+            from: 80000,
+            to: 120000,
+            type: 'double',
+            step: 1,
+            prefix: '₺',
+            prettify: false,
+            hasGrid: true,
+            onChange: function (data) {
+                document.getElementById("from").value = data.from;
+                document.getElementById("to").value = data.to;
+            }
+        })
+    };
+
+    function clearFilter() {
+        location.reload();
+    }
+
+    function getResult() {
+        $("#ItemsTable").DataTable({
+            "language": {
+                processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                zeroRecords: "Hiçbir kayıt bulunamadı.",
+                emptyTable: "Kayıt bulunmamaktadır.",
+                search: "Ara:",
+                oPaginate: {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "»",
+                    "sPrevious": "«"
+                },
+                sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
+                sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+            },
+            "processing": true,
+            "serverSide": true,
+            "searchDelay": 1200,
+            "stateSave": true,
+            "searching": false,
+            "stateDuration": -1,
+            "destroy": true,
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+
+                pageAmountTotal = api
+                    .column(6, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(6).footer()).html(
+                    currency(pageAmountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
+                );
+            },
+            "ajax": {
+                "url": "/PointOfSale/Post?isFiltered=true"
+                    + "&year=" + document.getElementById("year").value
+                    + "&sectorId=" + document.getElementById("sectorId").value
+                    + "&monthId=" + document.getElementById("monthId").value
+                    + "&bankId=" + document.getElementById("bankId").value
+                    + "&from=" + document.getElementById("from").value
+                    + "&to=" + document.getElementById("to").value,
+                "method": "POST"
+            },
+            "columns": [
+                { "data": "id" },
+                {
+                    "data": "year",
+                    "orderable": false
+                },
+                {
+                    "data": "monthName",
+                    "orderable": false
+                },
+                {
+                    "data": "sector.name",
+                    "orderable": false
+                },
+                {
+                    "data": "date",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                        return "-";
+                    }
+                },
+                {
+                    "data": "bankBranch.name",
+                    "orderable": false
+                },
+                {
+                    "data": "amount",
+                    "render": function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.amount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.amountCurrencyName;
+                        }
+                        return "-";
+                    }
+                },
+                {
+                    "data": "actionId", render: function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="PointOfSale/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="PointOfSale/Delete/' + row.id + '">Sil</a></ul></div>'
+                    },
+                    "orderable": false
+                }
+            ],
+            "ordering": true,
+            "paging": true,
+            "pagingType": "simple_numbers",
+            "pageLength": 100
+        });
+    }
+</script>

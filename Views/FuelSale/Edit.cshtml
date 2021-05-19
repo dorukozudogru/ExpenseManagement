@@ -1,0 +1,187 @@
+﻿@model ExpenseManagement.Models.FuelSales
+
+@{
+    ViewData["Title"] = "Akaryakıt Satışını Güncelle";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Akaryakıt Satışı Güncelle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" id="id" />
+                                <div class="form-group">
+                                    <label asp-for="Sector.Name" class="control-label"></label>
+                                    <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="FuelType.Name" class="control-label"></label>
+                                    <select asp-for="FuelType.Name" class="form-control" asp-items="ViewBag.FuelTypeId" id="fuelTypeId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Date" class="control-label"></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input asp-for="Date" type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="NetLiterPurchase" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
+                                        </div>
+                                        <input asp-for="NetLiterPurchase" class="form-control" id="netLiterPurchase" autocomplete="off" />
+                                        <span asp-validation-for="NetLiterPurchase" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="FuelPurchase" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
+                                        </div>
+                                        <input asp-for="FuelPurchase" class="form-control" id="fuelPurchase" autocomplete="off" />
+                                        <span asp-validation-for="FuelPurchase" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="NetLiterSale" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
+                                        </div>
+                                        <input asp-for="NetLiterSale" class="form-control" id="netLiterSale" autocomplete="off" />
+                                        <span asp-validation-for="NetLiterSale" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="FuelSale" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
+                                        </div>
+                                        <input asp-for="FuelSale" class="form-control" id="fuelSale" autocomplete="off" />
+                                        <span asp-validation-for="FuelSale" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="update()" id="updateButton" />
+                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.onload = function getFS() {
+        var id = '@Url.RouteUrl(ViewContext.RouteData.Values).Split("/").Last()';
+
+        $.ajax({
+            url: '/FuelSale/EditPost?&id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                console.log(returnvalue);
+
+                var date = new Date(returnvalue.date);
+
+                var dayS = date.getDate();
+                var monthS = date.getMonth() + 1;
+                var yearS = date.getFullYear();
+                dayS = dayS < 10 ? "0" + dayS : dayS;
+                monthS = monthS < 10 ? "0" + monthS : monthS;
+
+                document.getElementById("id").value = returnvalue.id;
+                document.getElementById("sectorId").value = returnvalue.sectorId;
+                document.getElementById("fuelTypeId").value = returnvalue.fuelTypeId;
+                document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
+                document.getElementById("netLiterPurchase").value = currency(returnvalue.netLiterPurchase, { decimal: ',', separator: '', symbol: '' }).format();
+                document.getElementById("fuelPurchase").value = currency(returnvalue.fuelPurchase, { decimal: ',', separator: '', symbol: '' }).format();
+                document.getElementById("netLiterSale").value = currency(returnvalue.netLiterSale, { decimal: ',', separator: '', symbol: '' }).format();
+                document.getElementById("fuelSale").value = currency(returnvalue.fuelSale, { decimal: ',', separator: '', symbol: '' }).format();
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = "Akaryakıt Satışı Getirilirken Bir Hata Oluştu!";
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>
+<script>
+    var id;
+    var sectorId;
+    var fuelTypeId;
+    var date;
+    var netLiterPurchase;
+    var fuelPurchase;
+    var netLiterSale;
+    var fuelSale;
+
+    function update() {
+        id = document.getElementById("id").value;
+        sectorId = document.getElementById("sectorId").value;
+        fuelTypeId = document.getElementById("fuelTypeId").value;
+        date = document.getElementById("datepicker").value;
+        netLiterPurchase = document.getElementById("netLiterPurchase").value;
+        fuelPurchase = document.getElementById("fuelPurchase").value;
+        netLiterSale = document.getElementById("netLiterSale").value;
+        fuelSale = document.getElementById("fuelSale").value;
+
+        var data = new FormData();
+
+        data.append('id', id);
+        data.append('sectorId', sectorId);
+        data.append('fuelTypeId', fuelTypeId);
+        data.append('date', date);
+        data.append('netLiterPurchase', netLiterPurchase);
+        data.append('fuelPurchase', fuelPurchase);
+        data.append('netLiterSale', netLiterSale);
+        data.append('fuelSale', fuelSale);
+
+        $("#updateButton").attr("disabled", true);
+
+        $.ajax({
+            type: 'POST',
+            url: '/FuelSale/Edit?id=' + id,
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#updateButton").attr("disabled", false);
+                }, 1600);
+            }
+        });
+    }
+</script>

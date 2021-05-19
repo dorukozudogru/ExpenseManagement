@@ -1,7 +1,7 @@
-﻿@model ExpenseManagement.Models.Sectors
+﻿@model ExpenseManagement.Models.FuelTypes
 
 @{
-    ViewData["Title"] = "Sektörü/İş Kolunu Sil";
+    ViewData["Title"] = "Yakıt Türünü Sil";
 }
 
 <section class="content">
@@ -9,16 +9,16 @@
         <div class="row">
             <div class="col-12">
                 <div class="callout callout-danger">
-                    <h4>Bu sektörü/iş kolunu silmek istediğinizden emin misiniz?</h4>
+                    <h4>Bu kaydı silmek istediğinizden emin misiniz?</h4>
                     <p>
-                        Bu sektörü/iş kolunu silerseniz işlemi geriye alamayacaksınız.
+                        Bu kaydı silerseniz işlemi geriye alamayacaksınız.
                     </p>
                 </div>
                 <div class="invoice p-3 mb-3">
                     <div class="row">
                         <div class="col-12">
                             <h4>
-                                <i class="fas fa-sitemap"></i> @Html.DisplayFor(model => model.Id) | @Html.DisplayFor(model => model.Name)
+                                <i class="fas fa-gas-pump"></i> @Html.DisplayFor(model => model.Id) | @Html.DisplayFor(model => model.Name)
                                 <br />
                             </h4>
                         </div>
@@ -45,7 +45,7 @@
     function deleted() {
         id = document.getElementById("id").value;
         $.ajax({
-            url: '/Sector/Delete?id=' + id,
+            url: '/FuelType/Delete?id=' + id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

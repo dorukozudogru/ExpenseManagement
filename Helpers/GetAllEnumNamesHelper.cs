@@ -1029,5 +1029,136 @@ namespace ExpenseManagement.Helpers
             }
             return expenseReportViewModel;
         }
+
+        public static List<PointOfSale> GetEnumName(List<PointOfSale> pos)
+        {
+            foreach (var p in pos)
+            {
+                switch (p.AmountCurrency)
+                {
+                    case 0:
+                        p.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                        break;
+                    case 1:
+                        p.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                        break;
+                    case 2:
+                        p.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                        break;
+                    case 3:
+                        p.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                        break;
+                    default:
+                        break;
+                }
+
+                switch (p.Month)
+                {
+                    case 1:
+                        p.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JANUARY);
+                        break;
+                    case 2:
+                        p.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.FEBRUARY);
+                        break;
+                    case 3:
+                        p.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MARCH);
+                        break;
+                    case 4:
+                        p.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.APRIL);
+                        break;
+                    case 5:
+                        p.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MAY);
+                        break;
+                    case 6:
+                        p.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JUNE);
+                        break;
+                    case 7:
+                        p.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JULY);
+                        break;
+                    case 8:
+                        p.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.AUGUST);
+                        break;
+                    case 9:
+                        p.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.SEPTEMBER);
+                        break;
+                    case 10:
+                        p.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.OCTOBER);
+                        break;
+                    case 11:
+                        p.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.NOVEMBER);
+                        break;
+                    case 12:
+                        p.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.DECEMBER);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return pos;
+        }
+
+        public static PointOfSale GetEnumName(PointOfSale pos)
+        {
+            switch (pos.AmountCurrency)
+            {
+                case 0:
+                    pos.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                    break;
+                case 1:
+                    pos.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                    break;
+                case 2:
+                    pos.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                    break;
+                case 3:
+                    pos.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                    break;
+                default:
+                    break;
+            }
+
+            switch (pos.Month)
+            {
+                case 1:
+                    pos.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JANUARY);
+                    break;
+                case 2:
+                    pos.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.FEBRUARY);
+                    break;
+                case 3:
+                    pos.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MARCH);
+                    break;
+                case 4:
+                    pos.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.APRIL);
+                    break;
+                case 5:
+                    pos.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MAY);
+                    break;
+                case 6:
+                    pos.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JUNE);
+                    break;
+                case 7:
+                    pos.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JULY);
+                    break;
+                case 8:
+                    pos.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.AUGUST);
+                    break;
+                case 9:
+                    pos.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.SEPTEMBER);
+                    break;
+                case 10:
+                    pos.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.OCTOBER);
+                    break;
+                case 11:
+                    pos.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.NOVEMBER);
+                    break;
+                case 12:
+                    pos.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.DECEMBER);
+                    break;
+                default:
+                    break;
+            }
+            return pos;
+        }
     }
 }

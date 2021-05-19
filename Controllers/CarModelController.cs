@@ -112,7 +112,7 @@ namespace ExpenseManagement.Controllers
                 await _context.SaveChangesAsync();
                 return Ok(new { Result = true, Message = "Model Silinmiştir!" });
             }
-            return BadRequest("Bu Modele Ait Sigorta Kayıtları Bulunmaktadır!");
+            return BadRequest("Bu Modele Ait Kayıtlar Bulunmaktadır!");
         }
 
         private bool CarModelsExists(int id)

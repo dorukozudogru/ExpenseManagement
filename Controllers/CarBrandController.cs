@@ -106,7 +106,7 @@ namespace ExpenseManagement.Controllers
                 await _context.SaveChangesAsync();
                 return Ok(new { Result = true, Message = "Marka Silinmiştir!" });
             }
-            return BadRequest("Bu Markaya Ait Sigorta Kayıtları Bulunmaktadır!");
+            return BadRequest("Bu Markaya Ait Kayıtlar Bulunmaktadır!");
         }
 
         private bool CarBrandsExists(int id)
