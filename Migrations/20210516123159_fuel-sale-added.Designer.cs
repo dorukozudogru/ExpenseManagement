@@ -4,14 +4,16 @@ using ExpenseManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseManagement.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    partial class ExpenseContextModelSnapshot : ModelSnapshot
+    [Migration("20210516123159_fuel-sale-added")]
+    partial class fuelsaleadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -400,13 +402,9 @@ namespace ExpenseManagement.Migrations
 
                     b.Property<double>("NetLiterSale");
 
-                    b.Property<int>("SectorId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("FuelTypeId");
-
-                    b.HasIndex("SectorId");
 
                     b.ToTable("FuelSales");
                 });
@@ -848,11 +846,6 @@ namespace ExpenseManagement.Migrations
                     b.HasOne("ExpenseManagement.Models.FuelTypes", "FuelType")
                         .WithMany()
                         .HasForeignKey("FuelTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ExpenseManagement.Models.Sectors", "Sector")
-                        .WithMany()
-                        .HasForeignKey("SectorId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

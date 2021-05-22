@@ -11,6 +11,7 @@ using ExpenseManagement.Helpers;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
 using Microsoft.AspNetCore.Authorization;
 using System.IO;
+using static ExpenseManagement.Models.ViewModels.ReportViewModel;
 
 namespace ExpenseManagement.Controllers
 {
@@ -138,6 +139,36 @@ namespace ExpenseManagement.Controllers
             _context.EnergyDailies.Remove(energyDaily);
             await _context.SaveChangesAsync();
             return Ok(new { Result = true, Message = "Günlük Üretim Kaydı Silinmiştir!" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DailyMonthlyTotalPost()
+        {
+            var requestFormData = Request.Form;
+
+            var energyDailies = await _context.EnergyDailies
+                .GroupBy(i => new
+                {
+                    i.Date.Month
+                })
+                .Select(i => new GeneralResponse
+                {
+                    Month = i.Key.Month,
+                    TotalAmount = i.Sum(x => x.Kw),
+                })
+                .ToListAsync();
+
+            energyDailies = GetAllEnumNamesHelper.GetEnumName(energyDailies);
+
+            var response = new PaginatedResponse<GeneralResponse>
+            {
+                Data = energyDailies,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = energyDailies.Count,
+                RecordsTotal = energyDailies.Count
+            };
+
+            return Ok(response);
         }
         #endregion
 

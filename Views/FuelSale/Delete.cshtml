@@ -1,7 +1,7 @@
-﻿@model ExpenseManagement.Models.Sectors
+﻿@model ExpenseManagement.Models.FuelSales
 
 @{
-    ViewData["Title"] = "Sektörü/İş Kolunu Sil";
+    ViewData["Title"] = "Akaryakıt Satışını Sil";
 }
 
 <section class="content">
@@ -9,18 +9,32 @@
         <div class="row">
             <div class="col-12">
                 <div class="callout callout-danger">
-                    <h4>Bu sektörü/iş kolunu silmek istediğinizden emin misiniz?</h4>
+                    <h4>Bu kaydı silmek istediğinizden emin misiniz?</h4>
                     <p>
-                        Bu sektörü/iş kolunu silerseniz işlemi geriye alamayacaksınız.
+                        Bu kaydı silerseniz işlemi geriye alamayacaksınız.
                     </p>
                 </div>
                 <div class="invoice p-3 mb-3">
                     <div class="row">
                         <div class="col-12">
                             <h4>
-                                <i class="fas fa-sitemap"></i> @Html.DisplayFor(model => model.Id) | @Html.DisplayFor(model => model.Name)
+                                <i class="fas fa-credit-card"></i> @Html.DisplayFor(model => model.Id)
                                 <br />
                             </h4>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row invoice-info">
+                        <div class="col-sm-12 invoice-col">
+                            <address>
+                                @Html.DisplayNameFor(model => model.Sector.Name): <strong>@Html.DisplayFor(model => model.Sector.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.FuelType.Name): <strong>@Html.DisplayFor(model => model.FuelType.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.Date): <strong>@Html.DisplayFor(model => model.Date)</strong><br>
+                                @Html.DisplayNameFor(model => model.NetLiterPurchase): <strong>@Html.DisplayFor(model => model.NetLiterPurchase) ₺</strong><br>
+                                @Html.DisplayNameFor(model => model.FuelPurchase): <strong>@Html.DisplayFor(model => model.FuelPurchase) ₺</strong><br>
+                                @Html.DisplayNameFor(model => model.NetLiterSale): <strong>@Html.DisplayFor(model => model.NetLiterSale) ₺</strong><br>
+                                @Html.DisplayNameFor(model => model.FuelSale): <strong>@Html.DisplayFor(model => model.FuelSale) ₺</strong><br>
+                            </address>
                         </div>
                     </div>
                     <hr />
@@ -45,7 +59,7 @@
     function deleted() {
         id = document.getElementById("id").value;
         $.ajax({
-            url: '/Sector/Delete?id=' + id,
+            url: '/FuelSale/Delete?id=' + id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

@@ -102,7 +102,10 @@ namespace ExpenseManagement.Controllers
             var hasAnyExpense = await _context.Expenses
                 .FirstOrDefaultAsync(m => m.SectorId == id);
 
-            if (hasAnyIncome == null && hasAnyExpense == null)
+            var hasAnyFS = await _context.FuelSales
+                .FirstOrDefaultAsync(m => m.SectorId == id);
+
+            if (hasAnyIncome == null && hasAnyExpense == null && hasAnyFS != null)
             {
                 var sectors = await _context.Sectors.FindAsync(id);
                 _context.Sectors.Remove(sectors);
