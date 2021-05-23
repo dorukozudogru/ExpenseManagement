@@ -19,8 +19,6 @@ namespace ExpenseManagement.Models
         public int SectorId { get; set; }
         [DisplayName("Sektör/İş Kolu Adı")]
         public virtual Sectors Sector { get; set; }
-        [NotMapped]
-        public string SectorName { get; set; }
 
         [Required]
         [ForeignKey(nameof(FuelType))]

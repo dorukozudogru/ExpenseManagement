@@ -1,0 +1,177 @@
+﻿@model ExpenseManagement.Models.RaiseDiscountTracking
+
+@{
+    ViewData["Title"] = "Zam/İndirim Takibini Güncelle";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Zam/İndirim Takibini Güncelle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" id="id" />
+                                <div class="form-group">
+                                    <label asp-for="Sector.Name" class="control-label"></label>
+                                    <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Date" class="control-label"></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input asp-for="Date" type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="FuelType.Name" class="control-label"></label>
+                                    <select asp-for="FuelType.Name" class="form-control" asp-items="ViewBag.FuelTypeId" id="fuelTypeId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="UnitSalePrice" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                        </div>
+                                        <input asp-for="UnitSalePrice" class="form-control" id="unitSalePrice" autocomplete="off" />
+                                        <span asp-validation-for="UnitSalePrice" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="FuelRemainingAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen küsürat için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select class="form-control btn btn-default" disabled>
+                                                <option>
+                                                    lt
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <input asp-for="FuelRemainingAmount" class="form-control" id="fuelRemainingAmount" autocomplete="off" />
+                                        <span asp-validation-for="FuelRemainingAmount" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Difference" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                        </div>
+                                        <input asp-for="Difference" class="form-control" id="difference" autocomplete="off" />
+                                        <span asp-validation-for="Difference" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="update()" id="updateButton" />
+                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.onload = function getRDT() {
+        var id = '@Url.RouteUrl(ViewContext.RouteData.Values).Split("/").Last()';
+
+        $.ajax({
+            url: '/RaiseDiscountTracking/EditPost?&id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                console.log(returnvalue);
+
+                var date = new Date(returnvalue.date);
+
+                var dayS = date.getDate();
+                var monthS = date.getMonth() + 1;
+                var yearS = date.getFullYear();
+                dayS = dayS < 10 ? "0" + dayS : dayS;
+                monthS = monthS < 10 ? "0" + monthS : monthS;
+
+                document.getElementById("id").value = returnvalue.id;
+                document.getElementById("sectorId").value = returnvalue.sectorId;
+                document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
+                document.getElementById("fuelTypeId").value = returnvalue.fuelTypeId;
+                document.getElementById("unitSalePrice").value = currency(returnvalue.unitSalePrice, { decimal: ',', separator: '', symbol: '' }).format();
+                document.getElementById("fuelRemainingAmount").value = currency(returnvalue.fuelRemainingAmount, { decimal: ',', separator: '', symbol: '' }).format();
+                document.getElementById("difference").value = currency(returnvalue.difference, { decimal: ',', separator: '', symbol: '' }).format();
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = "Zam/İndirim Takibi Getirilirken Bir Hata Oluştu!";
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>
+<script>
+    var id;
+    var sectorId;
+    var date;
+    var fuelTypeId;
+    var unitSalePrice;
+    var fuelRemainingAmount;
+    var difference;
+
+    function update() {
+        id = document.getElementById("id").value;
+        sectorId = document.getElementById("sectorId").value;
+        date = document.getElementById("datepicker").value;
+        fuelTypeId = document.getElementById("fuelTypeId").value;
+        unitSalePrice = document.getElementById("unitSalePrice").value;
+        fuelRemainingAmount = document.getElementById("fuelRemainingAmount").value;
+        difference = document.getElementById("difference").value;
+
+        var data = new FormData();
+
+        data.append('id', id);
+        data.append('sectorId', sectorId);
+        data.append('date', date);
+        data.append('fuelTypeId', fuelTypeId);
+        data.append('unitSalePrice', unitSalePrice);
+        data.append('fuelRemainingAmount', fuelRemainingAmount);
+        data.append('difference', difference);
+
+        $("#updateButton").attr("disabled", true);
+
+        $.ajax({
+            type: 'POST',
+            url: '/RaiseDiscountTracking/Edit?id=' + id,
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#updateButton").attr("disabled", false);
+                }, 1600);
+            }
+        });
+    }
+</script>

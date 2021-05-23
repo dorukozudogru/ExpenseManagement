@@ -1,7 +1,7 @@
-﻿@model IEnumerable<ExpenseManagement.Models.FuelSales>
+﻿@model IEnumerable<ExpenseManagement.Models.RaiseDiscountTracking>
 
 @{
-    ViewData["Title"] = "Akaryakıt Satışları";
+    ViewData["Title"] = "Zam/İndirim Takibi";
 }
 
 <section class="content">
@@ -63,7 +63,7 @@
                 <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
-                            <i class="fas fa-gas-pump"></i>&nbsp;Akaryakıt Satışları
+                            <i class="fas fa-chart-line"></i>&nbsp;Zam/İndirim Takibi
                             <a class="btn btn-light text-primary btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
                         </h5>
                     </div>
@@ -80,22 +80,19 @@
                                                 @Html.DisplayNameFor(model => model.Sector.Name)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.FuelType.Name)
-                                            </th>
-                                            <th>
                                                 @Html.DisplayNameFor(model => model.Date)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.NetLiterPurchase)
+                                                @Html.DisplayNameFor(model => model.FuelType.Name)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.FuelPurchase)
+                                                @Html.DisplayNameFor(model => model.UnitSalePrice)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.NetLiterSale)
+                                                @Html.DisplayNameFor(model => model.FuelRemainingAmount)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.FuelSale)
+                                                @Html.DisplayNameFor(model => model.Difference)
                                             </th>
                                             <th>İşlemler</th>
                                         </tr>
@@ -104,7 +101,6 @@
                                         <tr>
                                             <td colspan="3"></td>
                                             <td style="font-weight:bold">Toplam:</td>
-                                            <td style="font-weight:bold"></td>
                                             <td style="font-weight:bold"></td>
                                             <td style="font-weight:bold"></td>
                                             <td style="font-weight:bold"></td>
@@ -174,7 +170,7 @@
                     }, 0);
 
                 $(api.column(5).footer()).html(
-                    currency(pageTotal2, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
+                    currency(pageTotal2, { decimal: ',', separator: '.', symbol: '' }).format() + ' lt'
                 );
 
                 pageTotal3 = api
@@ -187,30 +183,15 @@
                 $(api.column(6).footer()).html(
                     currency(pageTotal3, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
                 );
-
-                pageTotal4 = api
-                    .column(7, { page: 'current' })
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-
-                $(api.column(7).footer()).html(
-                    currency(pageTotal4, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
-                );
             },
             "ajax": {
-                "url": "/FuelSale/Post",
+                "url": "/RaiseDiscountTracking/Post",
                 "method": "POST"
             },
             "columns": [
                 { "data": "id" },
                 {
                     "data": "sector.name",
-                    "orderable": false
-                },
-                {
-                    "data": "fuelType.name",
                     "orderable": false
                 },
                 {
@@ -223,44 +204,39 @@
                     }
                 },
                 {
-                    "data": "netLiterPurchase",
+                    "data": "fuelType.name",
+                    "orderable": false
+                },
+                {
+                    "data": "unitSalePrice",
                     "render": function (data, type, full, meta) {
                         if (data != null) {
-                            return currency(full.netLiterPurchase, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                            return currency(full.unitSalePrice, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                         }
                         return "-";
                     }
                 },
                 {
-                    "data": "fuelPurchase",
+                    "data": "fuelRemainingAmount",
                     "render": function (data, type, full, meta) {
                         if (data != null) {
-                            return currency(full.fuelPurchase, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                            return currency(full.fuelRemainingAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " lt";
                         }
                         return "-";
                     }
                 },
                 {
-                    "data": "netLiterSale",
+                    "data": "difference",
                     "render": function (data, type, full, meta) {
                         if (data != null) {
-                            return currency(full.netLiterSale, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
-                        }
-                        return "-";
-                    }
-                },
-                {
-                    "data": "fuelSale",
-                    "render": function (data, type, full, meta) {
-                        if (data != null) {
-                            return currency(full.fuelSale, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                            return currency(full.difference, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                         }
                         return "-";
                     }
                 },
                 {
                     "data": "actionId", render: function (data, type, row) {
-                        return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="FuelSale/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="FuelSale/Delete/' + row.id + '">Sil</a></ul></div>'
+                        return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="RaiseDiscountTracking/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="RaiseDiscountTracking/Delete/' + row.id + '">Sil</a></ul></div>'
                     },
                     "orderable": false
                 }
@@ -270,6 +246,22 @@
             "pagingType": "simple_numbers",
             "pageLength": 100
         });
+
+        $('#range_1').ionRangeSlider({
+            min: 1,
+            max: 200000,
+            from: 80000,
+            to: 120000,
+            type: 'double',
+            step: 1,
+            prefix: '₺',
+            prettify: false,
+            hasGrid: true,
+            onChange: function (data) {
+                document.getElementById("from").value = data.from;
+                document.getElementById("to").value = data.to;
+            }
+        })
     };
 
     function clearFilter() {
@@ -341,20 +333,9 @@
                 $(api.column(6).footer()).html(
                     currency(pageTotal3, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
                 );
-
-                pageTotal4 = api
-                    .column(7, { page: 'current' })
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-
-                $(api.column(7).footer()).html(
-                    currency(pageTotal4, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
-                );
             },
             "ajax": {
-                "url": "/FuelSale/Post?isFiltered=true"
+                "url": "/RaiseDiscountTracking/Post?isFiltered=true"
                     + "&monthId=" + document.getElementById("monthId").value
                     + "&fuelTypeId=" + document.getElementById("fuelTypeId").value
                     + "&sectorId=" + document.getElementById("sectorId").value,
@@ -367,10 +348,6 @@
                     "orderable": false
                 },
                 {
-                    "data": "fuelType.name",
-                    "orderable": false
-                },
-                {
                     "data": "date",
                     render: function (data, type, row) {
                         if (data != null) {
@@ -380,44 +357,39 @@
                     }
                 },
                 {
-                    "data": "netLiterPurchase",
+                    "data": "fuelType.name",
+                    "orderable": false
+                },
+                {
+                    "data": "unitSalePrice",
                     "render": function (data, type, full, meta) {
                         if (data != null) {
-                            return currency(full.netLiterPurchase, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                            return currency(full.unitSalePrice, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                         }
                         return "-";
                     }
                 },
                 {
-                    "data": "fuelPurchase",
+                    "data": "fuelRemainingAmount",
                     "render": function (data, type, full, meta) {
                         if (data != null) {
-                            return currency(full.fuelPurchase, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                            return currency(full.fuelRemainingAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                         }
                         return "-";
                     }
                 },
                 {
-                    "data": "netLiterSale",
+                    "data": "difference",
                     "render": function (data, type, full, meta) {
                         if (data != null) {
-                            return currency(full.netLiterSale, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
-                        }
-                        return "-";
-                    }
-                },
-                {
-                    "data": "fuelSale",
-                    "render": function (data, type, full, meta) {
-                        if (data != null) {
-                            return currency(full.fuelSale, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                            return currency(full.difference, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                         }
                         return "-";
                     }
                 },
                 {
                     "data": "actionId", render: function (data, type, row) {
-                        return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="FuelSale/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="FuelSale/Delete/' + row.id + '">Sil</a></ul></div>'
+                        return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="RaiseDiscountTracking/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="RaiseDiscountTracking/Delete/' + row.id + '">Sil</a></ul></div>'
                     },
                     "orderable": false
                 }
