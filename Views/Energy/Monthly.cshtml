@@ -25,6 +25,9 @@
                                                 @Html.DisplayNameFor(model => model.Id)
                                             </th>
                                             <th>
+                                                @Html.DisplayNameFor(model => model.Year)
+                                            </th>
+                                            <th>
                                                 @Html.DisplayNameFor(model => model.Month)
                                             </th>
                                             <th>
@@ -47,7 +50,7 @@
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <td style="font-weight:bold" colspan="2">Yıllık Toplam:</td>
+                                            <td style="font-weight:bold" colspan="3">Yıllık Toplam:</td>
                                             <td style="font-weight:bold" id="totalProducedKw"></td>
                                             <td style="font-weight:bold" id="totalConsumedKw"></td>
                                             <td style="font-weight:bold" id="distributionFee"></td>
@@ -96,6 +99,7 @@
                 },
                 "columns": [
                     { "data": "id" },
+                    { "data": "year" },
                     { "data": "monthName" },
                     {
                         "data": "producedKw",

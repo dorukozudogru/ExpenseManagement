@@ -492,37 +492,33 @@ namespace ExpenseManagement.Controllers
         [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
         public async Task<IActionResult> EnergyProfitReportPost(int year)
         {
-            //var usedVehicleSale = await _context.UsedVehicleSales
-            //    .Where(e => e.SaleDate.Year == year)
-            //    .GroupBy(e => new
-            //    {
-            //        e.SaleDate.Month,
-            //        e.SaleAmountCurrency
-            //    })
-            //    .Select(e => new ExpenseEndorsementProfitReport
-            //    {
-            //        Month = e.Key.Month,
-            //        TotalAmount = e.Sum(i => i.SaleAmount),
-            //        TotalAmountCurrency = e.Key.SaleAmountCurrency,
-            //        TotalProfit = e.Sum(i => i.SaleAmount) - e.Sum(i => i.PurchaseAmount),
-            //        TotalProfitCurrency = e.Key.SaleAmountCurrency
-            //    })
-            //    .AsNoTracking()
-            //    .ToListAsync();
+            var energyMonthlies = await _context.EnergyMonthlies
+                .Where(em => em.Year == year)
+                .GroupBy(e => new
+                {
+                    e.Month
+                })
+                .Select(em => new ExpenseEndorsementProfitReport
+                {
+                    Month = em.Key.Month,
+                    TotalProfit = em.Sum(i => i.Amount)
+                })
+                .AsNoTracking()
+                .ToListAsync();
 
-            //expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
+            energyMonthlies = GetAllEnumNamesHelper.GetEnumName(energyMonthlies);
 
-            //FakeSession.Instance.Obj = JsonConvert.SerializeObject(expenseContext);
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(energyMonthlies);
 
-            //var response = new PaginatedResponse<ExpenseEndorsementProfitReport>
-            //{
-            //    Data = expenseContext,
-            //    Draw = 1,
-            //    RecordsFiltered = 0,
-            //    RecordsTotal = 0
-            //};
+            var response = new PaginatedResponse<ExpenseEndorsementProfitReport>
+            {
+                Data = energyMonthlies,
+                Draw = 1,
+                RecordsFiltered = 0,
+                RecordsTotal = 0
+            };
 
-            return Ok(/*response*/);
+            return Ok(response);
         }
 
         //[HttpPost]
@@ -674,89 +670,178 @@ namespace ExpenseManagement.Controllers
             {
                 var ws = p.Workbook.Worksheets.Add(pageName);
 
-                using (var range = ws.Cells[1, 1, 1, 4])
+                if (pageName == "EnergyProfitReport")
                 {
-                    range.Style.Font.Bold = true;
-                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
-                    range.Style.Font.Color.SetColor(Color.White);
-                }
-
-                foreach (var item in items)
-                {
-                    item.Percent = (item.TotalProfit * 100) / item.TotalAmount;
-                }
-
-                ws.Cells[1, 1].Value = "Ay";
-                ws.Cells[1, 2].Value = "Toplam Ciro";
-                ws.Cells[1, 3].Value = "Toplam Kâr";
-                ws.Cells[1, 4].Value = "Ciro-Kâr Yüzdesi";
-
-                ws.Row(1).Style.Font.Bold = true;
-
-                for (int c = 2; c < items.Count + 2; c++)
-                {
-                    ws.Cells[c, 1].Value = items[c - 2].MonthName;
-
-                    if (items[c - 2].TotalAmountCurrencyName == "₺")
+                    using (var range = ws.Cells[1, 1, 1, 2])
                     {
+                        range.Style.Font.Bold = true;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
+                        range.Style.Font.Color.SetColor(Color.White);
+                    }
+
+                    ws.Cells[1, 1].Value = "Ay";
+                    ws.Cells[1, 2].Value = "Toplam Kâr";
+
+                    ws.Row(1).Style.Font.Bold = true;
+
+                    for (int c = 2; c < items.Count + 2; c++)
+                    {
+                        ws.Cells[c, 1].Value = items[c - 2].MonthName;
+
+                        ws.Cells[c, 2].Value = items[c - 2].TotalProfit.ToString("C2", new CultureInfo("tr-TR"));
+                    }
+
+                    ws.Column(2).Style.Numberformat.Format = "#,##0.00 ₺";
+
+                    var lastRow = ws.Dimension.End.Row;
+                    var lastColumn = ws.Dimension.End.Column;
+
+                    using (var range = ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(color: Color.Gray);
+                        range.Style.Font.Color.SetColor(Color.White);
+                    }
+
+                    ws.Cells[lastRow + 1, 1].Value = "Toplam:";
+                    ws.Cells[lastRow + 1, 2].Formula = String.Format("SUM(B2:B{0})", lastRow);
+
+                    ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                    ws.Cells["A1:B" + items.Count + 2].AutoFilter = true;
+
+                    ws.Column(2).PageBreak = true;
+                }
+                if (pageName == "ExpenseReport")
+                {
+                    using (var range = ws.Cells[1, 1, 1, 2])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
+                        range.Style.Font.Color.SetColor(Color.White);
+                    }
+
+                    ws.Cells[1, 1].Value = "Ay";
+                    ws.Cells[1, 2].Value = "Toplam Miktar";
+
+                    ws.Row(1).Style.Font.Bold = true;
+
+                    for (int c = 2; c < items.Count + 2; c++)
+                    {
+                        ws.Cells[c, 1].Value = items[c - 2].MonthName;
+
                         ws.Cells[c, 2].Value = items[c - 2].TotalAmount.ToString("C2", new CultureInfo("tr-TR"));
                     }
-                    if (items[c - 2].TotalAmountCurrencyName == "$")
+
+                    ws.Column(2).Style.Numberformat.Format = "#,##0.00 ₺";
+
+                    var lastRow = ws.Dimension.End.Row;
+                    var lastColumn = ws.Dimension.End.Column;
+
+                    using (var range = ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn])
                     {
-                        ws.Cells[c, 2].Value = items[c - 2].TotalAmount.ToString("C2", new CultureInfo("en-US"));
-                    }
-                    if (items[c - 2].TotalAmountCurrencyName == "€")
-                    {
-                        ws.Cells[c, 2].Value = items[c - 2].TotalAmount.ToString("C2", new CultureInfo("de-DE"));
-                    }
-                    if (items[c - 2].TotalAmountCurrencyName == "£")
-                    {
-                        ws.Cells[c, 2].Value = items[c - 2].TotalAmount.ToString("C2", new CultureInfo("en-GB"));
+                        range.Style.Font.Bold = true;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(color: Color.Gray);
+                        range.Style.Font.Color.SetColor(Color.White);
                     }
 
-                    if (items[c - 2].TotalProfitCurrencyName == "₺")
-                    {
-                        ws.Cells[c, 3].Value = items[c - 2].TotalProfit.ToString("C2", new CultureInfo("tr-TR"));
-                    }
-                    if (items[c - 2].TotalProfitCurrencyName == "$")
-                    {
-                        ws.Cells[c, 3].Value = items[c - 2].TotalProfit.ToString("C2", new CultureInfo("en-US"));
-                    }
-                    if (items[c - 2].TotalProfitCurrencyName == "€")
-                    {
-                        ws.Cells[c, 3].Value = items[c - 2].TotalProfit.ToString("C2", new CultureInfo("de-DE"));
-                    }
-                    if (items[c - 2].TotalProfitCurrencyName == "£")
-                    {
-                        ws.Cells[c, 3].Value = items[c - 2].TotalProfit.ToString("C2", new CultureInfo("en-GB"));
-                    }
+                    ws.Cells[lastRow + 1, 1].Value = "Toplam:";
+                    ws.Cells[lastRow + 1, 2].Formula = String.Format("SUM(B2:B{0})", lastRow);
 
-                    ws.Cells[c, 4].Value = "% " + Math.Round(items[c - 2].Percent, 2);
+                    ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                    ws.Cells["A1:B" + items.Count + 2].AutoFilter = true;
+
+                    ws.Column(2).PageBreak = true;
                 }
-
-                ws.Column(2).Style.Numberformat.Format = "#,##0.00 ₺";
-                ws.Column(3).Style.Numberformat.Format = "#,##0.00 ₺";
-
-                var lastRow = ws.Dimension.End.Row;
-                var lastColumn = ws.Dimension.End.Column;
-
-                using (var range = ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn])
+                if (pageName == "EndorsementReport")
                 {
-                    range.Style.Font.Bold = true;
-                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Gray);
-                    range.Style.Font.Color.SetColor(Color.White);
+                    using (var range = ws.Cells[1, 1, 1, 4])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
+                        range.Style.Font.Color.SetColor(Color.White);
+                    }
+
+                    foreach (var item in items)
+                    {
+                        item.Percent = (item.TotalProfit * 100) / item.TotalAmount;
+                    }
+
+                    ws.Cells[1, 1].Value = "Ay";
+                    ws.Cells[1, 2].Value = "Toplam Ciro";
+                    ws.Cells[1, 3].Value = "Toplam Kâr";
+                    ws.Cells[1, 4].Value = "Ciro-Kâr Yüzdesi";
+
+                    ws.Row(1).Style.Font.Bold = true;
+
+                    for (int c = 2; c < items.Count + 2; c++)
+                    {
+                        ws.Cells[c, 1].Value = items[c - 2].MonthName;
+
+                        if (items[c - 2].TotalAmountCurrencyName == "₺")
+                        {
+                            ws.Cells[c, 2].Value = items[c - 2].TotalAmount.ToString("C2", new CultureInfo("tr-TR"));
+                        }
+                        if (items[c - 2].TotalAmountCurrencyName == "$")
+                        {
+                            ws.Cells[c, 2].Value = items[c - 2].TotalAmount.ToString("C2", new CultureInfo("en-US"));
+                        }
+                        if (items[c - 2].TotalAmountCurrencyName == "€")
+                        {
+                            ws.Cells[c, 2].Value = items[c - 2].TotalAmount.ToString("C2", new CultureInfo("de-DE"));
+                        }
+                        if (items[c - 2].TotalAmountCurrencyName == "£")
+                        {
+                            ws.Cells[c, 2].Value = items[c - 2].TotalAmount.ToString("C2", new CultureInfo("en-GB"));
+                        }
+
+                        if (items[c - 2].TotalProfitCurrencyName == "₺")
+                        {
+                            ws.Cells[c, 3].Value = items[c - 2].TotalProfit.ToString("C2", new CultureInfo("tr-TR"));
+                        }
+                        if (items[c - 2].TotalProfitCurrencyName == "$")
+                        {
+                            ws.Cells[c, 3].Value = items[c - 2].TotalProfit.ToString("C2", new CultureInfo("en-US"));
+                        }
+                        if (items[c - 2].TotalProfitCurrencyName == "€")
+                        {
+                            ws.Cells[c, 3].Value = items[c - 2].TotalProfit.ToString("C2", new CultureInfo("de-DE"));
+                        }
+                        if (items[c - 2].TotalProfitCurrencyName == "£")
+                        {
+                            ws.Cells[c, 3].Value = items[c - 2].TotalProfit.ToString("C2", new CultureInfo("en-GB"));
+                        }
+
+                        ws.Cells[c, 4].Value = "% " + Math.Round(items[c - 2].Percent, 2);
+                    }
+
+                    ws.Column(2).Style.Numberformat.Format = "#,##0.00 ₺";
+                    ws.Column(3).Style.Numberformat.Format = "#,##0.00 ₺";
+
+                    var lastRow = ws.Dimension.End.Row;
+                    var lastColumn = ws.Dimension.End.Column;
+
+                    using (var range = ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(color: Color.Gray);
+                        range.Style.Font.Color.SetColor(Color.White);
+                    }
+
+                    ws.Cells[lastRow + 1, 1].Value = "Toplam:";
+                    ws.Cells[lastRow + 1, 2].Formula = String.Format("SUM(B2:B{0})", lastRow);
+                    ws.Cells[lastRow + 1, 3].Formula = String.Format("SUM(C2:C{0})", lastRow);
+
+                    ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                    ws.Cells["A1:D" + items.Count + 2].AutoFilter = true;
+
+                    ws.Column(4).PageBreak = true;
                 }
-
-                ws.Cells[lastRow + 1, 1].Value = "Toplam:";
-                ws.Cells[lastRow + 1, 2].Formula = String.Format("SUM(B2:B{0})", lastRow);
-                ws.Cells[lastRow + 1, 3].Formula = String.Format("SUM(C2:C{0})", lastRow);
-
-                ws.Cells[ws.Dimension.Address].AutoFitColumns();
-                ws.Cells["A1:D" + items.Count + 2].AutoFilter = true;
-
-                ws.Column(4).PageBreak = true;
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Landscape;
                 ws.PrinterSettings.Scale = 100;

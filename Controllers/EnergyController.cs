@@ -207,7 +207,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MonthlyCreate([Bind("Id,Month,ProducedKw,ConsumedKw,DistributionFee,Amount,TAX")] EnergyMonthlies energyMonthly)
+        public async Task<IActionResult> MonthlyCreate([Bind("Id,Year,Month,ProducedKw,ConsumedKw,DistributionFee,Amount,TAX")] EnergyMonthlies energyMonthly)
         {
             if (ModelState.IsValid)
             {
@@ -246,7 +246,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MonthlyEdit(int id, [Bind("Id,Month,ProducedKw,ConsumedKw,DistributionFee,Amount,TAX")] EnergyMonthlies energyMonthly)
+        public async Task<IActionResult> MonthlyEdit(int id, [Bind("Id,Year,Month,ProducedKw,ConsumedKw,DistributionFee,Amount,TAX")] EnergyMonthlies energyMonthly)
         {
             var energyMonthlyFirst = await _context.EnergyMonthlies.FindAsync(id);
 
@@ -254,6 +254,7 @@ namespace ExpenseManagement.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    energyMonthlyFirst.Year = energyMonthly.Year;
                     energyMonthlyFirst.Month = energyMonthly.Month;
                     energyMonthlyFirst.ProducedKw = energyMonthly.ProducedKw;
                     energyMonthlyFirst.ConsumedKw = energyMonthly.ConsumedKw;
