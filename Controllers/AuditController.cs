@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 using ExpenseManagement.Models;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
 using ExpenseManagement.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using ExpenseManagement.Helpers;
 
 namespace ExpenseManagement.Controllers
 {
@@ -24,17 +26,51 @@ namespace ExpenseManagement.Controllers
 
         public IActionResult Index()
         {
+            var tableNames = _context.Audits
+                .GroupBy(i => i.TableName)
+                .Select(i => new Audit
+                {
+                    TableName = i.Key
+                })
+                .ToList();
+
+            tableNames.Add(new Audit
+            {
+                TableName = ""
+            });
+
+            ViewData["TableName"] = new SelectList(tableNames.OrderBy(s => s.TableName).ToList(), "TableName", "TableName");
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post(bool isFiltered, string tableName, DateTime startDate, DateTime finishDate, string act, string changedUser)
         {
             var requestFormData = Request.Form;
 
             List<Audit> audits = await _context.Audits
                 .AsNoTracking()
                 .ToListAsync();
+
+            if (isFiltered != false)
+            {
+                if (tableName != null)
+                {
+                    audits = audits.Where(e => e.TableName == tableName).ToList();
+                }
+                if (startDate != DateTime.MinValue && finishDate != DateTime.MinValue)
+                {
+                    audits = audits.Where(e => e.DateTime >= startDate && e.DateTime <= finishDate).ToList();
+                }
+                if (act != null)
+                {
+                    audits = audits.Where(e => e.Action == act).ToList();
+                }
+                if (changedUser != null)
+                {
+                    audits = audits.Where(e => e.Username.ToUpper().Contains(changedUser.ToUpper())).ToList();
+                }
+            }
 
             List<Audit> lastAuditList = new List<Audit>();
 
