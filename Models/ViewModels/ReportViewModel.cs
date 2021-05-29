@@ -21,6 +21,8 @@ namespace ExpenseManagement.Models.ViewModels
 
             public string MonthName { get; set; }
 
+            public int? Year { get; set; }
+
             public int Count { get; set; }
 
             public double? TotalAmount { get; set; }
