@@ -138,32 +138,35 @@
                                 }
                             </ul>
                         </li>
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-gas-pump"></i>
-                                <p>
-                                    Petrol
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="PointOfSale" asp-action="Index">
-                                        <i class="far fa-circle nav-icon text-success"></i><p>POS Toplamları</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="FuelSale" asp-action="Index">
-                                        <i class="far fa-circle nav-icon text-success"></i><p>Akaryakıt Satışı</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="RaiseDiscountTracking" asp-action="Index">
-                                        <i class="far fa-circle nav-icon text-success"></i><p>Zam/İndirim Takibi</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                        @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe") || User.IsInRole("Petrol")))
+                        {
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-gas-pump"></i>
+                                    <p>
+                                        Petrol
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="PointOfSale" asp-action="Index">
+                                            <i class="far fa-circle nav-icon text-success"></i><p>POS Toplamları</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="FuelSale" asp-action="Index">
+                                            <i class="far fa-circle nav-icon text-success"></i><p>Akaryakıt Satışı</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="RaiseDiscountTracking" asp-action="Index">
+                                            <i class="far fa-circle nav-icon text-success"></i><p>Zam/İndirim Takibi</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
                         @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe")))
                         {
                             <li class="nav-item">
@@ -266,11 +269,14 @@
                                         <i class="far fa-circle nav-icon text-indigo"></i><p>Model Listesi</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="FuelType" asp-action="Index">
-                                        <i class="far fa-circle nav-icon text-indigo"></i><p>Yakıt Türleri</p>
-                                    </a>
-                                </li>
+                                @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe") || User.IsInRole("Petrol")))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="FuelType" asp-action="Index">
+                                            <i class="far fa-circle nav-icon text-indigo"></i><p>Yakıt Türleri</p>
+                                        </a>
+                                    </li>
+                                }
                                 @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe")))
                                 {
                                     <li class="nav-item">

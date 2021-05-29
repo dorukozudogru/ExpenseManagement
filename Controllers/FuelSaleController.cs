@@ -11,9 +11,11 @@ using ExpenseManagement.Helpers;
 using ExpenseManagement.Models.ViewModels;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExpenseManagement.Controllers
 {
+    [Authorize(Roles = ("Admin, Banaz, Muhasebe, Petrol"))]
     public class FuelSaleController : Controller
     {
         private readonly ExpenseContext _context;

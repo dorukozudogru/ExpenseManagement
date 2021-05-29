@@ -10,9 +10,11 @@ using ExpenseManagement.Models;
 using ExpenseManagement.Models.ViewModels;
 using Newtonsoft.Json;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExpenseManagement.Controllers
 {
+    [Authorize(Roles = ("Admin, Banaz, Muhasebe, Petrol"))]
     public class RaiseDiscountTrackingController : Controller
     {
         private readonly ExpenseContext _context;
