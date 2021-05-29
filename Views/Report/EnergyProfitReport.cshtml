@@ -79,18 +79,6 @@
         $('#getResult').click(function () {
             $("#resultRow").show();
             $("#exportButton").show();
-            $.ajax({
-                "url": "/Report/EnergyProfitReportTotalPost?year=" + $('#year').val(),
-                "method": "POST"
-            }).done(function (response) {
-                var data = "";
-                //console.log(response);
-                response.forEach(element => {
-                    data += currency(element.totalProfit, { decimal: ',', separator: '.', symbol: '' }).format() + " " + element.totalProfitCurrencyName + " + ";
-                });
-                data = data.substring(0, data.length - 3);
-                $('#totalProfit').html(data);
-            });
             $("#ItemsTable").DataTable({
                 "language": {
                     processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
@@ -114,6 +102,27 @@
                 "lengthChange": false,
                 "searching": false,
                 "stateDuration": -1,
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api(), data;
+
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+
+                    pageAmountTotal = api
+                        .column(1, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    $(api.column(1).footer()).html(
+                        currency(pageAmountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
+                    );
+                },
                 "ajax": {
                     "url": "/Report/EnergyProfitReportPost?year=" + $('#year').val(),
                     "method": "POST"
