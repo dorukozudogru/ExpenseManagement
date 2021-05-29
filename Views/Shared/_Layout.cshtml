@@ -54,7 +54,7 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-sm-right">
                         <div class="dropdown-item">
-                            <i class="fas fa-laptop-code"></i>&nbsp;&nbsp;Versiyon 1.6.0
+                            <i class="fas fa-laptop-code"></i>&nbsp;&nbsp;Versiyon 1.10.1
                         </div>
                     </div>
                 </li>
@@ -155,6 +155,11 @@
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="FuelSale" asp-action="Index">
                                         <i class="far fa-circle nav-icon text-success"></i><p>Akaryakıt Satışı</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="RaiseDiscountTracking" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-success"></i><p>Zam/İndirim Takibi</p>
                                     </a>
                                 </li>
                             </ul>
@@ -324,22 +329,22 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    @*<li class="nav-item has-treeview">
-                                            <a href="#" class="nav-link">
-                                                <i class="far fa-circle nav-icon text-danger"></i>
-                                                <p>
-                                                    Enerji
-                                                    <i class="right fas fa-angle-left"></i>
-                                                </p>
-                                            </a>
-                                            <ul class="nav nav-treeview">
-                                                <li class="nav-item">
-                                                    <a class="nav-link" asp-controller="Report" asp-action="EnergyProfitReport">
-                                                        <i class="far fa-dot-circle nav-icon text-danger"></i><p>GES Net Kâr Raporu</p>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>*@
+                                    <li class="nav-item has-treeview">
+                                        <a href="#" class="nav-link">
+                                            <i class="far fa-circle nav-icon text-danger"></i>
+                                            <p>
+                                                Enerji
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-controller="Report" asp-action="EnergyProfitReport">
+                                                    <i class="far fa-dot-circle nav-icon text-danger"></i><p>GES Net Kâr Raporu</p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
                                     @*<li class="nav-item">
                                             <a href="#" class="nav-link">
                                                 <i class="far fa-circle nav-icon text-danger"></i>

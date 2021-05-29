@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExpenseManagement.Models
 {
@@ -16,5 +17,9 @@ namespace ExpenseManagement.Models
         [Required]
         [DisplayName("kW")]
         public double Kw { get; set; }
+
+        [NotMapped]
+        [DisplayName("Ay")]
+        public string MonthName { get; set; }
     }
 }

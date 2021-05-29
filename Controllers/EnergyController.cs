@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ExpenseManagement.Data;
 using ExpenseManagement.Models;
 using ExpenseManagement.Helpers;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
+using static ExpenseManagement.Helpers.AddExportAuditHelper;
 using Microsoft.AspNetCore.Authorization;
 using System.IO;
 using static ExpenseManagement.Models.ViewModels.ReportViewModel;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
 
 namespace ExpenseManagement.Controllers
 {
@@ -149,10 +152,12 @@ namespace ExpenseManagement.Controllers
             var energyDailies = await _context.EnergyDailies
                 .GroupBy(i => new
                 {
+                    i.Date.Year,
                     i.Date.Month
                 })
                 .Select(i => new GeneralResponse
                 {
+                    Year = i.Key.Year,
                     Month = i.Key.Month,
                     TotalAmount = i.Sum(x => x.Kw),
                 })
@@ -160,9 +165,13 @@ namespace ExpenseManagement.Controllers
 
             energyDailies = GetAllEnumNamesHelper.GetEnumName(energyDailies);
 
+            energyDailies = energyDailies.OrderByDescending(i => i.Year).ThenByDescending(i => i.Month).ToList();
+
+            List<GeneralResponse> listItems = ProcessCollection(energyDailies, requestFormData);
+
             var response = new PaginatedResponse<GeneralResponse>
             {
-                Data = energyDailies,
+                Data = listItems,
                 Draw = int.Parse(requestFormData["draw"]),
                 RecordsFiltered = energyDailies.Count,
                 RecordsTotal = energyDailies.Count
@@ -207,7 +216,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MonthlyCreate([Bind("Id,Month,ProducedKw,ConsumedKw,DistributionFee,Amount,TAX")] EnergyMonthlies energyMonthly)
+        public async Task<IActionResult> MonthlyCreate([Bind("Id,Year,Month,ProducedKw,ConsumedKw,DistributionFee,Amount,TAX")] EnergyMonthlies energyMonthly)
         {
             if (ModelState.IsValid)
             {
@@ -246,7 +255,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MonthlyEdit(int id, [Bind("Id,Month,ProducedKw,ConsumedKw,DistributionFee,Amount,TAX")] EnergyMonthlies energyMonthly)
+        public async Task<IActionResult> MonthlyEdit(int id, [Bind("Id,Year,Month,ProducedKw,ConsumedKw,DistributionFee,Amount,TAX")] EnergyMonthlies energyMonthly)
         {
             var energyMonthlyFirst = await _context.EnergyMonthlies.FindAsync(id);
 
@@ -254,6 +263,7 @@ namespace ExpenseManagement.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    energyMonthlyFirst.Year = energyMonthly.Year;
                     energyMonthlyFirst.Month = energyMonthly.Month;
                     energyMonthlyFirst.ProducedKw = energyMonthly.ProducedKw;
                     energyMonthlyFirst.ConsumedKw = energyMonthly.ConsumedKw;
@@ -460,5 +470,81 @@ namespace ExpenseManagement.Controllers
             return Ok(new { Result = true, Message = "Lüytob/Fatura Kaydı Silinmiştir!" });
         }
         #endregion
+
+        public ActionResult ExportEnergy(int month, int year)
+        {
+            var energyDailies = _context.EnergyDailies
+                .Where(i => i.Date.Year == year && i.Date.Month == month)
+                .ToList();
+
+            energyDailies = GetAllEnumNamesHelper.GetEnumName(energyDailies);
+
+            string monthName = energyDailies.FirstOrDefault().MonthName;
+
+            var stream = ExportAllEnergy(energyDailies, year + " " + monthName + " Ayı Üretim");
+            string fileName = String.Format("{0}.xlsx", year + " " + monthName + " Ayı Üretim");
+            string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            stream.Position = 0;
+            return File(stream, fileType, fileName);
+        }
+
+        public MemoryStream ExportAllEnergy(List<EnergyDaily> items, string pageName)
+        {
+            var stream = new System.IO.MemoryStream();
+
+            var _temp = pageName.Split(" ");
+
+            using (var p = new ExcelPackage(stream))
+            {
+                var ws = p.Workbook.Worksheets.Add(_temp[0] + " " + _temp[1]);
+
+                using (var range = ws.Cells[1, 1, 1, 2])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                ws.Cells[1, 1].Value = "Tarih";
+                ws.Cells[1, 2].Value = "kW";
+
+                ws.Column(1).Style.Numberformat.Format = "dd-mmmm-yyyy";
+
+                ws.Row(1).Style.Font.Bold = true;
+
+                for (int c = 2; c < items.Count + 2; c++)
+                {
+                    ws.Cells[c, 1].Value = items[c - 2].Date;
+                    ws.Cells[c, 2].Value = items[c - 2].Kw;
+                }
+
+                var lastRow = ws.Dimension.End.Row;
+                var lastColumn = ws.Dimension.End.Column;
+
+                using (var range = ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Gray);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                ws.Cells[lastRow + 1, 1].Value = "Toplam:";
+                ws.Cells[lastRow + 1, 2].Formula = String.Format("SUM(B2:B{0})", lastRow);
+
+                ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                ws.Cells["A1:B" + items.Count + 2].AutoFilter = true;
+
+                ws.Column(2).PageBreak = true;
+                ws.PrinterSettings.PaperSize = ePaperSize.A4;
+                ws.PrinterSettings.Orientation = eOrientation.Landscape;
+                ws.PrinterSettings.Scale = 100;
+
+                p.Save();
+            }
+            AddExportAudit(pageName, HttpContext?.User?.Identity?.Name, _context);
+            return stream;
+        }
     }
 }
