@@ -187,6 +187,16 @@ namespace ExpenseManagement.Controllers
 
             var expenses = await _context.Expenses
                 .Where(i => i.Date.Value.Month >= DateTime.Now.AddMonths(-2).Month && i.ExpenseType != 2)
+                .ToListAsync();
+
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
+            {
+                expenses = expenses
+                    .Where(e => e.CreatedBy == GetLoggedUserId())
+                    .ToList();
+            }
+
+            var expensesFinal = expenses
                 .GroupBy(i => new
                 {
                     i.Date.Value.Month,
@@ -199,16 +209,16 @@ namespace ExpenseManagement.Controllers
                     TotalAmount = i.Sum(x => x.Amount),
                     TotalAmountCurrency = i.Key.AmountCurrency
                 })
-                .ToListAsync();
+                .ToList();
 
-            expenses = GetAllEnumNamesHelper.GetEnumName(expenses);
+            expensesFinal = GetAllEnumNamesHelper.GetEnumName(expensesFinal);
 
             var response = new PaginatedResponse<GeneralResponse>
             {
-                Data = expenses,
+                Data = expensesFinal,
                 Draw = int.Parse(requestFormData["draw"]),
-                RecordsFiltered = expenses.Count,
-                RecordsTotal = expenses.Count
+                RecordsFiltered = expensesFinal.Count,
+                RecordsTotal = expensesFinal.Count
             };
 
             return Ok(response);
@@ -221,6 +231,16 @@ namespace ExpenseManagement.Controllers
 
             var incomes = await _context.Incomes
                 .Where(i => i.Date.Month >= DateTime.Now.AddMonths(-2).Month)
+                .ToListAsync();
+
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe" && GetLoggedUserRole() != "Banaz")
+            {
+                incomes = incomes
+                    .Where(e => e.CreatedBy == GetLoggedUserId())
+                    .ToList();
+            }
+
+            var incomesFinal = incomes
                 .GroupBy(i => new
                 {
                     i.Date.Month,
@@ -233,16 +253,16 @@ namespace ExpenseManagement.Controllers
                     TotalAmount = i.Sum(x => x.Amount),
                     TotalAmountCurrency = i.Key.AmountCurrency
                 })
-                .ToListAsync();
+                .ToList();
 
-            incomes = GetAllEnumNamesHelper.GetEnumName(incomes);
+            incomesFinal = GetAllEnumNamesHelper.GetEnumName(incomesFinal);
 
             var response = new PaginatedResponse<GeneralResponse>
             {
-                Data = incomes,
+                Data = incomesFinal,
                 Draw = int.Parse(requestFormData["draw"]),
-                RecordsFiltered = incomes.Count,
-                RecordsTotal = incomes.Count
+                RecordsFiltered = incomesFinal.Count,
+                RecordsTotal = incomesFinal.Count
             };
 
             return Ok(response);
