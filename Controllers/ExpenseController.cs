@@ -326,7 +326,7 @@ namespace ExpenseManagement.Controllers
 
                         _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
                         _context.Add(document);
-                        await _context.SaveChangesAsync();
+                        _context.SaveChanges();
                     }
                     else
                     {
