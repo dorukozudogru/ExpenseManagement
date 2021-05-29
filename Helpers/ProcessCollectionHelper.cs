@@ -91,52 +91,11 @@ namespace ExpenseManagement.Helpers
             if (requestFormData.TryGetValue("order[0][column]", out tempOrder))
             {
                 var columnIndex = requestFormData["order[0][column]"].ToString();
-                var sortDirection = requestFormData["order[0][dir]"].ToString();
-                tempOrder = new[] { "" };
                 if (requestFormData.TryGetValue($"columns[{columnIndex}][data]", out tempOrder))
                 {
-                    var columnName = requestFormData[$"columns[{columnIndex}][data]"].ToString();
-                    string searchValue = requestFormData["search[value]"].ToString();
-
                     if (pageSize > 0)
                     {
-                        var prop = GetAuditsProperty(columnName);
-                        if (!string.IsNullOrEmpty(searchValue))
-                        {
-                            if (sortDirection == "asc")
-                            {
-                                return lstElements.Where(l => l.Id.ToString().Contains(searchValue)
-                                || l.TableName.Contains(searchValue)
-                                || l.Action.Contains(searchValue)
-                                || l.EntityName.Contains(searchValue)
-                                || l.KeyValues.Contains(searchValue)
-                                || l.NewValues.Contains(searchValue)
-                                || l.OldValues.Contains(searchValue)
-                                || l.Username.Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                            else
-                            {
-                                return lstElements.Where(l => l.Id.ToString().Contains(searchValue)
-                                || l.TableName.Contains(searchValue)
-                                || l.Action.Contains(searchValue)
-                                || l.EntityName.Contains(searchValue)
-                                || l.KeyValues.Contains(searchValue)
-                                || l.NewValues.Contains(searchValue)
-                                || l.OldValues.Contains(searchValue)
-                                || l.Username.Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                        }
-                        else
-                        {
-                            if (sortDirection == "asc")
-                            {
-                                return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                            else
-                            {
-                                return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
-                            }
-                        }
+                        return lstElements.Skip(skip).Take(pageSize).ToList();
                     }
                     else
                     {
