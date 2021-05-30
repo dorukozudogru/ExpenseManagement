@@ -68,7 +68,7 @@ namespace ExpenseManagement.Controllers
                 }
                 if (changedUser != null)
                 {
-                    audits = audits.Where(e => e.Username.ToUpper().Contains(changedUser.ToUpper())).ToList();
+                    audits = audits.Where(e => e.Username != null && e.Username.ToUpper().Contains(changedUser.ToUpper())).ToList();
                 }
             }
 
