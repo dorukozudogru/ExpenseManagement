@@ -555,7 +555,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe, Petrol"))]
         public async Task<IActionResult> POSReportPost(int year, int monthId, int sectorId, DateTime date)
         {
             var posReport = await _context.PointOfSale.ToListAsync();
@@ -736,7 +736,7 @@ namespace ExpenseManagement.Controllers
         //    return Ok(totalProfit);
         //}
 
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe, Petrol"))]
         public ActionResult ExportReport()
         {
             var pageName = Request.Headers["Referer"].ToString()?.Split("/");
