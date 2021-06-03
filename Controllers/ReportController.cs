@@ -58,6 +58,19 @@ namespace ExpenseManagement.Controllers
             return View();
         }
 
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe, Petrol"))]
+        public IActionResult POSReport()
+        {
+            var sectors = _context.Sectors.Where(s => s.Name.Contains("SHELL")).ToList();
+            sectors.Add(new Sectors
+            {
+                Id = 0,
+                Name = ""
+            });
+            ViewData["SectorId"] = new SelectList(sectors.OrderBy(s => s.Id), "Id", "Name");
+            return View();
+        }
+
         [HttpPost]
         [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
         public async Task<IActionResult> BankVaultsReport()
@@ -541,6 +554,58 @@ namespace ExpenseManagement.Controllers
             return Ok(response);
         }
 
+        [HttpPost]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe, Petrol"))]
+        public async Task<IActionResult> POSReportPost(int year, int monthId, int sectorId, DateTime date)
+        {
+            var posReport = await _context.PointOfSale.ToListAsync();
+
+            if (year != 0)
+            {
+                posReport = posReport.Where(e => e.Year == year).ToList();
+            }
+            if (sectorId != 0)
+            {
+                posReport = posReport.Where(e => e.SectorId == sectorId).ToList();
+            }
+            if (monthId != 0)
+            {
+                posReport = posReport.Where(e => e.Month == monthId).ToList();
+            }
+            if (date != DateTime.MinValue)
+            {
+                posReport = posReport.Where(e => e.Date == date).ToList();
+            }
+
+            var posReportFinal = posReport
+                .GroupBy(e => new
+                {
+                    e.BankBranchId,
+                    e.Month,
+                    e.Year
+                })
+                .Select(p => new ExpenseEndorsementProfitReport
+                {
+                    Month = p.Key.Month,
+                    Year = p.Key.Year,
+                    TotalProfit = p.Sum(i => i.Amount),
+                    BankBranchName = _context.BankBranches.FirstOrDefault(bb => bb.Id == p.Key.BankBranchId).Name.ToString()
+                })
+                .ToList();
+
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(posReportFinal);
+
+            var response = new PaginatedResponse<ExpenseEndorsementProfitReport>
+            {
+                Data = posReportFinal,
+                Draw = 1,
+                RecordsFiltered = 0,
+                RecordsTotal = 0
+            };
+
+            return Ok(response);
+        }
+
         //[HttpPost]
         //[Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
         //public async Task<IActionResult> ProfitReportPost(int year)
@@ -671,7 +736,7 @@ namespace ExpenseManagement.Controllers
         //    return Ok(totalProfit);
         //}
 
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe, Petrol"))]
         public ActionResult ExportReport()
         {
             var pageName = Request.Headers["Referer"].ToString()?.Split("/");
@@ -862,6 +927,56 @@ namespace ExpenseManagement.Controllers
 
                     ws.Column(4).PageBreak = true;
                 }
+                if (pageName == "POSReport")
+                {
+                    using (var range = ws.Cells[1, 1, 1, 4])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
+                        range.Style.Font.Color.SetColor(Color.White);
+                    }
+
+                    ws.Cells[1, 1].Value = "Yıl";
+                    ws.Cells[1, 2].Value = "Ay";
+                    ws.Cells[1, 3].Value = "Banka/Şube Adı";
+                    ws.Cells[1, 4].Value = "Toplam Miktar";
+
+                    ws.Row(1).Style.Font.Bold = true;
+
+                    for (int c = 2; c < items.Count + 2; c++)
+                    {
+                        ws.Cells[c, 1].Value = items[c - 2].Year;
+
+                        ws.Cells[c, 2].Value = items[c - 2].MonthName;
+
+                        ws.Cells[c, 3].Value = items[c - 2].BankBranchName;
+
+                        ws.Cells[c, 4].Value = items[c - 2].TotalProfit.ToString("C2", new CultureInfo("tr-TR"));
+                    }
+
+                    ws.Column(4).Style.Numberformat.Format = "#,##0.00 ₺";
+
+                    var lastRow = ws.Dimension.End.Row;
+                    var lastColumn = ws.Dimension.End.Column;
+
+                    using (var range = ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(color: Color.Gray);
+                        range.Style.Font.Color.SetColor(Color.White);
+                    }
+
+                    ws.Cells[lastRow + 1, 3].Value = "Toplam:";
+                    ws.Cells[lastRow + 1, 4].Formula = String.Format("SUM(D2:D{0})", lastRow);
+
+                    ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                    ws.Cells["A1:D" + items.Count + 2].AutoFilter = true;
+
+                    ws.Column(4).PageBreak = true;
+                }
+
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Landscape;
                 ws.PrinterSettings.Scale = 100;
