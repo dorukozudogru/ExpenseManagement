@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,6 +51,8 @@ namespace ExpenseManagement.Models.ViewModels
                 }
             }
 
+            public int Year { get; set; }
+
             public double TotalAmount { get; set; }
 
             public byte TotalAmountCurrency { get; set; }
@@ -61,6 +66,8 @@ namespace ExpenseManagement.Models.ViewModels
             public string TotalProfitCurrencyName { get; set; }
 
             public double Percent { get; set; }
+
+            public string BankBranchName { get; set; }
         }
     }
 }

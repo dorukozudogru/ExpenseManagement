@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "GES Net Kâr Raporu";
+    ViewData["Title"] = "POS Toplamları Raporu";
 }
 
 <section class="content">
@@ -9,24 +9,50 @@
                 <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
-                            <i class="fas fa-hand-holding-usd"></i>&nbsp;GES Net Kâr Raporu
+                            <i class="fas fa-cash-register"></i>&nbsp;POS Toplamları Raporu
                         </h5>
                     </div>
                     <div class="card-body">
-                        <div class="form-group">
-                            <label class="control-label">Yıl</label>
-                            <div class="input-group-prepend">
-                                <select class="form-control btn btn-default" id="year">
-                                    <option>2021</option>
-                                    <option>2022</option>
-                                    <option>2023</option>
-                                    <option>2024</option>
-                                    <option>2025</option>
-                                    <option>2026</option>
-                                    <option>2027</option>
-                                    <option>2028</option>
-                                    <option>2029</option>
-                                </select>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Yıl</label>
+                                    <div class="input-group-prepend">
+                                        <select class="form-control btn btn-default" id="year">
+                                            <option></option>
+                                            <option>2021</option>
+                                            <option>2022</option>
+                                            <option>2023</option>
+                                            <option>2024</option>
+                                            <option>2025</option>
+                                            <option>2026</option>
+                                            <option>2027</option>
+                                            <option>2028</option>
+                                            <option>2029</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Sektör/İş Kolu Adı</label>
+                                    <select class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Ay</label>
+                                    <select class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Tarih</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -50,15 +76,22 @@
                                 <thead>
                                     <tr>
                                         <th>
+                                            Yıl
+                                        </th>
+                                        <th>
                                             Ay
                                         </th>
                                         <th>
-                                            Toplam Kâr
+                                            Banka/Şube Adı
+                                        </th>
+                                        <th>
+                                            Toplam Miktar
                                         </th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
+                                        <td colspan="2"></td>
                                         <td style="font-weight:bold">Toplam:</td>
                                         <td style="font-weight:bold" id="totalProfit"></td>
                                     </tr>
@@ -72,8 +105,8 @@
     </div>
 </section>
 
-@section Scripts{
-    <script>
+<script>
+    window.onload = function getAll() {
         $('#getResult').click(function () {
             $("#resultRow").show();
             $("#exportButton").show();
@@ -111,24 +144,32 @@
                     };
 
                     pageAmountTotal = api
-                        .column(1, { page: 'current' })
+                        .column(3, { page: 'current' })
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                    $(api.column(1).footer()).html(
+                    $(api.column(3).footer()).html(
                         currency(pageAmountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
                     );
                 },
                 "ajax": {
-                    "url": "/Report/EnergyProfitReportPost?year=" + $('#year').val(),
+                    "url": "/Report/POSReportPost?year=" + $('#year').val() + "&monthId=" + $('#monthId').val() + "&sectorId=" + $('#sectorId').val() + "&date=" + $('#datepicker').val(),
                     "method": "POST"
                 },
                 "destroy": true,
                 "columns": [
                     {
+                        "data": "year",
+                        "orderable": false
+                    },
+                    {
                         "data": "monthName",
+                        "orderable": false
+                    },
+                    {
+                        "data": "bankBranchName",
                         "orderable": false
                     },
                     {
@@ -136,7 +177,7 @@
                         "orderable": false,
                         "render": function (data, type, full, meta) {
                             if (data != null) {
-                                return currency(full.totalProfit, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.totalProfitCurrencyName;
+                                return currency(full.totalProfit, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                             }
                             return "-";
                         }
@@ -148,5 +189,5 @@
                 "pageLength": 100
             });
         });
-    </script>
-}
+    }
+</script>
