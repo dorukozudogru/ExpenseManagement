@@ -26,17 +26,26 @@
                                     <label class="control-label">Sektör/İş Kolu Adı</label>
                                     <select class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
                                 </div>
+                                <div class="form-group">
+                                    <label class="control-label">Ay</label>
+                                    <select class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="control-label">Yakıt Türü</label>
                                     <select class="form-control" asp-items="ViewBag.FuelTypeId" id="fuelTypeId"></select>
                                 </div>
-                            </div>
-                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="control-label">Ay</label>
-                                    <select class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                    <label class="control-label">Tarih</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -357,7 +366,8 @@
                 "url": "/FuelSale/Post?isFiltered=true"
                     + "&monthId=" + document.getElementById("monthId").value
                     + "&fuelTypeId=" + document.getElementById("fuelTypeId").value
-                    + "&sectorId=" + document.getElementById("sectorId").value,
+                    + "&sectorId=" + document.getElementById("sectorId").value
+                    + "&date=" + document.getElementById("datepicker").value,
                 "method": "POST"
             },
             "columns": [

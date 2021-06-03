@@ -43,6 +43,12 @@
                                     <label class="control-label">Sektör/İş Kolu Adı</label>
                                     <select class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
                                 </div>
+                                <div class="form-group">
+                                    <label class="control-label">Tutar Aralığı</label>
+                                    <input id="range_1" type="text" name="range_1" value="">
+                                    <input hidden id="from" />
+                                    <input hidden id="to" />
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -53,13 +59,16 @@
                                     <label class="control-label">Banka/Şube Adı</label>
                                     <select class="form-control" asp-items="ViewBag.BankId" id="bankId"></select>
                                 </div>
-                            </div>
-                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="control-label">Tutar Aralığı</label>
-                                    <input id="range_1" type="text" name="range_1" value="">
-                                    <input hidden id="from" />
-                                    <input hidden id="to" />
+                                    <label class="control-label">Tarih</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -308,7 +317,8 @@
                     + "&monthId=" + document.getElementById("monthId").value
                     + "&bankId=" + document.getElementById("bankId").value
                     + "&from=" + document.getElementById("from").value
-                    + "&to=" + document.getElementById("to").value,
+                    + "&to=" + document.getElementById("to").value
+                    + "&date=" + document.getElementById("datepicker").value,
                 "method": "POST"
             },
             "columns": [
