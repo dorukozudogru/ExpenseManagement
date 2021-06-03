@@ -58,7 +58,7 @@ namespace ExpenseManagement.Controllers
             return View();
         }
 
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe, Petrol"))]
         public IActionResult POSReport()
         {
             var sectors = _context.Sectors.Where(s => s.Name.Contains("SHELL")).ToList();
