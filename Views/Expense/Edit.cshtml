@@ -76,6 +76,7 @@
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
                                                     <select class="form-control btn btn-default" id="taxRate" onchange="calculateTax()">
+                                                        <option>% 0</option>
                                                         <option>% 1</option>
                                                         <option>% 8</option>
                                                         <option>% 18</option>
@@ -194,11 +195,13 @@
                 dayS = dayS < 10 ? "0" + dayS : dayS;
                 monthS = monthS < 10 ? "0" + monthS : monthS;
 
-                var dayL = lastPaymentDate.getDate();
-                var monthL = lastPaymentDate.getMonth() + 1;
-                var yearL = lastPaymentDate.getFullYear();
-                dayL = dayL < 10 ? "0" + dayL : dayL;
-                monthL = monthL < 10 ? "0" + monthL : monthL;
+                if (returnvalue.lastPaymentDate != null) {
+                    var dayL = lastPaymentDate.getDate();
+                    var monthL = lastPaymentDate.getMonth() + 1;
+                    var yearL = lastPaymentDate.getFullYear();
+                    dayL = dayL < 10 ? "0" + dayL : dayL;
+                    monthL = monthL < 10 ? "0" + monthL : monthL;
+                }
 
                 if (returnvalue.salaryAmount == null) {
                     document.getElementById("id").value = returnvalue.id;
@@ -206,7 +209,9 @@
                     document.getElementById("sectorId").value = returnvalue.sectorId;
                     document.getElementById("supplier").value = returnvalue.supplierDef;
                     document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
-                    document.getElementById("datepicker2").value = yearL + "/" + monthL + "/" + dayL;
+                    if (returnvalue.lastPaymentDate != null) {
+                        document.getElementById("datepicker2").value = yearL + "/" + monthL + "/" + dayL;
+                    }
                     document.getElementById("definition").value = returnvalue.definition;
                     document.getElementById("amount").value = currency(returnvalue.amount, { decimal: ',', separator: '', symbol: '' }).format();
                     document.getElementById("amountCurrency").value = returnvalue.amountCurrency;

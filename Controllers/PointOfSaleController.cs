@@ -48,7 +48,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(bool isFiltered, int year, int sectorId, int monthId, int bankId, double from, double to)
+        public async Task<IActionResult> Post(bool isFiltered, int year, int sectorId, int monthId, int bankId, double from, double to, DateTime date)
         {
             var requestFormData = Request.Form;
 
@@ -79,6 +79,10 @@ namespace ExpenseManagement.Controllers
                 if (from != 0 && to != 0)
                 {
                     posContext = posContext.Where(e => e.Amount >= from && e.Amount <= to).ToList();
+                }
+                if (date != DateTime.MinValue)
+                {
+                    posContext = posContext.Where(e => e.Date == date).ToList();
                 }
             }
 

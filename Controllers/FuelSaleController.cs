@@ -47,7 +47,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(bool isFiltered, int fuelTypeId, int monthId, int sectorId)
+        public async Task<IActionResult> Post(bool isFiltered, int fuelTypeId, int monthId, int sectorId, DateTime date)
         {
             var requestFormData = Request.Form;
 
@@ -70,6 +70,10 @@ namespace ExpenseManagement.Controllers
                 if (sectorId != 0)
                 {
                     fsContext = fsContext.Where(e => e.SectorId == sectorId).ToList();
+                }
+                if (date != DateTime.MinValue)
+                {
+                    fsContext = fsContext.Where(e => e.Date == date).ToList();
                 }
             }
 
