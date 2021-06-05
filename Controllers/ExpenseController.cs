@@ -672,6 +672,24 @@ namespace ExpenseManagement.Controllers
         }
         #endregion
 
+        public IActionResult GetSuppliers()
+        {
+            var name = HttpContext.Request.Query["term"].ToString();
+            var supplier = _context.Expenses.Where(c => c.SupplierDef.Contains(name)).GroupBy(c => c.SupplierDef).Select(c => c.Key).ToList();
+            List<string> data = new List<string>();
+            if (supplier.Count != 0)
+            {
+                for (int i = 0; i < supplier.Count; i++)
+                {
+                    if (i < 5)
+                    {
+                        data.Add(supplier[i]);
+                    }
+                }
+            }
+            return Ok(data);
+        }
+
         private bool ExpensesExists(int id)
         {
             return _context.Expenses.Any(e => e.Id == id);

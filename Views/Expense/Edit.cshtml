@@ -29,7 +29,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="SupplierDef" class="control-label"></label>
-                                    <input asp-for="SupplierDef" class="form-control" id="supplier" />
+                                    <input asp-for="SupplierDef" class="form-control" id="supplier" autocomplete="off" />
                                     <span asp-validation-for="SupplierDef" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
@@ -268,6 +268,10 @@
                     }, 2000);
                 }
             });
+        });
+
+        $("#supplier").autocomplete({
+            source: '/Expense/GetSuppliers'
         });
     }
 </script>
