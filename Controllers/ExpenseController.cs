@@ -292,6 +292,18 @@ namespace ExpenseManagement.Controllers
 
         public IActionResult Create()
         {
+            var expenseTypes = Enum.GetValues(typeof(Expenses.ExpenseTypeEnum)).Cast<Expenses.ExpenseTypeEnum>().ToList();
+            List<string> types = new List<string>();
+
+            foreach (var item in expenseTypes)
+            {
+                if (EnumExtensionsHelper.GetDisplayName(item) != "Maaş")
+                {
+                    types.Add(EnumExtensionsHelper.GetDisplayName(item));
+                }
+            }
+
+            ViewData["ExpenseType"] = new SelectList(types);
             ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name");
             return View();
         }
@@ -338,7 +350,31 @@ namespace ExpenseManagement.Controllers
             return BadRequest("Gider Kaydedilirken Bir Hata Oluştu!");
         }
 
+        public IActionResult SalaryCreate()
+        {
+            var expenseTypes = Enum.GetValues(typeof(Expenses.ExpenseTypeEnum)).Cast<Expenses.ExpenseTypeEnum>().ToList();
+            List<string> types = new List<string>();
+
+            foreach (var item in expenseTypes)
+            {
+                if (EnumExtensionsHelper.GetDisplayName(item) == "Maaş")
+                {
+                    types.Add(EnumExtensionsHelper.GetDisplayName(item));
+                }
+            }
+
+            ViewData["ExpenseType"] = new SelectList(types);
+            ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name");
+            return View();
+        }
+
         public IActionResult Edit()
+        {
+            ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name");
+            return View();
+        }
+
+        public IActionResult SalaryEdit()
         {
             ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name");
             return View();
@@ -396,7 +432,6 @@ namespace ExpenseManagement.Controllers
                         }
                     }
 
-                    expense.ExpenseType = expenses.ExpenseType;
                     expense.SectorId = expenses.SectorId;
                     expense.SupplierDef = expenses.SupplierDef;
                     expense.Definition = expenses.Definition;
@@ -406,6 +441,13 @@ namespace ExpenseManagement.Controllers
                     expense.AmountCurrency = expenses.AmountCurrency;
                     expense.TAX = expenses.TAX;
                     expense.TAXCurrency = expenses.TAXCurrency;
+
+                    if (expenses.SalaryAmount != null)
+                    {
+                        expense.Month = expenses.Month;
+                        expense.SalaryAmount = expenses.SalaryAmount;
+                        expense.SalaryAmountCurrency = expenses.SalaryAmountCurrency;
+                    }
 
                     _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
                     _context.Update(expense);

@@ -1,5 +1,12 @@
 ﻿@inject Microsoft.AspNetCore.Identity.SignInManager<AppIdentityUser> signInManager;
 
+@{
+    ViewData["Version"] = "Versiyon 1.13.0";
+    ViewData["PreviousVersion"] = "Versiyon 1.12.2";
+    ViewData["2PreviousVersion"] = "Versiyon 1.12.1";
+    ViewData["3PreviousVersion"] = "Versiyon 1.12.0";
+}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,16 +56,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="fas fa-info-circle"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-sm-right">
-                        <div class="dropdown-item">
-                            <i class="fas fa-laptop-code"></i>&nbsp;&nbsp;Versiyon 1.12.2
-                        </div>
-                    </div>
-                </li>
+                <a class="nav-link" id="openVersion" href="#" data-toggle="modal" data-target="#modal-version"><i class="fas fa-info-circle"></i></a>
             </ul>
         </nav>
         <aside class="main-sidebar sidebar-light-primary elevation-4" style="position:fixed">
@@ -404,6 +402,92 @@
             <input id="warningSuccessMessage" hidden />
             <button type="button" class="btn btn-danger swalDefaultError" hidden id="swalDefaultError">
             </button>
+            <div class="modal fade" id="modal-version">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content text-white" style="background-color:#343a40">
+                        <div class="modal-header">
+                            <h4 class="modal-title"><strong><i class="fas fa-laptop-code"></i>&nbsp;&nbsp;Versiyon Bilgileri</strong></h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body text-dark">
+                            <div class="card card-primary collapsed-card">
+                                <div class="card-header border-0">
+                                    <h5 class="card-title">
+                                        @ViewData["Version"]
+                                    </h5>
+                                    <div class="card-tools">
+                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Maaş Girişi Gider Girişi Ekranından Ayrıldı</li>
+                                        <li>Gider Detayları ve Gider Silme Ekranlarına Maaş Bilgileri Eklendi</li>
+                                        <li>Versiyon Bilgileri Ekranı Eklendi</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card card-primary collapsed-card">
+                                <div class="card-header border-0">
+                                    <h5 class="card-title">
+                                        @ViewData["PreviousVersion"]
+                                    </h5>
+                                    <div class="card-tools">
+                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Satıcı/Tedarikçi Alanının Otomatik Doldurulması Sağlandı</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card card-primary collapsed-card">
+                                <div class="card-header border-0">
+                                    <h5 class="card-title">
+                                        @ViewData["2PreviousVersion"]
+                                    </h5>
+                                    <div class="card-tools">
+                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Akaryakıt Satışları ve POS Toplamları Ekranlarına Tarih Bazlı Filtreleme Eklendi</li>
+                                        <li>Gider Ekleme ve Güncellemeye %0 KDV Eklendi</li>
+                                        <li>Gider Güncelleme Ekranında Son Ödeme Tarihi Boşken 1970 Gelmesi Hatası Giderildi</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card card-primary collapsed-card">
+                                <div class="card-header border-0">
+                                    <h5 class="card-title">
+                                        @ViewData["3PreviousVersion"]
+                                    </h5>
+                                    <div class="card-tools">
+                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                        <li>POS Toplamları Raporu Yapıldı</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             @RenderBody()
         </div>
         <footer class="main-footer border-top-0" style="background-color:#343a40">

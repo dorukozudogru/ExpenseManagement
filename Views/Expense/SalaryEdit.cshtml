@@ -1,0 +1,138 @@
+﻿@model ExpenseManagement.Models.Expenses
+
+@{
+    ViewData["Title"] = "Maaşı Güncelle";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Maaşı Güncelle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" id="id" />
+                                <div class="form-group">
+                                    <label asp-for="ExpenseType" class="control-label"></label>
+                                    <select asp-for="ExpenseType" class="form-control" asp-items="@Html.GetEnumSelectList<Expenses.ExpenseTypeEnum>()" id="expenseType" disabled></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Sector.Name" class="control-label"></label>
+                                    <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Definition" class="control-label"></label>
+                                    <input asp-for="Definition" class="form-control" id="definition" />
+                                    <span asp-validation-for="Definition" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Month" class="control-label"></label>
+                                    <select asp-for="Month" class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="SalaryAmount" class="control-label" id="salary-title-for-salary"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group mb-3" id="salary-for-salary">
+                                        <div class="input-group-prepend">
+                                            <select asp-for="SalaryAmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<Expenses.SalaryAmountCurrencyEnum>()" id="salaryAmountCurrency"></select>
+                                        </div>
+                                        <input asp-for="SalaryAmount" class="form-control" id="salaryAmount" autocomplete="off" />
+                                        <span asp-validation-for="SalaryAmount" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="update()" id="updateButton" />
+                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.onload = function getExpense() {
+        var id = '@Url.RouteUrl(ViewContext.RouteData.Values).Split("/").Last()';
+
+        $.ajax({
+            url: '/Expense/EditPost?&id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("id").value = returnvalue.id;
+                document.getElementById("expenseType").value = returnvalue.expenseType;
+                document.getElementById("sectorId").value = returnvalue.sectorId;
+                document.getElementById("definition").value = returnvalue.definition;
+                document.getElementById("monthId").value = returnvalue.month;
+                document.getElementById("salaryAmount").value = returnvalue.salaryAmount;
+                document.getElementById("salaryAmountCurrency").value = returnvalue.salaryAmountCurrency;
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = "Maaş Getirilirken Bir Hata Oluştu!";
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>
+<script>
+    var id;
+    var sectorId;
+    var definition;
+    var monthId;
+    var salaryAmount;
+    var salaryAmountCurrency;
+
+    function update() {
+        sectorId = document.getElementById("sectorId").value;
+        definition = document.getElementById("definition").value;
+        month = document.getElementById("monthId").value;
+        salaryAmount = document.getElementById("salaryAmount").value;
+        salaryAmountCurrency = document.getElementById("salaryAmountCurrency").value;
+        id = document.getElementById("id").value;
+
+        var data = new FormData();
+
+        data.append('sectorId', sectorId);
+        data.append('definition', definition);
+        data.append('month', month);
+        data.append('salaryAmount', salaryAmount);
+        data.append('salaryAmountCurrency', salaryAmountCurrency);
+        data.append('id', id);
+
+        $("#updateButton").attr("disabled", true);
+
+        $.ajax({
+            type: "POST",
+            url: "/Expense/Edit",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#updateButton").attr("disabled", false);
+                }, 1600);
+            }
+        });
+    }
+</script>

@@ -49,8 +49,8 @@
                             <address>
                                 @Html.DisplayNameFor(model => model.ExpenseTypeName): <strong>@Html.DisplayFor(model => model.ExpenseTypeName)</strong><br>
                                 @Html.DisplayNameFor(model => model.Sector.Name): <strong>@Html.DisplayFor(model => model.Sector.Name)</strong><br>
-                                @Html.DisplayNameFor(model => model.Date): <strong>@Html.DisplayFor(model => model.Date)</strong><br>
                                 @Html.DisplayNameFor(model => model.Definition): <strong>@Html.DisplayFor(model => model.Definition)</strong><br>
+                                @Html.DisplayNameFor(model => model.Date): <strong>@Html.DisplayFor(model => model.Date)</strong><br>
                             </address>
                         </div>
                         <div class="col-sm-6 invoice-col">
@@ -58,6 +58,15 @@
                             @Html.DisplayNameFor(model => model.LastPaymentDate): <strong>@Html.DisplayFor(model => model.LastPaymentDate)</strong><br>
                             @Html.DisplayNameFor(model => model.Amount): <strong>@Html.DisplayFor(model => model.Amount) @Html.DisplayFor(model => model.AmountCurrencyName)</strong><br>
                             @Html.DisplayNameFor(model => model.TAX): <strong>@Html.DisplayFor(model => model.TAX) @Html.DisplayFor(model => model.TAXCurrencyName)</strong><br>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row invoice-info">
+                        <div class="col-sm-6 invoice-col">
+                            <address>
+                                @Html.DisplayNameFor(model => model.Month): <strong>@Html.DisplayFor(model => model.MonthName)</strong><br>
+                                @Html.DisplayNameFor(model => model.SalaryAmount): <strong>@Html.DisplayFor(model => model.SalaryAmount) @Html.DisplayFor(model => model.SalaryAmountCurrencyName)</strong><br>
+                            </address>
                         </div>
                     </div>
                     <hr />
