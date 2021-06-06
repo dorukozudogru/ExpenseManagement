@@ -52,7 +52,7 @@
                     <div class="card-footer">
                         <div class="form-group">
                             <input type="submit" value="Kaydet" class="btn btn-success" onclick="update()" id="updateButton" />
-                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                            <a class="btn btn-primary pull-right" asp-action="Salary" style="margin-right: 5px;">
                                 <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                             </a>
                         </div>
@@ -76,7 +76,7 @@
                 document.getElementById("sectorId").value = returnvalue.sectorId;
                 document.getElementById("definition").value = returnvalue.definition;
                 document.getElementById("monthId").value = returnvalue.month;
-                document.getElementById("salaryAmount").value = returnvalue.salaryAmount;
+                document.getElementById("salaryAmount").value = currency(returnvalue.salaryAmount, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("salaryAmountCurrency").value = returnvalue.salaryAmountCurrency;
             },
             error: function (error) {
