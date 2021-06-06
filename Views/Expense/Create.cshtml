@@ -20,7 +20,7 @@
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 <div class="form-group">
                                     <label asp-for="ExpenseType" class="control-label"></label>
-                                    <select asp-for="ExpenseType" class="form-control" asp-items="@Html.GetEnumSelectList<Expenses.ExpenseTypeEnum>()" id="expenseType" onchange="changeExpenseType()"></select>
+                                    <select asp-for="ExpenseType" class="form-control" asp-items="ViewBag.ExpenseType" id="expenseType"></select>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Sector.Name" class="control-label"></label>
@@ -106,20 +106,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="Month" class="control-label"></label>
-                                    <select asp-for="Month" disabled class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="SalaryAmount" class="control-label" id="salary-title-for-salary"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
-                                    <div class="input-group mb-3" id="salary-for-salary">
-                                        <div class="input-group-prepend">
-                                            <select asp-for="SalaryAmountCurrency" class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.SalaryAmountCurrencyEnum>()" id="salaryAmountCurrency"></select>
-                                        </div>
-                                        <input asp-for="SalaryAmount" disabled class="form-control" id="salaryAmount" autocomplete="off" />
-                                        <span asp-validation-for="SalaryAmount" class="text-danger"></span>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -150,40 +136,6 @@
     }
 </script>
 <script>
-    function changeExpenseType() {
-        if (document.getElementById("expenseType").value == 2) {
-            $('#datepicker').attr('disabled', 'disabled');
-            $('#datepicker2').attr('disabled', 'disabled');
-            $('#supplier').attr('disabled', 'disabled');
-            $('#amount').attr('disabled', 'disabled');
-            $('#amountCurrency').attr('disabled', 'disabled');
-            $('#tax').attr('disabled', 'disabled');
-            $('#taxCurrency').attr('disabled', 'disabled');
-            $('#imageFile').attr('disabled', 'disabled');
-            $('#taxRate').attr('disabled', 'disabled');
-
-            $('#monthId').removeAttr('disabled');
-            $('#salaryAmount').removeAttr('disabled');
-            $('#salaryAmountCurrency').removeAttr('disabled');
-        }
-        else {
-            $('#datepicker').removeAttr('disabled');
-            $('#datepicker2').removeAttr('disabled');
-            $('#supplier').removeAttr('disabled');
-            $('#amount').removeAttr('disabled');
-            $('#amountCurrency').removeAttr('disabled');
-            $('#tax').removeAttr('disabled');
-            $('#taxCurrency').removeAttr('disabled');
-            $('#imageFile').removeAttr('disabled');
-            $('#taxRate').removeAttr('disabled');
-
-            $('#monthId').attr('disabled', 'disabled');
-            $('#salaryAmount').attr('disabled', 'disabled');
-            $('#salaryAmountCurrency').attr('disabled', 'disabled');
-        }
-    }
-</script>
-<script>
     var expenseType;
     var sectorId;
     var supplier;
@@ -193,9 +145,6 @@
     var amountCurrency;
     var tax;
     var taxCurrency;
-    var monthId;
-    var salaryAmount;
-    var salaryAmountCurrency;
 
     function add() {
         expenseType = document.getElementById("expenseType").value;
@@ -208,9 +157,6 @@
         amountCurrency = document.getElementById("amountCurrency").value;
         tax = document.getElementById("tax").value;
         taxCurrency = document.getElementById("taxCurrency").value;
-        monthId = document.getElementById("monthId").value;
-        salaryAmount = document.getElementById("salaryAmount").value;
-        salaryAmountCurrency = document.getElementById("salaryAmountCurrency").value;
 
         var fileupload = $("#imageFile").get(0);
         var files = fileupload.files;
@@ -219,7 +165,13 @@
             data.append(files[i].name, files[i]);
         }
 
-        data.append('expenseType', expenseType);
+        if (expenseType == "Satınalma") {
+            data.append('expenseType', 0);
+        }
+        if (expenseType == "Gider") {
+            data.append('expenseType', 1);
+        }
+
         data.append('sectorId', sectorId);
         data.append('supplierDef', supplier);
         data.append('date', date);
@@ -229,9 +181,6 @@
         data.append('amountCurrency', amountCurrency);
         data.append('tax', tax);
         data.append('taxCurrency', taxCurrency);
-        data.append('month', monthId);
-        data.append('salaryAmount', salaryAmount);
-        data.append('salaryAmountCurrency', salaryAmountCurrency);
 
         $("#createButton").attr("disabled", true);
 
