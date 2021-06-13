@@ -101,7 +101,7 @@
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;
                 document.getElementById("swalDefaultSuccess").click();
                 window.setTimeout(function () {
-                    window.history.back();
+                    location.reload();
                 }, 2000);
             },
             error: function (error) {
