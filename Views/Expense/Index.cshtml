@@ -110,7 +110,13 @@
                                                 @Html.DisplayNameFor(model => model.Amount)
                                             </th>
                                             <th>
+                                                @Html.DisplayNameFor(model => model.Discount)
+                                            </th>
+                                            <th>
                                                 @Html.DisplayNameFor(model => model.TAX)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.OtherTAX)
                                             </th>
                                             <th>İşlemler</th>
                                         </tr>
@@ -119,6 +125,8 @@
                                         <tr>
                                             <td colspan="6"></td>
                                             <td style="font-weight:bold">Toplam:</td>
+                                            <td style="font-weight:bold"></td>
+                                            <td style="font-weight:bold"></td>
                                             <td style="font-weight:bold"></td>
                                             <td style="font-weight:bold"></td>
                                             <td style="font-weight:bold"></td>
@@ -179,7 +187,7 @@
                     currency(pageAmountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
                 );
 
-                pageTAXTotal = api
+                pageDiscountTotal = api
                     .column(8, { page: 'current' })
                     .data()
                     .reduce(function (a, b) {
@@ -187,7 +195,29 @@
                     }, 0);
 
                 $(api.column(8).footer()).html(
+                    currency(pageDiscountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
+                );
+
+                pageTAXTotal = api
+                    .column(9, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(9).footer()).html(
                     currency(pageTAXTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
+                );
+
+                pageOtherTAXTotal = api
+                    .column(10, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(10).footer()).html(
+                    currency(pageOtherTAXTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
                 );
             },
             "ajax": {
@@ -251,10 +281,28 @@
                     }
                 },
                 {
+                    "data": "discount",
+                    "render": function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.discount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.discountCurrencyName;
+                        }
+                        return "-";
+                    }
+                },
+                {
                     "data": "tax",
                     "render": function (data, type, full, meta) {
                         if (data != null) {
                             return currency(full.tax, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.taxCurrencyName;
+                        }
+                        return "-";
+                    }
+                },
+                {
+                    "data": "otherTAX",
+                    "render": function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.otherTAX, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.otherTAXCurrencyName;
                         }
                         return "-";
                     }
@@ -337,7 +385,7 @@
                     currency(pageAmountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
                 );
 
-                pageTAXTotal = api
+                pageDiscountTotal = api
                     .column(8, { page: 'current' })
                     .data()
                     .reduce(function (a, b) {
@@ -345,7 +393,29 @@
                     }, 0);
 
                 $(api.column(8).footer()).html(
+                    currency(pageDiscountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
+                );
+
+                pageTAXTotal = api
+                    .column(9, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(9).footer()).html(
                     currency(pageTAXTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
+                );
+
+                pageOtherTAXTotal = api
+                    .column(10, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(10).footer()).html(
+                    currency(pageOtherTAXTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
                 );
             },
             "ajax": {
@@ -416,10 +486,28 @@
                     }
                 },
                 {
+                    "data": "discount",
+                    "render": function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.discount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.discountCurrencyName;
+                        }
+                        return "-";
+                    }
+                },
+                {
                     "data": "tax",
                     "render": function (data, type, full, meta) {
                         if (data != null) {
                             return currency(full.tax, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.taxCurrencyName;
+                        }
+                        return "-";
+                    }
+                },
+                {
+                    "data": "otherTax",
+                    "render": function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.otherTax, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.otherTaxCurrencyName;
                         }
                         return "-";
                     }

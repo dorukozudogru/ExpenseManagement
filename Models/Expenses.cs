@@ -77,6 +77,16 @@ namespace ExpenseManagement.Models
             GBP = 3
         }
 
+        [DisplayName("İskonto")]
+        public double? Discount { get; set; }
+
+        [DisplayName("İskonto Dövizi")]
+        public double? DiscountCurrency { get; set; }
+
+        [NotMapped]
+        [DisplayName("İskonto Dövizi")]
+        public string DiscountCurrencyName { get; set; }
+
         [DisplayName("KDV")]
         public double? TAX { get; set; }
 
@@ -98,6 +108,16 @@ namespace ExpenseManagement.Models
             [Display(Name = "£")]
             GBP = 3
         }
+
+        [DisplayName("2. KDV")]
+        public double? OtherTAX { get; set; }
+
+        [DisplayName("2. KDV Dövizi")]
+        public double? OtherTAXCurrency { get; set; }
+
+        [NotMapped]
+        [DisplayName("2. KDV Dövizi")]
+        public string OtherTAXCurrencyName { get; set; }
 
         [DisplayName("Fatura Görüntüsü")]
         public byte[] InvoiceImage { get; set; }

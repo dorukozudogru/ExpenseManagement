@@ -24,6 +24,8 @@
     <Compile Remove="Migrations\20210410215951_plate-and-purchased-salesman-added.Designer.cs" />
     <Compile Remove="Migrations\20210411090607_valor-date-added.cs" />
     <Compile Remove="Migrations\20210411090607_valor-date-added.Designer.cs" />
+    <Compile Remove="Migrations\20210613132153_other-tax-nad-discount-added.cs" />
+    <Compile Remove="Migrations\20210613132153_other-tax-nad-discount-added.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -68,6 +68,16 @@
                                         <span asp-validation-for="Amount" class="text-danger"></span>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label asp-for="Discount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select asp-for="DiscountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="discountCurrency"></select>
+                                        </div>
+                                        <input asp-for="Discount" class="form-control" id="discount" autocomplete="off" />
+                                        <span asp-validation-for="Discount" class="text-danger"></span>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-1">
                                         <div class="form-group">
@@ -93,6 +103,35 @@
                                                 </div>
                                                 <input asp-for="TAX" class="form-control" id="tax" autocomplete="off" />
                                                 <span asp-validation-for="TAX" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <label class="control-label">2. KDV Oranı</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" id="otherTaxRate" onchange="calculateOtherTax()">
+                                                        <option>% 0</option>
+                                                        <option>% 1</option>
+                                                        <option>% 8</option>
+                                                        <option>% 18</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <div class="form-group">
+                                            <label asp-for="OtherTAX" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select asp-for="OtherTAXCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="otherTaxCurrency"></select>
+                                                </div>
+                                                <input asp-for="OtherTAX" class="form-control" id="otherTax" autocomplete="off" />
+                                                <span asp-validation-for="OtherTAX" class="text-danger"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -134,6 +173,16 @@
         }
         document.getElementById("tax").value = currency(tax, { decimal: ',', separator: '', symbol: '' }).format();
     }
+    function calculateOtherTax() {
+        amount = document.getElementById("amount").value;
+        taxRate = document.getElementById("otherTaxRate").value.substring(2, 4);
+        tax = amount * taxRate / 100;
+        if (isNaN(Number(tax))) {
+            var amount = Number(amount.replace(',', '.'));
+            tax = amount * taxRate / 100;
+        }
+        document.getElementById("otherTax").value = currency(tax, { decimal: ',', separator: '', symbol: '' }).format();
+    }
 </script>
 <script>
     var expenseType;
@@ -141,10 +190,15 @@
     var supplier;
     var date;
     var definition;
+    var lastPaymentDate;
     var amount;
     var amountCurrency;
+    var discount;
+    var discountCurrency;
     var tax;
     var taxCurrency;
+    var otherTax;
+    var otherTaxCurrency;
 
     function add() {
         expenseType = document.getElementById("expenseType").value;
@@ -155,8 +209,12 @@
         definition = document.getElementById("definition").value;
         amount = document.getElementById("amount").value;
         amountCurrency = document.getElementById("amountCurrency").value;
+        discount = document.getElementById("discount").value;
+        discountCurrency = document.getElementById("discountCurrency").value;
         tax = document.getElementById("tax").value;
         taxCurrency = document.getElementById("taxCurrency").value;
+        otherTax = document.getElementById("otherTax").value;
+        otherTaxCurrency = document.getElementById("otherTaxCurrency").value;
 
         var fileupload = $("#imageFile").get(0);
         var files = fileupload.files;
@@ -179,8 +237,12 @@
         data.append('definition', definition);
         data.append('amount', amount);
         data.append('amountCurrency', amountCurrency);
+        data.append('discount', discount);
+        data.append('discountCurrency', discountCurrency);
         data.append('tax', tax);
         data.append('taxCurrency', taxCurrency);
+        data.append('otherTAX', otherTax);
+        data.append('otherTAXCurrency', otherTaxCurrency);
 
         $("#createButton").attr("disabled", true);
 
