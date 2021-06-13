@@ -439,8 +439,12 @@ namespace ExpenseManagement.Controllers
                     expense.LastPaymentDate = expenses.LastPaymentDate;
                     expense.Amount = expenses.Amount;
                     expense.AmountCurrency = expenses.AmountCurrency;
+                    expense.Discount = expenses.Discount;
+                    expense.DiscountCurrency = expenses.DiscountCurrency;
                     expense.TAX = expenses.TAX;
                     expense.TAXCurrency = expenses.TAXCurrency;
+                    expense.OtherTAX = expenses.OtherTAX;
+                    expense.OtherTAXCurrency = expenses.OtherTAXCurrency;
 
                     if (expenses.SalaryAmount != null)
                     {

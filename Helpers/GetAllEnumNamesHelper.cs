@@ -423,16 +423,34 @@ namespace ExpenseManagement.Helpers
                 switch (expense.AmountCurrency)
                 {
                     case 0:
-                        expense.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.AmountCurrencyEnum.TRY);
+                        expense.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
                         break;
                     case 1:
-                        expense.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.AmountCurrencyEnum.USD);
+                        expense.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
                         break;
                     case 2:
-                        expense.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.AmountCurrencyEnum.EUR);
+                        expense.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
                         break;
                     case 3:
-                        expense.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.AmountCurrencyEnum.GBP);
+                        expense.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                        break;
+                    default:
+                        break;
+                }
+
+                switch (expense.DiscountCurrency)
+                {
+                    case 0:
+                        expense.DiscountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                        break;
+                    case 1:
+                        expense.DiscountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                        break;
+                    case 2:
+                        expense.DiscountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                        break;
+                    case 3:
+                        expense.DiscountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
                         break;
                     default:
                         break;
@@ -441,16 +459,34 @@ namespace ExpenseManagement.Helpers
                 switch (expense.TAXCurrency)
                 {
                     case 0:
-                        expense.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.TAXCurrencyEnum.TRY);
+                        expense.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
                         break;
                     case 1:
-                        expense.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.TAXCurrencyEnum.USD);
+                        expense.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
                         break;
                     case 2:
-                        expense.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.TAXCurrencyEnum.EUR);
+                        expense.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
                         break;
                     case 3:
-                        expense.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.TAXCurrencyEnum.GBP);
+                        expense.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                        break;
+                    default:
+                        break;
+                }
+
+                switch (expense.OtherTAXCurrency)
+                {
+                    case 0:
+                        expense.OtherTAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                        break;
+                    case 1:
+                        expense.OtherTAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                        break;
+                    case 2:
+                        expense.OtherTAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                        break;
+                    case 3:
+                        expense.OtherTAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
                         break;
                     default:
                         break;
@@ -474,16 +510,16 @@ namespace ExpenseManagement.Helpers
                 switch (expense.SalaryAmountCurrency)
                 {
                     case 0:
-                        expense.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.TRY);
+                        expense.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
                         break;
                     case 1:
-                        expense.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.USD);
+                        expense.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
                         break;
                     case 2:
-                        expense.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.EUR);
+                        expense.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
                         break;
                     case 3:
-                        expense.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.GBP);
+                        expense.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
                         break;
                     default:
                         break;
@@ -539,16 +575,34 @@ namespace ExpenseManagement.Helpers
             switch (expenses.AmountCurrency)
             {
                 case 0:
-                    expenses.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.AmountCurrencyEnum.TRY);
+                    expenses.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
                     break;
                 case 1:
-                    expenses.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.AmountCurrencyEnum.USD);
+                    expenses.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
                     break;
                 case 2:
-                    expenses.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.AmountCurrencyEnum.EUR);
+                    expenses.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
                     break;
                 case 3:
-                    expenses.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.AmountCurrencyEnum.GBP);
+                    expenses.AmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                    break;
+                default:
+                    break;
+            }
+
+            switch (expenses.DiscountCurrency)
+            {
+                case 0:
+                    expenses.DiscountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                    break;
+                case 1:
+                    expenses.DiscountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                    break;
+                case 2:
+                    expenses.DiscountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                    break;
+                case 3:
+                    expenses.DiscountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
                     break;
                 default:
                     break;
@@ -557,16 +611,34 @@ namespace ExpenseManagement.Helpers
             switch (expenses.TAXCurrency)
             {
                 case 0:
-                    expenses.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.TAXCurrencyEnum.TRY);
+                    expenses.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
                     break;
                 case 1:
-                    expenses.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.TAXCurrencyEnum.USD);
+                    expenses.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
                     break;
                 case 2:
-                    expenses.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.TAXCurrencyEnum.EUR);
+                    expenses.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
                     break;
                 case 3:
-                    expenses.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.TAXCurrencyEnum.GBP);
+                    expenses.TAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
+                    break;
+                default:
+                    break;
+            }
+
+            switch (expenses.OtherTAXCurrency)
+            {
+                case 0:
+                    expenses.OtherTAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
+                    break;
+                case 1:
+                    expenses.OtherTAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
+                    break;
+                case 2:
+                    expenses.OtherTAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
+                    break;
+                case 3:
+                    expenses.OtherTAXCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
                     break;
                 default:
                     break;
@@ -590,16 +662,16 @@ namespace ExpenseManagement.Helpers
             switch (expenses.SalaryAmountCurrency)
             {
                 case 0:
-                    expenses.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.TRY);
+                    expenses.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.TRY);
                     break;
                 case 1:
-                    expenses.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.USD);
+                    expenses.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.USD);
                     break;
                 case 2:
-                    expenses.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.EUR);
+                    expenses.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.EUR);
                     break;
                 case 3:
-                    expenses.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.GBP);
+                    expenses.SalaryAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(CurrencyEnum.GBP);
                     break;
                 default:
                     break;
