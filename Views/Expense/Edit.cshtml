@@ -195,20 +195,44 @@
     function calculateTax() {
         amount = document.getElementById("amount").value;
         taxRate = document.getElementById("taxRate").value.substring(2, 4);
-        tax = amount * taxRate / 100;
+        discount = document.getElementById("discount").value
+
+        aTemp = amount.replace(',', '.');
+        dTemp = discount.replace(',', '.');
+
+        tTemp = (aTemp - dTemp).toFixed(2);
+
+        tax = tTemp * taxRate / 100;
+
         if (isNaN(Number(tax))) {
-            var amount = Number(amount.replace(',', '.'));
-            tax = amount * taxRate / 100;
+            aTemp = amount.replace(',', '.');
+            dTemp = discount.replace(',', '.');
+
+            tTemp = (aTemp - dTemp).toFixed(2);
+
+            tax = tTemp * taxRate / 100;
         }
         document.getElementById("tax").value = currency(tax, { decimal: ',', separator: '', symbol: '' }).format();
     }
     function calculateOtherTax() {
         amount = document.getElementById("amount").value;
         taxRate = document.getElementById("otherTaxRate").value.substring(2, 4);
-        tax = amount * taxRate / 100;
+        discount = document.getElementById("discount").value
+
+        aTemp = amount.replace(',', '.');
+        dTemp = discount.replace(',', '.');
+
+        tTemp = (aTemp - dTemp).toFixed(2);
+
+        tax = tTemp * taxRate / 100;
+
         if (isNaN(Number(tax))) {
-            var amount = Number(amount.replace(',', '.'));
-            tax = amount * taxRate / 100;
+            aTemp = amount.replace(',', '.');
+            dTemp = discount.replace(',', '.');
+
+            tTemp = (aTemp - dTemp).toFixed(2);
+
+            tax = tTemp * taxRate / 100;
         }
         document.getElementById("otherTax").value = currency(tax, { decimal: ',', separator: '', symbol: '' }).format();
     }
