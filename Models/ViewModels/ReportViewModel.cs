@@ -65,9 +65,30 @@ namespace ExpenseManagement.Models.ViewModels
 
             public string TotalProfitCurrencyName { get; set; }
 
+            public double DifferenceAmount { get; set; }
+
+            public double FuelPurchaseAmount { get; set; }
+
+            public double TotalPurchaseSaleProfit { get; set; }
+
             public double Percent { get; set; }
 
             public string BankBranchName { get; set; }
+        }
+
+        public class RDTResponse
+        {
+            public string SectorName { get; set; }
+
+            public string FuelTypeName { get; set; }
+
+            public DateTime Date { get; set; }
+
+            public double DifferenceAmount { get; set; }
+
+            [ForeignKey(nameof(FuelSale))]
+            public int FuelSaleId { get; set; }
+            public virtual FuelSales FuelSale { get; set; }
         }
     }
 }

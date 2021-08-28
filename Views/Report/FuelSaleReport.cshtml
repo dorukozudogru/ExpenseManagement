@@ -1,7 +1,5 @@
-﻿@model ExpenseManagement.Models.Expenses
-
-@{
-    ViewData["Title"] = "Giderler Raporu";
+﻿@{
+    ViewData["Title"] = "Akaryakıt Satışı Raporu";
 }
 
 <section class="content">
@@ -11,40 +9,43 @@
                 <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
-                            <i class="fas fa-credit-card"></i>&nbsp;Giderler Raporu
+                            <i class="fas fa-gas-pump"></i>&nbsp;Akaryakıt Satışı Raporu
                         </h5>
                     </div>
                     <div class="card-body">
-                        <div class="form-group">
-                            <label asp-for="ExpenseType" class="control-label"></label>
-                            <select asp-for="ExpenseType" class="form-control" asp-items="@Html.GetEnumSelectList<Expenses.ExpenseTypeEnum>()" id="expenseType"></select>
-                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="@Model.StartDate" class="control-label"></label>
+                                    <label class="control-label">Sektör/İş Kolu Adı</label>
+                                    <select class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Başlangıç Tarihi</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">
                                                 <i class="far fa-calendar-alt"></i>
                                             </span>
                                         </div>
-                                        <input asp-for="@Model.StartDate" type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                        <input type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="@Model.FinishDate" class="control-label"></label>
+                                    <label class="control-label">Yakıt Türü</label>
+                                    <select class="form-control" asp-items="ViewBag.FuelTypeId" id="fuelTypeId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Bitiş Tarihi</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">
                                                 <i class="far fa-calendar-alt"></i>
                                             </span>
                                         </div>
-                                        <input asp-for="@Model.FinishDate" type="text" class="form-control float-right" id="datepicker2" autocomplete="off" />
+                                        <input type="text" class="form-control float-right" id="datepicker2" autocomplete="off" />
                                     </div>
-                                    <span asp-validation-for="@Model.FinishDate" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -69,19 +70,22 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            Ay
+                                            Satış Tutarı
                                         </th>
                                         <th>
-                                            Toplam Miktar
+                                            Fark
+                                        </th>
+                                        <th>
+                                            Alım-Satım Kâr
+                                        </th>
+                                        <th>
+                                            Yakıt Alım Değeri
+                                        </th>
+                                        <th>
+                                            Kâr
                                         </th>
                                     </tr>
                                 </thead>
-                                <tfoot>
-                                    <tr>
-                                        <td style="font-weight:bold">Toplam:</td>
-                                        <td style="font-weight:bold" id="totalAmount"></td>
-                                    </tr>
-                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -91,23 +95,11 @@
     </div>
 </section>
 
-@section Scripts{
-    <script src="~/js/datatables.min.js"></script>
-    <script>
+<script>
+    window.onload = function getAll() {
         $('#getResult').click(function () {
             $("#resultRow").show();
             $("#exportButton").show();
-            $.ajax({
-                "url": "/Report/ExpenseReportTotalPost?startDate=" + $('#datepicker').val() + "&finishDate=" + $('#datepicker2').val() + "&expenseType=" + $('#expenseType').val(),
-                "method": "POST"
-            }).done(function (response) {
-                var data = "";
-                response.forEach(element => {
-                    data += currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + element.totalAmountCurrencyName + " + ";
-                });
-                data = data.substring(0, data.length - 3);
-                $('#totalAmount').html(data);
-            });
             $("#ItemsTable").DataTable({
                 "language": {
                     processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
@@ -132,21 +124,57 @@
                 "searching": false,
                 "stateDuration": -1,
                 "ajax": {
-                    "url": "/Report/ExpenseReportPost?startDate=" + $('#datepicker').val() + "&finishDate=" + $('#datepicker2').val() + "&expenseType=" + $('#expenseType').val(),
+                    "url": "/Report/FuelSaleReportPost?sectorId=" + $('#sectorId').val() + "&fuelTypeId=" + $('#fuelTypeId').val() + "&startDate=" + $('#datepicker').val() + "&finishDate=" + $('#datepicker2').val(),
                     "method": "POST"
                 },
                 "destroy": true,
                 "columns": [
                     {
-                        "data": "monthName",
-                        "orderable": false
-                    },
-                    {
                         "data": "totalAmount",
                         "orderable": false,
                         "render": function (data, type, full, meta) {
                             if (data != null) {
-                                return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.totalAmountCurrencyName;
+                                return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                            }
+                            return "-";
+                        }
+                    },
+                    {
+                        "data": "differenceAmount",
+                        "orderable": false,
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return currency(full.differenceAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                            }
+                            return "-";
+                        }
+                    },
+                    {
+                        "data": "totalPurchaseSaleProfit",
+                        "orderable": false,
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return currency(full.totalPurchaseSaleProfit, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                            }
+                            return "-";
+                        }
+                    },
+                    {
+                        "data": "fuelPurchaseAmount",
+                        "orderable": false,
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return currency(full.fuelPurchaseAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                            }
+                            return "-";
+                        }
+                    },
+                    {
+                        "data": "totalProfit",
+                        "orderable": false,
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return currency(full.totalProfit, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                             }
                             return "-";
                         }
@@ -158,5 +186,5 @@
                 "pageLength": 100
             });
         });
-    </script>
-}
+    }
+</script>

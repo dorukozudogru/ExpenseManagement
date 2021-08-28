@@ -71,6 +71,50 @@ namespace ExpenseManagement.Controllers
             return View();
         }
 
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe, Petrol"))]
+        public IActionResult RaiseDiscountTrackingReport()
+        {
+            var sectors = _context.Sectors.Where(s => s.Name.Contains("SHELL")).ToList();
+            sectors.Add(new Sectors
+            {
+                Id = 0,
+                Name = ""
+            });
+
+            var fuelTypes = _context.FuelTypes.ToList();
+            fuelTypes.Add(new FuelTypes
+            {
+                Id = 0,
+                Name = ""
+            });
+
+            ViewData["SectorId"] = new SelectList(sectors.OrderBy(s => s.Id), "Id", "Name");
+            ViewData["FuelTypeId"] = new SelectList(fuelTypes.OrderBy(s => s.Id), "Id", "Name");
+            return View();
+        }
+
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe, Petrol"))]
+        public IActionResult FuelSaleReport()
+        {
+            var sectors = _context.Sectors.Where(s => s.Name.Contains("SHELL")).ToList();
+            sectors.Add(new Sectors
+            {
+                Id = 0,
+                Name = ""
+            });
+
+            var fuelTypes = _context.FuelTypes.ToList();
+            fuelTypes.Add(new FuelTypes
+            {
+                Id = 0,
+                Name = ""
+            });
+
+            ViewData["SectorId"] = new SelectList(sectors.OrderBy(s => s.Id), "Id", "Name");
+            ViewData["FuelTypeId"] = new SelectList(fuelTypes.OrderBy(s => s.Id), "Id", "Name");
+            return View();
+        }
+
         [HttpPost]
         [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
         public async Task<IActionResult> BankVaultsReport()
@@ -606,6 +650,116 @@ namespace ExpenseManagement.Controllers
             return Ok(response);
         }
 
+        [HttpPost]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe, Petrol"))]
+        public async Task<IActionResult> RaiseDiscountTrackingReportPost(int sectorId, int fuelTypeId, DateTime startDate, DateTime finishDate)
+        {
+            var rdtReport = await _context.RaiseDiscountTracking
+                .Include(s => s.Sector)
+                .Include(f => f.FuelType)
+                .ToListAsync();
+
+            if (sectorId != 0)
+            {
+                rdtReport = rdtReport.Where(e => e.SectorId == sectorId).ToList();
+            }
+            if (fuelTypeId != 0)
+            {
+                rdtReport = rdtReport.Where(e => e.FuelTypeId == fuelTypeId).ToList();
+            }
+            if (startDate != DateTime.MinValue && finishDate != DateTime.MinValue)
+            {
+                rdtReport = rdtReport.Where(e => e.Date >= startDate && e.Date <= finishDate).ToList();
+            }
+
+            var rdtReportFinal = rdtReport
+                .GroupBy(e => new
+                {
+                    e.Sector,
+                    e.FuelType,
+                    e.Date
+                })
+                .Select(p => new RDTResponse
+                {
+                    SectorName = p.Key.Sector.Name,
+                    FuelTypeName = p.Key.FuelType.Name,
+                    Date = p.Key.Date,
+                    FuelSale = _context.FuelSales.FirstOrDefault(f => f.Date.Day == p.Key.Date.Day && f.Date.Month == p.Key.Date.Month && f.Date.Year == p.Key.Date.Year)
+                    //DifferenceAmount = p.Sum(r => r.Difference) * p.Sum(r => r.FuelRemainingAmount)
+                })
+                .ToList();
+
+            foreach (var item in rdtReportFinal)
+            {
+                if (item.FuelSale != null)
+                {
+                    //item.DifferenceAmount = item.DifferenceAmount
+                }
+            }
+
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(rdtReportFinal);
+
+            var response = new PaginatedResponse<RDTResponse>
+            {
+                Data = rdtReportFinal,
+                Draw = 1,
+                RecordsFiltered = 0,
+                RecordsTotal = 0
+            };
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe, Petrol"))]
+        public async Task<IActionResult> FuelSaleReportPost(int sectorId, int fuelTypeId, DateTime startDate, DateTime finishDate)
+        {
+            var fsReport = await _context.FuelSales
+                .Include(s => s.Sector)
+                .Include(f => f.FuelType)
+                .ToListAsync();
+
+            if (sectorId != 0)
+            {
+                fsReport = fsReport.Where(e => e.SectorId == sectorId).ToList();
+            }
+            if (fuelTypeId != 0)
+            {
+                fsReport = fsReport.Where(e => e.FuelTypeId == fuelTypeId).ToList();
+            }
+            if (startDate != DateTime.MinValue && finishDate != DateTime.MinValue)
+            {
+                fsReport = fsReport.Where(e => e.Date >= startDate && e.Date <= finishDate).ToList();
+            }
+
+            var fsReportFinal = fsReport
+                .GroupBy(e => new
+                {
+                    e.Date.Month
+                })
+                .Select(p => new ExpenseEndorsementProfitReport
+                {
+                    TotalAmount = p.Sum(f => f.NetLiterSale) * p.Sum(f => f.FuelSale),
+                    DifferenceAmount = p.Sum(f => f.FuelSale) - p.Sum(f => f.FuelPurchase),
+                    TotalPurchaseSaleProfit = (p.Sum(f => f.FuelSale) - p.Sum(f => f.FuelPurchase)) / p.Sum(f => f.FuelPurchase),
+                    FuelPurchaseAmount = p.Sum(f => f.FuelPurchase) * p.Sum(f => f.NetLiterSale),
+                    TotalProfit = (p.Sum(f => f.NetLiterSale) * p.Sum(f => f.FuelSale)) - p.Sum(f => f.FuelPurchase)
+                })
+                .ToList();
+
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(fsReportFinal);
+
+            var response = new PaginatedResponse<ExpenseEndorsementProfitReport>
+            {
+                Data = fsReportFinal,
+                Draw = 1,
+                RecordsFiltered = 0,
+                RecordsTotal = 0
+            };
+
+            return Ok(response);
+        }
+
         //[HttpPost]
         //[Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
         //public async Task<IActionResult> ProfitReportPost(int year)
@@ -739,8 +893,17 @@ namespace ExpenseManagement.Controllers
         [Authorize(Roles = ("Admin, Banaz, Muhasebe, Petrol"))]
         public ActionResult ExportReport()
         {
+            MemoryStream stream = new MemoryStream();
             var pageName = Request.Headers["Referer"].ToString()?.Split("/");
-            var stream = ExportAllReport(JsonConvert.DeserializeObject<List<ExpenseEndorsementProfitReport>>(FakeSession.Instance.Obj), 1, pageName.Last());
+            if (pageName.Last() != "RaiseDiscountTrackingReport")
+            {
+                stream = ExportAllReport(JsonConvert.DeserializeObject<List<ExpenseEndorsementProfitReport>>(FakeSession.Instance.Obj), 1, pageName.Last());
+            }
+            else
+            {
+                stream = ExportAllRDTReport(JsonConvert.DeserializeObject<List<RDTResponse>>(FakeSession.Instance.Obj), 1, pageName.Last());
+            }
+
             string fileName = String.Format("{0}.xlsx", pageName.Last().ToString());
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;
@@ -976,6 +1139,131 @@ namespace ExpenseManagement.Controllers
 
                     ws.Column(4).PageBreak = true;
                 }
+                if (pageName == "FuelSaleReport")
+                {
+                    using (var range = ws.Cells[1, 1, 1, 5])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
+                        range.Style.Font.Color.SetColor(Color.White);
+                    }
+
+                    ws.Cells[1, 1].Value = "Satış Tutarı";
+                    ws.Cells[1, 2].Value = "Fark";
+                    ws.Cells[1, 3].Value = "Alım-Satım Kâr";
+                    ws.Cells[1, 4].Value = "Yakıt Alım Değeri";
+                    ws.Cells[1, 5].Value = "Kâr";
+
+                    ws.Row(1).Style.Font.Bold = true;
+
+                    for (int c = 2; c < items.Count + 2; c++)
+                    {
+                        ws.Cells[c, 1].Value = items[c - 2].TotalAmount.ToString("C2", new CultureInfo("tr-TR"));
+
+                        ws.Cells[c, 2].Value = items[c - 2].DifferenceAmount.ToString("C2", new CultureInfo("tr-TR"));
+
+                        ws.Cells[c, 3].Value = items[c - 2].TotalPurchaseSaleProfit.ToString("C2", new CultureInfo("tr-TR"));
+
+                        ws.Cells[c, 4].Value = items[c - 2].FuelPurchaseAmount.ToString("C2", new CultureInfo("tr-TR"));
+
+                        ws.Cells[c, 5].Value = items[c - 2].TotalProfit.ToString("C2", new CultureInfo("tr-TR"));
+                    }
+
+                    ws.Column(1).Style.Numberformat.Format = "#,##0.00 ₺";
+                    ws.Column(2).Style.Numberformat.Format = "#,##0.00 ₺";
+                    ws.Column(3).Style.Numberformat.Format = "#,##0.00 ₺";
+                    ws.Column(4).Style.Numberformat.Format = "#,##0.00 ₺";
+                    ws.Column(5).Style.Numberformat.Format = "#,##0.00 ₺";
+
+                    var lastRow = ws.Dimension.End.Row;
+                    var lastColumn = ws.Dimension.End.Column;
+
+                    using (var range = ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(color: Color.Gray);
+                        range.Style.Font.Color.SetColor(Color.White);
+                    }
+
+                    ws.Cells[lastRow + 1, 1].Formula = String.Format("SUM(A2:A{0})", lastRow);
+                    ws.Cells[lastRow + 1, 2].Formula = String.Format("SUM(B2:B{0})", lastRow);
+                    ws.Cells[lastRow + 1, 3].Formula = String.Format("SUM(C2:C{0})", lastRow);
+                    ws.Cells[lastRow + 1, 4].Formula = String.Format("SUM(D2:D{0})", lastRow);
+                    ws.Cells[lastRow + 1, 5].Formula = String.Format("SUM(E2:E{0})", lastRow);
+
+                    ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                    ws.Cells["A1:E" + items.Count + 2].AutoFilter = true;
+
+                    ws.Column(5).PageBreak = true;
+                }
+
+                ws.PrinterSettings.PaperSize = ePaperSize.A4;
+                ws.PrinterSettings.Orientation = eOrientation.Landscape;
+                ws.PrinterSettings.Scale = 100;
+
+                p.Save();
+            }
+            AddExportAudit(pageName, HttpContext?.User?.Identity?.Name, _context);
+            return stream;
+        }
+
+        public MemoryStream ExportAllRDTReport(List<RDTResponse> items, byte type, string pageName)
+        {
+            var stream = new System.IO.MemoryStream();
+
+            using (var p = new ExcelPackage(stream))
+            {
+                var ws = p.Workbook.Worksheets.Add(pageName);
+
+                using (var range = ws.Cells[1, 1, 1, 4])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                ws.Cells[1, 1].Value = "Sektör/İş Kolu Adı";
+                ws.Cells[1, 2].Value = "Yakıt Türü";
+                ws.Cells[1, 3].Value = "Tarih";
+                ws.Cells[1, 4].Value = "Miktar (Fark * Kalan Yakıt)";
+
+                ws.Row(1).Style.Font.Bold = true;
+
+                for (int c = 2; c < items.Count + 2; c++)
+                {
+                    ws.Cells[c, 1].Value = items[c - 2].SectorName;
+
+                    ws.Cells[c, 2].Value = items[c - 2].FuelTypeName;
+
+                    ws.Cells[c, 3].Value = items[c - 2].Date;
+
+                    ws.Cells[c, 4].Value = items[c - 2].DifferenceAmount.ToString("C2", new CultureInfo("tr-TR"));
+                }
+
+                ws.Column(3).Style.Numberformat.Format = "dd/MM/yyyy";
+                ws.Column(4).Style.Numberformat.Format = "#,##0.00 ₺";
+
+                var lastRow = ws.Dimension.End.Row;
+                var lastColumn = ws.Dimension.End.Column;
+
+                using (var range = ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Gray);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                ws.Cells[lastRow + 1, 3].Value = "Toplam:";
+                ws.Cells[lastRow + 1, 4].Formula = String.Format("SUM(D2:D{0})", lastRow);
+
+                ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                ws.Cells["A1:D" + items.Count + 2].AutoFilter = true;
+
+                ws.Column(4).PageBreak = true;
 
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Landscape;
