@@ -871,6 +871,31 @@ namespace ExpenseManagement.Helpers
             return generalResponses;
         }
 
+        public static List<ToDoListResponse> GetEnumName(List<ToDoListResponse> toDoListResponses)
+        {
+            foreach (var toDoListResponse in toDoListResponses)
+            {
+                switch (toDoListResponse.TotalAmountCurrency)
+                {
+                    case 0:
+                        toDoListResponse.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.TRY);
+                        break;
+                    case 1:
+                        toDoListResponse.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.USD);
+                        break;
+                    case 2:
+                        toDoListResponse.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.EUR);
+                        break;
+                    case 3:
+                        toDoListResponse.TotalAmountCurrencyName = EnumExtensionsHelper.GetDisplayName(Expenses.SalaryAmountCurrencyEnum.GBP);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return toDoListResponses;
+        }
+
         public static List<EnergyDaily> GetEnumName(List<EnergyDaily> energyDailies)
         {
             foreach (var energyDaily in energyDailies)

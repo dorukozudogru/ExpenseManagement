@@ -338,7 +338,7 @@ namespace ExpenseManagement.Controllers
                 ws.Cells[1, 9].Value = "Alış Tarihi";
                 ws.Cells[1, 10].Value = "Satış Tarihi";
                 ws.Cells[1, 11].Value = "Araç Maliyeti";
-                ws.Cells[1, 12].Value = "Artı Garanti";
+                ws.Cells[1, 12].Value = "Bandrol";
                 ws.Cells[1, 13].Value = "Açıklama";
 
                 ws.Column(9).Style.Numberformat.Format = "dd-mmmm-yyyy";

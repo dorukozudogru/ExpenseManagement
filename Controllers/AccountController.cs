@@ -59,6 +59,9 @@ namespace ExpenseManagement.Controllers
                         }
                         else
                         {
+                            user.LastLoginDate = DateTime.Now;
+                            _context.Update(user);
+                            await _context.SaveChangesAsync();
                             return Redirect("~/Home");
                         }
                     }
@@ -173,13 +176,13 @@ namespace ExpenseManagement.Controllers
             }
         }
 
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        [Authorize(Roles = ("Admin, Banaz"))]
         public IActionResult Index()
         {
             return View();
         }
 
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        [Authorize(Roles = ("Admin, Banaz"))]
         [HttpPost]
         public async Task<IActionResult> Post()
         {
@@ -202,13 +205,13 @@ namespace ExpenseManagement.Controllers
             return Ok(response);
         }
 
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        [Authorize(Roles = ("Admin, Banaz"))]
         public IActionResult Create()
         {
             return View();
         }
 
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        [Authorize(Roles = ("Admin, Banaz"))]
         [HttpPost]
         public async Task<IActionResult> Create(string email, string password)
         {
@@ -231,7 +234,7 @@ namespace ExpenseManagement.Controllers
             return BadRequest("Tüm Alanları Doldurunuz!");
         }
 
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        [Authorize(Roles = ("Admin, Banaz"))]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -253,7 +256,7 @@ namespace ExpenseManagement.Controllers
             return View(regUser);
         }
 
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        [Authorize(Roles = ("Admin, Banaz"))]
         [HttpPost]
         public async Task<IActionResult> Edit(string email, string password)
         {
@@ -280,7 +283,7 @@ namespace ExpenseManagement.Controllers
             return BadRequest("Tüm Alanları Doldurunuz!");
         }
 
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        [Authorize(Roles = ("Admin, Banaz"))]
         [HttpPost]
         public async Task<IActionResult> Passive(string passiveUserId)
         {
@@ -298,7 +301,7 @@ namespace ExpenseManagement.Controllers
             return Ok(new { Result = true, Message = "Kullanıcı Pasif Olarak Ayarlanmıştır!" });
         }
 
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        [Authorize(Roles = ("Admin, Banaz"))]
         [HttpPost]
         public async Task<IActionResult> Active(string passiveUserId)
         {

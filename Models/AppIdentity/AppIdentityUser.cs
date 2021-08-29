@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.ComponentModel;
 
 namespace ExpenseManagement.Models
@@ -15,5 +16,8 @@ namespace ExpenseManagement.Models
 
         [DisplayName("Admin Mi?")]
         public bool IsAdmin { get; set; }
+
+        [DisplayName("Son Oturum Açma Tarihi")]
+        public DateTime? LastLoginDate { get; set; }
     }
 }

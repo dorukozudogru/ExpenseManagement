@@ -17,6 +17,7 @@ using System.IO;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Drawing;
+using static ExpenseManagement.Models.ViewModels.ReportViewModel;
 
 namespace ExpenseManagement.Controllers
 {
@@ -38,7 +39,7 @@ namespace ExpenseManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(bool state)
         {
-            var toToListContext = await _context.ToDoLists
+            var toDoListContext = await _context.ToDoLists
                 .Where(e => e.State == state)
                 .Include(e => e.Sector)
                 .OrderByDescending(e => e.Id)
@@ -47,14 +48,14 @@ namespace ExpenseManagement.Controllers
 
             if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe")
             {
-                toToListContext = toToListContext
+                toDoListContext = toDoListContext
                     .Where(e => e.CreatedBy == GetLoggedUserId())
                     .ToList();
             }
 
-            toToListContext = GetAllEnumNamesHelper.GetEnumName(toToListContext);
+            toDoListContext = GetAllEnumNamesHelper.GetEnumName(toDoListContext);
 
-            return Ok(toToListContext);
+            return Ok(toDoListContext);
         }
 
         public IActionResult Create()
@@ -141,6 +142,55 @@ namespace ExpenseManagement.Controllers
                 return Ok(new { Result = true, Message = "Kayıt Başarıyla Güncellendi!" });
             }
             return BadRequest("Gider Güncellenirken Bir Hata Oluştu!");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SectorTotalPost()
+        {
+            var requestFormData = Request.Form;
+
+            var toDoListContext = await _context.ToDoLists
+                .Where(e => e.State == false)
+                .Include(e => e.Sector)
+                .OrderByDescending(e => e.Id)
+                .AsNoTracking()
+                .ToListAsync();
+
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe")
+            {
+                toDoListContext = toDoListContext
+                    .Where(e => e.CreatedBy == GetLoggedUserId())
+                    .ToList();
+            }
+
+            var groupedToDoList = toDoListContext
+                .GroupBy(e => new
+                {
+                    e.Sector.Name,
+                    e.AmountCurrency
+                })
+                .Select(e => new ToDoListResponse
+                {
+                    SectorName = e.Key.Name,
+                    TotalAmount = e.Sum(x => x.Amount),
+                    TotalAmountCurrency = e.Key.AmountCurrency
+                })
+                .OrderByDescending(e => e.TotalAmount)
+                .ToList();
+
+            groupedToDoList = GetAllEnumNamesHelper.GetEnumName(groupedToDoList);
+
+            List<ToDoListResponse> listItems = ProcessCollection(groupedToDoList, requestFormData);
+
+            var response = new PaginatedResponse<ToDoListResponse>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = groupedToDoList.Count,
+                RecordsTotal = groupedToDoList.Count
+            };
+
+            return Ok(response);
         }
 
         public string GetLoggedUserId()

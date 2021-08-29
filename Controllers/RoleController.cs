@@ -13,7 +13,7 @@ using ExpenseManagement.Models.ViewModels;
 
 namespace ExpenseManagement.Controllers
 {
-    [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+    [Authorize(Roles = ("Admin, Banaz"))]
     public class RoleController : Controller
     {
         private readonly UserManager<AppIdentityUser> _userManager;

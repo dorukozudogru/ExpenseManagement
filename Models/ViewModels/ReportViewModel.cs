@@ -90,5 +90,25 @@ namespace ExpenseManagement.Models.ViewModels
             public int FuelSaleId { get; set; }
             public virtual FuelSales FuelSale { get; set; }
         }
+
+        public class ToDoListResponse
+        {
+            public string SectorName { get; set; }
+
+            public double TotalAmount { get; set; }
+
+            public byte TotalAmountCurrency { get; set; }
+
+            public string TotalAmountCurrencyName { get; set; }
+        }
+
+        public class AuditResponse
+        {
+            public string ActionName { get; set; }
+
+            public string TableName { get; set; }
+
+            public int ActionCount { get; set; }
+        }
     }
 }
