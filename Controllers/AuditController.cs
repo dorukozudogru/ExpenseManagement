@@ -10,7 +10,7 @@ using ExpenseManagement.Models;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
 using ExpenseManagement.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using ExpenseManagement.Helpers;
+using static ExpenseManagement.Models.ViewModels.ReportViewModel;
 
 namespace ExpenseManagement.Controllers
 {
@@ -198,6 +198,40 @@ namespace ExpenseManagement.Controllers
                 Draw = int.Parse(requestFormData["draw"]),
                 RecordsFiltered = lastAuditList.Count,
                 RecordsTotal = lastAuditList.Count
+            };
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UserAuditPost(string username, DateTime startDate, DateTime finishDate)
+        {
+            var requestFormData = Request.Form;
+
+            var audits = await _context.Audits
+                .Where(e => e.Username == username)
+                .Where(e => e.DateTime >= startDate && e.DateTime <= finishDate)
+                .GroupBy(e => new
+                {
+                    e.Action,
+                    e.TableName
+                })
+                .Select(e => new AuditResponse
+                {
+                    ActionName = e.Key.Action,
+                    TableName = e.Key.TableName,
+                    ActionCount = e.Count()
+                })
+                .OrderBy(e => e.ActionName)
+                .AsNoTracking()
+                .ToListAsync();
+
+            var response = new PaginatedResponse<AuditResponse>
+            {
+                Data = audits,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = audits.Count,
+                RecordsTotal = audits.Count
             };
 
             return Ok(response);

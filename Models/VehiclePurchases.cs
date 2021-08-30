@@ -86,7 +86,7 @@ namespace ExpenseManagement.Models
         public double? RegistrationFee { get; set; }
 
         [DisplayName("Trafik Tescil Bedeli Dahil Fiyatı")]
-        public double? IncludingRegistrationFee { get; set; }
+        public double IncludingRegistrationFee { get; set; }
 
         [DisplayName("Satış Fiyatı")]
         public double? SaleAmount { get; set; }
