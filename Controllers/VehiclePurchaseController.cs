@@ -176,6 +176,7 @@ namespace ExpenseManagement.Controllers
                     if (newVehicleSale != null)
                     {
                         newVehicleSale.PurchaseDate = vehiclePurchases.PurchaseDate;
+                        newVehicleSale.VehicleCost = vehiclePurchases.IncludingRegistrationFee;
                         _context.Update(newVehicleSale);
                     }
 
