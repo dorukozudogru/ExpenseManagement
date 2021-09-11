@@ -169,11 +169,7 @@
                                             <div class="col-md-2">
                                                 <div class="form-group">
                                                     <label class="control-label">Tescil Bedeli (₺)</label>
-                                                    <select id="feeAmount" asp-for="RegistrationFee" class="form-control" onchange="calculateFinalAmount()">
-                                                        <option>0</option>
-                                                        <option>920,5</option>
-                                                        <option>1388,5</option>
-                                                    </select>
+                                                    <select id="feeAmount" asp-for="RegistrationFee.RegistrationFee" asp-items="ViewBag.RegistrationFeeId" class="form-control" onchange="calculateFinalAmount()"></select>
                                                 </div>
                                             </div>
                                             <div class="col-md-10">
@@ -236,7 +232,9 @@
     function calculateFinalAmount() {
         var amount = document.getElementById("purchaseAmount").value;
         var incKdv = document.getElementById("kdv").value;
-        var fee = document.getElementById("feeAmount").value;
+
+        var e = document.getElementById("feeAmount");
+        var fee = e.options[e.selectedIndex].text;
 
         var final = +incKdv + +fee
 
@@ -325,7 +323,7 @@
                 document.getElementById("otvPercent").value = returnvalue.otvPercent;
                 document.getElementById("otv").value = currency(returnvalue.otv, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("kdv").value = currency(returnvalue.kdv, { decimal: ',', separator: '', symbol: '' }).format();
-                document.getElementById("feeAmount").value = currency(returnvalue.registrationFee, { decimal: ',', separator: '', symbol: '', precision: 1 }).format();
+                document.getElementById("feeAmount").value = returnvalue.registrationFeeId;
                 document.getElementById("includingRegistrationFee").value = currency(returnvalue.includingRegistrationFee, { decimal: ',', separator: '', symbol: '' }).format();
 
                 if (returnvalue.isSold == true) {
@@ -381,7 +379,7 @@
         data.append('OTVPercent', OTVPercent);
         data.append('OTV', OTV);
         data.append('KDV', KDV);
-        data.append('RegistrationFee', RegistrationFee);
+        data.append('RegistrationFeeId', RegistrationFee);
         data.append('IncludingRegistrationFee', IncludingRegistrationFee);
 
         data.append('SaleAmount', SaleAmount);

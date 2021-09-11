@@ -1,0 +1,75 @@
+﻿@model ExpenseManagement.Models.RegistrationFees
+
+@{
+    ViewData["Title"] = " Tescil Bedelini Güncelle";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-pencil-alt"></i>&nbsp; Tescil Bedelini Güncelle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" id="id" />
+                                <div class="form-group">
+                                    <label asp-for="RegistrationFee" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen küsürat için virgül (,) kullanınız.)</strong></label>
+                                    <input asp-for="RegistrationFee" class="form-control" id="registrationFee" autocomplete="off" />
+                                    <span asp-validation-for="RegistrationFee" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="update()" id="updateButton" />
+                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var registrationFee;
+    var id;
+
+    function update() {
+        registrationFee = document.getElementById("registrationFee").value;
+        id = document.getElementById("id").value;
+
+        registrationFee2 = registrationFee.replace(/,/g, '.');
+
+        $("#updateButton").attr("disabled", true);
+
+        $.ajax({
+            url: '/RegistrationFee/Edit?registrationFees.RegistrationFee=' + registrationFee2 + "&id=" + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#updateButton").attr("disabled", false);
+                }, 1600);
+            }
+        });
+    }
+</script>
