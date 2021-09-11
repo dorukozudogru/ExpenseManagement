@@ -26,6 +26,8 @@
     <Compile Remove="Migrations\20210411090607_valor-date-added.Designer.cs" />
     <Compile Remove="Migrations\20210613132153_other-tax-nad-discount-added.cs" />
     <Compile Remove="Migrations\20210613132153_other-tax-nad-discount-added.Designer.cs" />
+    <Compile Remove="Migrations\20210911191745_registration-fee.cs" />
+    <Compile Remove="Migrations\20210911191745_registration-fee.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

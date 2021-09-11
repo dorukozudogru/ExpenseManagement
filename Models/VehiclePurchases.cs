@@ -81,9 +81,12 @@ namespace ExpenseManagement.Models
 
         [DisplayName("KDV Dahil Fiyatı")]
         public double? KDV { get; set; }
-
-        [DisplayName("Trafik Tescil Bedeli")]
-        public double? RegistrationFee { get; set; }
+        
+        [ForeignKey(nameof(RegistrationFees))]
+        public int? RegistrationFeeId { get; set; }
+        public virtual RegistrationFees RegistrationFee { get; set; }
+        [NotMapped]
+        public double RegistrationFeeAmount { get; set; }
 
         [DisplayName("Trafik Tescil Bedeli Dahil Fiyatı")]
         public double IncludingRegistrationFee { get; set; }

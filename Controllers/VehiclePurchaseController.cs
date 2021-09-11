@@ -112,6 +112,7 @@ namespace ExpenseManagement.Controllers
 
         public IActionResult Create()
         {
+            ViewData["RegistrationFeeId"] = new SelectList(_context.RegistrationFees.OrderBy(s => s.RegistrationFee), "Id", "RegistrationFee");
             ViewData["CarModelId"] = new SelectList(_context.CarModels, "Id", "Name");
             return View();
         }
@@ -132,6 +133,7 @@ namespace ExpenseManagement.Controllers
 
         public IActionResult Edit()
         {
+            ViewBag.RegistrationFeeId = new SelectList(_context.RegistrationFees.OrderBy(s => s.RegistrationFee), "Id", "RegistrationFee");
             ViewBag.CarBrands = new SelectList(_context.CarBrands.OrderBy(x => x.Name), "Id", "Name");
             ViewBag.CarModels = new SelectList(_context.CarModels.OrderBy(x => x.Name), "Name", "Name");
 
@@ -149,6 +151,7 @@ namespace ExpenseManagement.Controllers
             var vehiclePurchases = await _context.VehiclePurchases
                 .Include(c => c.CarModel)
                 .Include(cb => cb.CarModel.CarBrand)
+                .Include(r => r.RegistrationFee)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (vehiclePurchases == null)
@@ -165,6 +168,7 @@ namespace ExpenseManagement.Controllers
             var vehiclePurchase = await _context.VehiclePurchases
                 .Include(c => c.CarModel)
                 .Include(cb => cb.CarModel.CarBrand)
+                .Include(r => r.RegistrationFee)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             var newVehicleSale = await _context.NewVehicleSales.FirstOrDefaultAsync(nvs => nvs.VehiclePurchaseId == id);
@@ -193,7 +197,7 @@ namespace ExpenseManagement.Controllers
                     vehiclePurchase.OTVPercent = vehiclePurchases.OTVPercent;
                     vehiclePurchase.OTV = vehiclePurchases.OTV;
                     vehiclePurchase.KDV = vehiclePurchases.KDV;
-                    vehiclePurchase.RegistrationFee = vehiclePurchases.RegistrationFee;
+                    vehiclePurchase.RegistrationFeeId = vehiclePurchases.RegistrationFeeId;
                     vehiclePurchase.IncludingRegistrationFee = vehiclePurchases.IncludingRegistrationFee;
 
                     vehiclePurchase.SaleAmount = vehiclePurchases.SaleAmount;

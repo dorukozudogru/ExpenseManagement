@@ -136,5 +136,7 @@ namespace ExpenseManagement.Data
         public DbSet<FuelSales> FuelSales { get; set; }
 
         public DbSet<RaiseDiscountTracking> RaiseDiscountTracking { get; set; }
+
+        public DbSet<RegistrationFees> RegistrationFees { get; set; }
     }
 }
