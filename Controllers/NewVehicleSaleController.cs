@@ -36,7 +36,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(bool isFiltered, DateTime startDate, DateTime finishDate, double from, double to, int monthId, string model, string chassis, string licencePlate)
+        public async Task<IActionResult> Post(bool isFiltered, DateTime startDate, DateTime finishDate, double from, double to, int monthId, string model, string chassis, string licencePlate, byte taxExempt)
         {
             var requestFormData = Request.Form;
 
@@ -75,6 +75,11 @@ namespace ExpenseManagement.Controllers
                 if (licencePlate != null)
                 {
                     newVehicleSale = newVehicleSale.Where(e => e.LicencePlate != null && e.LicencePlate.ToUpper().Contains(licencePlate.ToUpper())).ToList();
+                }
+                if (taxExempt != 9)
+                {
+                    var tt = taxExempt == 0 ? false : true;
+                    newVehicleSale = newVehicleSale.Where(e => e.TaxExempt == tt).ToList();
                 }
             }
 
@@ -236,6 +241,7 @@ namespace ExpenseManagement.Controllers
                     newVehicleSale.VehicleCostCurrency = newVehicleSales.VehicleCostCurrency;
                     newVehicleSale.VehiclePurchaseId = newVehicleSales.VehiclePurchaseId;
                     newVehicleSale.WarrantyPlus = newVehicleSales.WarrantyPlus;
+                    newVehicleSale.TaxExempt = newVehicleSales.TaxExempt;
 
                     _context.Update(vehiclePurchase);
                     _context.Update(newVehicleSale);
@@ -319,7 +325,7 @@ namespace ExpenseManagement.Controllers
             {
                 var ws = p.Workbook.Worksheets.Add("Sıfır Araç Satışı");
 
-                using (var range = ws.Cells[1, 1, 1, 13])
+                using (var range = ws.Cells[1, 1, 1, 14])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -340,6 +346,7 @@ namespace ExpenseManagement.Controllers
                 ws.Cells[1, 11].Value = "Araç Maliyeti";
                 ws.Cells[1, 12].Value = "Bandrol";
                 ws.Cells[1, 13].Value = "Açıklama";
+                ws.Cells[1, 14].Value = "ÖTV Muaf Mı?";
 
                 ws.Column(9).Style.Numberformat.Format = "dd-mmmm-yyyy";
                 ws.Column(10).Style.Numberformat.Format = "dd-mmmm-yyyy";
@@ -367,15 +374,16 @@ namespace ExpenseManagement.Controllers
                     ws.Cells[c, 11].Value = items[c - 2].VehicleCost + " " + items[c - 2].VehicleCostCurrencyName;
                     ws.Cells[c, 12].Value = items[c - 2].WarrantyPlus;
                     ws.Cells[c, 13].Value = items[c - 2].Description;
+                    ws.Cells[c, 14].Value = items[c - 2].TaxExempt;
 
                     ws.Column(8).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SaleAmountCurrencyName);
                     ws.Column(11).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].VehicleCostCurrencyName);
                 }
 
                 ws.Cells[ws.Dimension.Address].AutoFitColumns();
-                ws.Cells["A1:M" + items.Count + 2].AutoFilter = true;
+                ws.Cells["A1:N" + items.Count + 2].AutoFilter = true;
 
-                ws.Column(13).PageBreak = true;
+                ws.Column(14).PageBreak = true;
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Landscape;
                 ws.PrinterSettings.Scale = 100;
