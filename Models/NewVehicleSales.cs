@@ -69,5 +69,8 @@ namespace ExpenseManagement.Models
 
         [DisplayName("Açıklama")]
         public string Description { get; set; }
+
+        [DisplayName("ÖTV Muaf Mı?")]
+        public bool TaxExempt { get; set; }
     }
 }

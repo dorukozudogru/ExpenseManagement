@@ -62,7 +62,20 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label" asp-for="TaxExempt"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <input type="checkbox" asp-for="TaxExempt" id="taxExempt">
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label asp-for="PurchaseDate" class="control-label"></label>
                                             <div class="input-group">
@@ -76,7 +89,7 @@
                                             <span asp-validation-for="PurchaseDate" class="text-danger"></span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label asp-for="VehicleCost" class="control-label"></label>
                                             <div class="input-group mb-3">
@@ -173,6 +186,18 @@
                 dayF = dayF < 10 ? "0" + dayF : dayF;
                 monthF = monthF < 10 ? "0" + monthF : monthF;
 
+                if (returnvalue.taxExempt == false) {
+                    $('#taxExempt').attr('value', 'false');
+                }
+
+                $("#taxExempt").on('change', function () {
+                if ($(this).is(':checked')) {
+                    $(this).attr('value', 'true');
+                } else {
+                    $(this).attr('value', 'false');
+                    }
+                });
+
                 document.getElementById("id").value = returnvalue.id;
                 document.getElementById("vehiclePurchaseCarBrandId").value = returnvalue.vehiclePurchase.carModel.carBrand.id;
                 document.getElementById("vehiclePurchaseCarModelId").value = returnvalue.vehiclePurchase.carModel.id;
@@ -188,6 +213,7 @@
                 document.getElementById("vehicleCostCurrency").value = returnvalue.vehicleCostCurrency;
                 document.getElementById("warrantyPlus").value = returnvalue.warrantyPlus;
                 document.getElementById("description").value = returnvalue.description;
+                document.getElementById("taxExempt").checked = returnvalue.taxExempt;
             },
             error: function (error) {
                 document.getElementById("swalDefaultError").value = "Sıfır Araç Satışı Getirilirken Bir Hata Oluştu!";
@@ -211,6 +237,7 @@
         var VehicleCostCurrency = document.getElementById("vehicleCostCurrency").value;
         var WarrantyPlus = document.getElementById("warrantyPlus").value;
         var Description = document.getElementById("description").value;
+        var TaxExempt = document.getElementById("taxExempt").value;
 
         var data = new FormData();
 
@@ -226,6 +253,7 @@
         data.append('VehicleCostCurrency', VehicleCostCurrency);
         data.append('WarrantyPlus', WarrantyPlus);
         data.append('Description', Description);
+        data.append('TaxExempt', TaxExempt);
 
         $("#updateButton").attr("disabled", true);
 
