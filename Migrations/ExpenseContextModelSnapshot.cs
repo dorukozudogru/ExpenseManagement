@@ -634,6 +634,19 @@ namespace ExpenseManagement.Migrations
                     b.ToTable("RaiseDiscountTracking");
                 });
 
+            modelBuilder.Entity("ExpenseManagement.Models.RegistrationFees", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("RegistrationFee");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RegistrationFees");
+                });
+
             modelBuilder.Entity("ExpenseManagement.Models.Salesmans", b =>
                 {
                     b.Property<int>("Id")

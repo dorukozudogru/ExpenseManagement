@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseManagement.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    [Migration("20211116183714_bonuses-added")]
-    partial class bonusesadded
+    [Migration("20211116194815_bonus-added")]
+    partial class bonusadded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ExpenseManagement.Migrations
 {
-    public partial class bonusesadded : Migration
+    public partial class bonusadded : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
