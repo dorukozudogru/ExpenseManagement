@@ -20,6 +20,7 @@ using OfficeOpenXml.Style;
 using System.Drawing;
 using ExpenseManagement.Models.ViewModels;
 using Newtonsoft.Json;
+using static ExpenseManagement.Models.ViewModels.ReportViewModel;
 
 namespace ExpenseManagement.Controllers
 {
@@ -288,6 +289,42 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> MonthlyTotalPost()
+        {
+            var requestFormData = Request.Form;
+
+            var bonuses = await _context.Bonuses
+                .GroupBy(i => new
+                {
+                    i.Year,
+                    i.Month
+                })
+                .Select(i => new GeneralResponse
+                {
+                    Year = i.Key.Year,
+                    Month = (int)i.Key.Month,
+                    TotalAmount = i.Sum(x => x.Amount),
+                })
+                .ToListAsync();
+
+            bonuses = GetAllEnumNamesHelper.GetEnumName(bonuses);
+
+            bonuses = bonuses.OrderByDescending(i => i.Year).ThenByDescending(i => i.Month).ToList();
+
+            List<GeneralResponse> listItems = ProcessCollection(bonuses, requestFormData);
+
+            var response = new PaginatedResponse<GeneralResponse>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = bonuses.Count,
+                RecordsTotal = bonuses.Count
+            };
+
+            return Ok(response);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> GetDocument(int? id)
         {
             if (id == null)
@@ -376,6 +413,82 @@ namespace ExpenseManagement.Controllers
             _context.BonusDocuments.Remove(documents);
             await _context.SaveChangesAsync();
             return Ok(new { Result = true, Message = "Görüntü Silinmiştir!" });
+        }
+
+        public ActionResult ExportBonus(int month, int year)
+        {
+            var bonus = _context.Bonuses
+                .Where(i => i.Year == year && i.Month == month)
+                .ToList();
+
+            bonus = GetAllEnumNamesHelper.GetEnumName(bonus);
+
+            string monthName = bonus.FirstOrDefault().MonthName;
+
+            var stream = ExportAllBonus(bonus, year + " " + monthName + " Ayı Primleri");
+            string fileName = String.Format("{0}.xlsx", year + " " + monthName + " Ayı Primleri");
+            string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            stream.Position = 0;
+            return File(stream, fileType, fileName);
+        }
+
+        public MemoryStream ExportAllBonus(List<Bonuses> items, string pageName)
+        {
+            var stream = new System.IO.MemoryStream();
+
+            var _temp = pageName.Split(" ");
+
+            using (var p = new ExcelPackage(stream))
+            {
+                var ws = p.Workbook.Worksheets.Add(_temp[0] + " " + _temp[1]);
+
+                using (var range = ws.Cells[1, 1, 1, 3])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                ws.Cells[1, 1].Value = "Yıl";
+                ws.Cells[1, 2].Value = "Ay";
+                ws.Cells[1, 3].Value = "Toplam Tutar";
+
+                ws.Row(1).Style.Font.Bold = true;
+
+                for (int c = 2; c < items.Count + 2; c++)
+                {
+                    ws.Cells[c, 1].Value = items[c - 2].Year;
+                    ws.Cells[c, 2].Value = items[c - 2].MonthName;
+                    ws.Cells[c, 3].Value = items[c - 2].Amount;
+                }
+
+                var lastRow = ws.Dimension.End.Row;
+                var lastColumn = ws.Dimension.End.Column;
+
+                using (var range = ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Gray);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                ws.Cells[lastRow + 1, 2].Value = "Toplam:";
+                ws.Cells[lastRow + 1, 3].Formula = String.Format("SUM(C2:C{0})", lastRow);
+
+                ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                ws.Cells["A1:C" + items.Count + 2].AutoFilter = true;
+
+                ws.Column(3).PageBreak = true;
+                ws.PrinterSettings.PaperSize = ePaperSize.A4;
+                ws.PrinterSettings.Orientation = eOrientation.Landscape;
+                ws.PrinterSettings.Scale = 100;
+
+                p.Save();
+            }
+            AddExportAudit(pageName, HttpContext?.User?.Identity?.Name, _context);
+            return stream;
         }
 
         public string GetLoggedUserId()
