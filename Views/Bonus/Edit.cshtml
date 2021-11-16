@@ -118,8 +118,8 @@
                 document.getElementById("id").value = returnvalue.id;
                 document.getElementById("bonusType").value = returnvalue.bonusType;
                 document.getElementById("year").value = returnvalue.year;
-                document.getElementById("monthId").value = returnvalue.monthId;
-                document.getElementById("amount").value = returnvalue.amount;
+                document.getElementById("monthId").value = returnvalue.month;
+                document.getElementById("amount").value = currency(returnvalue.amount, { decimal: ',', separator: '', symbol: '' }).format();
             },
             error: function (error) {
                 document.getElementById("swalDefaultError").value = "Prim Getirilirken Bir Hata Oluştu!";
@@ -191,7 +191,7 @@
     function update() {
         bonusType = document.getElementById("bonusType").value;
         year = document.getElementById("year").value;
-        month = document.getElementById("month").value;
+        month = document.getElementById("monthId").value;
         amount = document.getElementById("amount").value;
         id = document.getElementById("id").value;
 

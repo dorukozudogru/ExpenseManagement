@@ -28,7 +28,20 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Yıl</label>
-                                    <input class="form-control" id="year" autocomplete="off" />
+                                    <div class="input-group-prepend">
+                                        <select class="form-control btn btn-default" id="year">
+                                            <option></option>
+                                            <option>2021</option>
+                                            <option>2022</option>
+                                            <option>2023</option>
+                                            <option>2024</option>
+                                            <option>2025</option>
+                                            <option>2026</option>
+                                            <option>2027</option>
+                                            <option>2028</option>
+                                            <option>2029</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -100,6 +113,7 @@
                                             <td colspan="3"></td>
                                             <td style="font-weight:bold">Toplam:</td>
                                             <td style="font-weight:bold"></td>
+                                            <td></td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -148,13 +162,13 @@
                 };
 
                 pageAmountTotal = api
-                    .column(5, { page: 'current' })
+                    .column(4, { page: 'current' })
                     .data()
                     .reduce(function (a, b) {
                         return intVal(a) + intVal(b);
                     }, 0);
 
-                $(api.column(5).footer()).html(
+                $(api.column(4).footer()).html(
                     currency(pageAmountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
                 );
             },
@@ -254,13 +268,13 @@
                 };
 
                 pageAmountTotal = api
-                    .column(5, { page: 'current' })
+                    .column(4, { page: 'current' })
                     .data()
                     .reduce(function (a, b) {
                         return intVal(a) + intVal(b);
                     }, 0);
 
-                $(api.column(5).footer()).html(
+                $(api.column(4).footer()).html(
                     currency(pageAmountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
                 );
             },

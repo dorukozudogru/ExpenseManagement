@@ -35,11 +35,21 @@ namespace ExpenseManagement.Controllers
 
         public IActionResult Index()
         {
+            var bonusTypes = Enum.GetValues(typeof(Bonuses.BonusTypeEnum)).Cast<Bonuses.BonusTypeEnum>().ToList();
+            List<string> types = new List<string>();
+
+            foreach (var item in bonusTypes)
+            {
+                types.Add(EnumExtensionsHelper.GetDisplayName(item));
+            }
+            types.Add("");
+
+            ViewData["BonusType"] = new SelectList(types.OrderBy(t => t));
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(bool isFiltered, string bonusType, string year, double from, double to, int monthId)
+        public async Task<IActionResult> Post(bool isFiltered, string bonusType, int year, double from, double to, int monthId)
         {
             var requestFormData = Request.Form;
 
@@ -56,53 +66,33 @@ namespace ExpenseManagement.Controllers
 
             var Id = 999999;
 
-            /*if (isFiltered != false)
+            if (isFiltered != false)
             {
-                if (expenseType != null)
+                if (bonusType != null)
                 {
-                    var expenseTypes = Enum.GetValues(typeof(Expenses.ExpenseTypeEnum)).Cast<Expenses.ExpenseTypeEnum>().ToList();
-                    for (int i = 0; i < expenseTypes.Count; i++)
+                    var bonusTypes = Enum.GetValues(typeof(Bonuses.BonusTypeEnum)).Cast<Bonuses.BonusTypeEnum>().ToList();
+                    for (int i = 0; i < bonusTypes.Count; i++)
                     {
-                        if (EnumExtensionsHelper.GetDisplayName(expenseTypes[i]).ToString() == expenseType)
+                        if (EnumExtensionsHelper.GetDisplayName(bonusTypes[i]).ToString() == bonusType)
                         {
                             Id = i;
                         }
                     }
-                    expenseContext = expenseContext.Where(e => e.ExpenseType == Id).ToList();
+                    bonusContext = bonusContext.Where(e => e.BonusType == Id).ToList();
                 }
-                if (supplier != null)
+                if (year != 0)
                 {
-                    expenseContext = expenseContext.Where(e => e.SupplierDef != null && e.SupplierDef.ToUpper().Contains(supplier.ToUpper())).ToList();
-                }
-                if (sectorId != 0)
-                {
-                    expenseContext = expenseContext.Where(e => e.SectorId == sectorId).ToList();
-                }
-                if (definition != null)
-                {
-                    expenseContext = expenseContext.Where(e => e.Definition.ToUpper().Contains(definition.ToUpper())).ToList();
+                    bonusContext = bonusContext.Where(e => e.Year == year).ToList();
                 }
                 if (from != 0 && to != 0)
                 {
-                    expenseContext = expenseContext.Where(e => e.Amount >= from && e.Amount <= to).ToList();
+                    bonusContext = bonusContext.Where(e => e.Amount >= from && e.Amount <= to).ToList();
                 }
                 if (monthId != 0)
                 {
-                    expenseContext = expenseContext.Where(e => e.Date != null && e.Date.Value.Month == monthId).ToList();
+                    bonusContext = bonusContext.Where(e => e.Month == monthId).ToList();
                 }
-            }*/
-
-            //foreach (var item in bonusContext)
-            //{
-            //    if (item.Sector != null)
-            //    {
-            //        item.SectorName = item.Sector.Name;
-            //    }
-            //    if (item.Sector == null)
-            //    {
-            //        item.SectorName = "EMPTY";
-            //    }
-            //}
+            }
 
             bonusContext = GetAllEnumNamesHelper.GetEnumName(bonusContext);
 

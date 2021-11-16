@@ -1368,6 +1368,48 @@ namespace ExpenseManagement.Helpers
                     default:
                         break;
                 }
+
+                switch (bonus.Month)
+                {
+                    case 1:
+                        bonus.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JANUARY);
+                        break;
+                    case 2:
+                        bonus.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.FEBRUARY);
+                        break;
+                    case 3:
+                        bonus.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MARCH);
+                        break;
+                    case 4:
+                        bonus.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.APRIL);
+                        break;
+                    case 5:
+                        bonus.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MAY);
+                        break;
+                    case 6:
+                        bonus.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JUNE);
+                        break;
+                    case 7:
+                        bonus.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JULY);
+                        break;
+                    case 8:
+                        bonus.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.AUGUST);
+                        break;
+                    case 9:
+                        bonus.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.SEPTEMBER);
+                        break;
+                    case 10:
+                        bonus.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.OCTOBER);
+                        break;
+                    case 11:
+                        bonus.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.NOVEMBER);
+                        break;
+                    case 12:
+                        bonus.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.DECEMBER);
+                        break;
+                    default:
+                        break;
+                }
             }
             return bonuses;
         }
@@ -1381,6 +1423,48 @@ namespace ExpenseManagement.Helpers
                     break;
                 case 1:
                     bonuses.BonusTypeName = EnumExtensionsHelper.GetDisplayName(Bonuses.BonusTypeEnum.SALE);
+                    break;
+                default:
+                    break;
+            }
+
+            switch (bonuses.Month)
+            {
+                case 1:
+                    bonuses.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JANUARY);
+                    break;
+                case 2:
+                    bonuses.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.FEBRUARY);
+                    break;
+                case 3:
+                    bonuses.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MARCH);
+                    break;
+                case 4:
+                    bonuses.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.APRIL);
+                    break;
+                case 5:
+                    bonuses.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.MAY);
+                    break;
+                case 6:
+                    bonuses.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JUNE);
+                    break;
+                case 7:
+                    bonuses.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.JULY);
+                    break;
+                case 8:
+                    bonuses.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.AUGUST);
+                    break;
+                case 9:
+                    bonuses.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.SEPTEMBER);
+                    break;
+                case 10:
+                    bonuses.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.OCTOBER);
+                    break;
+                case 11:
+                    bonuses.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.NOVEMBER);
+                    break;
+                case 12:
+                    bonuses.MonthName = EnumExtensionsHelper.GetDisplayName(MonthEnum.DECEMBER);
                     break;
                 default:
                     break;

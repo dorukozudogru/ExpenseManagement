@@ -1,16 +1,17 @@
 ﻿@inject Microsoft.AspNetCore.Identity.SignInManager<AppIdentityUser> signInManager;
 
 @{
-    ViewData["Version"] = "Versiyon 1.15.1";
-    ViewData["PreviousVersion"] = "Versiyon 1.15.0";
-    ViewData["2PreviousVersion"] = "Versiyon 1.14.2";
-    ViewData["3PreviousVersion"] = "Versiyon 1.14.1";
-    ViewData["4PreviousVersion"] = "Versiyon 1.14.0";
-    ViewData["5PreviousVersion"] = "Versiyon 1.13.1";
-    ViewData["6PreviousVersion"] = "Versiyon 1.13.0";
-    ViewData["7PreviousVersion"] = "Versiyon 1.12.2";
-    ViewData["8PreviousVersion"] = "Versiyon 1.12.1";
-    ViewData["9PreviousVersion"] = "Versiyon 1.12.0";
+    ViewData["Version"] = "Versiyon 1.16.0";
+    ViewData["PreviousVersion"] = "Versiyon 1.15.1";
+    ViewData["2PreviousVersion"] = "Versiyon 1.15.0";
+    ViewData["3PreviousVersion"] = "Versiyon 1.14.2";
+    ViewData["4PreviousVersion"] = "Versiyon 1.14.1";
+    ViewData["5PreviousVersion"] = "Versiyon 1.14.0";
+    ViewData["6PreviousVersion"] = "Versiyon 1.13.1";
+    ViewData["7PreviousVersion"] = "Versiyon 1.13.0";
+    ViewData["8PreviousVersion"] = "Versiyon 1.12.2";
+    ViewData["9PreviousVersion"] = "Versiyon 1.12.1";
+    ViewData["10PreviousVersion"] = "Versiyon 1.12.0";
 }
 
 <!DOCTYPE html>
@@ -133,6 +134,11 @@
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="Expense" asp-action="Salary">
                                             <i class="far fa-circle nav-icon text-success"></i><p>Maaşlar</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Bonus" asp-action="Index">
+                                            <i class="far fa-circle nav-icon text-success"></i><p>Primler</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
@@ -453,7 +459,7 @@
                                 </div>
                                 <div class="card-body">
                                     <ul>
-                                        <li>Araç Alış Ekranındaki Tescil Bedeli Alanının Sistem Değişkeni Olarak Eklenebilmesi Sağlandı</li>
+                                        <li>Gelir-Gider Menüsü Altına Primler Eklendi</li>
                                     </ul>
                                 </div>
                             </div>
@@ -461,6 +467,23 @@
                                 <div class="card-header border-0">
                                     <h5 class="card-title">
                                         @ViewData["PreviousVersion"]
+                                    </h5>
+                                    <div class="card-tools">
+                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Araç Alış Ekranındaki Tescil Bedeli Alanının Sistem Değişkeni Olarak Eklenebilmesi Sağlandı</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card card-primary collapsed-card">
+                                <div class="card-header border-0">
+                                    <h5 class="card-title">
+                                        @ViewData["2PreviousVersion"]
                                     </h5>
                                     <div class="card-tools">
                                         <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
@@ -480,7 +503,7 @@
                             <div class="card card-primary collapsed-card">
                                 <div class="card-header border-0">
                                     <h5 class="card-title">
-                                        @ViewData["2PreviousVersion"]
+                                        @ViewData["3PreviousVersion"]
                                     </h5>
                                     <div class="card-tools">
                                         <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
@@ -497,7 +520,7 @@
                             <div class="card card-primary collapsed-card">
                                 <div class="card-header border-0">
                                     <h5 class="card-title">
-                                        @ViewData["3PreviousVersion"]
+                                        @ViewData["4PreviousVersion"]
                                     </h5>
                                     <div class="card-tools">
                                         <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
@@ -515,7 +538,7 @@
                             <div class="card card-primary collapsed-card">
                                 <div class="card-header border-0">
                                     <h5 class="card-title">
-                                        @ViewData["4PreviousVersion"]
+                                        @ViewData["5PreviousVersion"]
                                     </h5>
                                     <div class="card-tools">
                                         <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
@@ -532,7 +555,7 @@
                             <div class="card card-primary collapsed-card">
                                 <div class="card-header border-0">
                                     <h5 class="card-title">
-                                        @ViewData["5PreviousVersion"]
+                                        @ViewData["6PreviousVersion"]
                                     </h5>
                                     <div class="card-tools">
                                         <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
@@ -549,7 +572,7 @@
                             <div class="card card-primary collapsed-card">
                                 <div class="card-header border-0">
                                     <h5 class="card-title">
-                                        @ViewData["6PreviousVersion"]
+                                        @ViewData["7PreviousVersion"]
                                     </h5>
                                     <div class="card-tools">
                                         <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
@@ -568,7 +591,7 @@
                             <div class="card card-primary collapsed-card">
                                 <div class="card-header border-0">
                                     <h5 class="card-title">
-                                        @ViewData["7PreviousVersion"]
+                                        @ViewData["8PreviousVersion"]
                                     </h5>
                                     <div class="card-tools">
                                         <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
@@ -585,7 +608,7 @@
                             <div class="card card-primary collapsed-card">
                                 <div class="card-header border-0">
                                     <h5 class="card-title">
-                                        @ViewData["8PreviousVersion"]
+                                        @ViewData["9PreviousVersion"]
                                     </h5>
                                     <div class="card-tools">
                                         <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
@@ -604,7 +627,7 @@
                             <div class="card card-primary collapsed-card">
                                 <div class="card-header border-0">
                                     <h5 class="card-title">
-                                        @ViewData["9PreviousVersion"]
+                                        @ViewData["10PreviousVersion"]
                                     </h5>
                                     <div class="card-tools">
                                         <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
