@@ -138,5 +138,9 @@ namespace ExpenseManagement.Data
         public DbSet<RaiseDiscountTracking> RaiseDiscountTracking { get; set; }
 
         public DbSet<RegistrationFees> RegistrationFees { get; set; }
+
+        public DbSet<Bonuses> Bonuses { get; set; }
+
+        public DbSet<BonusDocuments> BonusDocuments { get; set; }
     }
 }

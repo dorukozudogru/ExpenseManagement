@@ -1352,5 +1352,40 @@ namespace ExpenseManagement.Helpers
             }
             return pos;
         }
+
+        public static List<Bonuses> GetEnumName(List<Bonuses> bonuses)
+        {
+            foreach (var bonus in bonuses)
+            {
+                switch (bonus.BonusType)
+                {
+                    case 0:
+                        bonus.BonusTypeName = EnumExtensionsHelper.GetDisplayName(Bonuses.BonusTypeEnum.SERVICE);
+                        break;
+                    case 1:
+                        bonus.BonusTypeName = EnumExtensionsHelper.GetDisplayName(Bonuses.BonusTypeEnum.SALE);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return bonuses;
+        }
+
+        public static Bonuses GetEnumName(Bonuses bonuses)
+        {
+            switch (bonuses.BonusType)
+            {
+                case 0:
+                    bonuses.BonusTypeName = EnumExtensionsHelper.GetDisplayName(Bonuses.BonusTypeEnum.SERVICE);
+                    break;
+                case 1:
+                    bonuses.BonusTypeName = EnumExtensionsHelper.GetDisplayName(Bonuses.BonusTypeEnum.SALE);
+                    break;
+                default:
+                    break;
+            }
+            return bonuses;
+        }
     }
 }
