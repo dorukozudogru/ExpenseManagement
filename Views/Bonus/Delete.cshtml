@@ -1,0 +1,119 @@
+﻿@model ExpenseManagement.Models.Bonuses
+
+@{
+    ViewData["Title"] = "Primi Sil";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="callout callout-danger">
+            <h4>Bu primi silmek istediğinizden emin misiniz?</h4>
+            <p>
+                Bu primi silerseniz işlemi geriye alamayacaksınız.
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="invoice p-3 mb-3">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4>
+                                <i class="fas fa-credit-card"></i> @Html.DisplayNameFor(model => model.InvoiceImage)
+                                <a id="printButton" href="/Bonus/Print/@Html.DisplayFor(model => model.Id)" target="_blank" class="btn btn-secondary float-right"><i class="fas fa-print"></i>&nbsp;&nbsp;Görüntüyü Yazdır</a>
+                                <br />
+                            </h4>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row invoice-info">
+                        <img class="img-fluid pad" id="image" />
+                    </div>
+                    <div class="row invoice-info">
+                        <iframe id="document" style="width:100%;height:800px" webkitallowfullscreen allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="invoice p-3 mb-3">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4>
+                                <i class="fas fa-credit-card"></i> @Html.DisplayFor(model => model.Id)
+                                <br />
+                            </h4>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row invoice-info">
+                        <div class="col-sm-12 invoice-col">
+                            <address>
+                                @Html.DisplayNameFor(model => model.BonusTypeName): <strong>@Html.DisplayFor(model => model.BonusTypeName)</strong><br>
+                                @Html.DisplayNameFor(model => model.Year): <strong>@Html.DisplayFor(model => model.Year)</strong><br>
+                                @Html.DisplayNameFor(model => model.MonthName): <strong>@Html.DisplayFor(model => model.MonthName)</strong><br>
+                                @Html.DisplayNameFor(model => model.Amount): <strong>@Html.DisplayFor(model => model.Amount) ₺</strong><br>
+                            </address>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row no-print">
+                        <div class="col-12">
+                            <input type="hidden" asp-for="Id" id="id" />
+                            <input type="submit" value="Evet" class="btn btn-danger float-right" onclick="deleted()" />
+                            <a class="btn btn-primary float-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.onload = function getDocument() {
+        var id = '@Url.RouteUrl(ViewContext.RouteData.Values).Split("/").Last()';
+
+        $.ajax({
+            url: '/Bonus/GetDocument?&id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                if (returnvalue.invoiceImageFormat == "application/pdf") {
+                    document.getElementById("document").src = 'data:application/pdf;base64,' + returnvalue.invoiceImage;
+                    $("#image").attr("hidden", true);
+                    $("#printButton").attr("hidden", true);
+                }
+                if (returnvalue.invoiceImageFormat.includes("image")) {
+                    document.getElementById("image").src = 'data:image;base64,' + returnvalue.invoiceImage;
+                    $("#document").attr("hidden", true);
+                }
+            },
+            error: function (error) {
+                $("#document").attr("hidden", true);
+                $("#image").attr("hidden", true);
+                $("#printButton").attr("hidden", true);
+            }
+        });
+    };
+
+    var id;
+
+    function deleted() {
+        id = document.getElementById("id").value;
+        $.ajax({
+            url: '/Bonus/Delete?id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>
