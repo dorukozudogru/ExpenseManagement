@@ -1,0 +1,105 @@
+﻿@model ExpenseManagement.Models.UsedVehiclePurchases
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit</title>
+</head>
+<body>
+
+<h4>UsedVehiclePurchases</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="CarModelId" class="control-label"></label>
+                <select asp-for="CarModelId" class="form-control" asp-items="ViewBag.CarModelId"></select>
+                <span asp-validation-for="CarModelId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="KM" class="control-label"></label>
+                <input asp-for="KM" class="form-control" />
+                <span asp-validation-for="KM" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LicencePlate" class="control-label"></label>
+                <input asp-for="LicencePlate" class="form-control" />
+                <span asp-validation-for="LicencePlate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Seller" class="control-label"></label>
+                <input asp-for="Seller" class="form-control" />
+                <span asp-validation-for="Seller" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchaseDate" class="control-label"></label>
+                <input asp-for="PurchaseDate" class="form-control" />
+                <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchasedSalesmanId" class="control-label"></label>
+                <select asp-for="PurchasedSalesmanId" class="form-control" asp-items="ViewBag.PurchasedSalesmanId"></select>
+                <span asp-validation-for="PurchasedSalesmanId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchaseAmount" class="control-label"></label>
+                <input asp-for="PurchaseAmount" class="form-control" />
+                <span asp-validation-for="PurchaseAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchasedSalesmanBonus" class="control-label"></label>
+                <input asp-for="PurchasedSalesmanBonus" class="form-control" />
+                <span asp-validation-for="PurchasedSalesmanBonus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Buyer" class="control-label"></label>
+                <input asp-for="Buyer" class="form-control" />
+                <span asp-validation-for="Buyer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SaleDate" class="control-label"></label>
+                <input asp-for="SaleDate" class="form-control" />
+                <span asp-validation-for="SaleDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SoldSalesmanId" class="control-label"></label>
+                <select asp-for="SoldSalesmanId" class="form-control" asp-items="ViewBag.SoldSalesmanId"></select>
+                <span asp-validation-for="SoldSalesmanId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SaleAmount" class="control-label"></label>
+                <input asp-for="SaleAmount" class="form-control" />
+                <span asp-validation-for="SaleAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SoldSalesmanBonus" class="control-label"></label>
+                <input asp-for="SoldSalesmanBonus" class="form-control" />
+                <span asp-validation-for="SoldSalesmanBonus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Profit" class="control-label"></label>
+                <input asp-for="Profit" class="form-control" />
+                <span asp-validation-for="Profit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+</body>
+</html>

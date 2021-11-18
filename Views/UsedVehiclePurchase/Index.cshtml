@@ -1,0 +1,121 @@
+﻿@model IEnumerable<ExpenseManagement.Models.UsedVehiclePurchases>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CarModel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.KM)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LicencePlate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Seller)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PurchaseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PurchasedSalesman)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PurchaseAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PurchasedSalesmanBonus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Buyer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SaleDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SoldSalesman)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SaleAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SoldSalesmanBonus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Profit)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CarModel.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.KM)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LicencePlate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Seller)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PurchaseDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PurchasedSalesman.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PurchaseAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PurchasedSalesmanBonus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Buyer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SaleDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SoldSalesman.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SaleAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SoldSalesmanBonus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Profit)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</body>
+</html>
