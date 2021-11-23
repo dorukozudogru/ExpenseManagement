@@ -20,23 +20,16 @@
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 <input asp-for="Id" class="form-control" id="id" hidden />
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="form-group">
-                                            <label asp-for="VehiclePurchase.CarModel.CarBrand.Name" class="control-label"></label>
-                                            <input asp-for="VehiclePurchase.CarModel.CarBrand.Name" class="form-control" id="vehiclePurchaseCarBrandId" autocomplete="off" disabled />
+                                            <label asp-for="UsedVehiclePurchases.CarModel.CarBrand.Name" class="control-label"></label>
+                                            <input asp-for="UsedVehiclePurchases.CarModel.CarBrand.Name" class="form-control" id="vehiclePurchaseCarBrandId" autocomplete="off" disabled />
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="form-group">
-                                            <label asp-for="VehiclePurchase.CarModel.Name" class="control-label"></label>
-                                            <input asp-for="VehiclePurchase.CarModel.Name" class="form-control" id="vehiclePurchaseCarModelId" autocomplete="off" disabled />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label asp-for="VehiclePurchaseId" class="control-label"></label>
-                                            <select asp-for="VehiclePurchaseId" class="form-control" style="width: 100%;" asp-items="@ViewBag.VehiclePurchaseId" id="vehiclePurchaseId" disabled></select>
-                                            <span asp-validation-for="VehiclePurchaseId" class="text-danger"></span>
+                                            <label asp-for="UsedVehiclePurchases.CarModel.Name" class="control-label"></label>
+                                            <input asp-for="UsedVehiclePurchases.CarModel.Name" class="form-control" id="vehiclePurchaseCarModelId" autocomplete="off" disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -162,9 +155,8 @@
                 monthF = monthF < 10 ? "0" + monthF : monthF;
 
                 document.getElementById("id").value = returnvalue.id;
-                document.getElementById("vehiclePurchaseCarBrandId").value = returnvalue.vehiclePurchase.carModel.carBrand.name;
-                document.getElementById("vehiclePurchaseCarModelId").value = returnvalue.vehiclePurchase.carModel.name;
-                document.getElementById("vehiclePurchaseId").value = returnvalue.vehiclePurchase.id;
+                document.getElementById("vehiclePurchaseCarBrandId").value = returnvalue.usedVehiclePurchases.carModel.carBrand.name;
+                document.getElementById("vehiclePurchaseCarModelId").value = returnvalue.usedVehiclePurchases.carModel.name;
                 document.getElementById("licencePlate").value = returnvalue.licencePlate;
                 document.getElementById("km").value = returnvalue.km;
                 document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
@@ -187,7 +179,6 @@
 <script>
     function updateUsedVehicleSales() {
         var Id = document.getElementById("id").value;
-        var VehiclePurchaseId = document.getElementById("vehiclePurchaseId").value;
         var LicencePlate = document.getElementById("licencePlate").value;
         var KM = document.getElementById("km").value;
         var PurchaseDate = document.getElementById("datepicker").value;
@@ -202,7 +193,6 @@
 
         var data = new FormData();
 
-        data.append('VehiclePurchaseId', VehiclePurchaseId);
         data.append('LicencePlate', LicencePlate);
         data.append('KM', KM);
         data.append('PurchaseDate', PurchaseDate);

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ExpenseManagement.Models.UsedVehicleSales>
 
 @{
-    ViewData["Title"] = "2. El Araç Satışı";
+    ViewData["Title"] = "2. El Araç Satış";
 }
 
 <section class="content">
@@ -65,10 +65,6 @@
                                     <select class="form-control" id="model"></select>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label">Şase No</label>
-                                    <input class="form-control" id="chassis" autocomplete="off" />
-                                </div>
-                                <div class="form-group">
                                     <label class="control-label">Satılan Ay</label>
                                     <select class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
                                 </div>
@@ -105,7 +101,7 @@
                 <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
-                            <i class="fas fa-car"></i>&nbsp;2. El Araç Satışı
+                            <i class="fas fa-car"></i>&nbsp;2. El Araç Satış
                             <a class="btn btn-light text-primary btn-sm float-right" asp-controller="UsedVehicleSale" asp-action="ExportSales" style="margin-left:10px"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
                             <a class="btn btn-light text-primary btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
                         </h5>
@@ -123,13 +119,10 @@
                                                 Araç Alış Id
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.VehiclePurchase.CarBrandName)
+                                                @Html.DisplayNameFor(model => model.UsedVehiclePurchases.CarBrandName)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.VehiclePurchase.CarModel.Name)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.VehiclePurchase.Chassis)
+                                                @Html.DisplayNameFor(model => model.UsedVehiclePurchases.CarModel.Name)
                                             </th>
                                             <th>
                                                 @Html.DisplayNameFor(model => model.LicencePlate)
@@ -202,17 +195,13 @@
             },
             "columns": [
                 { "data": "id" },
-                { "data": "vehiclePurchase.id" },
+                { "data": "usedVehiclePurchases.id" },
                 {
-                    "data": "vehiclePurchase.carModel.carBrand.name",
+                    "data": "usedVehiclePurchases.carModel.carBrand.name",
                     "orderable": false
                 },
                 {
-                    "data": "vehiclePurchase.carModel.name",
-                    "orderable": false
-                },
-                {
-                    "data": "vehiclePurchase.chassis",
+                    "data": "usedVehiclePurchases.carModel.name",
                     "orderable": false
                 },
                 {
@@ -361,24 +350,19 @@
                     + "&from=" + document.getElementById("from").value
                     + "&to=" + document.getElementById("to").value
                     + "&model=" + document.getElementById("model").value
-                    + "&chassis=" + document.getElementById("chassis").value
                     + "&licencePlate=" + document.getElementById("licencePlate").value
                     + "&monthId=" + document.getElementById("monthId").value,
                 "method": "POST"
             },
             "columns": [
                 { "data": "id" },
-                { "data": "vehiclePurchase.id" },
+                { "data": "usedVehiclePurchases.id" },
                 {
-                    "data": "vehiclePurchase.carModel.carBrand.name",
+                    "data": "usedVehiclePurchases.carModel.carBrand.name",
                     "orderable": false
                 },
                 {
-                    "data": "vehiclePurchase.carModel.name",
-                    "orderable": false
-                },
-                {
-                    "data": "vehiclePurchase.chassis",
+                    "data": "usedVehiclePurchases.carModel.name",
                     "orderable": false
                 },
                 {

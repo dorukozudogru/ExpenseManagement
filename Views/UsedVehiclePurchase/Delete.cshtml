@@ -1,7 +1,7 @@
-﻿@model ExpenseManagement.Models.UsedVehicleSales
+﻿@model ExpenseManagement.Models.UsedVehiclePurchases
 
 @{
-    ViewData["Title"] = "2. El Araç Satışını Sil";
+    ViewData["Title"] = "2. El Araç Alışını Sil";
 }
 
 <section class="content">
@@ -9,9 +9,9 @@
         <div class="row">
             <div class="col-12">
                 <div class="callout callout-danger">
-                    <h4>Bu araç satışını silmek istediğinizden emin misiniz?</h4>
+                    <h4>Bu 2. el araç alışını silmek istediğinizden emin misiniz?</h4>
                     <p>
-                        Bu araç satışını silerseniz işlemi geriye alamayacaksınız.
+                        Bu 2. el araç alışını silerseniz işlemi geriye alamayacaksınız.
                     </p>
                 </div>
                 <div class="invoice p-3 mb-3">
@@ -29,32 +29,33 @@
                     <div class="row invoice-info">
                         <div class="col-sm-4 invoice-col">
                             <address>
-                                @Html.DisplayNameFor(model => model.UsedVehiclePurchases.CarModel.CarBrand.Name): <strong>@Html.DisplayFor(model => model.UsedVehiclePurchases.CarModel.CarBrand.Name)</strong><br>
-                                @Html.DisplayNameFor(model => model.UsedVehiclePurchases.CarModel.Name): <strong>@Html.DisplayFor(model => model.UsedVehiclePurchases.CarModel.Name)</strong><br>
-                                @Html.DisplayNameFor(model => model.LicencePlate): <strong>@Html.DisplayFor(model => model.LicencePlate)</strong><br>
+                                @Html.DisplayNameFor(model => model.CarModel.CarBrand.Name): <strong>@Html.DisplayFor(model => model.CarModel.CarBrand.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.CarModel.Name): <strong>@Html.DisplayFor(model => model.CarModel.Name)</strong><br>
                                 @Html.DisplayNameFor(model => model.KM): <strong>@Html.DisplayFor(model => model.KM)</strong><br>
+                                @Html.DisplayNameFor(model => model.LicencePlate): <strong>@Html.DisplayFor(model => model.LicencePlate)</strong><br>
                             </address>
                         </div>
                         <div class="col-sm-4 invoice-col">
                             <address>
-                                @Html.DisplayNameFor(model => model.PurchasedSalesman): <strong>@Html.DisplayFor(model => model.PurchasedSalesman.Name)</strong><br>
-                                @Html.DisplayNameFor(model => model.PurchaseDate): <strong>@Html.DisplayFor(model => model.PurchaseDate)</strong><br>
-                                @Html.DisplayNameFor(model => model.PurchaseAmount): <strong>@Html.DisplayFor(model => model.PurchaseAmount) @Html.DisplayFor(model => model.PurchaseAmountCurrencyName)</strong><br>
+                                @Html.DisplayNameFor(model => model.Seller): <strong>@Html.DisplayFor(model => model.Seller)</strong><br>
+                                @Html.DisplayNameFor(model => model.PurchasedSalesmanId): <strong>@Html.DisplayFor(model => model.PurchasedSalesman.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.PurchaseAmount) : <strong>@Html.DisplayFor(model => model.PurchaseAmount) ₺</strong><br>
+                                @Html.DisplayNameFor(model => model.PurchasedSalesmanBonus) : <strong>@Html.DisplayFor(model => model.PurchasedSalesmanBonus) ₺</strong><br>
                             </address>
                         </div>
                         <div class="col-sm-4 invoice-col">
                             <address>
-                                @Html.DisplayNameFor(model => model.SoldSalesman): <strong>@Html.DisplayFor(model => model.SoldSalesman.Name)</strong><br>
-                                @Html.DisplayNameFor(model => model.SaleDate): <strong>@Html.DisplayFor(model => model.SaleDate)</strong><br>
-                                @Html.DisplayNameFor(model => model.SaleAmount): <strong>@Html.DisplayFor(model => model.SaleAmount) @Html.DisplayFor(model => model.SaleAmountCurrencyName)</strong><br>
+                                @Html.DisplayNameFor(model => model.Buyer): <strong>@Html.DisplayFor(model => model.Buyer)</strong><br>
+                                @Html.DisplayNameFor(model => model.SoldSalesmansId): <strong>@Html.DisplayFor(model => model.SoldSalesman.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.SaleAmount) : <strong>@Html.DisplayFor(model => model.SaleAmount) ₺</strong><br>
+                                @Html.DisplayNameFor(model => model.SoldSalesmanBonus) : <strong>@Html.DisplayFor(model => model.SoldSalesmanBonus) ₺</strong><br>
                             </address>
                         </div>
                     </div>
-                    <hr />
                     <div class="row invoice-info">
-                        <div class="col-sm-12 invoice-col">
+                        <div class="col-sm-4 invoice-col">
                             <address>
-                                @Html.DisplayNameFor(model => model.Description): <strong>@Html.DisplayFor(model => model.Description)</strong><br>
+                                @Html.DisplayNameFor(model => model.Profit): <strong>@Html.DisplayFor(model => model.Profit)</strong><br>
                             </address>
                         </div>
                     </div>
@@ -80,7 +81,7 @@
     function deleted() {
         id = document.getElementById("id").value;
         $.ajax({
-            url: '/UsedVehicleSale/Delete?id=' + id,
+            url: '/UsedVehiclePurchase/Delete?id=' + id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

@@ -55,7 +55,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label asp-for="PurchasedSalesmanId" class="control-label"></label>
-                                            <select asp-for="PurchasedSalesmanId" class="form-control" asp-items="ViewBag.PurchasedSalesmanId" id="purchasedSalesmanId"></select>
+                                            <select asp-for="PurchasedSalesmanId" class="form-control" asp-items="ViewBag.PurchasedSalesmanId" id="purchasedSalesmanId" disabled></select>
                                             <span asp-validation-for="PurchasedSalesmanId" class="text-danger"></span>
                                         </div>
                                         <div class="form-group">
@@ -135,10 +135,12 @@
             function GetPurchaseDate(vehiclePurchaseName)
             {
                 $('#datepicker').html('');
+                $('#purchasedSalesmanId').val('');
                 $.getJSON('@Url.Action("GetPurchaseDate", "UsedVehicleSale")' + "?vehiclePurchaseName=" + vehiclePurchaseName, function (result) {
                     for (var i = 0; i < result.length; i++) {
                         $("#datepicker").attr('value', moment(result[i].purchaseDate).format("YYYY/MM/DD"))
                         $("#purchaseAmount").attr('value', currency(result[i].purchaseAmount, { decimal: ',', separator: '', symbol: '' }).format())
+                        document.getElementById('purchasedSalesmanId').getElementsByTagName('option')[(result[i].purchasedSalesmanId)-1].selected = 'selected'
                     }
                 })
             }

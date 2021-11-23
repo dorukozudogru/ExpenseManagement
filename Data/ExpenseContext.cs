@@ -142,5 +142,7 @@ namespace ExpenseManagement.Data
         public DbSet<Bonuses> Bonuses { get; set; }
 
         public DbSet<BonusDocuments> BonusDocuments { get; set; }
+
+        public DbSet<UsedVehiclePurchases> UsedVehiclePurchases { get; set; }
     }
 }

@@ -11,10 +11,10 @@ namespace ExpenseManagement.Models
         public int Id { get; set; }
 
         [Required]
-        [DisplayName("Alınan Araç Şase No")]
-        [ForeignKey(nameof(VehiclePurchase))]
+        [DisplayName("Araç Bilgileri")]
+        [ForeignKey(nameof(UsedVehiclePurchases))]
         public int VehiclePurchaseId { get; set; }
-        public virtual VehiclePurchases VehiclePurchase { get; set; }
+        public virtual UsedVehiclePurchases UsedVehiclePurchases { get; set; }
 
         [Required]
         [DisplayName("Plaka")]
