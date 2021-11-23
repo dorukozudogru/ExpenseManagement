@@ -17,6 +17,9 @@ namespace ExpenseManagement.Models
         [DisplayName("Marka")]
         public string CarBrandName { get; set; }
 
+        [DisplayName("Araç Satıldı Mı?")]
+        public bool IsSold { get; set; }
+
         [Required]
         [DisplayName("KM")]
         public string KM { get; set; }
@@ -48,31 +51,45 @@ namespace ExpenseManagement.Models
         [DisplayName("Alan Danışman Primi")]
         public double PurchasedSalesmanBonus { get; set; }
 
-        [Required]
         [DisplayName("Aracın Satıldığı Kişi")]
         public string Buyer { get; set; }
 
-        [Required]
         [DisplayName("Satış Tarihi")]
-        public DateTime SaleDate { get; set; }
+        public DateTime? SaleDate { get; set; }
 
-        [Required]
         [DisplayName("Satan Danışman")]
         [ForeignKey(nameof(SoldSalesman))]
-        public int? SoldSalesmanId { get; set; }
+        public int? SoldSalesmansId { get; set; }
         [DisplayName("Satan Danışman")]
         public virtual Salesmans SoldSalesman { get; set; }
 
-        [Required]
         [DisplayName("Satış Fiyatı")]
-        public double SaleAmount { get; set; }
+        public double? SaleAmount { get; set; }
 
-        [Required]
         [DisplayName("Satan Danışman Primi")]
-        public double SoldSalesmanBonus { get; set; }
+        public double? SoldSalesmanBonus { get; set; }
 
-        [Required]
         [DisplayName("Kâr")]
-        public double Profit { get; set; }
+        public double? Profit { get; set; }
+
+        [NotMapped]
+        private string _fullInfo { get; set; }
+        [NotMapped]
+        [DisplayName("Araç Bilgileri")]
+        public string FullInfo
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_fullInfo))
+                {
+                    return string.Format($"{this.LicencePlate}");
+                }
+                return _fullInfo;
+            }
+            set
+            {
+                _fullInfo = value;
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿@model ExpenseManagement.Models.VehiclePurchases
 
 @{
-    ViewData["Title"] = "Araç Alımını Güncelle";
+    ViewData["Title"] = "Sıfır Araç Alışını Güncelle";
 }
 
 <section class="content">
@@ -11,7 +11,7 @@
                 <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
-                            <i class="fas fa-pencil-alt"></i>&nbsp;Araç Alımını Güncelle
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Sıfır Araç Alışını Güncelle
                         </h5>
                     </div>
                     <div class="card-body">
@@ -310,7 +310,7 @@
                 monthS = monthS < 10 ? "0" + monthS : monthS;
 
                 document.getElementById("id").value = returnvalue.id;
-                document.getElementById("Brand").value = returnvalue.carModel.carBrandId;
+                document.getElementById("Brand").value = returnvalue.carModel.carBrand.name;
                 document.getElementById("Model").value = returnvalue.carModel.name;
                 document.getElementById("isNew").checked = returnvalue.isNew;
                 document.getElementById("isSold").checked = returnvalue.isSold;

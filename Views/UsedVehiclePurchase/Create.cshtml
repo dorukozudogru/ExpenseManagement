@@ -1,101 +1,307 @@
 ﻿@model ExpenseManagement.Models.UsedVehiclePurchases
 
 @{
-    Layout = null;
+    ViewData["Title"] = "2. El Araç Alış Ekle";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Create</title>
-</head>
-<body>
-
-<h4>UsedVehiclePurchases</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CarModelId" class="control-label"></label>
-                <select asp-for="CarModelId" class ="form-control" asp-items="ViewBag.CarModelId"></select>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-plus"></i>&nbsp;2. El Araç Alımı Ekle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="CarModel.CarBrandName" class="control-label"></label>
+                                            <select id="Brand" asp-for="CarModel.CarBrand.Name" class="form-control"></select>
+                                            <span asp-validation-for="CarModel.CarBrand.Name" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="CarModel.Name" class="control-label"></label>
+                                            <select id="Model" asp-for="CarModel.Name" class="form-control"></select>
+                                            <span asp-validation-for="CarModel.Name" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label asp-for="LicencePlate" class="control-label"></label>
+                                            <input asp-for="LicencePlate" class="form-control" id="licencePlate" autocomplete="off" />
+                                            <span asp-validation-for="LicencePlate" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label asp-for="KM" class="control-label"></label>
+                                            <input asp-for="KM" class="form-control" id="km" autocomplete="off" />
+                                            <span asp-validation-for="KM" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label" asp-for="IsSold"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <input type="checkbox" asp-for="IsSold" id="isSold">
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="Seller" class="control-label"></label>
+                                            <input asp-for="Seller" class="form-control" autocomplete="off" id="seller" />
+                                            <span asp-validation-for="Seller" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="PurchaseDate" class="control-label"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input asp-for="PurchaseDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker" />
+                                            </div>
+                                            <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="PurchasedSalesmanId" class="control-label"></label>
+                                            <select asp-for="PurchasedSalesmanId" class="form-control" asp-items="ViewBag.PurchasedSalesmanId" id="purchasedSalesmanId"></select>
+                                            <span asp-validation-for="PurchasedSalesmanId" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="PurchaseAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                                </div>
+                                                <input asp-for="PurchaseAmount" class="form-control" autocomplete="off" id="purchaseAmount" type="text" />
+                                                <span asp-validation-for="PurchaseAmount" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="PurchasedSalesmanBonus" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                                </div>
+                                                <input asp-for="PurchasedSalesmanBonus" class="form-control" autocomplete="off" id="purchasedSalesmanBonus" type="text" />
+                                                <span asp-validation-for="PurchasedSalesmanBonus" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="Buyer" class="control-label"></label>
+                                            <input asp-for="Buyer" class="form-control" autocomplete="off" id="buyer" disabled />
+                                            <span asp-validation-for="Buyer" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="SaleDate" class="control-label"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input asp-for="SaleDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker2" disabled />
+                                            </div>
+                                            <span asp-validation-for="SaleDate" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="SoldSalesmansId" class="control-label"></label>
+                                            <select asp-for="SoldSalesmansId" class="form-control" asp-items="ViewBag.SoldSalesmanId" id="soldSalesmanId" disabled></select>
+                                            <span asp-validation-for="SoldSalesmansId" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="SaleAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                                </div>
+                                                <input asp-for="SaleAmount" class="form-control" autocomplete="off" id="saleAmount" type="text" disabled onchange="calculate()" />
+                                                <span asp-validation-for="SaleAmount" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="SoldSalesmanBonus" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                                </div>
+                                                <input asp-for="SoldSalesmanBonus" class="form-control" autocomplete="off" id="soldSalesmanBonus" type="text" disabled />
+                                                <span asp-validation-for="SoldSalesmanBonus" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Profit" class="control-label"></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                        </div>
+                                        <input asp-for="Profit" class="form-control" autocomplete="off" id="profit" type="text" disabled />
+                                        <span asp-validation-for="Profit" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Ekle" class="btn btn-success" onclick="create()" id="createButton" />
+                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="KM" class="control-label"></label>
-                <input asp-for="KM" class="form-control" />
-                <span asp-validation-for="KM" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LicencePlate" class="control-label"></label>
-                <input asp-for="LicencePlate" class="form-control" />
-                <span asp-validation-for="LicencePlate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Seller" class="control-label"></label>
-                <input asp-for="Seller" class="form-control" />
-                <span asp-validation-for="Seller" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PurchaseDate" class="control-label"></label>
-                <input asp-for="PurchaseDate" class="form-control" />
-                <span asp-validation-for="PurchaseDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PurchasedSalesmanId" class="control-label"></label>
-                <select asp-for="PurchasedSalesmanId" class ="form-control" asp-items="ViewBag.PurchasedSalesmanId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="PurchaseAmount" class="control-label"></label>
-                <input asp-for="PurchaseAmount" class="form-control" />
-                <span asp-validation-for="PurchaseAmount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PurchasedSalesmanBonus" class="control-label"></label>
-                <input asp-for="PurchasedSalesmanBonus" class="form-control" />
-                <span asp-validation-for="PurchasedSalesmanBonus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Buyer" class="control-label"></label>
-                <input asp-for="Buyer" class="form-control" />
-                <span asp-validation-for="Buyer" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SaleDate" class="control-label"></label>
-                <input asp-for="SaleDate" class="form-control" />
-                <span asp-validation-for="SaleDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SoldSalesmanId" class="control-label"></label>
-                <select asp-for="SoldSalesmanId" class ="form-control" asp-items="ViewBag.SoldSalesmanId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="SaleAmount" class="control-label"></label>
-                <input asp-for="SaleAmount" class="form-control" />
-                <span asp-validation-for="SaleAmount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SoldSalesmanBonus" class="control-label"></label>
-                <input asp-for="SoldSalesmanBonus" class="form-control" />
-                <span asp-validation-for="SoldSalesmanBonus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Profit" class="control-label"></label>
-                <input asp-for="Profit" class="form-control" />
-                <span asp-validation-for="Profit" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</section>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Scripts {
+    <script>
+        function brandLoad() {
+            $('#Brand').html('');
+            $("#isSold").attr('value', 'false');
+            $('#soldSalesmanId').val('');
+            $.getJSON('@Url.Action("GetCarBrands", "CarBrand")', function (result) {
+                for (var i = 0; i < result.length; i++) {
+                    $("#Brand").append("<option id='" + result[i].id + "'>" + result[i].name + "</option>")
+                }
+                showValue(result[0].id);
+            })
+        }
+        window.onload = brandLoad;
 
-</body>
-</html>
+        $("#Brand").on("change", function (e) {
+            showValue(e.target.selectedOptions[0].id);
+        })
+
+        function showValue(brandId)
+        {
+            $('#Model').html('');
+            $.getJSON('@Url.Action("GetCarModelsById", "CarModel")' + "?Id=" + brandId, function (result) {
+                for (var i = 0; i < result.length; i++) {
+                    $("#Model").append("<option id='" + result[i].id + "'>" + result[i].name + "</option>")
+                }
+            })
+        }
+
+        $("#isSold").on('change', function () {
+            if ($(this).is(':checked')) {
+                $(this).attr('value', 'true');
+                $('#buyer').removeAttr('disabled');
+                $('#datepicker2').removeAttr('disabled');
+                $('#saleAmount').removeAttr('disabled');
+                $('#soldSalesmanId').removeAttr('disabled');
+                $('#soldSalesmanBonus').removeAttr('disabled');
+                $('#profit').removeAttr('disabled');
+            } else {
+                $(this).attr('value', 'false');
+                $('#buyer').attr('disabled', 'disabled');
+                $('#datepicker2').attr('disabled', 'disabled');
+                $('#saleAmount').attr('disabled', 'disabled');
+                $('#soldSalesmanId').attr('disabled', 'disabled');
+                $('#soldSalesmanBonus').attr('disabled', 'disabled');
+                $('#profit').attr('disabled', 'disabled');
+                $('#buyer').val('');
+                $('#datepicker2').val('');
+                $('#saleAmount').val('');
+                $('#soldSalesmanBonus').val('');
+                $('#profit').val('');
+            }
+        });
+
+        function calculate() {
+            var purchaseAmount = document.getElementById("purchaseAmount").value;
+            var saleAmount = document.getElementById("saleAmount").value;
+
+            var profit = Number(saleAmount.replace(',', '.') - purchaseAmount.replace(',', '.'));
+
+            document.getElementById("profit").value = currency(profit, { decimal: ',', separator: '', symbol: '' }).format();
+        }
+
+        function create() {
+            var Brand = document.getElementById("Brand").value;
+            var Model = document.getElementById("Model").value;
+            var LicencePlate = document.getElementById("licencePlate").value;
+            var KM = document.getElementById("km").value;
+            var IsSold = document.getElementById("isSold").value;
+            var Seller = document.getElementById("seller").value;
+            var PurchaseDate = document.getElementById("datepicker").value;
+            var PurchasedSalesmanId = document.getElementById("purchasedSalesmanId").value;
+            var PurchaseAmount = document.getElementById("purchaseAmount").value;
+            var PurchasedSalesmanBonus = document.getElementById("purchasedSalesmanBonus").value;
+            var Buyer = document.getElementById("buyer").value;
+            var SaleDate = document.getElementById("datepicker2").value;
+            var SoldSalesmanId = document.getElementById("soldSalesmanId").value;
+            var SaleAmount = document.getElementById("saleAmount").value;
+            var SoldSalesmanBonus = document.getElementById("soldSalesmanBonus").value;
+            var Profit = document.getElementById("profit").value;
+
+            var data = new FormData();
+
+            data.append('CarModel.Name', Model);
+            data.append('LicencePlate', LicencePlate);
+            data.append('KM', KM);
+            data.append('IsSold', IsSold);
+            data.append('Seller', Seller);
+            data.append('PurchaseDate', PurchaseDate);
+            data.append('PurchasedSalesmanId', PurchasedSalesmanId);
+            data.append('PurchaseAmount', PurchaseAmount);
+            data.append('PurchasedSalesmanBonus', PurchasedSalesmanBonus);
+            data.append('Buyer', Buyer);
+            data.append('SaleDate', SaleDate);
+            data.append('SoldSalesmansId', SoldSalesmanId);
+            data.append('SaleAmount', SaleAmount);
+            data.append('SoldSalesmanBonus', SoldSalesmanBonus);
+            data.append('Profit', Profit);
+
+            $("#createButton").attr("disabled", true);
+
+            $.ajax({
+                url: '/UsedVehiclePurchase/Create',
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                data: data,
+                success: function (returnvalue) {
+                    document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                    document.getElementById("swalDefaultSuccess").click();
+                    window.setTimeout(function () {
+                        location.reload();
+                    }, 2000);
+                },
+                error: function (error) {
+                    document.getElementById("swalDefaultError").value = error.responseText;
+                    document.getElementById("swalDefaultError").click();
+                    window.setTimeout(function () {
+                        $("#createButton").attr("disabled", false);
+                    }, 1600);
+                }
+            });
+        }
+    </script>
+}

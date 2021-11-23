@@ -134,10 +134,10 @@ namespace ExpenseManagement.Controllers
 
         public IActionResult Edit()
         {
-            ViewData["CarBrand"] = new SelectList(_context.CarBrands.OrderBy(x => x.Name), "Id", "Name");
-            ViewData["CarModel"] = new SelectList(_context.CarModels.OrderBy(x => x.Name), "Name", "Name");
-            ViewData["PurchasedSalesman"] = new SelectList(_context.Salesmans, "Id", "Name");
-            ViewData["SoldSalesman"] = new SelectList(_context.Salesmans, "Id", "Name");
+            ViewBag.CarBrands = new SelectList(_context.CarBrands.OrderBy(x => x.Name), "Id", "Name");
+            ViewBag.CarModels = new SelectList(_context.CarModels.OrderBy(x => x.Name), "Name", "Name");
+            ViewBag.PurchasedSalesman = new SelectList(_context.Salesmans, "Id", "Name");
+            ViewBag.SoldSalesman = new SelectList(_context.Salesmans, "Id", "Name");
 
             return View();
         }
@@ -192,6 +192,7 @@ namespace ExpenseManagement.Controllers
 
                     usedVehiclePurchase.Buyer = usedVehiclePurchases.Buyer;
                     usedVehiclePurchase.CarModelId = _context.CarModels.FirstOrDefault(x => x.Name == usedVehiclePurchases.CarModel.Name).Id;
+                    usedVehiclePurchase.IsSold = usedVehiclePurchases.IsSold;
                     usedVehiclePurchase.KM = usedVehiclePurchases.KM;
                     usedVehiclePurchase.LicencePlate = usedVehiclePurchases.LicencePlate;
                     usedVehiclePurchase.Profit = usedVehiclePurchases.Profit;
@@ -203,7 +204,7 @@ namespace ExpenseManagement.Controllers
                     usedVehiclePurchase.SaleDate = usedVehiclePurchases.SaleDate;
                     usedVehiclePurchase.Seller = usedVehiclePurchases.Seller;
                     usedVehiclePurchase.SoldSalesmanBonus = usedVehiclePurchases.SoldSalesmanBonus;
-                    usedVehiclePurchase.SoldSalesmanId = usedVehiclePurchases.SoldSalesmanId;
+                    usedVehiclePurchase.SoldSalesmansId = usedVehiclePurchases.SoldSalesmansId;
 
                     _context.Update(usedVehiclePurchase);
                     await _context.SaveChangesAsync();

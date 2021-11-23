@@ -4,14 +4,16 @@ using ExpenseManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseManagement.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    partial class ExpenseContextModelSnapshot : ModelSnapshot
+    [Migration("20211121135846_used-vehicle-purchase-added")]
+    partial class usedvehiclepurchaseadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -725,11 +727,10 @@ namespace ExpenseManagement.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Buyer");
+                    b.Property<string>("Buyer")
+                        .IsRequired();
 
                     b.Property<int>("CarModelId");
-
-                    b.Property<bool>("IsSold");
 
                     b.Property<string>("KM")
                         .IsRequired();
@@ -1092,7 +1093,7 @@ namespace ExpenseManagement.Migrations
                         .WithMany()
                         .HasForeignKey("SoldSalesmanId");
 
-                    b.HasOne("ExpenseManagement.Models.UsedVehiclePurchases", "UsedVehiclePurchases")
+                    b.HasOne("ExpenseManagement.Models.VehiclePurchases", "VehiclePurchase")
                         .WithMany()
                         .HasForeignKey("VehiclePurchaseId")
                         .OnDelete(DeleteBehavior.Cascade);

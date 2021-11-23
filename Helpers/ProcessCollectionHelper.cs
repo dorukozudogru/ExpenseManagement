@@ -263,18 +263,16 @@ namespace ExpenseManagement.Helpers
                         {
                             if (sortDirection == "asc")
                             {
-                                return lstElements.Where(l => l.VehiclePurchase.Chassis.ToUpper().Contains(searchValue)
-                                || l.VehiclePurchase.CarModel.CarBrand.Name.ToUpper().Contains(searchValue)
-                                || l.VehiclePurchase.CarModel.Name.ToUpper().Contains(searchValue)
+                                return lstElements.Where(l => l.UsedVehiclePurchases.CarModel.CarBrand.Name.ToUpper().Contains(searchValue)
+                                || l.UsedVehiclePurchases.CarModel.Name.ToUpper().Contains(searchValue)
                                 || l.PurchasedSalesman.Name.ToUpper().Contains(searchValue)
                                 || l.SoldSalesman.Name.ToUpper().Contains(searchValue)
                                 || l.Id.ToString().Contains(searchValue)).OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
                             }
                             else
                             {
-                                return lstElements.Where(l => l.VehiclePurchase.Chassis.ToUpper().ToString().Contains(searchValue)
-                                || l.VehiclePurchase.CarModel.CarBrand.Name.ToUpper().Contains(searchValue)
-                                || l.VehiclePurchase.CarModel.Name.ToUpper().Contains(searchValue)
+                                return lstElements.Where(l => l.UsedVehiclePurchases.CarModel.CarBrand.Name.ToUpper().Contains(searchValue)
+                                || l.UsedVehiclePurchases.CarModel.Name.ToUpper().Contains(searchValue)
                                 || l.PurchasedSalesman.Name.ToUpper().Contains(searchValue)
                                 || l.SoldSalesman.Name.ToUpper().Contains(searchValue)
                                 || l.Id.ToString().Contains(searchValue)).OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();

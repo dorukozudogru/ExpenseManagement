@@ -28,6 +28,16 @@
     <Compile Remove="Migrations\20210613132153_other-tax-nad-discount-added.Designer.cs" />
     <Compile Remove="Migrations\20210911191745_registration-fee.cs" />
     <Compile Remove="Migrations\20210911191745_registration-fee.Designer.cs" />
+    <Compile Remove="Migrations\20211121132500_used-vehicle-purchase-added.cs" />
+    <Compile Remove="Migrations\20211121132500_used-vehicle-purchase-added.Designer.cs" />
+    <Compile Remove="Migrations\20211121133454_used-vehicle-purchase-added.cs" />
+    <Compile Remove="Migrations\20211121133454_used-vehicle-purchase-added.Designer.cs" />
+    <Compile Remove="Migrations\20211121135610_used-vehicle-purchase-added.cs" />
+    <Compile Remove="Migrations\20211121135610_used-vehicle-purchase-added.Designer.cs" />
+    <Compile Remove="Migrations\20211121212531_used-vehicle-sale-updated.cs" />
+    <Compile Remove="Migrations\20211121212531_used-vehicle-sale-updated.Designer.cs" />
+    <Compile Remove="Migrations\20211122185300_used-vehicle-sale-updated.cs" />
+    <Compile Remove="Migrations\20211122185300_used-vehicle-sale-updated.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
