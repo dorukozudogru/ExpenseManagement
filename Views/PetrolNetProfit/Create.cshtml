@@ -1,0 +1,161 @@
+﻿@model ExpenseManagement.Models.PetrolNetProfit
+
+@{
+    ViewData["Title"] = "Net Kârlılık Ekle";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fa fa-plus"></i>&nbsp;Net Kârlılık Ekle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="Year" class="control-label"></label>
+                                            <div class="input-group-prepend">
+                                                <select asp-for="Year" class="form-control btn btn-default" id="year">
+                                                    <option>2021</option>
+                                                    <option>2022</option>
+                                                    <option>2023</option>
+                                                    <option>2024</option>
+                                                    <option>2025</option>
+                                                    <option>2026</option>
+                                                    <option>2027</option>
+                                                    <option>2028</option>
+                                                    <option>2029</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="Month" class="control-label"></label>
+                                            <select asp-for="Month" class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label asp-for="GrossProfit" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                                </div>
+                                                <input asp-for="GrossProfit" class="form-control" id="grossProfit" autocomplete="off" onchange="calculate()" />
+                                                <span asp-validation-for="GrossProfit" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label asp-for="Cost" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                                </div>
+                                                <input asp-for="Cost" class="form-control" id="cost" autocomplete="off" onchange="calculate()" />
+                                                <span asp-validation-for="Cost" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label asp-for="NetProfit" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                                </div>
+                                                <input asp-for="NetProfit" class="form-control" id="netProfit" autocomplete="off" />
+                                                <span asp-validation-for="NetProfit" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Ekle" class="btn btn-success" onclick="add()" id="createButton" />
+                            <a class="btn btn-primary" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function calculate() {
+        var grossProfit = document.getElementById("grossProfit").value;
+        var cost = document.getElementById("cost").value;
+
+        grossProfit = Number(grossProfit.replace(',', '.'));
+        cost = Number(cost.replace(',', '.'));
+
+        if (isNaN(grossProfit)) {
+            grossProfit = 0;
+        }
+        if (isNaN(cost)) {
+            cost = 0;
+        }
+
+        var netProfit = grossProfit - cost;
+
+        document.getElementById("netProfit").value = currency(netProfit, { decimal: ',', separator: '', symbol: '' }).format();
+    }
+
+    function add() {
+        var year = document.getElementById("year").value;
+        var monthId = document.getElementById("monthId").value;
+        var grossProfit = document.getElementById("grossProfit").value;
+        var cost = document.getElementById("cost").value;
+        var netProfit = document.getElementById("netProfit").value;
+
+        var data = new FormData();
+
+        data.append('year', year);
+        data.append('month', monthId);
+        data.append('grossProfit', grossProfit);
+        data.append('cost', cost);
+        data.append('netProfit', netProfit);
+
+        $("#createButton").attr("disabled", true);
+
+        $.ajax({
+            type: "POST",
+            url: "/PetrolNetProfit/Create",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    location.reload();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#createButton").attr("disabled", false);
+                }, 1600);
+            }
+        });
+    }
+</script>

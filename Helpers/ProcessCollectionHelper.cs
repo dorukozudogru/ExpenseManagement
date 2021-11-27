@@ -756,6 +756,42 @@ namespace ExpenseManagement.Helpers
             return null;
         }
 
+        public static List<PetrolNetProfit> ProcessCollection(List<PetrolNetProfit> lstElements, IFormCollection requestFormData)
+        {
+            var skip = Convert.ToInt32(requestFormData["start"].ToString());
+            var pageSize = Convert.ToInt32(requestFormData["length"].ToString());
+            Microsoft.Extensions.Primitives.StringValues tempOrder = new[] { "" };
+
+            if (requestFormData.TryGetValue("order[0][column]", out tempOrder))
+            {
+                var columnIndex = requestFormData["order[0][column]"].ToString();
+                var sortDirection = requestFormData["order[0][dir]"].ToString();
+                tempOrder = new[] { "" };
+                if (requestFormData.TryGetValue($"columns[{columnIndex}][data]", out tempOrder))
+                {
+                    var columnName = requestFormData[$"columns[{columnIndex}][data]"].ToString();
+
+                    if (pageSize > 0)
+                    {
+                        var prop = GetProfitProperty(columnName);
+                        if (sortDirection == "asc")
+                        {
+                            return lstElements.OrderBy(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                        }
+                        else
+                        {
+                            return lstElements.OrderByDescending(prop.GetValue).Skip(skip).Take(pageSize).ToList();
+                        }
+                    }
+                    else
+                    {
+                        return lstElements;
+                    }
+                }
+            }
+            return null;
+        }
+
         private static PropertyInfo GetIncomesProperty(string name)
         {
             var properties = typeof(Incomes).GetProperties();
@@ -1014,6 +1050,21 @@ namespace ExpenseManagement.Helpers
         private static PropertyInfo GetUsedVehicleProperty(string name)
         {
             var properties = typeof(UsedVehiclePurchases).GetProperties();
+            PropertyInfo prop = null;
+            foreach (var item in properties)
+            {
+                if (item.Name.ToLowerInvariant().Equals(name.ToLowerInvariant()))
+                {
+                    prop = item;
+                    break;
+                }
+            }
+            return prop;
+        }
+
+        private static PropertyInfo GetProfitProperty(string name)
+        {
+            var properties = typeof(PetrolNetProfit).GetProperties();
             PropertyInfo prop = null;
             foreach (var item in properties)
             {

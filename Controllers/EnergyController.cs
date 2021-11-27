@@ -291,7 +291,7 @@ namespace ExpenseManagement.Controllers
             var energyMonthly = await _context.EnergyMonthlies
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            energyMonthly = GetAllEnumNamesHelper.GetEnumName(energyMonthly);
+            energyMonthly.MonthName = GetMonthNameHelper.GetMonth(energyMonthly.Month);
 
             if (energyMonthly == null)
             {
@@ -428,7 +428,7 @@ namespace ExpenseManagement.Controllers
                 .Include(el => el.EnergyLuytobFile)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            energyLuytobs = GetAllEnumNamesHelper.GetEnumName(energyLuytobs);
+            energyLuytobs.MonthName = GetMonthNameHelper.GetMonth(energyLuytobs.Month);
 
             if (energyLuytobs == null)
             {
@@ -449,7 +449,7 @@ namespace ExpenseManagement.Controllers
                 .Include(el => el.EnergyLuytobFile)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            energyLuytobs = GetAllEnumNamesHelper.GetEnumName(energyLuytobs);
+            energyLuytobs.MonthName = GetMonthNameHelper.GetMonth(energyLuytobs.Month);
 
             if (energyLuytobs == null)
             {
