@@ -97,8 +97,6 @@
             url: '/RaiseDiscountTracking/EditPost?&id=' + id,
             type: 'POST',
             success: function (returnvalue) {
-                console.log(returnvalue);
-
                 var date = new Date(returnvalue.date);
 
                 var dayS = date.getDate();
