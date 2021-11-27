@@ -126,7 +126,7 @@ namespace ExpenseManagement.Controllers
 
             var pContext = await _context.PetrolNetProfit
                 .FirstOrDefaultAsync(m => m.Id == id);
-            pContext = GetAllEnumNamesHelper.GetEnumName(pContext);
+            pContext.MonthName = GetMonthNameHelper.GetMonth(pContext.Month);
 
             if (pContext == null)
             {
@@ -146,7 +146,7 @@ namespace ExpenseManagement.Controllers
             var pContext = await _context.PetrolNetProfit
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            pContext = GetAllEnumNamesHelper.GetEnumName(pContext);
+            pContext.MonthName = GetMonthNameHelper.GetMonth(pContext.Month);
 
             if (pContext == null)
             {
