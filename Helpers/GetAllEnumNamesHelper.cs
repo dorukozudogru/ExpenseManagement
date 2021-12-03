@@ -929,7 +929,7 @@ namespace ExpenseManagement.Helpers
             bonuses.MonthName = GetMonthNameHelper.GetMonth(bonuses.Month);
             return bonuses;
         }
-        
+
         public static List<PetrolNetProfit> GetEnumName(List<PetrolNetProfit> profits)
         {
             foreach (var profit in profits)
@@ -937,6 +937,41 @@ namespace ExpenseManagement.Helpers
                 profit.MonthName = GetMonthNameHelper.GetMonth(profit.Month);
             }
             return profits;
+        }
+
+        public static List<InterestIncomes> GetEnumName(List<InterestIncomes> interestIncomes)
+        {
+            foreach (var interestIncome in interestIncomes)
+            {
+                switch (interestIncome.InterestType)
+                {
+                    case 0:
+                        interestIncome.InterestTypeName = EnumExtensionsHelper.GetDisplayName(InterestIncomes.InterestTypeEnum.OVERNIGHT_INTEREST);
+                        break;
+                    case 1:
+                        interestIncome.InterestTypeName = EnumExtensionsHelper.GetDisplayName(InterestIncomes.InterestTypeEnum.LONG_TERM_INTEREST);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return interestIncomes;
+        }
+
+        public static InterestIncomes GetEnumName(InterestIncomes interestIncomes)
+        {
+            switch (interestIncomes.InterestType)
+            {
+                case 0:
+                    interestIncomes.InterestTypeName = EnumExtensionsHelper.GetDisplayName(InterestIncomes.InterestTypeEnum.OVERNIGHT_INTEREST);
+                    break;
+                case 1:
+                    interestIncomes.InterestTypeName = EnumExtensionsHelper.GetDisplayName(InterestIncomes.InterestTypeEnum.LONG_TERM_INTEREST);
+                    break;
+                default:
+                    break;
+            }
+            return interestIncomes;
         }
     }
 }

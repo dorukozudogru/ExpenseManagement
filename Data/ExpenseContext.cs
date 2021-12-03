@@ -146,5 +146,7 @@ namespace ExpenseManagement.Data
         public DbSet<UsedVehiclePurchases> UsedVehiclePurchases { get; set; }
 
         public DbSet<PetrolNetProfit> PetrolNetProfit { get; set; }
+
+        public DbSet<InterestIncomes> InterestIncomes { get; set; }
     }
 }
