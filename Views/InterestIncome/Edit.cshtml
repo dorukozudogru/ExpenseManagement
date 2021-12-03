@@ -1,0 +1,148 @@
+﻿@model ExpenseManagement.Models.InterestIncomes
+
+@{
+    ViewData["Title"] = "Faiz Gelirini Güncelle";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Faiz Gelirini Güncelle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" id="id" />
+                                <div class="form-group">
+                                    <label asp-for="Year" class="control-label"></label>
+                                    <div class="input-group-prepend">
+                                        <select asp-for="Year" class="form-control btn btn-default" id="year">
+                                            <option>2021</option>
+                                            <option>2022</option>
+                                            <option>2023</option>
+                                            <option>2024</option>
+                                            <option>2025</option>
+                                            <option>2026</option>
+                                            <option>2027</option>
+                                            <option>2028</option>
+                                            <option>2029</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="InterestType" class="control-label"></label>
+                                    <select asp-for="InterestType" class="form-control" asp-items="ViewBag.InterestType" id="type"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Amount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                        </div>
+                                        <input asp-for="Amount" class="form-control" id="amount" autocomplete="off" />
+                                        <span asp-validation-for="Amount" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="update()" id="updateButton" />
+                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.onload = function get() {
+        var id = '@Url.RouteUrl(ViewContext.RouteData.Values).Split("/").Last()';
+
+        $.ajax({
+            url: '/InterestIncome/EditPost?&id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("id").value = returnvalue.id;
+                document.getElementById("year").value = returnvalue.year;
+
+                console.log(returnvalue.interestType);
+
+                if (returnvalue.interestType == "0") {
+                    document.getElementById("type").value = "Gecelik";
+                }
+                if (returnvalue.interestType == "1") {
+                    document.getElementById("type").value = "Uzun Dönem";
+                }
+
+                console.log(document.getElementById("type").value);
+                document.getElementById("amount").value = currency(returnvalue.amount, { decimal: ',', separator: '', symbol: '' }).format();
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = "Faiz Geliri Getirilirken Bir Hata Oluştu!";
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>
+<script>
+    var id;
+    var year;
+    var interestType;
+    var amount;
+
+    function update() {
+        id = document.getElementById("id").value;
+        year = document.getElementById("year").value;
+        interestType = document.getElementById("type").value;
+        amount = document.getElementById("amount").value;
+
+        var data = new FormData();
+
+        if (interestType == "Gecelik") {
+            data.append('interestType', 0);
+        }
+        if (interestType == "Uzun Dönem") {
+            data.append('interestType', 1);
+        }
+
+        data.append('id', id);
+        data.append('year', year);
+        data.append('amount', amount);
+
+        $("#updateButton").attr("disabled", true);
+
+        $.ajax({
+            type: 'POST',
+            url: '/InterestIncome/Edit?id=' + id,
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#updateButton").attr("disabled", false);
+                }, 1600);
+            }
+        });
+    }
+</script>
