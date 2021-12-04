@@ -110,5 +110,12 @@ namespace ExpenseManagement.Models.ViewModels
 
             public int ActionCount { get; set; }
         }
+
+        public class PaylistResponse
+        {
+            public DateTime Date { get; set; }
+
+            public double TotalAmount { get; set; }
+        }
     }
 }

@@ -148,5 +148,7 @@ namespace ExpenseManagement.Data
         public DbSet<PetrolNetProfit> PetrolNetProfit { get; set; }
 
         public DbSet<InterestIncomes> InterestIncomes { get; set; }
+
+        public DbSet<Paylists> Paylists { get; set; }
     }
 }

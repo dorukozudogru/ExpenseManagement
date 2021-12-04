@@ -46,7 +46,7 @@ namespace ExpenseManagement.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
-            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe")
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Banaz" && GetLoggedUserRole() != "Muhasebe")
             {
                 toDoListContext = toDoListContext
                     .Where(e => e.CreatedBy == GetLoggedUserId())
@@ -141,7 +141,7 @@ namespace ExpenseManagement.Controllers
                 await _context.SaveChangesAsync();
                 return Ok(new { Result = true, Message = "Kayıt Başarıyla Güncellendi!" });
             }
-            return BadRequest("Gider Güncellenirken Bir Hata Oluştu!");
+            return BadRequest("Alacak Güncellenirken Bir Hata Oluştu!");
         }
 
         [HttpPost]
@@ -156,7 +156,7 @@ namespace ExpenseManagement.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
-            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Muhasebe")
+            if (GetLoggedUserRole() != "Admin" && GetLoggedUserRole() != "Banaz" && GetLoggedUserRole() != "Muhasebe")
             {
                 toDoListContext = toDoListContext
                     .Where(e => e.CreatedBy == GetLoggedUserId())
@@ -224,7 +224,7 @@ namespace ExpenseManagement.Controllers
 
             using (var p = new ExcelPackage(stream))
             {
-                var ws = p.Workbook.Worksheets.Add("Poliçeler");
+                var ws = p.Workbook.Worksheets.Add("Alacaklar");
 
                 using (var range = ws.Cells[1, 1, 1, 5])
                 {
