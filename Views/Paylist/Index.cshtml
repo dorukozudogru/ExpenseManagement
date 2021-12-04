@@ -1,0 +1,281 @@
+﻿@model IEnumerable<ExpenseManagement.Models.Paylists>
+
+@{
+    ViewData["Title"] = "Ödeme Listesi";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-success">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">
+                            <strong>∑</strong>&nbsp;&nbsp;Ödenecek Toplam Tutar
+                        </h3>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table id="generalTable2" class="table table-striped table-valign-middle">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Gün
+                                    </th>
+                                    <th>
+                                        Toplam Tutar
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <td style="font-weight:bold">Genel Toplam:</td>
+                                    <td style="font-weight:bold"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header border-0">
+                        <h5 class="card-title">
+                            <i class="ion ion-clipboard mr-1"></i>&nbsp;Ödeme Listesi
+                        </h5>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a class="btn btn-outline-light text-primary btn-block btn-sm" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
+                        </div>
+                        <div class="col-md-6">
+                            <a class="btn btn-outline-light text-info btn-block btn-sm" asp-controller="Paylist" asp-action="ExportAllActivePaylist"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="todo-list" id="todo-list" data-widget="todo-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary collapsed-card">
+                    <div class="card-header border-0">
+                        <h5 class="card-title">
+                            <i class="ion ion-clipboard mr-1"></i>&nbsp;Ödenenler
+                        </h5>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="todo-list" id="done-todo-list" data-widget="todo-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script>
+        $(".todo-list").on("click", ":checkbox", function () {
+            id = $(this).closest("li")[0].id;
+            $.ajax({
+                url: '/Paylist/EditState?id=' + id,
+                type: 'POST',
+                success: function (returnvalue) {
+                    document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                    document.getElementById("swalDefaultSuccess").click();
+                    window.setTimeout(function () {
+                        window.location.reload();
+                    }, 2000);
+                },
+                error: function (error) {
+                    document.getElementById("swalDefaultError").value = error.responseText;
+                    document.getElementById("swalDefaultError").click();
+                }
+            });
+        });
+    </script>
+    <script>
+        (function () {
+            $.ajax({
+                type: "POST",
+                url: "/Paylist/Post?state=false",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (index, item) {
+                        const weekday = new Array(7);
+
+                        weekday[1] = "Pazartesi";
+                        weekday[2] = "Salı";
+                        weekday[3] = "Çarşamba";
+                        weekday[4] = "Perşembe";
+                        weekday[5] = "Cuma";
+                        weekday[6] = "Cumartesi";
+                        weekday[7] = "Pazar";
+
+                        var screenDate = new Date(item.date);
+
+                        var dayS = screenDate.getDate();
+                        var monthS = screenDate.getMonth() + 1;
+                        var yearS = screenDate.getFullYear();
+                        dayS = dayS < 10 ? "0" + dayS : dayS;
+                        monthS = monthS < 10 ? "0" + monthS : monthS;
+
+                        var fullDate = dayS + "/" + monthS + "/" + yearS;
+
+                        $("#todo-list").append(
+                            '<li id="' + item.id + '">'
+                            + '<div class="icheck-primary d-inline ml-2">'
+                            + '<input class="checkbox" type="checkbox" asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
+                            + '<span class="text">'
+                            + fullDate + " (" + weekday[screenDate.getDay()] + ') - ' + currency(item.amount, { decimal: ',', separator: '.', symbol: '' }).format() + ' - ' + item.personToBePaid
+                            + '</span><div class="tools">'
+                            + '<a href="Paylist/Edit?Id=' + item.id + '"><i class="fas fa-edit"></i></a>'
+                            + '</div>'
+                            + '</li>'
+                        );
+                    });
+                }
+            })
+        })(jQuery);
+        (function () {
+            $.ajax({
+                type: "POST",
+                url: "/Paylist/Post?state=true",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (index, item) {
+                        const weekday = new Array(7);
+
+                        weekday[1] = "Pazartesi";
+                        weekday[2] = "Salı";
+                        weekday[3] = "Çarşamba";
+                        weekday[4] = "Perşembe";
+                        weekday[5] = "Cuma";
+                        weekday[6] = "Cumartesi";
+                        weekday[7] = "Pazar";
+
+                        var screenDate = new Date(item.date);
+
+                        var dayS = screenDate.getDate();
+                        var monthS = screenDate.getMonth() + 1;
+                        var yearS = screenDate.getFullYear();
+                        dayS = dayS < 10 ? "0" + dayS : dayS;
+                        monthS = monthS < 10 ? "0" + monthS : monthS;
+
+                        var fullDate = dayS + "/" + monthS + "/" + yearS;
+
+                        $("#done-todo-list").append(
+                            '<li class="done" id="' + item.id + '">'
+                            + '<div class="icheck-primary d-inline ml-2">'
+                            + '<input class="checkbox" type="checkbox" checked asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
+                            + '<span class="text">'
+                            + fullDate + " (" + weekday[screenDate.getDay()] + ') - ' + currency(item.amount, { decimal: ',', separator: '.', symbol: '' }).format() + ' - ' + item.personToBePaid
+                            + '</span><div class="tools">'
+                            + '</div>'
+                            + '</li>'
+                        );
+                    });
+                }
+            })
+        })(jQuery);
+        (function () {
+            $("#generalTable2").DataTable({
+                "language": {
+                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                    zeroRecords: "Hiçbir kayıt bulunamadı.",
+                    emptyTable: "Kayıt bulunmamaktadır.",
+                    search: "Ara:",
+                    oPaginate: {
+                        "sFirst": "İlk",
+                        "sLast": "Son",
+                        "sNext": "»",
+                        "sPrevious": "«"
+                    },
+                    sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
+                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                },
+                "processing": true,
+                "serverSide": true,
+                "searchDelay": 1200,
+                "stateSave": true,
+                "lengthChange": false,
+                "searching": false,
+                "stateDuration": -1,
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api(), data;
+
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+
+                    pageAmountTotal = api
+                        .column(1, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    $(api.column(1).footer()).html(
+                        currency(pageAmountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
+                    );
+                },
+                "ajax": {
+                    "url": "/Paylist/DailyTotalPost",
+                    "method": "POST",
+                    "error": function (error) {
+                        $('#generalTable2 tbody')
+                            .empty()
+                            .append('<tr><td colspan="3" class="dataTables_empty">Kayıt Bulunmamaktadır.</td></tr>');
+                    }
+                },
+                "destroy": true,
+                "columns": [
+                    {
+                        "data": "date",
+                        render: function (data, type, row) {
+                            if (data != null) {
+                                return window.moment(data).format("DD/MM/YYYY");
+                            }
+                            return "-";
+                        },
+                        "orderable": false
+                    },
+                    {
+                        "data": "totalAmount",
+                        "render": function (data, type, full, meta) {
+                            return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                        },
+                        "orderable": false
+                    }
+                ],
+                "ordering": false,
+                "pageLength": 5
+            });
+        })(jQuery);
+    </script>
+}

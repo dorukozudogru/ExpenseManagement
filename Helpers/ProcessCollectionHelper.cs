@@ -828,6 +828,21 @@ namespace ExpenseManagement.Helpers
             return null;
         }
 
+        public static List<PaylistResponse> ProcessCollection(List<PaylistResponse> lstElements, IFormCollection requestFormData)
+        {
+            var skip = Convert.ToInt32(requestFormData["start"].ToString());
+            var pageSize = Convert.ToInt32(requestFormData["length"].ToString());
+
+            if (pageSize > 0)
+            {
+                return lstElements.Skip(skip).Take(pageSize).ToList();
+            }
+            else
+            {
+                return lstElements;
+            }
+        }
+
         private static PropertyInfo GetIncomesProperty(string name)
         {
             var properties = typeof(Incomes).GetProperties();
