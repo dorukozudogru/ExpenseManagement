@@ -93,18 +93,32 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label asp-for="ValorDate" class="control-label"></label>
                                             <input asp-for="ValorDate" class="form-control" id="valorDate" autocomplete="off" />
                                             <span asp-validation-for="ValorDate" class="text-danger"></span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label asp-for="Chassis" class="control-label"></label>
                                             <input asp-for="Chassis" class="form-control" autocomplete="off" id="chassis" />
                                             <span asp-validation-for="Chassis" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label asp-for="PaymentDate" class="control-label"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input asp-for="PaymentDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker3" />
+                                            </div>
+                                            <span asp-validation-for="PaymentDate" class="text-danger"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -278,8 +292,6 @@
             url: '/VehiclePurchase/EditPost?&id=' + id,
             type: 'POST',
             success: function (returnvalue) {
-                var start = new Date(returnvalue.purchaseDate);
-
                 if (returnvalue.saleDate != null) {
                     var finish = new Date(returnvalue.saleDate);
 
@@ -303,14 +315,28 @@
                     $('#isNew').attr('value', 'false');
                 }
 
+                var start = new Date(returnvalue.purchaseDate);
+
                 var dayS = start.getDate();
                 var monthS = start.getMonth() + 1;
                 var yearS = start.getFullYear();
                 dayS = dayS < 10 ? "0" + dayS : dayS;
                 monthS = monthS < 10 ? "0" + monthS : monthS;
 
+                if (returnvalue.paymentDate != null) {
+                    var purchase = new Date(returnvalue.paymentDate);
+
+                    var dayP = purchase.getDate();
+                    var monthP = purchase.getMonth() + 1;
+                    var yearP = purchase.getFullYear();
+                    dayP = dayP < 10 ? "0" + dayP : dayP;
+                    monthP = monthP < 10 ? "0" + monthP : monthP;
+
+                    document.getElementById("datepicker3").value = yearP + "/" + monthP + "/" + dayP;
+                }
+
                 document.getElementById("id").value = returnvalue.id;
-                document.getElementById("Brand").value = returnvalue.carModel.carBrand.name;
+                document.getElementById("Brand").value = returnvalue.carModel.carBrand.id;
                 document.getElementById("Model").value = returnvalue.carModel.name;
                 document.getElementById("isNew").checked = returnvalue.isNew;
                 document.getElementById("isSold").checked = returnvalue.isSold;
@@ -352,6 +378,7 @@
         var PurchaseDate = document.getElementById("datepicker").value;
         var SaleDate = document.getElementById("datepicker2").value;
         var ValorDate = document.getElementById("valorDate").value;
+        var PaymentDate = document.getElementById("datepicker3").value;
         var PurchaseAmount = document.getElementById("purchaseAmount").value;
         var PurchaseAmountCurrency = document.getElementById("purchaseAmountCurrency").value;
 
@@ -373,6 +400,7 @@
         data.append('PurchaseDate', PurchaseDate);
         data.append('SaleDate', SaleDate);
         data.append('ValorDate', ValorDate);
+        data.append('PaymentDate', PaymentDate);
         data.append('PurchaseAmount', PurchaseAmount);
         data.append('PurchaseAmountCurrency', PurchaseAmountCurrency);
 

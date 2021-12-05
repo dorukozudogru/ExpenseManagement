@@ -37,6 +37,9 @@ namespace ExpenseManagement.Models
         [DisplayName("Valör Bitiş Tarihi")]
         public DateTime ValorEndDate { get; set; }
 
+        [DisplayName("Ödeme Tarihi")]
+        public DateTime? PaymentDate { get; set; }
+
         [Required]
         [DisplayName("Şase No")]
         public string Chassis { get; set; }
