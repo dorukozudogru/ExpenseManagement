@@ -191,6 +191,7 @@ namespace ExpenseManagement.Controllers
                     vehiclePurchase.PurchaseDate = vehiclePurchases.PurchaseDate;
                     vehiclePurchase.SaleDate = vehiclePurchases.SaleDate;
                     vehiclePurchase.ValorDate = vehiclePurchases.ValorDate;
+                    vehiclePurchase.PaymentDate = vehiclePurchases.PaymentDate;
                     vehiclePurchase.PurchaseAmount = vehiclePurchases.PurchaseAmount;
                     vehiclePurchase.PurchaseAmountCurrency = vehiclePurchases.PurchaseAmountCurrency;
 
@@ -259,7 +260,7 @@ namespace ExpenseManagement.Controllers
             var vehiclePurchaseContext = await _context.VehiclePurchases
                 .Include(c => c.CarModel)
                 .Include(cb => cb.CarModel.CarBrand)
-                .Where(vp => vp.ValorDate != null)
+                .Where(vp => vp.PaymentDate != null && vp.PaymentDate >= DateTime.Now)
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -267,10 +268,11 @@ namespace ExpenseManagement.Controllers
 
             foreach (var item in listItems)
             {
-                item.ValorEndDate = item.PurchaseDate.AddDays((double)item.ValorDate);
+                if (item.ValorDate != null)
+                {
+                    item.ValorEndDate = item.PurchaseDate.AddDays((double)item.ValorDate);
+                }
             }
-
-            listItems = listItems.Where(li => li.ValorEndDate.AddDays(-2) <= DateTime.Now.Date && li.ValorEndDate >= DateTime.Now.Date).ToList();
 
             var response = new PaginatedResponse<VehiclePurchases>
             {
@@ -279,8 +281,6 @@ namespace ExpenseManagement.Controllers
                 RecordsFiltered = listItems.Count,
                 RecordsTotal = listItems.Count
             };
-
-            ViewBag.NotificationCount = listItems.Count;
 
             return Ok(response);
         }
@@ -323,14 +323,16 @@ namespace ExpenseManagement.Controllers
                 ws.Cells[1, 7].Value = "Satış Tarihi";
                 ws.Cells[1, 8].Value = "Valör";
                 ws.Cells[1, 9].Value = "Valör Bitiş Tarihi";
-                ws.Cells[1, 10].Value = "Şase No";
-                ws.Cells[1, 11].Value = "Araç Alış Fiyatı";
-                ws.Cells[1, 12].Value = "Trafik Tescil Bedeli Dahil Fiyatı";
-                ws.Cells[1, 13].Value = "Araç Satış Fiyatı";
+                ws.Cells[1, 10].Value = "Ödeme Tarihi";
+                ws.Cells[1, 11].Value = "Şase No";
+                ws.Cells[1, 12].Value = "Araç Alış Fiyatı";
+                ws.Cells[1, 13].Value = "Trafik Tescil Bedeli Dahil Fiyatı";
+                ws.Cells[1, 14].Value = "Araç Satış Fiyatı";
 
                 ws.Column(6).Style.Numberformat.Format = "dd-mmmm-yyyy";
                 ws.Column(7).Style.Numberformat.Format = "dd-mmmm-yyyy";
                 ws.Column(9).Style.Numberformat.Format = "dd-mmmm-yyyy";
+                ws.Column(10).Style.Numberformat.Format = "dd-mmmm-yyyy";
 
                 ws.Row(1).Style.Font.Bold = true;
 
@@ -355,36 +357,45 @@ namespace ExpenseManagement.Controllers
                         ws.Cells[c, 9].Value = "";
                     }
 
-                    ws.Cells[c, 10].Value = items[c - 2].Chassis;
-                    ws.Cells[c, 11].Value = items[c - 2].PurchaseAmount + " " + items[c - 2].PurchaseAmountCurrencyName;
-
-                    if (items[c - 2].IncludingRegistrationFee != null)
+                    if (items[c - 2].PaymentDate != null)
                     {
-                        ws.Cells[c, 12].Value = items[c - 2].IncludingRegistrationFee + " ₺";
+                        ws.Cells[c, 10].Value = items[c - 2].PaymentDate;
                     }
                     else
                     {
-                        ws.Cells[c, 12].Value = "";
+                        ws.Cells[c, 10].Value = "";
                     }
 
-                    if (items[c - 2].SaleAmount != null)
+                    ws.Cells[c, 11].Value = items[c - 2].Chassis;
+                    ws.Cells[c, 12].Value = items[c - 2].PurchaseAmount + " " + items[c - 2].PurchaseAmountCurrencyName;
+
+                    if (items[c - 2].IncludingRegistrationFee != null)
                     {
-                        ws.Cells[c, 13].Value = items[c - 2].SaleAmount + " " + items[c - 2].SaleAmountCurrencyName;
+                        ws.Cells[c, 13].Value = items[c - 2].IncludingRegistrationFee + " ₺";
                     }
                     else
                     {
                         ws.Cells[c, 13].Value = "";
                     }
 
-                    ws.Column(11).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].PurchaseAmountCurrencyName);
-                    ws.Column(12).Style.Numberformat.Format = String.Format("#,##0.00 {0}", "₺");
-                    ws.Column(13).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SaleAmountCurrencyName);
+                    if (items[c - 2].SaleAmount != null)
+                    {
+                        ws.Cells[c, 14].Value = items[c - 2].SaleAmount + " " + items[c - 2].SaleAmountCurrencyName;
+                    }
+                    else
+                    {
+                        ws.Cells[c, 14].Value = "";
+                    }
+
+                    ws.Column(12).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].PurchaseAmountCurrencyName);
+                    ws.Column(13).Style.Numberformat.Format = String.Format("#,##0.00 {0}", "₺");
+                    ws.Column(14).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SaleAmountCurrencyName);
                 }
 
                 ws.Cells[ws.Dimension.Address].AutoFitColumns();
-                ws.Cells["A1:M" + items.Count + 2].AutoFilter = true;
+                ws.Cells["A1:N" + items.Count + 2].AutoFilter = true;
 
-                ws.Column(13).PageBreak = true;
+                ws.Column(14).PageBreak = true;
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Landscape;
                 ws.PrinterSettings.Scale = 100;

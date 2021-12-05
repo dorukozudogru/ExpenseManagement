@@ -94,7 +94,7 @@
         <div class="card card-primary">
             <div class="card-header border-0">
                 <div class="d-flex justify-content-between">
-                    <h3 class="card-title">Valör Tarihine 2 Gün Kalan Araçlar</h3>
+                    <h3 class="card-title">Ödeme Tarihi Gelen Araçlar</h3>
                     <div class="card-tools">
                         <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
                             <i class="fas fa-minus"></i>
@@ -124,6 +124,9 @@
                                 </th>
                                 <th>
                                     Valör Bitiş Tarihi
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PaymentDate)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.Chassis)
@@ -390,6 +393,18 @@
                         },
                         {
                             "data": "valorEndDate",
+                            "orderable": false,
+                            render: function (data, type, row) {
+                                if (data != "0001-01-01T00:00:00") {
+                                    return window.moment(data).format("DD-MMMM-YYYY");
+                                }
+                                else {
+                                    return "-";
+                                }
+                            }
+                        },
+                        {
+                            "data": "paymentDate",
                             "orderable": false,
                             render: function (data, type, row) {
                                 return window.moment(data).format("DD-MMMM-YYYY");

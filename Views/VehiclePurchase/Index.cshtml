@@ -135,6 +135,9 @@
                                                 @Html.DisplayNameFor(model => model.ValorDate)
                                             </th>
                                             <th>
+                                                @Html.DisplayNameFor(model => model.PaymentDate)
+                                            </th>
+                                            <th>
                                                 @Html.DisplayNameFor(model => model.Chassis)
                                             </th>
                                             <th>
@@ -238,6 +241,17 @@
                     render: function (data, type, full, meta) {
                         if (data != null) {
                             return data + " gün";
+                        }
+                        else {
+                            return "-";
+                        }
+                    }
+                },
+                {
+                    "data": "paymentDate",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
                         }
                         else {
                             return "-";
@@ -416,6 +430,17 @@
                     render: function (data, type, full, meta) {
                         if (data != null) {
                             return data + " gün";
+                        }
+                        else {
+                            return "-";
+                        }
+                    }
+                },
+                {
+                    "data": "paymentDate",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
                         }
                         else {
                             return "-";

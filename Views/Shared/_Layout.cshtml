@@ -495,8 +495,8 @@
                                     <ul>
                                         <li>Faiz Gelirleri Ekranı Eklendi</li>
                                         <li>Ödeme Listesi Ekranı Eklendi</li>
-                                        <li></li>
-                                        <li></li>
+                                        <li>Sıfır Araç Alış Ekranına Ödeme Tarihi Eklendi</li>
+                                        <li>Ana Sayfada Listelenen Araçlara Ödeme Tarihi Bazlı Filtre Eklendi</li>
                                     </ul>
                                 </div>
                             </div>
@@ -791,6 +791,13 @@
         })
 
         $('#datepicker2').datepicker({
+            autoclose: true,
+            format: "yyyy/mm/dd",
+            todayHighlight: true,
+            orientation: "bottom auto"
+        })
+
+        $('#datepicker3').datepicker({
             autoclose: true,
             format: "yyyy/mm/dd",
             todayHighlight: true,
