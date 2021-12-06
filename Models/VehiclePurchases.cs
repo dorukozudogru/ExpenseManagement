@@ -30,8 +30,9 @@ namespace ExpenseManagement.Models
         [DisplayName("Satış Tarihi")]
         public DateTime? SaleDate { get; set; }
 
+        [Required]
         [DisplayName("Valör")]
-        public int? ValorDate { get; set; }
+        public int ValorDate { get; set; }
 
         [NotMapped]
         [DisplayName("Valör Bitiş Tarihi")]
