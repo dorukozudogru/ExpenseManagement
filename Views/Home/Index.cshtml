@@ -50,19 +50,6 @@
                         <span class="info-box-number" id="monthlyIncomeCount"></span>
                     </div>
                 </div>
-                @*<div class="card card-primary">
-                        <div class="card-header border-0">
-                            <h3 class="card-title"><i class="nav-icon fas fa-university"></i>&nbsp;&nbsp;Banka</h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="pieChart" style="min-height: 305px; height: 305px; max-height: 305px; max-width: 100%;"></canvas>
-                        </div>
-                    </div>*@
                 <div class="card card-success">
                     <div class="card-header border-0">
                         <h3 class="card-title"><i class="nav-icon fas fa-coins"></i>&nbsp;&nbsp;Son 3 Ayda Sisteme Eklenen Gelir Sayısı</h3>
@@ -94,8 +81,11 @@
         <div class="card card-primary">
             <div class="card-header border-0">
                 <div class="d-flex justify-content-between">
-                    <h3 class="card-title">Ödeme Tarihi Gelen Araçlar</h3>
+                    <h5 class="box-title">
+                        <i class="fas fa-warehouse"></i>&nbsp;Ödeme Tarihi Gelen Araçlar
+                    </h5>
                     <div class="card-tools">
+                        <a class="btn btn-light text-primary btn-sm" asp-controller="VehiclePurchase" asp-action="ExportVehicles" style="margin-left:10px"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
                         <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
                             <i class="fas fa-minus"></i>
                         </a>
@@ -157,78 +147,6 @@
                 $('#monthlyExpenseCount').html(response[0]);
                 $('#monthlyIncomeCount').html(response[1]);
             });
-
-            //$.ajax({
-            //    url: "/Report/BankReport",
-            //    dataType: "json",
-            //    type: "POST",
-            //    contentType: "application/json; charset=utf-8",
-            //    success: function (data) {
-            //        var amountCurrency = [];
-
-            //        $.each(data, function (index, value) {
-            //            amountCurrency.push([value.amountCurrencyName]);
-            //        });
-
-            //        var totalAmount = [];
-
-            //        $.each(data, function (index, value) {
-            //            totalAmount.push([value.totalAmount]);
-            //        });
-
-            //        var backgroundColor = ['#dc3545', '#ff851b', '#001f3f', '#007bff', '#3d9970', '#343a40'];
-
-            //        var donutData = {
-            //            labels:
-            //                $.each(amountCurrency, function (index, value) {
-            //                    value;
-            //                }),
-            //            datasets: [
-            //                {
-            //                    data: $.each(totalAmount, function (index, value) {
-            //                        totalAmount;
-            //                    }),
-            //                    backgroundColor: $.each(backgroundColor, function (index, value) {
-            //                        backgroundColor
-            //                    }),
-            //                }
-            //            ]
-            //        }
-            //        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-            //        var pieData = donutData;
-            //        var pieOptions = {
-            //            maintainAspectRatio: false,
-            //            responsive: true,
-            //        }
-            //        var pieChart = new Chart(pieChartCanvas, {
-            //            type: 'pie',
-            //            data: pieData,
-            //            options: pieOptions
-            //        })
-            //    },
-            //    error: function (error) {
-            //        var donutData = {
-            //            labels: ['Kayıt Bulunmamaktadır.'],
-            //            datasets: [
-            //                {
-            //                    data: [100],
-            //                    backgroundColor: ['#dc3545'],
-            //                }
-            //            ]
-            //        }
-            //        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-            //        var pieData = donutData;
-            //        var pieOptions = {
-            //            maintainAspectRatio: false,
-            //            responsive: true,
-            //        }
-            //        var pieChart = new Chart(pieChartCanvas, {
-            //            type: 'pie',
-            //            data: pieData,
-            //            options: pieOptions
-            //        })
-            //    }
-            //})
 
             $("#generalTable").DataTable({
                 "language": {
