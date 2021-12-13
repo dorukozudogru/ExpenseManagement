@@ -464,7 +464,13 @@ namespace ExpenseManagement.Controllers
 
                     foreach (var lastItem in lastItems)
                     {
-                        var remainingDay = lastItem.PurchaseDate.AddDays(lastItem.ValorDate) - DateTime.Now.Date;
+                        //var remainingDay = lastItem.PurchaseDate.AddDays(lastItem.ValorDate) - DateTime.Now.Date;
+                        var rd = 0;
+                        if (lastItem.PaymentDate != DateTime.MinValue)
+                        {
+                            rd = (lastItem.PaymentDate.Value.Date - DateTime.Now.Date).Days;
+                        }
+                        
                         var amount = lastItem.PurchaseAmount * 1.18;
 
                         ws.Cells[row, 1].Value = count;
@@ -473,7 +479,7 @@ namespace ExpenseManagement.Controllers
                         ws.Cells[row, 4].Value = lastItem.PurchaseDate;
                         ws.Cells[row, 5].Value = lastItem.PaymentDate;
                         ws.Cells[row, 6].Value = lastItem.ValorDate;
-                        ws.Cells[row, 7].Value = remainingDay.Days;
+                        ws.Cells[row, 7].Value = rd;
                         ws.Cells[row, 8].Value = amount;
 
                         ws.Cells[row, 1, row + 1, 8].Style.Border.Top.Style = ExcelBorderStyle.Thin;
