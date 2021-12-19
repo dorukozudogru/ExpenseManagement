@@ -33,6 +33,22 @@
                                     <span asp-validation-for="Definition" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
+                                    <label asp-for="Year" class="control-label"></label>
+                                    <div class="input-group-prepend">
+                                        <select asp-for="Year" class="form-control btn btn-default" id="year">
+                                            <option>2021</option>
+                                            <option>2022</option>
+                                            <option>2023</option>
+                                            <option>2024</option>
+                                            <option>2025</option>
+                                            <option>2026</option>
+                                            <option>2027</option>
+                                            <option>2028</option>
+                                            <option>2029</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label asp-for="Month" class="control-label"></label>
                                     <select asp-for="Month" class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
                                 </div>
@@ -75,6 +91,7 @@
                 document.getElementById("expenseType").value = returnvalue.expenseType;
                 document.getElementById("sectorId").value = returnvalue.sectorId;
                 document.getElementById("definition").value = returnvalue.definition;
+                document.getElementById("year").value = returnvalue.year;
                 document.getElementById("monthId").value = returnvalue.month;
                 document.getElementById("salaryAmount").value = currency(returnvalue.salaryAmount, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("salaryAmountCurrency").value = returnvalue.salaryAmountCurrency;
@@ -90,6 +107,7 @@
     var id;
     var sectorId;
     var definition;
+    var year;
     var monthId;
     var salaryAmount;
     var salaryAmountCurrency;
@@ -97,6 +115,7 @@
     function update() {
         sectorId = document.getElementById("sectorId").value;
         definition = document.getElementById("definition").value;
+        year = document.getElementById("year").value;
         month = document.getElementById("monthId").value;
         salaryAmount = document.getElementById("salaryAmount").value;
         salaryAmountCurrency = document.getElementById("salaryAmountCurrency").value;
@@ -106,6 +125,7 @@
 
         data.append('sectorId', sectorId);
         data.append('definition', definition);
+        data.append('year', year);
         data.append('month', month);
         data.append('salaryAmount', salaryAmount);
         data.append('salaryAmountCurrency', salaryAmountCurrency);

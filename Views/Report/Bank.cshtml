@@ -70,6 +70,8 @@
                                 <div class="small-box bg-success">
                                     <div class="inner">
                                         <h3 id="lira">0</h3>
+                                        <h5>&nbsp;</h5>
+                                        <h5>&nbsp;</h5>
                                     </div>
                                     <div class="icon">
                                         <i class="fas fa-lira-sign"></i>
@@ -83,6 +85,8 @@
                                 <div class="small-box bg-success">
                                     <div class="inner">
                                         <h3 id="dollar">0</h3>
+                                        <h5 id="currentdollar">0</h5>
+                                        <h5 id="dollartolira">0</h5>
                                     </div>
                                     <div class="icon">
                                         <i class="fas fa-dollar-sign"></i>
@@ -96,6 +100,8 @@
                                 <div class="small-box bg-success">
                                     <div class="inner">
                                         <h3 id="euro">0</h3>
+                                        <h5 id="currenteuro">0</h5>
+                                        <h5 id="eurotolira">0</h5>
                                     </div>
                                     <div class="icon">
                                         <i class="fas fa-euro-sign"></i>
@@ -109,6 +115,8 @@
                                 <div class="small-box bg-success">
                                     <div class="inner">
                                         <h3 id="pound">0</h3>
+                                        <h5 id="currentpound">Güncel Kur: ₺0</h5>
+                                        <h5 id="poundtolira">₺0</h5>
                                     </div>
                                     <div class="icon">
                                         <i class="fas fa-pound-sign"></i>
@@ -191,15 +199,43 @@
                     if (element.currency == "$") {
                         if (element.totalAmount != null) {
                             $('#dollar').html(currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format());
+
+                            $.ajax({
+                                type: "GET",
+                                url: "https://freecurrencyapi.net/api/v2/latest?apikey=ff94a2c0-60ef-11ec-8f35-ab1e84ffeb94&base_currency=USD",
+                                success: function (response) {
+                                    var dollartolira = element.totalAmount * response.data.TRY;
+                                    $('#currentdollar').html(currency(response.data.TRY, { decimal: ',', separator: '.', symbol: 'Güncel Kur: ₺' }).format());
+                                    $('#dollartolira').html(currency(dollartolira, { decimal: ',', separator: '.', symbol: '₺' }).format());
+                                },
+                                error: function (error) {
+                                    alert("error");
+                                }
+                            });
                         }
                     }
+
                     if (element.currency == "€") {
                         if (element.totalAmount != null) {
                             $('#euro').html(currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format());
+
+                            $.ajax({
+                                type: "GET",
+                                url: "https://freecurrencyapi.net/api/v2/latest?apikey=ff94a2c0-60ef-11ec-8f35-ab1e84ffeb94&base_currency=EUR",
+                                success: function (response) {
+                                    var eurotolira = element.totalAmount * response.data.TRY;
+                                    $('#currenteuro').html(currency(response.data.TRY, { decimal: ',', separator: '.', symbol: 'Güncel Kur: ₺' }).format());
+                                    $('#eurotolira').html(currency(eurotolira, { decimal: ',', separator: '.', symbol: '₺' }).format());
+                                },
+                                error: function (error) {
+                                    alert("error");
+                                }
+                            });
                         }
                     }
                     if (element.currency == "£") {
                         if (element.totalAmount != null) {
+                            var zero = 0;
                             $('#pound').html(currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format());
                         }
                     }

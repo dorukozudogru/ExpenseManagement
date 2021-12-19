@@ -24,7 +24,7 @@ using static ExpenseManagement.Models.ViewModels.ReportViewModel;
 
 namespace ExpenseManagement.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
     public class BonusController : Controller
     {
         private readonly ExpenseContext _context;

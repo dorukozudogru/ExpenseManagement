@@ -8,7 +8,7 @@ using ExpenseManagement.Data;
 
 namespace ExpenseManagement.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin, Banaz, Muhasebe, Plaza")]
     public class RegistrationFeeController : Controller
     {
         private readonly ExpenseContext _context;
