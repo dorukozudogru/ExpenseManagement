@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 
 namespace ExpenseManagement.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin, Banaz, Muhasebe, Plaza")]
     public class NewVehicleSaleController : Controller
     {
         private readonly ExpenseContext _context;

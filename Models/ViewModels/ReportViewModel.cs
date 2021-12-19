@@ -20,6 +20,8 @@ namespace ExpenseManagement.Models.ViewModels
 
         public class GeneralResponse
         {
+            public string SectorName { get; set; }
+
             public int Month { get; set; }
 
             public string MonthName { get; set; }

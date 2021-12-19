@@ -137,6 +137,9 @@ namespace ExpenseManagement.Models
         }
 
         #region ForSalary
+        [DisplayName("Yıl")]
+        public int? Year { get; set; }
+
         [DisplayName("Ay (Maaş)")]
         public byte? Month { get; set; }
 

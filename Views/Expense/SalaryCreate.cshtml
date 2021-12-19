@@ -32,6 +32,22 @@
                                     <span asp-validation-for="Definition" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
+                                    <label asp-for="Year" class="control-label"></label>
+                                    <div class="input-group-prepend">
+                                        <select asp-for="Year" class="form-control btn btn-default" id="year">
+                                            <option>2021</option>
+                                            <option>2022</option>
+                                            <option>2023</option>
+                                            <option>2024</option>
+                                            <option>2025</option>
+                                            <option>2026</option>
+                                            <option>2027</option>
+                                            <option>2028</option>
+                                            <option>2029</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label asp-for="Month" class="control-label"></label>
                                     <select asp-for="Month" class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
                                 </div>
@@ -66,6 +82,7 @@
     var expenseType;
     var sectorId;
     var definition;
+    var year;
     var monthId;
     var salaryAmount;
     var salaryAmountCurrency;
@@ -74,6 +91,7 @@
         expenseType = document.getElementById("expenseType").value;
         sectorId = document.getElementById("sectorId").value;
         definition = document.getElementById("definition").value;
+        year = document.getElementById("year").value;
         monthId = document.getElementById("monthId").value;
         salaryAmount = document.getElementById("salaryAmount").value;
         salaryAmountCurrency = document.getElementById("salaryAmountCurrency").value;
@@ -83,6 +101,7 @@
         data.append('expenseType', 2);
         data.append('sectorId', sectorId);
         data.append('definition', definition);
+        data.append('year', year);
         data.append('month', monthId);
         data.append('salaryAmount', salaryAmount);
         data.append('salaryAmountCurrency', salaryAmountCurrency);

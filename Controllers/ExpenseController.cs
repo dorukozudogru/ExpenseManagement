@@ -196,6 +196,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
         public async Task<IActionResult> WeeklyPaylistPost()
         {
             var requestFormData = Request.Form;
@@ -350,6 +351,7 @@ namespace ExpenseManagement.Controllers
             return BadRequest("Gider Kaydedilirken Bir Hata Oluştu!");
         }
 
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
         public IActionResult SalaryCreate()
         {
             var expenseTypes = Enum.GetValues(typeof(Expenses.ExpenseTypeEnum)).Cast<Expenses.ExpenseTypeEnum>().ToList();
@@ -374,6 +376,7 @@ namespace ExpenseManagement.Controllers
             return View();
         }
 
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
         public IActionResult SalaryEdit()
         {
             ViewData["SectorId"] = new SelectList(_context.Sectors, "Id", "Name");
@@ -448,6 +451,7 @@ namespace ExpenseManagement.Controllers
 
                     if (expenses.SalaryAmount != null)
                     {
+                        expense.Year = expenses.Year;
                         expense.Month = expenses.Month;
                         expense.SalaryAmount = expenses.SalaryAmount;
                         expense.SalaryAmountCurrency = expenses.SalaryAmountCurrency;

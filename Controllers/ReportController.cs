@@ -46,7 +46,7 @@ namespace ExpenseManagement.Controllers
             return View();
         }
 
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe, Plaza"))]
         public IActionResult EndorsementReport()
         {
             return View();
@@ -416,7 +416,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe, Plaza"))]
         public async Task<IActionResult> EndorsementReportPost(int year)
         {
             var usedVehicleSale = await _context.UsedVehicleSales
@@ -499,7 +499,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe, Plaza"))]
         public async Task<IActionResult> EndorsementReportTotalPost(int year)
         {
             var usedVehicleSale = await _context.UsedVehicleSales
@@ -760,137 +760,135 @@ namespace ExpenseManagement.Controllers
             return Ok(response);
         }
 
-        //[HttpPost]
-        //[Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
-        //public async Task<IActionResult> ProfitReportPost(int year)
-        //{
-        //    var usedVehicleProfit = await _context.UsedVehicleSales
-        //        .Where(e => e.SaleDate.Year == year)
-        //        .GroupBy(e => new
-        //        {
-        //            e.SaleDate.Month,
-        //            e.SaleAmountCurrency,
-        //            e.PurchaseAmountCurrency
-        //        })
-        //        .Select(e => new ExpenseEndorsementProfitReport
-        //        {
-        //            Month = e.Key.Month,
-        //            TotalAmount = e.Sum(i => i.SaleAmount) - e.Sum(i => i.PurchaseAmount),
-        //            TotalAmountCurrency = e.Key.SaleAmountCurrency
-        //        })
-        //        .AsNoTracking()
-        //        .ToListAsync();
+        [HttpPost]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        public async Task<IActionResult> YearlyExpenseReport()
+        {
+            var requestFormData = Request.Form;
 
-        //    var newVehicleProfit = await _context.NewVehicleSales
-        //        .Where(e => e.SaleDate.Year == year)
-        //        .GroupBy(e => new
-        //        {
-        //            e.SaleDate.Month,
-        //            e.SaleAmountCurrency,
-        //            e.VehicleCost
-        //        })
-        //        .Select(e => new ExpenseEndorsementProfitReport
-        //        {
-        //            Month = e.Key.Month,
-        //            TotalAmount = e.Sum(i => i.SaleAmount) - e.Sum(i => i.VehicleCost),
-        //            TotalAmountCurrency = e.Key.SaleAmountCurrency
-        //        })
-        //        .AsNoTracking()
-        //        .ToListAsync();
+            var salary = await _context.Expenses
+                .Where(i => i.ExpenseType == 2 && i.Year == DateTime.Now.Year)
+                .GroupBy(i => i.Year)
+                .Select(i => new GeneralResponse
+                {
+                    SectorName = "Maaşlar",
+                    TotalAmount = i.Sum(x => x.SalaryAmount)
+                })
+                .ToListAsync();
 
-        //    foreach (var item in usedVehicleProfit)
-        //    {
-        //        newVehicleProfit.Add(item);
-        //    }
+            var expense = await _context.Expenses
+                .Where(i => i.ExpenseType != 2 && i.Date.Value.Year == DateTime.Now.Year)
+                .GroupBy(i => i.Year)
+                .Select(i => new GeneralResponse
+                {
+                    SectorName = "Giderler",
+                    TotalAmount = i.Sum(x => x.Amount)
+                })
+                .ToListAsync();
 
-        //    var totalProfit = newVehicleProfit
-        //        .GroupBy(e => new
-        //        {
-        //            e.Month,
-        //            e.TotalAmountCurrency
-        //        })
-        //        .Select(e => new ExpenseEndorsementProfitReport
-        //        {
-        //            Month = e.Key.Month,
-        //            TotalAmount = e.Sum(i => i.TotalAmount),
-        //            TotalAmountCurrency = e.Key.TotalAmountCurrency
-        //        })
-        //        .OrderBy(i => i.Month)
-        //        .ToList();
+            var final = new List<GeneralResponse>();
 
-        //    totalProfit = GetAllEnumNamesHelper.GetEnumName(totalProfit);
+            final.Add(expense.First());
+            final.Add(salary.First());
 
-        //    FakeSession.Instance.Obj = JsonConvert.SerializeObject(totalProfit);
+            var response = new PaginatedResponse<GeneralResponse>
+            {
+                Data = final,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = final.Count,
+                RecordsTotal = final.Count
+            };
 
-        //    var response = new PaginatedResponse<ExpenseEndorsementProfitReport>
-        //    {
-        //        Data = totalProfit,
-        //        Draw = 1,
-        //        RecordsFiltered = 0,
-        //        RecordsTotal = 0
-        //    };
+            return Ok(response);
+        }
 
-        //    return Ok(response);
-        //}
+        [HttpPost]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        public async Task<IActionResult> YearlyIncomeReport()
+        {
+            var requestFormData = Request.Form;
 
-        //[HttpPost]
-        //[Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
-        //public async Task<IActionResult> ProfitReportTotalPost(int year)
-        //{
-        //    var usedVehicleProfit = await _context.UsedVehicleSales
-        //        .Where(e => e.SaleDate.Year == year)
-        //        .GroupBy(e => new
-        //        {
-        //            e.SaleAmountCurrency,
-        //            e.PurchaseAmountCurrency
-        //        })
-        //        .Select(e => new ExpenseEndorsementProfitReport
-        //        {
-        //            TotalAmount = e.Sum(i => i.SaleAmount) - e.Sum(i => i.PurchaseAmount),
-        //            TotalAmountCurrency = e.Key.SaleAmountCurrency
-        //        })
-        //        .AsNoTracking()
-        //        .ToListAsync();
+            var bonus = await _context.Bonuses
+                .Where(i => i.Year == DateTime.Now.Year)
+                .GroupBy(i => i.Year)
+                .Select(i => new GeneralResponse
+                {
+                    SectorName = "Primler",
+                    TotalAmount = i.Sum(x => x.Amount)
+                })
+                .ToListAsync();
 
-        //    var newVehicleProfit = await _context.NewVehicleSales
-        //        .Where(e => e.SaleDate.Year == year)
-        //        .GroupBy(e => new
-        //        {
-        //            e.SaleAmountCurrency,
-        //            e.VehicleCost
-        //        })
-        //        .Select(e => new ExpenseEndorsementProfitReport
-        //        {
-        //            TotalAmount = e.Sum(i => i.SaleAmount) - e.Sum(i => i.VehicleCost),
-        //            TotalAmountCurrency = e.Key.SaleAmountCurrency
-        //        })
-        //        .AsNoTracking()
-        //        .ToListAsync();
+            var energy = await _context.EnergyMonthlies
+                .Where(i => i.Year == DateTime.Now.Year)
+                .GroupBy(i => i.Year)
+                .Select(i => new GeneralResponse
+                {
+                    SectorName = "Enerji",
+                    TotalAmount = i.Sum(x => x.Amount)
+                })
+                .ToListAsync();
 
-        //    foreach (var item in usedVehicleProfit)
-        //    {
-        //        newVehicleProfit.Add(item);
-        //    }
+            var petrol = await _context.PetrolNetProfit
+                .Where(i => i.Year == DateTime.Now.Year)
+                .GroupBy(i => i.Year)
+                .Select(i => new GeneralResponse
+                {
+                    SectorName = "Petrol",
+                    TotalAmount = i.Sum(x => x.NetProfit)
+                })
+               .ToListAsync();
 
-        //    var totalProfit = newVehicleProfit
-        //        .GroupBy(e => new
-        //        {
-        //            e.TotalAmountCurrency
-        //        })
-        //        .Select(e => new ExpenseEndorsementProfitReport
-        //        {
-        //            TotalAmount = e.Sum(i => i.TotalAmount),
-        //            TotalAmountCurrency = e.Key.TotalAmountCurrency
-        //        })
-        //        .OrderBy(i => i.Month)
-        //        .ToList();
+            var newVehicle = await _context.VehiclePurchases
+                .Where(i => i.IsSold == true && i.SaleDate.Value.Year == DateTime.Now.Year)
+                .GroupBy(i => i.SaleDate.Value.Year)
+                .Select(i => new GeneralResponse
+                {
+                    SectorName = "Sıfır Araç Satışı",
+                    TotalAmount = i.Sum(x => x.SaleAmount) - i.Sum(x => x.IncludingRegistrationFee)
+                })
+                .ToListAsync();
 
-        //    totalProfit = GetAllEnumNamesHelper.GetEnumName(totalProfit);
+            var usedVehicle = await _context.UsedVehiclePurchases
+                .Where(i => i.IsSold == true && i.SaleDate.Value.Year == DateTime.Now.Year)
+                .GroupBy(i => i.SaleDate.Value.Year)
+                .Select(i => new GeneralResponse
+                {
+                    SectorName = "2. El Araç Satışı",
+                    TotalAmount = i.Sum(x => x.SaleAmount) - i.Sum(x => x.PurchaseAmount)
+                })
+                .ToListAsync();
 
-        //    return Ok(totalProfit);
-        //}
+            var interestIncome = await _context.InterestIncomes
+                .Where(i => i.Year == DateTime.Now.Year)
+                .GroupBy(i => i.Year)
+                .Select(i => new GeneralResponse
+                {
+                    SectorName = "Faiz Gelirleri",
+                    TotalAmount = i.Sum(x => x.Amount)
+                })
+                .ToListAsync();
 
-        [Authorize(Roles = ("Admin, Banaz, Muhasebe, Petrol"))]
+            var final = new List<GeneralResponse>();
+
+            final.Add(newVehicle.First());
+            final.Add(usedVehicle.First());
+            final.Add(energy.First());
+            final.Add(petrol.First());
+            final.Add(bonus.First());
+            final.Add(interestIncome.First());
+
+            var response = new PaginatedResponse<GeneralResponse>
+            {
+                Data = final,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = final.Count,
+                RecordsTotal = final.Count
+            };
+
+            return Ok(response);
+        }
+
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
         public ActionResult ExportReport()
         {
             MemoryStream stream = new MemoryStream();
@@ -910,6 +908,7 @@ namespace ExpenseManagement.Controllers
             return File(stream, fileType, fileName);
         }
 
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
         public MemoryStream ExportAllReport(List<ExpenseEndorsementProfitReport> items, byte type, string pageName)
         {
             var stream = new System.IO.MemoryStream();
@@ -1209,6 +1208,7 @@ namespace ExpenseManagement.Controllers
             return stream;
         }
 
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
         public MemoryStream ExportAllRDTReport(List<RDTResponse> items, byte type, string pageName)
         {
             var stream = new System.IO.MemoryStream();
