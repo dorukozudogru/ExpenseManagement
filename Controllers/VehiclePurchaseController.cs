@@ -422,7 +422,8 @@ namespace ExpenseManagement.Controllers
         public MemoryStream ExportSaleReport(List<VehiclePurchases> items, string pageName)
         {
             var purchasedDates = items
-                .GroupBy(i => i.PurchaseDate);
+                .GroupBy(i => i.PurchaseDate)
+                .OrderBy(i => i.Key);
 
             var stream = new System.IO.MemoryStream();
 
@@ -464,7 +465,6 @@ namespace ExpenseManagement.Controllers
 
                     foreach (var lastItem in lastItems)
                     {
-                        //var remainingDay = lastItem.PurchaseDate.AddDays(lastItem.ValorDate) - DateTime.Now.Date;
                         var rd = 0;
                         if (lastItem.PaymentDate != DateTime.MinValue)
                         {
@@ -547,7 +547,6 @@ namespace ExpenseManagement.Controllers
 
                 ws.Column(8).Width = 20;
                 ws.Column(8).PageBreak = true;
-
 
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Landscape;
