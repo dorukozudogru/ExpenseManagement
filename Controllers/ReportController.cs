@@ -762,34 +762,58 @@ namespace ExpenseManagement.Controllers
 
         [HttpPost]
         [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
-        public async Task<IActionResult> YearlyExpenseReport()
+        public async Task<IActionResult> YearlyExpenseReport(string year)
         {
             var requestFormData = Request.Form;
 
             var salary = await _context.Expenses
-                .Where(i => i.ExpenseType == 2 && i.Year == DateTime.Now.Year)
-                .GroupBy(i => i.Year)
+                .Where(i => i.ExpenseType == 2 && i.Year.ToString() == year)
+                .GroupBy(i => new
+                {
+                    i.Year,
+                    i.SalaryAmountCurrency
+                })
                 .Select(i => new GeneralResponse
                 {
                     SectorName = "Maaşlar",
-                    TotalAmount = i.Sum(x => x.SalaryAmount)
+                    TotalAmount = i.Sum(x => x.SalaryAmount),
+                    TotalAmountCurrency = i.Key.SalaryAmountCurrency
                 })
                 .ToListAsync();
 
             var expense = await _context.Expenses
-                .Where(i => i.ExpenseType != 2 && i.Date.Value.Year == DateTime.Now.Year)
-                .GroupBy(i => i.Year)
+                .Where(i => i.ExpenseType != 2 && i.Date.Value.Year.ToString() == year)
+                .GroupBy(i => new
+                {
+                    i.Year,
+                    i.AmountCurrency
+                })
                 .Select(i => new GeneralResponse
                 {
                     SectorName = "Giderler",
-                    TotalAmount = i.Sum(x => x.Amount)
+                    TotalAmount = i.Sum(x => x.Amount),
+                    TotalAmountCurrency = i.Key.AmountCurrency
                 })
                 .ToListAsync();
 
             var final = new List<GeneralResponse>();
 
-            final.Add(expense.First());
-            final.Add(salary.First());
+            if (expense.Count != 0)
+            {
+                expense = GetAllEnumNamesHelper.GetEnumName(expense);
+                foreach (var item in expense)
+                {
+                    final.Add(item);
+                }
+            }
+            if (salary.Count != 0)
+            {
+                salary = GetAllEnumNamesHelper.GetEnumName(salary);
+                foreach (var item in salary)
+                {
+                    final.Add(item);
+                }
+            }
 
             var response = new PaginatedResponse<GeneralResponse>
             {
@@ -804,12 +828,75 @@ namespace ExpenseManagement.Controllers
 
         [HttpPost]
         [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
-        public async Task<IActionResult> YearlyIncomeReport()
+        public async Task<IActionResult> YearlyExpenseReportTotalPost(string year)
+        {
+            var salary = await _context.Expenses
+                .Where(i => i.ExpenseType == 2 && i.Year.ToString() == year)
+                .GroupBy(i => new
+                {
+                    i.SalaryAmountCurrency
+                })
+                .Select(i => new GeneralResponse
+                {
+                    TotalAmount = i.Sum(x => (double)x.SalaryAmount),
+                    TotalAmountCurrency = i.Key.SalaryAmountCurrency
+                })
+                .ToListAsync();
+
+            var expense = await _context.Expenses
+                .Where(i => i.ExpenseType != 2 && i.Date.Value.Year.ToString() == year)
+                .GroupBy(i => new
+                {
+                    i.AmountCurrency
+                })
+                .Select(i => new GeneralResponse
+                {
+                    TotalAmount = i.Sum(x => x.Amount),
+                    TotalAmountCurrency = i.Key.AmountCurrency
+                })
+                .ToListAsync();
+
+            var final = new List<GeneralResponse>();
+
+            if (expense.Count != 0)
+            {
+                expense = GetAllEnumNamesHelper.GetEnumName(expense);
+                foreach (var item in expense)
+                {
+                    final.Add(item);
+                }
+            }
+            if (salary.Count != 0)
+            {
+                salary = GetAllEnumNamesHelper.GetEnumName(salary);
+                foreach (var item in salary)
+                {
+                    final.Add(item);
+                }
+            }
+
+            var totalFinal = new List<GeneralResponse>();
+
+            totalFinal = final
+                .GroupBy(f => f.TotalAmountCurrencyName)
+                .Select(f => new GeneralResponse
+                {
+                    TotalAmount = f.Sum(x => x.TotalAmount),
+                    TotalAmountCurrencyName = f.Key.First().ToString()
+                })
+                .ToList();
+
+            return Ok(totalFinal);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        public async Task<IActionResult> YearlyIncomeReport(string year)
         {
             var requestFormData = Request.Form;
 
             var bonus = await _context.Bonuses
-                .Where(i => i.Year == DateTime.Now.Year)
+                .Where(i => i.Year.ToString() == year)
                 .GroupBy(i => i.Year)
                 .Select(i => new GeneralResponse
                 {
@@ -819,7 +906,7 @@ namespace ExpenseManagement.Controllers
                 .ToListAsync();
 
             var energy = await _context.EnergyMonthlies
-                .Where(i => i.Year == DateTime.Now.Year)
+                .Where(i => i.Year.ToString() == year)
                 .GroupBy(i => i.Year)
                 .Select(i => new GeneralResponse
                 {
@@ -829,7 +916,7 @@ namespace ExpenseManagement.Controllers
                 .ToListAsync();
 
             var petrol = await _context.PetrolNetProfit
-                .Where(i => i.Year == DateTime.Now.Year)
+                .Where(i => i.Year.ToString() == year)
                 .GroupBy(i => i.Year)
                 .Select(i => new GeneralResponse
                 {
@@ -839,17 +926,22 @@ namespace ExpenseManagement.Controllers
                .ToListAsync();
 
             var newVehicle = await _context.VehiclePurchases
-                .Where(i => i.IsSold == true && i.SaleDate.Value.Year == DateTime.Now.Year)
-                .GroupBy(i => i.SaleDate.Value.Year)
+                .Where(i => i.IsSold == true && i.SaleDate.Value.Year.ToString() == year)
+                .GroupBy(i => new
+                {
+                    i.SaleDate.Value.Year,
+                    i.PurchaseAmountCurrency
+                })
                 .Select(i => new GeneralResponse
                 {
                     SectorName = "Sıfır Araç Satışı",
-                    TotalAmount = i.Sum(x => x.SaleAmount) - i.Sum(x => x.IncludingRegistrationFee)
+                    TotalAmount = i.Sum(x => x.SaleAmount) - i.Sum(x => x.IncludingRegistrationFee),
+                    TotalAmountCurrency = i.Key.PurchaseAmountCurrency
                 })
                 .ToListAsync();
 
             var usedVehicle = await _context.UsedVehiclePurchases
-                .Where(i => i.IsSold == true && i.SaleDate.Value.Year == DateTime.Now.Year)
+                .Where(i => i.IsSold == true && i.SaleDate.Value.Year.ToString() == year)
                 .GroupBy(i => i.SaleDate.Value.Year)
                 .Select(i => new GeneralResponse
                 {
@@ -859,7 +951,7 @@ namespace ExpenseManagement.Controllers
                 .ToListAsync();
 
             var interestIncome = await _context.InterestIncomes
-                .Where(i => i.Year == DateTime.Now.Year)
+                .Where(i => i.Year.ToString() == year)
                 .GroupBy(i => i.Year)
                 .Select(i => new GeneralResponse
                 {
@@ -870,12 +962,39 @@ namespace ExpenseManagement.Controllers
 
             var final = new List<GeneralResponse>();
 
-            final.Add(newVehicle.First());
-            final.Add(usedVehicle.First());
-            final.Add(energy.First());
-            final.Add(petrol.First());
-            final.Add(bonus.First());
-            final.Add(interestIncome.First());
+            if (newVehicle.Count != 0)
+            {
+                newVehicle = GetAllEnumNamesHelper.GetEnumName(newVehicle);
+                foreach (var item in newVehicle)
+                {
+                    final.Add(item);
+                }
+            }
+            if (usedVehicle.Count != 0)
+            {
+                usedVehicle.First().TotalAmountCurrencyName = "₺";
+                final.Add(usedVehicle.First());
+            }
+            if (energy.Count != 0)
+            {
+                energy.First().TotalAmountCurrencyName = "₺";
+                final.Add(energy.First());
+            }
+            if (petrol.Count != 0)
+            {
+                petrol.First().TotalAmountCurrencyName = "₺";
+                final.Add(petrol.First());
+            }
+            if (bonus.Count != 0)
+            {
+                bonus.First().TotalAmountCurrencyName = "₺";
+                final.Add(bonus.First());
+            }
+            if (interestIncome.Count != 0)
+            {
+                interestIncome.First().TotalAmountCurrencyName = "₺";
+                final.Add(interestIncome.First());
+            }
 
             var response = new PaginatedResponse<GeneralResponse>
             {
@@ -886,6 +1005,123 @@ namespace ExpenseManagement.Controllers
             };
 
             return Ok(response);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
+        public async Task<IActionResult> YearlyIncomeReportTotalPost(string year)
+        {
+            var bonus = await _context.Bonuses
+                .Where(i => i.Year.ToString() == year)
+                .GroupBy(i => i.Year)
+                .Select(i => new GeneralResponse
+                {
+                    TotalAmount = i.Sum(x => x.Amount),
+                    TotalAmountCurrency = 0
+                })
+                .ToListAsync();
+
+            var energy = await _context.EnergyMonthlies
+                .Where(i => i.Year.ToString() == year)
+                .GroupBy(i => i.Year)
+                .Select(i => new GeneralResponse
+                {
+                    TotalAmount = i.Sum(x => x.Amount),
+                    TotalAmountCurrency = 0
+                })
+                .ToListAsync();
+
+            var petrol = await _context.PetrolNetProfit
+                .Where(i => i.Year.ToString() == year)
+                .GroupBy(i => i.Year)
+                .Select(i => new GeneralResponse
+                {
+                    TotalAmount = i.Sum(x => x.NetProfit),
+                    TotalAmountCurrency = 0
+                })
+               .ToListAsync();
+
+            var newVehicle = await _context.VehiclePurchases
+                .Where(i => i.IsSold == true && i.SaleDate.Value.Year.ToString() == year)
+                .GroupBy(i => new
+                {
+                    i.PurchaseAmountCurrency
+                })
+                .Select(i => new GeneralResponse
+                {
+                    TotalAmount = i.Sum(x => x.SaleAmount) - i.Sum(x => x.IncludingRegistrationFee),
+                    TotalAmountCurrency = i.Key.PurchaseAmountCurrency
+                })
+                .ToListAsync();
+
+            var usedVehicle = await _context.UsedVehiclePurchases
+                .Where(i => i.IsSold == true && i.SaleDate.Value.Year.ToString() == year)
+                .GroupBy(i => i.SaleDate.Value.Year)
+                .Select(i => new GeneralResponse
+                {
+                    TotalAmount = i.Sum(x => x.SaleAmount) - i.Sum(x => x.PurchaseAmount),
+                    TotalAmountCurrency = 0
+                })
+                .ToListAsync();
+
+            var interestIncome = await _context.InterestIncomes
+                .Where(i => i.Year.ToString() == year)
+                .GroupBy(i => i.Year)
+                .Select(i => new GeneralResponse
+                {
+                    TotalAmount = i.Sum(x => x.Amount),
+                    TotalAmountCurrency = 0
+                })
+                .ToListAsync();
+
+            var final = new List<GeneralResponse>();
+
+            if (newVehicle.Count != 0)
+            {
+                newVehicle = GetAllEnumNamesHelper.GetEnumName(newVehicle);
+                foreach (var item in newVehicle)
+                {
+                    final.Add(item);
+                }
+            }
+            if (usedVehicle.Count != 0)
+            {
+                usedVehicle.First().TotalAmountCurrencyName = "₺";
+                final.Add(usedVehicle.First());
+            }
+            if (energy.Count != 0)
+            {
+                energy.First().TotalAmountCurrencyName = "₺";
+                final.Add(energy.First());
+            }
+            if (petrol.Count != 0)
+            {
+                petrol.First().TotalAmountCurrencyName = "₺";
+                final.Add(petrol.First());
+            }
+            if (bonus.Count != 0)
+            {
+                bonus.First().TotalAmountCurrencyName = "₺";
+                final.Add(bonus.First());
+            }
+            if (interestIncome.Count != 0)
+            {
+                interestIncome.First().TotalAmountCurrencyName = "₺";
+                final.Add(interestIncome.First());
+            }
+
+            var totalFinal = new List<GeneralResponse>();
+
+            totalFinal = final
+                .GroupBy(f => f.TotalAmountCurrencyName)
+                .Select(f => new GeneralResponse
+                {
+                    TotalAmount = f.Sum(x => x.TotalAmount),
+                    TotalAmountCurrencyName = f.Key.First().ToString()
+                })
+                .ToList();
+
+            return Ok(totalFinal);
         }
 
         [Authorize(Roles = ("Admin, Banaz, Muhasebe"))]
