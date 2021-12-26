@@ -939,6 +939,15 @@ namespace ExpenseManagement.Helpers
             return profits;
         }
 
+        public static List<Tankers> GetEnumName(List<Tankers> tankers)
+        {
+            foreach (var tanker in tankers)
+            {
+                tanker.MonthName = GetMonthNameHelper.GetMonth(tanker.Month);
+            }
+            return tankers;
+        }
+
         public static List<InterestIncomes> GetEnumName(List<InterestIncomes> interestIncomes)
         {
             foreach (var interestIncome in interestIncomes)

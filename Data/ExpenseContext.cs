@@ -152,5 +152,7 @@ namespace ExpenseManagement.Data
         public DbSet<Paylists> Paylists { get; set; }
 
         public DbSet<WashingIncome> WashingIncome { get; set; }
+
+        public DbSet<Tankers> Tankers { get; set; }
     }
 }
