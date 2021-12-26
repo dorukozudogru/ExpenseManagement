@@ -960,6 +960,16 @@ namespace ExpenseManagement.Controllers
                 })
                 .ToListAsync();
 
+            var washingIncome = await _context.WashingIncome
+                .Where(i => i.Year.ToString() == year)
+                .GroupBy(i => i.Year)
+                .Select(i => new GeneralResponse
+                {
+                    SectorName = "Yıkama Gelirleri",
+                    TotalAmount = i.Sum(x => x.NetProfit)
+                })
+                .ToListAsync();
+
             var final = new List<GeneralResponse>();
 
             if (newVehicle.Count != 0)
@@ -984,6 +994,11 @@ namespace ExpenseManagement.Controllers
             {
                 petrol.First().TotalAmountCurrencyName = "₺";
                 final.Add(petrol.First());
+            }
+            if (washingIncome.Count != 0)
+            {
+                washingIncome.First().TotalAmountCurrencyName = "₺";
+                final.Add(washingIncome.First());
             }
             if (bonus.Count != 0)
             {
