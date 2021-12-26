@@ -1,21 +1,22 @@
 ﻿@inject Microsoft.AspNetCore.Identity.SignInManager<AppIdentityUser> signInManager;
 
 @{
-    ViewData["Version"] = "Versiyon 1.20.0";
-    ViewData["PreviousVersion"] = "Versiyon 1.19.0";
-    ViewData["2PreviousVersion"] = "Versiyon 1.18.0";
-    ViewData["3PreviousVersion"] = "Versiyon 1.17.0";
-    ViewData["4PreviousVersion"] = "Versiyon 1.16.0";
-    ViewData["5PreviousVersion"] = "Versiyon 1.15.1";
-    ViewData["6PreviousVersion"] = "Versiyon 1.15.0";
-    ViewData["7PreviousVersion"] = "Versiyon 1.14.2";
-    ViewData["8PreviousVersion"] = "Versiyon 1.14.1";
-    ViewData["9PreviousVersion"] = "Versiyon 1.14.0";
-    ViewData["10PreviousVersion"] = "Versiyon 1.13.1";
-    ViewData["11PreviousVersion"] = "Versiyon 1.13.0";
-    ViewData["12PreviousVersion"] = "Versiyon 1.12.2";
-    ViewData["13PreviousVersion"] = "Versiyon 1.12.1";
-    ViewData["14PreviousVersion"] = "Versiyon 1.12.0";
+    ViewData["Version"] = "Versiyon 1.21.0";
+    ViewData["PreviousVersion"] = "Versiyon 1.20.0";
+    ViewData["2PreviousVersion"] = "Versiyon 1.19.0";
+    ViewData["3PreviousVersion"] = "Versiyon 1.18.0";
+    ViewData["4PreviousVersion"] = "Versiyon 1.17.0";
+    ViewData["5PreviousVersion"] = "Versiyon 1.16.0";
+    ViewData["6PreviousVersion"] = "Versiyon 1.15.1";
+    ViewData["7PreviousVersion"] = "Versiyon 1.15.0";
+    ViewData["8PreviousVersion"] = "Versiyon 1.14.2";
+    ViewData["9PreviousVersion"] = "Versiyon 1.14.1";
+    ViewData["10PreviousVersion"] = "Versiyon 1.14.0";
+    ViewData["11PreviousVersion"] = "Versiyon 1.13.1";
+    ViewData["12PreviousVersion"] = "Versiyon 1.13.0";
+    ViewData["13PreviousVersion"] = "Versiyon 1.12.2";
+    ViewData["14PreviousVersion"] = "Versiyon 1.12.1";
+    ViewData["15PreviousVersion"] = "Versiyon 1.12.0";
 }
 
 <!DOCTYPE html>
@@ -67,7 +68,10 @@
                         </li>
                     </ul>
                 </li>
-                <a class="nav-link" id="openVersion" href="#" data-toggle="modal" data-target="#modal-version"><i class="fas fa-info-circle"></i></a>
+                @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe")))
+                {
+                    <a class="nav-link" id="openVersion" href="#" data-toggle="modal" data-target="#modal-version"><i class="fas fa-info-circle"></i></a>
+                }
             </ul>
         </nav>
         <aside class="main-sidebar sidebar-light-primary elevation-4" style="position:fixed">
@@ -175,6 +179,11 @@
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="PetrolNetProfit" asp-action="Index">
                                         <i class="far fa-circle nav-icon text-success"></i><p>Net Kârlılık</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="WashingIncome" asp-action="Index">
+                                        <i class="far fa-circle nav-icon text-success"></i><p>Yıkama Geliri</p>
                                     </a>
                                 </li>
                                 @*<li class="nav-item">
@@ -450,290 +459,317 @@
             <input id="warningSuccessMessage" hidden />
             <button type="button" class="btn btn-danger swalDefaultError" hidden id="swalDefaultError">
             </button>
-            <div class="modal fade" id="modal-version">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content text-white" style="background-color:#343a40">
-                        <div class="modal-header">
-                            <h4 class="modal-title"><strong><i class="fas fa-laptop-code"></i>&nbsp;&nbsp;Versiyon Bilgileri</strong></h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body text-dark">
-                            <div class="card card-primary collapsed-card">
-                                <div class="card-header border-0">
-                                    <h5 class="card-title">
-                                        @ViewData["Version"]
-                                    </h5>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>Tüm Menülerin Yetki Dahilinde Listelenmesi Sağlandı</li>
-                                        <li>Anasayfada Toplam Gelir-Gider Bilgisinin İş Kolu Bazlı Listelenmesi Sağlandı</li>
-                                        <li>Banka Anasayfasına Güncel Kur Eklendi</li>
-                                    </ul>
-                                </div>
+            @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe")))
+            {
+                <div class="modal fade" id="modal-version">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content text-white" style="background-color:#343a40">
+                            <div class="modal-header">
+                                <h4 class="modal-title"><strong><i class="fas fa-laptop-code"></i>&nbsp;&nbsp;Versiyon Bilgileri</strong></h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                            <div class="card card-primary collapsed-card">
-                                <div class="card-header border-0">
-                                    <h5 class="card-title">
-                                        @ViewData["PreviousVersion"]
-                                    </h5>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
+                            <div class="modal-body text-dark">
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["Version"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>Anasayfadaki Toplam Gelir-Gider Tablolarında;</li>
+                                            <ul>
+                                                <li>Yıl Seçimi Yapılarak Filtrelenebilmesi Sağlandı</li>
+                                                <li>Listedeki Kalemlerden Herhangi Biri Boş Gelmişse Hata Vermemesi Sağlandı</li>
+                                                <li>Listelenirken Döviz Cinsine Göre Gruplanması Sağlandı</li>
+                                            </ul>
+                                            <li>Ödeme Listesi Dışa Aktarım Formatı Değiştirildi</li>
+                                            <li>Petrol Menüsüne Yıkama Geliri Eklendi</li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>Faiz Gelirleri Ekranı Eklendi</li>
-                                        <li>Ödeme Listesi Ekranı Eklendi</li>
-                                        <li>Sıfır Araç Alış Ekranına Ödeme Tarihi Eklendi</li>
-                                        <li>Ana Sayfada Listelenen Araçlara Ödeme Tarihi Bazlı Filtre Eklendi</li>
-                                        <li>Ana Sayfada Listelenen Araçlara Dışa Aktarım Eklendi</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card card-primary collapsed-card">
-                                <div class="card-header border-0">
-                                    <h5 class="card-title">
-                                        @ViewData["2PreviousVersion"]
-                                    </h5>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["PreviousVersion"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>Tüm Menülerin Yetki Dahilinde Listelenmesi Sağlandı</li>
+                                            <li>Anasayfada Toplam Gelir-Gider Bilgisinin İş Kolu Bazlı Listelenmesi Sağlandı</li>
+                                            <li>Banka Anasayfasına Güncel Kur Eklendi</li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>Net Kârlılık Eklendi</li>
-                                        <li>Petrol Başlığı Altındaki Diğer Ekranlar Kaldırıldı</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card card-primary collapsed-card">
-                                <div class="card-header border-0">
-                                    <h5 class="card-title">
-                                        @ViewData["3PreviousVersion"]
-                                    </h5>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["2PreviousVersion"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>Faiz Gelirleri Ekranı Eklendi</li>
+                                            <li>Ödeme Listesi Ekranı Eklendi</li>
+                                            <li>Sıfır Araç Alış Ekranına Ödeme Tarihi Eklendi</li>
+                                            <li>Ana Sayfada Listelenen Araçlara Ödeme Tarihi Bazlı Filtre Eklendi</li>
+                                            <li>Ana Sayfada Listelenen Araçlara Dışa Aktarım Eklendi</li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>2. El Araç Alışı Eklendi</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card card-primary collapsed-card">
-                                <div class="card-header border-0">
-                                    <h5 class="card-title">
-                                        @ViewData["4PreviousVersion"]
-                                    </h5>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["3PreviousVersion"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>Net Kârlılık Eklendi</li>
+                                            <li>Petrol Başlığı Altındaki Diğer Ekranlar Kaldırıldı</li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>Gelir-Gider Menüsü Altına Primler Eklendi</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card card-primary collapsed-card">
-                                <div class="card-header border-0">
-                                    <h5 class="card-title">
-                                        @ViewData["5PreviousVersion"]
-                                    </h5>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["4PreviousVersion"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>2. El Araç Alışı Eklendi</li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>Araç Alış Ekranındaki Tescil Bedeli Alanının Sistem Değişkeni Olarak Eklenebilmesi Sağlandı</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card card-primary collapsed-card">
-                                <div class="card-header border-0">
-                                    <h5 class="card-title">
-                                        @ViewData["6PreviousVersion"]
-                                    </h5>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["5PreviousVersion"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>Gelir-Gider Menüsü Altına Primler Eklendi</li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>Alacak Listesi Ekranına Sektör Bazlı Gruplama İle Alınacak Toplam Miktar Yazıldı</li>
-                                        <li>Araç Satışı Ekranında Dışa Aktarılan Excel'de Artı Garanti Başlığı Bandrol Şeklinde Değiştirildi</li>
-                                        <li>POS Toplamları Ekleme Ekranında Banka/Şube Adı Alanı Yazılarak Arama Yapılacak Şekilde Düzenlendi</li>
-                                        <li>Araç Alış Ekranında Toplam Fiyatta Yapılan Değişikliğin Araç Satışına Yansıması Sağlandı</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card card-primary collapsed-card">
-                                <div class="card-header border-0">
-                                    <h5 class="card-title">
-                                        @ViewData["7PreviousVersion"]
-                                    </h5>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["6PreviousVersion"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>Araç Alış Ekranındaki Tescil Bedeli Alanının Sistem Değişkeni Olarak Eklenebilmesi Sağlandı</li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>İskonto Alanına Yazılan Miktarın Tutardan Çıkartıldıktan Sonra Vergi Hesaplanması Sağlandı</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card card-primary collapsed-card">
-                                <div class="card-header border-0">
-                                    <h5 class="card-title">
-                                        @ViewData["8PreviousVersion"]
-                                    </h5>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["7PreviousVersion"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>Alacak Listesi Ekranına Sektör Bazlı Gruplama İle Alınacak Toplam Miktar Yazıldı</li>
+                                            <li>Araç Satışı Ekranında Dışa Aktarılan Excel'de Artı Garanti Başlığı Bandrol Şeklinde Değiştirildi</li>
+                                            <li>POS Toplamları Ekleme Ekranında Banka/Şube Adı Alanı Yazılarak Arama Yapılacak Şekilde Düzenlendi</li>
+                                            <li>Araç Alış Ekranında Toplam Fiyatta Yapılan Değişikliğin Araç Satışına Yansıması Sağlandı</li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>Index Sayfalarında Sondan Sıralama Yapıldı</li>
-                                        <li>Ekleme Yapıldıktan Sonra Aynı Ekranda Kalması Sağlandı</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card card-primary collapsed-card">
-                                <div class="card-header border-0">
-                                    <h5 class="card-title">
-                                        @ViewData["9PreviousVersion"]
-                                    </h5>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["8PreviousVersion"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>İskonto Alanına Yazılan Miktarın Tutardan Çıkartıldıktan Sonra Vergi Hesaplanması Sağlandı</li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>Gider Ekranlarına İskonto ve 2. KDV Seçeneği Eklendi</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card card-primary collapsed-card">
-                                <div class="card-header border-0">
-                                    <h5 class="card-title">
-                                        @ViewData["10PreviousVersion"]
-                                    </h5>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["9PreviousVersion"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>Index Sayfalarında Sondan Sıralama Yapıldı</li>
+                                            <li>Ekleme Yapıldıktan Sonra Aynı Ekranda Kalması Sağlandı</li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>Maaş Güncelleme Ekranındaki Currency Hatası Düzeltildi</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card card-primary collapsed-card">
-                                <div class="card-header border-0">
-                                    <h5 class="card-title">
-                                        @ViewData["11PreviousVersion"]
-                                    </h5>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["10PreviousVersion"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>Gider Ekranlarına İskonto ve 2. KDV Seçeneği Eklendi</li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>Maaş Girişi Gider Girişi Ekranından Ayrıldı</li>
-                                        <li>Gider Detayları ve Gider Silme Ekranlarına Maaş Bilgileri Eklendi</li>
-                                        <li>Versiyon Bilgileri Ekranı Eklendi</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card card-primary collapsed-card">
-                                <div class="card-header border-0">
-                                    <h5 class="card-title">
-                                        @ViewData["12PreviousVersion"]
-                                    </h5>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["11PreviousVersion"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>Maaş Güncelleme Ekranındaki Currency Hatası Düzeltildi</li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>Satıcı/Tedarikçi Alanının Otomatik Doldurulması Sağlandı</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card card-primary collapsed-card">
-                                <div class="card-header border-0">
-                                    <h5 class="card-title">
-                                        @ViewData["13PreviousVersion"]
-                                    </h5>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["12PreviousVersion"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>Maaş Girişi Gider Girişi Ekranından Ayrıldı</li>
+                                            <li>Gider Detayları ve Gider Silme Ekranlarına Maaş Bilgileri Eklendi</li>
+                                            <li>Versiyon Bilgileri Ekranı Eklendi</li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>Akaryakıt Satışları ve POS Toplamları Ekranlarına Tarih Bazlı Filtreleme Eklendi</li>
-                                        <li>Gider Ekleme ve Güncellemeye %0 KDV Eklendi</li>
-                                        <li>Gider Güncelleme Ekranında Son Ödeme Tarihi Boşken 1970 Gelmesi Hatası Giderildi</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card card-primary collapsed-card">
-                                <div class="card-header border-0">
-                                    <h5 class="card-title">
-                                        @ViewData["14PreviousVersion"]
-                                    </h5>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["13PreviousVersion"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>Satıcı/Tedarikçi Alanının Otomatik Doldurulması Sağlandı</li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>POS Toplamları Raporu Yapıldı</li>
-                                    </ul>
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["14PreviousVersion"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>Akaryakıt Satışları ve POS Toplamları Ekranlarına Tarih Bazlı Filtreleme Eklendi</li>
+                                            <li>Gider Ekleme ve Güncellemeye %0 KDV Eklendi</li>
+                                            <li>Gider Güncelleme Ekranında Son Ödeme Tarihi Boşken 1970 Gelmesi Hatası Giderildi</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header border-0">
+                                        <h5 class="card-title">
+                                            @ViewData["15PreviousVersion"]
+                                        </h5>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li>POS Toplamları Raporu Yapıldı</li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
             @RenderBody()
         </div>
         <footer class="main-footer border-top-0" style="background-color:#343a40">
