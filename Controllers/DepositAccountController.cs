@@ -29,11 +29,31 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post(bool isActive)
         {
             var requestFormData = Request.Form;
 
             var expenseContext = await _context.DepositAccounts
+                .Where(d => d.IsActive == isActive)
+                .Include(d => d.BankBranch)
+                .AsNoTracking()
+                .ToListAsync();
+
+            if (isActive == true)
+            {
+                foreach (var item in expenseContext)
+                {
+                    if (item.FinishDate < DateTime.Now.Date)
+                    {
+                        item.IsActive = false;
+                        _context.Update(item);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
+
+            expenseContext = await _context.DepositAccounts
+                .Where(d => d.IsActive == isActive)
                 .Include(d => d.BankBranch)
                 .AsNoTracking()
                 .ToListAsync();
@@ -64,6 +84,14 @@ namespace ExpenseManagement.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (depositAccounts.FinishDate < DateTime.Now.Date)
+                {
+                    depositAccounts.IsActive = false;
+                }
+                if (depositAccounts.FinishDate >= DateTime.Now.Date)
+                {
+                    depositAccounts.IsActive = true;
+                }
                 _context.Add(depositAccounts);
                 await _context.SaveChangesAsync();
                 return Ok(new { Result = true, Message = "Vadeli Hesap Kaydı Başarıyla Oluşturulmuştur!" });
@@ -94,6 +122,15 @@ namespace ExpenseManagement.Controllers
                     depositAccount.Profit = depositAccounts.Profit;
                     depositAccount.StartDate = depositAccounts.StartDate;
                     depositAccount.FinishDate = depositAccounts.FinishDate;
+
+                    if (depositAccounts.FinishDate < DateTime.Now.Date)
+                    {
+                        depositAccount.IsActive = false;
+                    }
+                    if (depositAccounts.FinishDate >= DateTime.Now.Date)
+                    {
+                        depositAccount.IsActive = true;
+                    }
 
                     _context.Update(depositAccount);
                     await _context.SaveChangesAsync();
