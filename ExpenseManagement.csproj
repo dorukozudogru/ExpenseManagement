@@ -40,6 +40,8 @@
     <Compile Remove="Migrations\20211122185300_used-vehicle-sale-updated.Designer.cs" />
     <Compile Remove="Migrations\20211219182546_year-added-to-salary.cs" />
     <Compile Remove="Migrations\20211219182546_year-added-to-salary.Designer.cs" />
+    <Compile Remove="Migrations\20220101200901_deposit-account-status-removed.cs" />
+    <Compile Remove="Migrations\20220101200901_deposit-account-status-removed.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

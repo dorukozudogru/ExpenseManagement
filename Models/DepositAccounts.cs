@@ -66,5 +66,8 @@ namespace ExpenseManagement.Models
 
         [DisplayName("Vade Bitiş Tarihi")]
         public DateTime FinishDate { get; set; }
+
+        [DisplayName("Durum")]
+        public bool IsActive { get; set; }
     }
 }
