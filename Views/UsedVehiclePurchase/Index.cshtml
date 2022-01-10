@@ -8,94 +8,94 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                @*<div class="card card-primary collapsed-card">
-                        <div class="card-header border-0">
-                            <h5 class="card-title">
-                                <i class="fas fa-filter mr-1"></i>&nbsp;Filtreler
-                            </h5>
-                            <div class="card-tools">
-                                <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
-                                    <i class="fas fa-plus"></i>
-                                </a>
-                            </div>
+                <div class="card card-primary collapsed-card">
+                    <div class="card-header border-0">
+                        <h5 class="card-title">
+                            <i class="fas fa-filter mr-1"></i>&nbsp;Filtreler
+                        </h5>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                <i class="fas fa-plus"></i>
+                            </a>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Marka Adı</label>
-                                        <select class="form-control" id="brand"></select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">Plaka</label>
-                                        <input class="form-control" id="licencePlate" autocomplete="off" />
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="control-label">Araç Satış Başlangıç Tarihi</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">
-                                                            <i class="far fa-calendar-alt"></i>
-                                                        </span>
-                                                    </div>
-                                                    <input type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="control-label">Araç Satış Bitiş Tarihi</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">
-                                                            <i class="far fa-calendar-alt"></i>
-                                                        </span>
-                                                    </div>
-                                                    <input type="text" class="form-control float-right" id="datepicker2" autocomplete="off" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Marka Adı</label>
+                                    <select class="form-control" id="brand"></select>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Model Adı</label>
-                                        <select class="form-control" id="model"></select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">Şase No</label>
-                                        <input class="form-control" id="chassis" autocomplete="off" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">Satılan Ay</label>
-                                        <select class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
-                                    </div>
+                                <div class="form-group">
+                                    <label class="control-label">Plaka</label>
+                                    <input class="form-control" id="licencePlate" autocomplete="off" />
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Satış Fiyatı Tutar Aralığı</label>
-                                        <input id="range_1" type="text" name="range_1" value="">
-                                        <input hidden id="from" />
-                                        <input hidden id="to" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="form-group">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <input type="submit" value="Filtreyi Uygula" class="btn btn-success btn-block" onclick="getResult()" />
+                                        <div class="form-group">
+                                            <label class="control-label">Araç Satış Başlangıç Tarihi</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="submit" value="Temizle" class="btn btn-danger btn-block" onclick="clearFilter()" />
+                                        <div class="form-group">
+                                            <label class="control-label">Araç Satış Bitiş Tarihi</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control float-right" id="datepicker2" autocomplete="off" />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Model Adı</label>
+                                    <select class="form-control" id="model"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Aracın Alındığı Kişi</label>
+                                    <input class="form-control" id="seller" autocomplete="off" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Satılan Ay</label>
+                                    <select class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Satış Fiyatı Tutar Aralığı</label>
+                                    <input id="range_1" type="text" name="range_1" value="">
+                                    <input hidden id="from" />
+                                    <input hidden id="to" />
+                                </div>
+                            </div>
                         </div>
-                    </div>*@
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="submit" value="Filtreyi Uygula" class="btn btn-success btn-block" onclick="getResult()" />
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="submit" value="Temizle" class="btn btn-danger btn-block" onclick="clearFilter()" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -330,7 +330,7 @@
         });
 
         $('#range_1').ionRangeSlider({
-            min: 100000,
+            min: 10000,
             max: 2000000,
             from: 180000,
             to: 800000,
@@ -407,7 +407,8 @@
                     + "&from=" + document.getElementById("from").value
                     + "&to=" + document.getElementById("to").value
                     + "&model=" + document.getElementById("model").value
-                    + "&chassis=" + document.getElementById("chassis").value
+                    + "&licencePlate=" + document.getElementById("licencePlate").value
+                    + "&seller=" + document.getElementById("seller").value
                     + "&monthId=" + document.getElementById("monthId").value,
                 "method": "POST"
             },
@@ -437,10 +438,32 @@
                 {
                     "data": "purchasedSalesmanBonus",
                     "render": function (data, type, full, meta) {
-                        return currency(full.purchaseAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                        return currency(full.purchasedSalesmanBonus, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                     }
                 },
-                { "data": "buyer", "orderable": false },
+                {
+                    "data": "isSold",
+                    "render": function (data, type, row) {
+                        if (data == true) {
+                            return "Evet";
+                        }
+                        else if (data == false) {
+                            return "Hayır";
+                        }
+                    }
+                },
+                {
+                    "data": "buyer",
+                    "render": function (data, type, row) {
+                        if (data != null) {
+                            return data;
+                        }
+                        else {
+                            return "-";
+                        }
+                    },
+                    "orderable": false
+                },
                 {
                     "data": "saleDate",
                     render: function (data, type, row) {
@@ -454,13 +477,21 @@
                 },
                 {
                     "data": "soldSalesman.name",
+                    "render": function (data, type, row) {
+                        if (data != null) {
+                            return data;
+                        }
+                        else {
+                            return "-";
+                        }
+                    },
                     "orderable": false
                 },
                 {
                     "data": "saleAmount",
                     render: function (data, type, full, meta) {
                         if (data != null) {
-                            return currency(full.saleAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.saleAmountCurrencyName;
+                            return currency(full.saleAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                         }
                         else {
                             return "-";
@@ -470,10 +501,25 @@
                 {
                     "data": "soldSalesmanBonus",
                     "render": function (data, type, full, meta) {
-                        return currency(full.purchaseAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                        if (data != null) {
+                            return currency(full.soldSalesmanBonus, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                        }
+                        else {
+                            return "-";
+                        }
                     }
                 },
-                { "data": "profit" },
+                {
+                    "data": "profit",
+                    "render": function (data, type, row) {
+                        if (data != null) {
+                            return currency(data, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                        }
+                        else {
+                            return "-";
+                        }
+                    },
+                },
                 {
                     "data": "actionId", "orderable": false, render: function (data, type, row) {
                         return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="UsedVehiclePurchase/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="UsedVehiclePurchase/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="UsedVehiclePurchase/Delete/' + row.id + '">Sil</a></ul></div>'
