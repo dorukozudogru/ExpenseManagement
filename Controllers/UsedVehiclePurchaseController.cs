@@ -36,7 +36,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(bool isFiltered, DateTime startDate, DateTime finishDate, double from, double to, int monthId, string model, string chassis)
+        public async Task<IActionResult> Post(bool isFiltered, DateTime startDate, DateTime finishDate, double from, double to, string model, string licencePlate, string seller, int monthId)
         {
             var requestFormData = Request.Form;
 
@@ -48,30 +48,34 @@ namespace ExpenseManagement.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
-            //if (isFiltered != false)
-            //{
-            //    if (startDate != DateTime.MinValue && finishDate != DateTime.MinValue)
-            //    {
-            //        vehiclePurchaseContext = vehiclePurchaseContext.Where(e => e.PurchaseDate >= startDate && e.PurchaseDate <= finishDate).ToList();
-            //    }
-            //    if (from != 0 && to != 0)
-            //    {
-            //        vehiclePurchaseContext = vehiclePurchaseContext.Where(e => e.PurchaseAmount >= from && e.PurchaseAmount <= to).ToList();
-            //    }
-            //    if (monthId != 0)
-            //    {
-            //        vehiclePurchaseContext = vehiclePurchaseContext.Where(e => e.PurchaseDate != null && e.PurchaseDate.Month == monthId).ToList();
-            //    }
-            //    if (model != null)
-            //    {
-            //        var modelId = await _context.CarModels.FirstOrDefaultAsync(c => c.Name == model);
-            //        vehiclePurchaseContext = vehiclePurchaseContext.Where(e => e.CarModelId == modelId.Id).ToList();
-            //    }
-            //    if (chassis != null)
-            //    {
-            //        vehiclePurchaseContext = vehiclePurchaseContext.Where(e => e.Chassis.ToUpper().Contains(chassis.ToUpper())).ToList();
-            //    }
-            //}
+            if (isFiltered != false)
+            {
+                if (startDate != DateTime.MinValue && finishDate != DateTime.MinValue)
+                {
+                    uvpContext = uvpContext.Where(e => e.SaleDate >= startDate && e.SaleDate <= finishDate).ToList();
+                }
+                if (from != 0 && to != 0)
+                {
+                    uvpContext = uvpContext.Where(e => e.SaleAmount >= from && e.SaleAmount <= to).ToList();
+                }
+                if (monthId != 0)
+                {
+                    uvpContext = uvpContext.Where(e => e.SaleDate != null && e.SaleDate.Value.Month == monthId).ToList();
+                }
+                if (model != null)
+                {
+                    var modelId = await _context.CarModels.FirstOrDefaultAsync(c => c.Name == model);
+                    uvpContext = uvpContext.Where(e => e.CarModelId == modelId.Id).ToList();
+                }
+                if (licencePlate != null)
+                {
+                    uvpContext = uvpContext.Where(e => e.LicencePlate.ToUpper().Contains(licencePlate.ToUpper())).ToList();
+                }
+                if (seller != null)
+                {
+                    uvpContext = uvpContext.Where(e => e.Seller.ToUpper().Contains(seller.ToUpper())).ToList();
+                }
+            }
 
             List<UsedVehiclePurchases> listItems = ProcessCollection(uvpContext, requestFormData);
 

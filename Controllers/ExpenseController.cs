@@ -65,6 +65,14 @@ namespace ExpenseManagement.Controllers
         [Authorize(Roles = "Admin, Banaz, Muhasebe")]
         public IActionResult Salary()
         {
+            var sectors = _context.Sectors.ToList();
+            sectors.Add(new Sectors
+            {
+                Id = 0,
+                Name = ""
+            });
+
+            ViewBag.SectorId = new SelectList(sectors.OrderBy(s => s.Id), "Id", "Name");
             return View();
         }
 
@@ -76,7 +84,7 @@ namespace ExpenseManagement.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin, Banaz, Muhasebe")]
-        public async Task<IActionResult> SalaryPost()
+        public async Task<IActionResult> SalaryPost(bool isFiltered, int sectorId, string definition, double from, double to, int year, int monthId)
         {
             var requestFormData = Request.Form;
 
@@ -91,6 +99,30 @@ namespace ExpenseManagement.Controllers
                 expenseContext = expenseContext
                     .Where(e => e.CreatedBy == GetLoggedUserId())
                     .ToList();
+            }
+
+            if (isFiltered != false)
+            {
+                if (sectorId != 0)
+                {
+                    expenseContext = expenseContext.Where(e => e.SectorId == sectorId).ToList();
+                }
+                if (definition != null)
+                {
+                    expenseContext = expenseContext.Where(e => e.Definition.ToUpper().Contains(definition.ToUpper())).ToList();
+                }
+                if (from != 0 && to != 0)
+                {
+                    expenseContext = expenseContext.Where(e => e.SalaryAmount >= from && e.SalaryAmount <= to).ToList();
+                }
+                if (monthId != 0)
+                {
+                    expenseContext = expenseContext.Where(e => e.Month != null && e.Month == monthId).ToList();
+                }
+                if (year != 0)
+                {
+                    expenseContext = expenseContext.Where(e => e.Year == year).ToList();
+                }
             }
 
             expenseContext = GetAllEnumNamesHelper.GetEnumName(expenseContext);
