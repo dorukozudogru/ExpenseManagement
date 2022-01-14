@@ -208,11 +208,11 @@ namespace ExpenseManagement.Controllers
             {
                 var ws = p.Workbook.Worksheets.Add("Ödemeler");
 
-                ws.Cells[1, 1, 1, 4].Merge = true;
-                ws.Cells[1, 1, 1, 4].Style.Font.Bold = true;
-                ws.Cells[1, 1, 1, 4].Value = dates.First().Key.ToString("dd.MM.yyyy") + " - " + dates.Last().Key.ToString("dd.MM.yyyy") + " TARİHLERİ ARASI ÖDEME PLANI";
+                ws.Cells[1, 1, 1, 3].Merge = true;
+                ws.Cells[1, 1, 1, 3].Style.Font.Bold = true;
+                ws.Cells[1, 1, 1, 3].Value = dates.First().Key.ToString("dd.MM.yyyy") + " - " + dates.Last().Key.ToString("dd.MM.yyyy") + " TARİHLERİ ARASI ÖDEME PLANI";
 
-                using (var range = ws.Cells[2, 1, 2, 4])
+                using (var range = ws.Cells[2, 1, 2, 3])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -225,18 +225,17 @@ namespace ExpenseManagement.Controllers
                     range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
                 }
 
-                ws.Cells[2, 1].Value = "#";
-                ws.Cells[2, 2].Value = "Tarih";
-                ws.Cells[2, 3].Value = "Tutar";
-                ws.Cells[2, 4].Value = "Ödeme Yapılacak Kişi/Kurum";
+                ws.Cells[2, 1].Value = "Tarih";
+                ws.Cells[2, 2].Value = "Tutar";
+                ws.Cells[2, 3].Value = "Ödeme Yapılacak Kişi/Kurum";
 
-                ws.Column(3).Style.Numberformat.Format = String.Format("#,##0.00 ₺");
+                ws.Column(2).Style.Numberformat.Format = String.Format("#,##0.00 ₺");
 
                 ws.Row(2).Style.Font.Bold = true;
 
                 int tr = 0;
                 int row = 3;
-                int column = 2;
+                int column = 1;
                 int count = 1;
                 double sum = 0.0;
                 double totalSum = 0.0;
@@ -256,25 +255,24 @@ namespace ExpenseManagement.Controllers
                             tr = 1;
                         }
 
-                        ws.Cells[row, 1].Value = count;
-                        ws.Cells[row, 3].Value = lastItem.Amount;
-                        ws.Cells[row, 4].Value = lastItem.PersonToBePaid;
+                        ws.Cells[row, 2].Value = lastItem.Amount;
+                        ws.Cells[row, 3].Value = lastItem.PersonToBePaid;
 
                         ws.Row(row).Height = 30;
 
                         if (count < lastItems.Count)
                         {
-                            ws.Cells[row, 1, row + 1, 4].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                            ws.Cells[row, 1, row + 1, 4].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                            ws.Cells[row, 1, row + 1, 4].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                            ws.Cells[row, 1, row + 1, 4].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                            ws.Cells[row, 1, row + 1, 3].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                            ws.Cells[row, 1, row + 1, 3].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                            ws.Cells[row, 1, row + 1, 3].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                            ws.Cells[row, 1, row + 1, 3].Style.Border.Right.Style = ExcelBorderStyle.Thin;
                         }
                         else if (count == 1)
                         {
-                            ws.Cells[row, 1, row, 4].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                            ws.Cells[row, 1, row, 4].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                            ws.Cells[row, 1, row, 4].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                            ws.Cells[row, 1, row, 4].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                            ws.Cells[row, 1, row, 3].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                            ws.Cells[row, 1, row, 3].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                            ws.Cells[row, 1, row, 3].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                            ws.Cells[row, 1, row, 3].Style.Border.Right.Style = ExcelBorderStyle.Thin;
                         }
 
                         row++;
@@ -283,7 +281,7 @@ namespace ExpenseManagement.Controllers
                         totalSum += lastItem.Amount;
                     }
 
-                    using (var range = ws.Cells[row, 1, row, 4])
+                    using (var range = ws.Cells[row, 1, row, 3])
                     {
                         range.Style.Font.Bold = true;
                         range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -296,16 +294,15 @@ namespace ExpenseManagement.Controllers
                         range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
                     }
 
-                    ws.Cells[row, 3].Value = sum;
-                    ws.Cells[row, 1, row, 2].Merge = true;
-                    ws.Cells[row, 1, row, 2].Value = "TOPLAM";
+                    ws.Cells[row, 2].Value = sum;
+                    ws.Cells[row, 1, row, 1].Merge = true;
+                    ws.Cells[row, 1, row, 1].Value = "TOPLAM";
 
                     row += 2;
 
                     ws.Cells[row, 1].Value = "";
                     ws.Cells[row, 2].Value = "";
                     ws.Cells[row, 3].Value = "";
-                    ws.Cells[row, 4].Value = "";
                     row++;
                     count = 1;
                     sum = 0.0;
@@ -322,12 +319,13 @@ namespace ExpenseManagement.Controllers
                     range.Style.Font.Color.SetColor(Color.White);
                 }
 
-                ws.Cells[lastRow + 1, 3].Value = totalSum;
+                ws.Cells[lastRow + 1, 2].Value = totalSum;
 
                 ws.Cells[ws.Dimension.Address].AutoFitColumns();
                 ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn - 2].Merge = true;
                 ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn - 2].Value = "GENEL TOPLAM";
 
+                ws.Cells[1, 1, lastRow + 1, lastColumn].Style.Font.Size = 9;
                 ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn].Style.Border.Top.Style = ExcelBorderStyle.Thin;
                 ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                 ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn].Style.Border.Left.Style = ExcelBorderStyle.Thin;
@@ -336,14 +334,14 @@ namespace ExpenseManagement.Controllers
                 ws.Cells[1, 1, lastRow + 1, lastColumn].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 ws.Cells[1, 1, lastRow + 1, lastColumn].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
 
-                ws.Column(2).Style.WrapText = true;
-                ws.Column(2).Width = 15;
-                ws.Column(3).Width = 30;
-                ws.Column(4).PageBreak = true;
+                ws.Column(1).Style.WrapText = true;
+                ws.Column(1).Width = 15;
+                ws.Column(2).Width = 30;
+                ws.Column(3).PageBreak = true;
 
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Portrait;
-                ws.PrinterSettings.Scale = 90;
+                ws.PrinterSettings.Scale = 80;
 
                 p.Save();
             }
