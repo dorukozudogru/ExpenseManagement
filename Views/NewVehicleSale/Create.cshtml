@@ -35,14 +35,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label asp-for="PurchasedSalesmanId" class="control-label"></label>
-                                            <select asp-for="PurchasedSalesmanId" class="form-control" asp-items="ViewBag.PurchasedSalesmanId" id="purchasedSalesmanId"></select>
-                                            <span asp-validation-for="PurchasedSalesmanId" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label asp-for="SalesmanId" class="control-label"></label>
                                             <select asp-for="SalesmanId" class="form-control" asp-items="ViewBag.SalesmanId" id="salesmanId"></select>
@@ -191,7 +184,6 @@
             function createNewVehicleSales() {
                 var VehiclePurchaseId = document.getElementById("vehiclePurchaseId").value;
                 var LicencePlate = document.getElementById("licencePlate").value;
-                var PurchasedSalesmanId = document.getElementById("purchasedSalesmanId").value;
                 var SalesmanId = document.getElementById("salesmanId").value;
                 var SaleAmount = document.getElementById("saleAmount").value;
                 var SaleAmountCurrency = document.getElementById("saleAmountCurrency").value;
@@ -207,7 +199,6 @@
 
                 data.append('VehiclePurchaseId', VehiclePurchaseId);
                 data.append('LicencePlate', LicencePlate);
-                data.append('PurchasedSalesmanId', PurchasedSalesmanId);
                 data.append('SalesmanId', SalesmanId);
                 data.append('SaleAmount', SaleAmount);
                 data.append('SaleAmountCurrency', SaleAmountCurrency);

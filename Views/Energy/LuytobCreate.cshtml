@@ -19,6 +19,22 @@
                             <div class="col-md-12">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 <div class="form-group">
+                                    <label asp-for="Year" class="control-label"></label>
+                                    <div class="input-group-prepend">
+                                        <select asp-for="Year" class="form-control btn btn-default" id="year">
+                                            <option>2021</option>
+                                            <option>2022</option>
+                                            <option>2023</option>
+                                            <option>2024</option>
+                                            <option>2025</option>
+                                            <option>2026</option>
+                                            <option>2027</option>
+                                            <option>2028</option>
+                                            <option>2029</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label asp-for="Month" class="control-label"></label>
                                     <select asp-for="Month" class="form-control" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.MonthEnum>()" id="monthId"></select>
                                 </div>
@@ -62,6 +78,7 @@
 
     function add() {
         month = document.getElementById("monthId").value;
+        year = document.getElementById("year").value;
 
         var data = new FormData();
 
@@ -77,6 +94,7 @@
             data.append(files2[i].name, files2[i]);
         }
 
+        data.append('year', year);
         data.append('month', month);
 
         $("#createButton").attr("disabled", true);

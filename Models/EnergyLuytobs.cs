@@ -10,6 +10,10 @@ namespace ExpenseManagement.Models
         public int Id { get; set; }
 
         [Required]
+        [DisplayName("Yıl")]
+        public int Year { get; set; }
+
+        [Required]
         [DisplayName("Ay")]
         public byte? Month { get; set; }
 

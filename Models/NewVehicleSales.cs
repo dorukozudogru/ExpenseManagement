@@ -16,12 +16,6 @@ namespace ExpenseManagement.Models
         public int VehiclePurchaseId { get; set; }
         public virtual VehiclePurchases VehiclePurchase { get; set; }
 
-        [DisplayName("Alan Danışman")]
-        [ForeignKey(nameof(PurchasedSalesman))]
-        public int? PurchasedSalesmanId { get; set; }
-        [DisplayName("Alan Danışman")]
-        public virtual Salesmans PurchasedSalesman { get; set; }
-
         [Required]
         [DisplayName("Satan Danışman")]
         [ForeignKey(nameof(Salesman))]

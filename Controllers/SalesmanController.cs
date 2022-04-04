@@ -96,13 +96,10 @@ namespace ExpenseManagement.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var hasAnyNewSale = await _context.NewVehicleSales
-                .FirstOrDefaultAsync(m => m.PurchasedSalesmanId == id || m.SalesmanId == id);
-
             var hasAnyUsedSale = await _context.UsedVehicleSales
                 .FirstOrDefaultAsync(m => m.PurchasedSalesmanId == id || m.SoldSalesmanId == id);
 
-            if (hasAnyNewSale == null && hasAnyUsedSale == null)
+            if (hasAnyUsedSale == null)
             {
                 var salesmans = await _context.NewVehicleSales.FindAsync(id);
                 _context.NewVehicleSales.Remove(salesmans);

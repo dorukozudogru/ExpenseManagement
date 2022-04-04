@@ -41,7 +41,6 @@ namespace ExpenseManagement.Controllers
             var requestFormData = Request.Form;
 
             var newVehicleSale = await _context.NewVehicleSales
-                .Include(n => n.PurchasedSalesman)
                 .Include(n => n.Salesman)
                 .Include(n => n.VehiclePurchase)
                 .Include(n => n.VehiclePurchase.CarModel)
@@ -156,7 +155,6 @@ namespace ExpenseManagement.Controllers
             }
 
             var newVehicleSales = await _context.NewVehicleSales
-                .Include(n => n.PurchasedSalesman)
                 .Include(n => n.Salesman)
                 .Include(n => n.VehiclePurchase)
                 .Include(n => n.VehiclePurchase.CarModel)
@@ -192,7 +190,6 @@ namespace ExpenseManagement.Controllers
             }
 
             var newVehicleSales = await _context.NewVehicleSales
-                .Include(n => n.PurchasedSalesman)
                 .Include(n => n.Salesman)
                 .Include(n => n.VehiclePurchase)
                 .Include(n => n.VehiclePurchase.CarModel)
@@ -211,7 +208,6 @@ namespace ExpenseManagement.Controllers
         public async Task<IActionResult> Edit(int id, NewVehicleSales newVehicleSales)
         {
             var newVehicleSale = await _context.NewVehicleSales
-                .Include(n => n.PurchasedSalesman)
                 .Include(n => n.Salesman)
                 .Include(n => n.VehiclePurchase)
                 .Include(n => n.VehiclePurchase.CarModel)
@@ -234,7 +230,6 @@ namespace ExpenseManagement.Controllers
                     newVehicleSale.SaleAmount = newVehicleSales.SaleAmount;
                     newVehicleSale.SaleAmountCurrency = newVehicleSales.SaleAmountCurrency;
                     newVehicleSale.SaleDate = newVehicleSales.SaleDate;
-                    newVehicleSale.PurchasedSalesmanId = newVehicleSales.PurchasedSalesmanId;
                     newVehicleSale.LicencePlate = newVehicleSales.LicencePlate;
                     newVehicleSale.SalesmanId = newVehicleSales.SalesmanId;
                     newVehicleSale.VehicleCost = newVehicleSales.VehicleCost;
@@ -262,7 +257,6 @@ namespace ExpenseManagement.Controllers
             }
 
             var newVehicleSales = await _context.NewVehicleSales
-                .Include(n => n.PurchasedSalesman)
                 .Include(n => n.Salesman)
                 .Include(n => n.VehiclePurchase)
                 .Include(n => n.VehiclePurchase.CarModel)
@@ -325,7 +319,7 @@ namespace ExpenseManagement.Controllers
             {
                 var ws = p.Workbook.Worksheets.Add("Sıfır Araç Satışı");
 
-                using (var range = ws.Cells[1, 1, 1, 14])
+                using (var range = ws.Cells[1, 1, 1, 13])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -338,18 +332,17 @@ namespace ExpenseManagement.Controllers
                 ws.Cells[1, 3].Value = "Model";
                 ws.Cells[1, 4].Value = "Şase No";
                 ws.Cells[1, 5].Value = "Plaka";
-                ws.Cells[1, 6].Value = "Alan Danışman";
-                ws.Cells[1, 7].Value = "Satan Danışman";
-                ws.Cells[1, 8].Value = "Araç Satış Fiyatı";
-                ws.Cells[1, 9].Value = "Alış Tarihi";
-                ws.Cells[1, 10].Value = "Satış Tarihi";
-                ws.Cells[1, 11].Value = "Araç Maliyeti";
-                ws.Cells[1, 12].Value = "Bandrol";
-                ws.Cells[1, 13].Value = "Açıklama";
-                ws.Cells[1, 14].Value = "ÖTV Muaf Mı?";
+                ws.Cells[1, 6].Value = "Satan Danışman";
+                ws.Cells[1, 7].Value = "Araç Satış Fiyatı";
+                ws.Cells[1, 8].Value = "Alış Tarihi";
+                ws.Cells[1, 9].Value = "Satış Tarihi";
+                ws.Cells[1, 10].Value = "Araç Maliyeti";
+                ws.Cells[1, 11].Value = "Bandrol";
+                ws.Cells[1, 12].Value = "Açıklama";
+                ws.Cells[1, 13].Value = "ÖTV Muaf Mı?";
 
+                ws.Column(8).Style.Numberformat.Format = "dd-mmmm-yyyy";
                 ws.Column(9).Style.Numberformat.Format = "dd-mmmm-yyyy";
-                ws.Column(10).Style.Numberformat.Format = "dd-mmmm-yyyy";
 
                 ws.Row(1).Style.Font.Bold = true;
 
@@ -360,30 +353,26 @@ namespace ExpenseManagement.Controllers
                     ws.Cells[c, 3].Value = items[c - 2].VehiclePurchase.CarModel.Name;
                     ws.Cells[c, 4].Value = items[c - 2].VehiclePurchase.Chassis;
                     ws.Cells[c, 5].Value = items[c - 2].LicencePlate;
-                    if (items[c - 2].PurchasedSalesman != null)
-                    {
-                        ws.Cells[c, 6].Value = items[c - 2].PurchasedSalesman.Name;
-                    }
                     if (items[c - 2].Salesman != null)
                     {
-                        ws.Cells[c, 7].Value = items[c - 2].Salesman.Name;
+                        ws.Cells[c, 6].Value = items[c - 2].Salesman.Name;
                     }
-                    ws.Cells[c, 8].Value = items[c - 2].SaleAmount + " " + items[c - 2].SaleAmountCurrencyName;
-                    ws.Cells[c, 9].Value = items[c - 2].PurchaseDate;
-                    ws.Cells[c, 10].Value = items[c - 2].SaleDate;
-                    ws.Cells[c, 11].Value = items[c - 2].VehicleCost + " " + items[c - 2].VehicleCostCurrencyName;
-                    ws.Cells[c, 12].Value = items[c - 2].WarrantyPlus;
-                    ws.Cells[c, 13].Value = items[c - 2].Description;
-                    ws.Cells[c, 14].Value = items[c - 2].TaxExempt;
+                    ws.Cells[c, 7].Value = items[c - 2].SaleAmount + " " + items[c - 2].SaleAmountCurrencyName;
+                    ws.Cells[c, 8].Value = items[c - 2].PurchaseDate;
+                    ws.Cells[c, 9].Value = items[c - 2].SaleDate;
+                    ws.Cells[c, 10].Value = items[c - 2].VehicleCost + " " + items[c - 2].VehicleCostCurrencyName;
+                    ws.Cells[c, 11].Value = items[c - 2].WarrantyPlus;
+                    ws.Cells[c, 12].Value = items[c - 2].Description;
+                    ws.Cells[c, 13].Value = items[c - 2].TaxExempt;
 
-                    ws.Column(8).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SaleAmountCurrencyName);
-                    ws.Column(11).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].VehicleCostCurrencyName);
+                    ws.Column(7).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SaleAmountCurrencyName);
+                    ws.Column(10).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].VehicleCostCurrencyName);
                 }
 
                 ws.Cells[ws.Dimension.Address].AutoFitColumns();
-                ws.Cells["A1:N" + items.Count + 2].AutoFilter = true;
+                ws.Cells["A1:M" + items.Count + 2].AutoFilter = true;
 
-                ws.Column(14).PageBreak = true;
+                ws.Column(13).PageBreak = true;
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Landscape;
                 ws.PrinterSettings.Scale = 100;
