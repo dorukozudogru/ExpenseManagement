@@ -9,7 +9,9 @@
             <div class="col-md-12">
                 <div class="card card-primary" style="background-color:#343a40">
                     <div class="card-header border-0">
-                        <h3 class="card-title"><i class="nav-icon fas fa-credit-card"></i>&nbsp;&nbsp;Vadeli Hesaplar</h3>
+                        <a href="~/DepositAccount/">
+                            <h3 class="card-title"><i class="nav-icon fas fa-credit-card"></i>&nbsp;&nbsp;Vadeli Hesaplar</h3>
+                        </a>
                         <div class="card-tools">
                             <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
@@ -25,7 +27,9 @@
             <div class="col-md-6">
                 <div class="card card-warning" style="background-color:#343a40">
                     <div class="card-header border-0">
-                        <h3 class="card-title"><i class="nav-icon fas fa-university"></i>&nbsp;&nbsp;Kasa</h3>
+                        <a href="~/BankVault/">
+                            <h3 class="card-title"><i class="nav-icon fas fa-university"></i>&nbsp;&nbsp;Kasa</h3>
+                        </a>
                         <div class="card-tools">
                             <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
@@ -41,7 +45,9 @@
             <div class="col-md-6">
                 <div class="card card-warning" style="background-color:#343a40">
                     <div class="card-header border-0">
-                        <h3 class="card-title"><i class="nav-icon fas fa-university"></i>&nbsp;&nbsp;Vadesiz</h3>
+                        <a href="~/BankVault/">
+                            <h3 class="card-title"><i class="nav-icon fas fa-university"></i>&nbsp;&nbsp;Vadesiz</h3>
+                        </a>
                         <div class="card-tools">
                             <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
@@ -202,10 +208,10 @@
 
                             $.ajax({
                                 type: "GET",
-                                url: "https://freecurrencyapi.net/api/v2/latest?apikey=ff94a2c0-60ef-11ec-8f35-ab1e84ffeb94&base_currency=USD",
+                                url: "https://api.currencyapi.com/v3/latest?apikey=ff94a2c0-60ef-11ec-8f35-ab1e84ffeb94&base_currency=USD",
                                 success: function (response) {
-                                    var dollartolira = element.totalAmount * response.data.TRY;
-                                    $('#currentdollar').html(currency(response.data.TRY, { decimal: ',', separator: '.', symbol: 'Güncel Kur: ₺' }).format());
+                                    var dollartolira = element.totalAmount * response.data.TRY.value;
+                                    $('#currentdollar').html(currency(response.data.TRY.value, { decimal: ',', separator: '.', symbol: 'Güncel Kur: ₺' }).format());
                                     $('#dollartolira').html(currency(dollartolira, { decimal: ',', separator: '.', symbol: '₺' }).format());
                                 },
                                 error: function (error) {
@@ -221,10 +227,10 @@
 
                             $.ajax({
                                 type: "GET",
-                                url: "https://freecurrencyapi.net/api/v2/latest?apikey=ff94a2c0-60ef-11ec-8f35-ab1e84ffeb94&base_currency=EUR",
+                                url: "https://api.currencyapi.com/v3/latest?apikey=ff94a2c0-60ef-11ec-8f35-ab1e84ffeb94&base_currency=EUR",
                                 success: function (response) {
-                                    var eurotolira = element.totalAmount * response.data.TRY;
-                                    $('#currenteuro').html(currency(response.data.TRY, { decimal: ',', separator: '.', symbol: 'Güncel Kur: ₺' }).format());
+                                    var eurotolira = element.totalAmount * response.data.TRY.value;
+                                    $('#currenteuro').html(currency(response.data.TRY.value, { decimal: ',', separator: '.', symbol: 'Güncel Kur: ₺' }).format());
                                     $('#eurotolira').html(currency(eurotolira, { decimal: ',', separator: '.', symbol: '₺' }).format());
                                 },
                                 error: function (error) {

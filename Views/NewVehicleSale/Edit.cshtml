@@ -46,14 +46,7 @@
                                     <span asp-validation-for="LicencePlate" class="text-danger"></span>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label asp-for="PurchasedSalesmanId" class="control-label"></label>
-                                            <select asp-for="PurchasedSalesmanId" class="form-control" asp-items="ViewBag.PurchasedSalesmanId" id="purchasedSalesmanId"></select>
-                                            <span asp-validation-for="PurchasedSalesmanId" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label asp-for="SalesmanId" class="control-label"></label>
                                             <select asp-for="SalesmanId" class="form-control" asp-items="ViewBag.SalesmanId" id="salesmanId"></select>
@@ -203,7 +196,6 @@
                 document.getElementById("vehiclePurchaseCarModelId").value = returnvalue.vehiclePurchase.carModel.id;
                 document.getElementById("vehiclePurchaseId").value = returnvalue.vehiclePurchaseId;
                 document.getElementById("licencePlate").value = returnvalue.licencePlate;
-                document.getElementById("purchasedSalesmanId").value = returnvalue.purchasedSalesmanId;
                 document.getElementById("salesmanId").value = returnvalue.salesmanId;
                 document.getElementById("saleAmount").value = currency(returnvalue.saleAmount, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("saleAmountCurrency").value = returnvalue.saleAmountCurrency;
@@ -227,7 +219,6 @@
         var Id = document.getElementById("id").value;
         var VehiclePurchaseId = document.getElementById("vehiclePurchaseId").value;
         var LicencePlate = document.getElementById("licencePlate").value;
-        var PurchasedSalesmanId = document.getElementById("purchasedSalesmanId").value;
         var SalesmanId = document.getElementById("salesmanId").value;
         var SaleAmount = document.getElementById("saleAmount").value;
         var SaleAmountCurrency = document.getElementById("saleAmountCurrency").value;
@@ -243,7 +234,6 @@
 
         data.append('VehiclePurchaseId', VehiclePurchaseId);
         data.append('LicencePlate', LicencePlate);
-        data.append('PurchasedSalesmanId', PurchasedSalesmanId);
         data.append('SalesmanId', SalesmanId);
         data.append('SaleAmount', SaleAmount);
         data.append('SaleAmountCurrency', SaleAmountCurrency);

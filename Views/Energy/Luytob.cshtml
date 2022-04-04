@@ -25,6 +25,9 @@
                                                 @Html.DisplayNameFor(model => model.Id)
                                             </th>
                                             <th>
+                                                @Html.DisplayNameFor(model => model.Year)
+                                            </th>
+                                            <th>
                                                 @Html.DisplayNameFor(model => model.Month)
                                             </th>
                                             <th>İşlemler</th>
@@ -64,13 +67,14 @@
                 "stateSave": true,
                 "stateDuration": -1,
                 "searching": false,
-                "order": [[ 0, "desc" ]],
+                "order": [[0, "desc"]],
                 "ajax": {
                     "url": "/Energy/LuytobPost",
                     "method": "POST"
                 },
                 "columns": [
                     { "data": "id" },
+                    { "data": "year" },
                     { "data": "monthName" },
                     {
                         "data": "actionId", render: function (data, type, row) {

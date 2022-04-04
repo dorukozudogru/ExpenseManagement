@@ -152,9 +152,6 @@
                                                 @Html.DisplayNameFor(model => model.LicencePlate)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.PurchasedSalesman)
-                                            </th>
-                                            <th>
                                                 @Html.DisplayNameFor(model => model.Salesman)
                                             </th>
                                             <th>
@@ -237,18 +234,6 @@
                 },
                 {
                     "data": "licencePlate",
-                    "orderable": false,
-                    render: function (data, type, full, meta) {
-                        if (data != null) {
-                            return data;
-                        }
-                        else {
-                            return "-";
-                        }
-                    }
-                },
-                {
-                    "data": "purchasedSalesman.name",
                     "orderable": false,
                     render: function (data, type, full, meta) {
                         if (data != null) {
@@ -449,18 +434,6 @@
                 },
                 {
                     "data": "licencePlate",
-                    "orderable": false,
-                    render: function (data, type, full, meta) {
-                        if (data != null) {
-                            return data;
-                        }
-                        else {
-                            return "-";
-                        }
-                    }
-                },
-                {
-                    "data": "purchasedSalesman.name",
                     "orderable": false,
                     render: function (data, type, full, meta) {
                         if (data != null) {
