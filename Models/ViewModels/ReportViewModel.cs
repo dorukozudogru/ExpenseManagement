@@ -35,6 +35,8 @@ namespace ExpenseManagement.Models.ViewModels
             public byte? TotalAmountCurrency { get; set; }
 
             public string TotalAmountCurrencyName { get; set; }
+
+            public double? TotalKw { get; set; }
         }
 
         public class ExpenseEndorsementProfitReport

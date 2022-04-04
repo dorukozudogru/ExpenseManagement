@@ -309,6 +309,39 @@ namespace ExpenseManagement.Controllers
             await _context.SaveChangesAsync();
             return Ok(new { Result = true, Message = "Aylık Üretim Kaydı Silinmiştir!" });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> MonthlyYearlyTotalPost()
+        {
+            var requestFormData = Request.Form;
+
+            var energyMonthlies = await _context.EnergyMonthlies
+                .GroupBy(i => new
+                {
+                    i.Year
+                })
+                .Select(i => new GeneralResponse
+                {
+                    Year = i.Key.Year,
+                    TotalKw = i.Sum(x => x.ProducedKw),
+                    TotalAmount = i.Sum(x => x.Amount),
+                })
+                .ToListAsync();
+
+            energyMonthlies = energyMonthlies.OrderByDescending(i => i.Year).ToList();
+
+            List<GeneralResponse> listItems = ProcessCollection(energyMonthlies, requestFormData);
+
+            var response = new PaginatedResponse<GeneralResponse>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = energyMonthlies.Count,
+                RecordsTotal = energyMonthlies.Count
+            };
+
+            return Ok(response);
+        }
         #endregion
 
         public async Task<IActionResult> YearlyPost()
@@ -492,11 +525,9 @@ namespace ExpenseManagement.Controllers
         {
             var stream = new System.IO.MemoryStream();
 
-            var _temp = pageName.Split(" ");
-
             using (var p = new ExcelPackage(stream))
             {
-                var ws = p.Workbook.Worksheets.Add(_temp[0] + " " + _temp[1]);
+                var ws = p.Workbook.Worksheets.Add(pageName);
 
                 using (var range = ws.Cells[1, 1, 1, 2])
                 {
@@ -537,6 +568,93 @@ namespace ExpenseManagement.Controllers
                 ws.Cells["A1:B" + items.Count + 2].AutoFilter = true;
 
                 ws.Column(2).PageBreak = true;
+                ws.PrinterSettings.PaperSize = ePaperSize.A4;
+                ws.PrinterSettings.Orientation = eOrientation.Landscape;
+                ws.PrinterSettings.Scale = 100;
+
+                p.Save();
+            }
+            AddExportAudit(pageName, HttpContext?.User?.Identity?.Name, _context);
+            return stream;
+        }
+
+        public ActionResult ExportYearly(int year)
+        {
+            var energyMonthlies = _context.EnergyMonthlies
+                .Where(i => i.Year == year)
+                .ToList();
+
+            energyMonthlies = GetAllEnumNamesHelper.GetEnumName(energyMonthlies);
+
+            var stream = ExportYearlyEnergy(energyMonthlies, year + " Yılı Üretim");
+            string fileName = String.Format("{0}.xlsx", year + " Yılı Üretim");
+            string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            stream.Position = 0;
+            return File(stream, fileType, fileName);
+        }
+
+        public MemoryStream ExportYearlyEnergy(List<EnergyMonthlies> items, string pageName)
+        {
+            var stream = new System.IO.MemoryStream();
+
+            using (var p = new ExcelPackage(stream))
+            {
+                var ws = p.Workbook.Worksheets.Add(pageName);
+
+                using (var range = ws.Cells[1, 1, 1, 7])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Black);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                ws.Cells[1, 1].Value = "Yıl";
+                ws.Cells[1, 2].Value = "Ay";
+                ws.Cells[1, 3].Value = "Üretilen kW";
+                ws.Cells[1, 4].Value = "Tüketilen kW";
+                ws.Cells[1, 5].Value = "Dağıtım Bedeli";
+                ws.Cells[1, 6].Value = "Fatura Tutarı (KDV Hariç)";
+                ws.Cells[1, 7].Value = "KDV";
+
+                ws.Row(1).Style.Font.Bold = true;
+
+                for (int c = 2; c < items.Count + 2; c++)
+                {
+                    ws.Cells[c, 1].Value = items[c - 2].Year;
+                    ws.Cells[c, 2].Value = items[c - 2].MonthName;
+                    ws.Cells[c, 3].Value = items[c - 2].ProducedKw;
+                    ws.Cells[c, 4].Value = items[c - 2].ConsumedKw;
+                    ws.Cells[c, 5].Value = items[c - 2].DistributionFee;
+                    ws.Cells[c, 6].Value = items[c - 2].Amount;
+                    ws.Cells[c, 7].Value = items[c - 2].TAX;
+                }
+
+                var lastRow = ws.Dimension.End.Row;
+                var lastColumn = ws.Dimension.End.Column;
+
+                using (var range = ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(color: Color.Gray);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                ws.Cells[lastRow + 1, 2].Value = "Toplam:";
+                ws.Cells[lastRow + 1, 3].Formula = String.Format("SUM(C2:C{0})", lastRow);
+                ws.Cells[lastRow + 1, 4].Formula = String.Format("SUM(D2:D{0})", lastRow);
+                ws.Cells[lastRow + 1, 5].Formula = String.Format("SUM(E2:E{0})", lastRow);
+                ws.Cells[lastRow + 1, 6].Formula = String.Format("SUM(F2:F{0})", lastRow);
+                ws.Cells[lastRow + 1, 7].Formula = String.Format("SUM(G2:G{0})", lastRow);
+                ws.Column(5).Style.Numberformat.Format = String.Format("#,##0.00 ₺");
+                ws.Column(6).Style.Numberformat.Format = String.Format("#,##0.00 ₺");
+                ws.Column(7).Style.Numberformat.Format = String.Format("#,##0.00 ₺");
+
+                ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                ws.Cells["A1:G" + items.Count + 2].AutoFilter = true;
+
+                ws.Column(7).PageBreak = true;
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Landscape;
                 ws.PrinterSettings.Scale = 100;

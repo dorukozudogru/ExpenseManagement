@@ -22,11 +22,11 @@ namespace ExpenseManagement.Models
         public string MonthName { get; set; }
 
         [Required]
-        [DisplayName("Üretilen Kw")]
+        [DisplayName("Üretilen kW")]
         public double ProducedKw { get; set; }
 
         [Required]
-        [DisplayName("Tüketilen Kw")]
+        [DisplayName("Tüketilen kW")]
         public double ConsumedKw { get; set; }
 
         [Required]
