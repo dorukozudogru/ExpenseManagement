@@ -194,6 +194,7 @@ namespace ExpenseManagement.Controllers
                     vehiclePurchase.PaymentDate = vehiclePurchases.PaymentDate;
                     vehiclePurchase.PurchaseAmount = vehiclePurchases.PurchaseAmount;
                     vehiclePurchase.PurchaseAmountCurrency = vehiclePurchases.PurchaseAmountCurrency;
+                    vehiclePurchase.AmountToBePaid = vehiclePurchases.AmountToBePaid;
 
                     vehiclePurchase.OTVPercent = vehiclePurchases.OTVPercent;
                     vehiclePurchase.OTV = vehiclePurchases.OTV;
@@ -471,8 +472,6 @@ namespace ExpenseManagement.Controllers
                             rd = (lastItem.PaymentDate.Value.Date - DateTime.Now.Date).Days;
                         }
                         
-                        var amount = lastItem.PurchaseAmount * 1.18;
-
                         ws.Cells[row, 1].Value = count;
                         ws.Cells[row, 2].Value = lastItem.CarModel.Name;
                         ws.Cells[row, 3].Value = lastItem.Chassis;
@@ -480,7 +479,7 @@ namespace ExpenseManagement.Controllers
                         ws.Cells[row, 5].Value = lastItem.PaymentDate;
                         ws.Cells[row, 6].Value = lastItem.ValorDate;
                         ws.Cells[row, 7].Value = rd;
-                        ws.Cells[row, 8].Value = amount;
+                        ws.Cells[row, 8].Value = lastItem.AmountToBePaid;
 
                         ws.Cells[row, 1, row + 1, 8].Style.Border.Top.Style = ExcelBorderStyle.Thin;
                         ws.Cells[row, 1, row + 1, 8].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
@@ -489,8 +488,8 @@ namespace ExpenseManagement.Controllers
 
                         row++;
                         count++;
-                        sum += amount;
-                        totalSum += amount;
+                        sum += lastItem.AmountToBePaid;
+                        totalSum += lastItem.AmountToBePaid;
                     }
 
                     using (var range = ws.Cells[row, 1, row, 8])
