@@ -123,13 +123,27 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="PurchaseAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <select asp-for="PurchaseAmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="purchaseAmountCurrency"></select>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label asp-for="PurchaseAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select asp-for="PurchaseAmountCurrency" class="form-control btn btn-default" asp-items="@Html.GetEnumSelectList<ExpenseManagement.Enums.CurrencyEnum>()" id="purchaseAmountCurrency"></select>
+                                                </div>
+                                                <input asp-for="PurchaseAmount" class="form-control" autocomplete="off" id="purchaseAmount" />
+                                                <span asp-validation-for="PurchaseAmount" class="text-danger"></span>
+                                            </div>
                                         </div>
-                                        <input asp-for="PurchaseAmount" class="form-control" autocomplete="off" id="purchaseAmount" />
-                                        <span asp-validation-for="PurchaseAmount" class="text-danger"></span>
+                                        <div class="col-md-6">
+                                            <label asp-for="AmountToBePaid" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                                </div>
+                                                <input asp-for="AmountToBePaid" class="form-control" autocomplete="off" id="amountToBePaid" />
+                                                <span asp-validation-for="AmountToBePaid" class="text-danger"></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -345,6 +359,7 @@
                 document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
                 document.getElementById("purchaseAmount").value = currency(returnvalue.purchaseAmount, { decimal: ',', separator: '', symbol: '' }).format();
                 document.getElementById("purchaseAmountCurrency").value = returnvalue.purchaseAmountCurrency;
+                document.getElementById("amountToBePaid").value = currency(returnvalue.amountToBePaid, { decimal: ',', separator: '', symbol: '' }).format();
 
                 document.getElementById("otvPercent").value = returnvalue.otvPercent;
                 document.getElementById("otv").value = currency(returnvalue.otv, { decimal: ',', separator: '', symbol: '' }).format();
@@ -381,6 +396,7 @@
         var PaymentDate = document.getElementById("datepicker3").value;
         var PurchaseAmount = document.getElementById("purchaseAmount").value;
         var PurchaseAmountCurrency = document.getElementById("purchaseAmountCurrency").value;
+        var AmountToBePaid = document.getElementById("amountToBePaid").value;
 
         var OTVPercent = document.getElementById("otvPercent").value;
         var OTV = document.getElementById("otv").value;
@@ -403,6 +419,7 @@
         data.append('PaymentDate', PaymentDate);
         data.append('PurchaseAmount', PurchaseAmount);
         data.append('PurchaseAmountCurrency', PurchaseAmountCurrency);
+        data.append('AmountToBePaid', AmountToBePaid);
 
         data.append('OTVPercent', OTVPercent);
         data.append('OTV', OTV);

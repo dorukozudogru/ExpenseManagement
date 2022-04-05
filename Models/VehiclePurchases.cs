@@ -105,5 +105,9 @@ namespace ExpenseManagement.Models
         [NotMapped]
         [DisplayName("Satış Fiyatı Dövizi")]
         public string SaleAmountCurrencyName { get; set; }
+
+        [Required]
+        [DisplayName("Y.A. Ödenecek Tutar")]
+        public double AmountToBePaid { get; set; }
     }
 }

@@ -149,6 +149,9 @@
                                             <th>
                                                 @Html.DisplayNameFor(model => model.SaleAmount)
                                             </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.AmountToBePaid)
+                                            </th>
                                             <th>İşlemler</th>
                                         </tr>
                                     </thead>
@@ -281,6 +284,17 @@
                     render: function (data, type, full, meta) {
                         if (data != null) {
                             return currency(full.saleAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.saleAmountCurrencyName;
+                        }
+                        else {
+                            return "-";
+                        }
+                    }
+                },
+                {
+                    "data": "amountToBePaid",
+                    render: function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.amountToBePaid, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                         }
                         else {
                             return "-";
@@ -470,6 +484,17 @@
                     render: function (data, type, full, meta) {
                         if (data != null) {
                             return currency(full.saleAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.saleAmountCurrencyName;
+                        }
+                        else {
+                            return "-";
+                        }
+                    }
+                },
+                {
+                    "data": "amountToBePaid",
+                    render: function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.amountToBePaid, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                         }
                         else {
                             return "-";
