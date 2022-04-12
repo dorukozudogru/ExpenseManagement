@@ -17,6 +17,7 @@ using OfficeOpenXml.Style;
 using System.Drawing;
 using ExpenseManagement.Models.ViewModels;
 using Newtonsoft.Json;
+using static ExpenseManagement.Models.ViewModels.ReportViewModel;
 
 namespace ExpenseManagement.Controllers
 {
@@ -290,6 +291,38 @@ namespace ExpenseManagement.Controllers
                 return Ok(new { Result = true, Message = "2. El Araç Satışı Silinmiştir!" });
             }
             return BadRequest("2. El Araç Satışı Silinirken Bir Hata Oluştu!");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> YearlyTotalPost()
+        {
+            var requestFormData = Request.Form;
+
+            var usedVehicleSale = await _context.UsedVehicleSales
+                .GroupBy(i => new
+                {
+                    i.SaleDate.Year
+                })
+                .Select(i => new GeneralResponse
+                {
+                    Year = i.Key.Year,
+                    TotalAmount = i.Sum(x => x.SaleAmount) - i.Sum(x => x.UsedVehiclePurchases.PurchaseAmount),
+                })
+                .ToListAsync();
+
+            usedVehicleSale = usedVehicleSale.OrderByDescending(i => i.Year).ToList();
+
+            List<GeneralResponse> listItems = ProcessCollection(usedVehicleSale, requestFormData);
+
+            var response = new PaginatedResponse<GeneralResponse>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = usedVehicleSale.Count,
+                RecordsTotal = usedVehicleSale.Count
+            };
+
+            return Ok(response);
         }
 
         [Authorize(Roles = "Admin, Banaz, Muhasebe")]
