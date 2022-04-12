@@ -4,14 +4,16 @@ using ExpenseManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseManagement.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    partial class ExpenseContextModelSnapshot : ModelSnapshot
+    [Migration("20220412150953_important-documents-added")]
+    partial class importantdocumentsadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -495,7 +497,8 @@ namespace ExpenseManagement.Migrations
                     b.Property<string>("Definition")
                         .IsRequired();
 
-                    b.Property<byte[]>("Document");
+                    b.Property<byte[]>("Document")
+                        .IsRequired();
 
                     b.Property<string>("DocumentFormat");
 

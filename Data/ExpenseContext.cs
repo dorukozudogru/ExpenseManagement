@@ -154,5 +154,7 @@ namespace ExpenseManagement.Data
         public DbSet<WashingIncome> WashingIncome { get; set; }
 
         public DbSet<Tankers> Tankers { get; set; }
+
+        public DbSet<ImportantDocuments> ImportantDocuments { get; set; }
     }
 }
