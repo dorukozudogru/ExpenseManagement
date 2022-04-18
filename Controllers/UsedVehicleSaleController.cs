@@ -306,6 +306,7 @@ namespace ExpenseManagement.Controllers
                 .Select(i => new GeneralResponse
                 {
                     Year = i.Key.Year,
+                    Count = i.Count(),
                     TotalAmount = i.Sum(x => x.SaleAmount) - i.Sum(x => x.UsedVehiclePurchases.PurchaseAmount),
                 })
                 .ToListAsync();
