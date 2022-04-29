@@ -17,6 +17,7 @@ using OfficeOpenXml.Style;
 using System.Drawing;
 using ExpenseManagement.Models.ViewModels;
 using Newtonsoft.Json;
+using static ExpenseManagement.Models.ViewModels.ReportViewModel;
 
 namespace ExpenseManagement.Controllers
 {
@@ -284,6 +285,75 @@ namespace ExpenseManagement.Controllers
                 Draw = int.Parse(requestFormData["draw"]),
                 RecordsFiltered = vehiclePurchaseContext.Count,
                 RecordsTotal = vehiclePurchaseContext.Count
+            };
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MonthlyTotalPost()
+        {
+            var requestFormData = Request.Form;
+
+            var vehiclePurchase = await _context.VehiclePurchases
+                .GroupBy(i => new
+                {
+                    i.PurchaseDate.Year,
+                    i.PurchaseDate.Month
+                })
+                .Select(i => new GeneralResponse
+                {
+                    Year = i.Key.Year,
+                    Month = i.Key.Month,
+                    Count = i.Count()
+                })
+                .ToListAsync();
+
+            vehiclePurchase = vehiclePurchase.OrderByDescending(i => i.Year).ThenByDescending(i => i.Month).ToList();
+
+            vehiclePurchase = GetAllEnumNamesHelper.GetEnumName(vehiclePurchase);
+
+            List<GeneralResponse> listItems = ProcessCollection(vehiclePurchase, requestFormData);
+
+            var response = new PaginatedResponse<GeneralResponse>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = vehiclePurchase.Count,
+                RecordsTotal = vehiclePurchase.Count
+            };
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> YearlyTotalPost()
+        {
+            var requestFormData = Request.Form;
+
+            var vehiclePurchase = await _context.VehiclePurchases
+                .GroupBy(i => new
+                {
+                    i.PurchaseDate.Year
+                })
+                .Select(i => new GeneralResponse
+                {
+                    Year = i.Key.Year,
+                    Count = i.Count()
+                })
+                .ToListAsync();
+
+            vehiclePurchase = vehiclePurchase.OrderByDescending(i => i.Year).ToList();
+
+
+            List<GeneralResponse> listItems = ProcessCollection(vehiclePurchase, requestFormData);
+
+            var response = new PaginatedResponse<GeneralResponse>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = vehiclePurchase.Count,
+                RecordsTotal = vehiclePurchase.Count
             };
 
             return Ok(response);
