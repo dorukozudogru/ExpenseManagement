@@ -1,7 +1,7 @@
-﻿@model ExpenseManagement.Models.BankBranches
+﻿@model ExpenseManagement.Models.MyVehicles
 
 @{
-    ViewData["Title"] = "Bankayı/Şubeyi Sil";
+    ViewData["Title"] = "Aracı Sil";
 }
 
 <section class="content">
@@ -9,18 +9,31 @@
         <div class="row">
             <div class="col-12">
                 <div class="callout callout-danger">
-                    <h4>Bu bankayı/şubeyi silmek istediğinizden emin misiniz?</h4>
+                    <h4>Bu araç kaydını silmek istediğinizden emin misiniz?</h4>
                     <p>
-                        Bu bankayı/şubeyi silerseniz işlemi geriye alamayacaksınız.
+                        Bu araç kaydını silerseniz işlemi geriye alamayacaksınız.
                     </p>
                 </div>
                 <div class="invoice p-3 mb-3">
                     <div class="row">
                         <div class="col-12">
                             <h4>
-                                <i class="fas fa-piggy-bank"></i> @Html.DisplayFor(model => model.Id) | @Html.DisplayFor(model => model.Name)
+                                <i class="fa-solid fa-car-tunnel"></i> @Html.DisplayFor(model => model.Id)
                                 <br />
                             </h4>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row invoice-info">
+                        <div class="col-sm-4 invoice-col">
+                            <address>
+                                @Html.DisplayNameFor(model => model.CarModel.CarBrand.Name): <strong>@Html.DisplayFor(model => model.CarModel.CarBrand.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.CarModel.Name): <strong>@Html.DisplayFor(model => model.CarModel.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.ModelYear): <strong>@Html.DisplayFor(model => model.ModelYear)</strong><br>
+                                @Html.DisplayNameFor(model => model.TrafficInsuranceAmount): <strong>@Html.DisplayFor(model => model.TrafficInsuranceAmount) ₺</strong><br>
+                                @Html.DisplayNameFor(model => model.KaskoAmount): <strong>@Html.DisplayFor(model => model.KaskoAmount) ₺</strong><br>
+                                @Html.DisplayNameFor(model => model.InspectionDate): <strong>@Html.DisplayFor(model => model.InspectionDate)</strong><br>
+                            </address>
                         </div>
                     </div>
                     <hr />
@@ -39,14 +52,13 @@
     </div>
 </section>
 
-
 <script>
     var id;
 
     function deleted() {
         id = document.getElementById("id").value;
         $.ajax({
-            url: '/BankBranches/Delete?id=' + id,
+            url: '/MyVehicles/Delete?id=' + id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

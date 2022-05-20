@@ -232,20 +232,197 @@
 <br />
 
 @section Scripts{
-    <script src="~/js/datatables.min.js"></script>
-    <script src="~/js/moment.min.js"></script>
-    <script src="~/Content/NewSite/plugins/chart.js/Chart.min.js"></script>
-    <script>
-        (function () {
+<script src="~/js/datatables.min.js"></script>
+<script src="~/js/moment.min.js"></script>
+<script src="~/Content/NewSite/plugins/chart.js/Chart.min.js"></script>
+<script>
+    (function () {
+        $.ajax({
+            "url": "/Report/MonthlyCountReport",
+            "method": "POST"
+        }).done(function (response) {
+            $('#monthlyExpenseCount').html(response[0]);
+            $('#monthlyIncomeCount').html(response[1]);
+        });
+
+        $("#generalTable").DataTable({
+            "language": {
+                processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                zeroRecords: "Hiçbir kayıt bulunamadı.",
+                emptyTable: "Kayıt bulunmamaktadır.",
+                search: "Ara:",
+                oPaginate: {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "»",
+                    "sPrevious": "«"
+                },
+                sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
+                sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+            },
+            "info": false,
+            "processing": true,
+            "serverSide": true,
+            "searchDelay": 1200,
+            "stateSave": true,
+            "lengthChange": false,
+            "searching": false,
+            "stateDuration": -1,
+            "ajax": {
+                "url": "/Report/MontlyExpensesReport",
+                "method": "POST",
+                "error": function (error) {
+                    $('#generalTable tbody')
+                        .empty()
+                        .append('<tr><td colspan="3" class="dataTables_empty">Kayıt Bulunmamaktadır.</td></tr>');
+                }
+            },
+            "destroy": true,
+            "columns": [
+                {
+                    "data": "monthName",
+                    "orderable": false
+                },
+                {
+                    "data": "count",
+                    "orderable": false
+                },
+                {
+                    "data": "totalAmount",
+                    "render": function (data, type, full, meta) {
+                        return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.totalAmountCurrencyName;
+                    },
+                    "orderable": false
+                }
+            ],
+            "ordering": false,
+            "paging": false,
+            "pageLength": 3
+        });
+
+        $("#generalTable2").DataTable({
+            "language": {
+                processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                zeroRecords: "Hiçbir kayıt bulunamadı.",
+                emptyTable: "Kayıt bulunmamaktadır.",
+                search: "Ara:",
+                oPaginate: {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "»",
+                    "sPrevious": "«"
+                },
+                sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
+                sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+            },
+            "info": false,
+            "processing": true,
+            "serverSide": true,
+            "searchDelay": 1200,
+            "stateSave": true,
+            "lengthChange": false,
+            "searching": false,
+            "stateDuration": -1,
+            "ajax": {
+                "url": "/Report/MontlyIncomesReport",
+                "method": "POST",
+                "error": function (error) {
+                    $('#generalTable2 tbody')
+                        .empty()
+                        .append('<tr><td colspan="3" class="dataTables_empty">Kayıt Bulunmamaktadır.</td></tr>');
+                }
+            },
+            "destroy": true,
+            "columns": [
+                {
+                    "data": "monthName",
+                    "orderable": false
+                },
+                {
+                    "data": "count",
+                    "orderable": false
+                },
+                {
+                    "data": "totalAmount",
+                    "render": function (data, type, full, meta) {
+                        return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.totalAmountCurrencyName;
+                    },
+                    "orderable": false
+                }
+            ],
+            "ordering": false,
+            "paging": false,
+            "pageLength": 3
+        });
+
+        document.getElementById("year").addEventListener('change', (event) => {
+            $('#yearTotalExpense').html('<h3 class="card-title" id="yearTotalExpense"><i class="nav-icon fas fa-credit-card"></i>&nbsp;&nbsp;' + document.getElementById("year").value + ' Yılı Toplam Gider Miktarı</h3>');
+            $('#yearTotalIncome').html('<h3 class="card-title" id="yearTotalIncome"><i class="nav-icon fas fa-money-bill-wave"></i>&nbsp;&nbsp;' + document.getElementById("year").value + ' Yılı Toplam Gelir Miktarı</h3>');
+
+            var expenseTable = $("#expenseTable").DataTable({
+                "language": {
+                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                    zeroRecords: "Hiçbir kayıt bulunamadı.",
+                    emptyTable: "Kayıt bulunmamaktadır.",
+                    search: "Ara:",
+                    oPaginate: {
+                        "sFirst": "İlk",
+                        "sLast": "Son",
+                        "sNext": "»",
+                        "sPrevious": "«"
+                    },
+                    sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
+                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                },
+                "info": false,
+                "processing": true,
+                "serverSide": true,
+                "searchDelay": 1200,
+                "stateSave": true,
+                "lengthChange": false,
+                "searching": false,
+                "stateDuration": -1,
+                "ajax": {
+                    "url": "/Report/YearlyExpenseReport?year=" + document.getElementById("year").value,
+                    "method": "POST",
+                    "error": function (error) {
+                        $('#expenseTable tbody')
+                            .empty()
+                            .append('<tr><td colspan="2" class="dataTables_empty">Kayıt Bulunmamaktadır.</td></tr>');
+                    }
+                },
+                "destroy": true,
+                "columns": [
+                    {
+                        "data": "sectorName",
+                        "orderable": false
+                    },
+                    {
+                        "data": "totalAmount",
+                        "render": function (data, type, full, meta) {
+                            return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.totalAmountCurrencyName;
+                        },
+                        "orderable": false
+                    }
+                ],
+                "ordering": false,
+                "paging": false,
+                "pageLength": 3
+            });
+
             $.ajax({
-                "url": "/Report/MonthlyCountReport",
+                "url": "/Report/YearlyExpenseReportTotalPost?year=" + document.getElementById("year").value,
                 "method": "POST"
             }).done(function (response) {
-                $('#monthlyExpenseCount').html(response[0]);
-                $('#monthlyIncomeCount').html(response[1]);
+                var data = "";
+                response.forEach(element => {
+                    data += currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + element.totalAmountCurrencyName + " + ";
+                });
+                data = data.substring(0, data.length - 3);
+                $('#totalExpense').html(data);
             });
 
-            $("#generalTable").DataTable({
+            var incomeTable = $("#incomeTable").DataTable({
                 "language": {
                     processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
                     zeroRecords: "Hiçbir kayıt bulunamadı.",
@@ -269,22 +446,18 @@
                 "searching": false,
                 "stateDuration": -1,
                 "ajax": {
-                    "url": "/Report/MontlyExpensesReport",
+                    "url": "/Report/YearlyIncomeReport?year=" + document.getElementById("year").value,
                     "method": "POST",
                     "error": function (error) {
-                        $('#generalTable tbody')
+                        $('#expenseTable tbody')
                             .empty()
-                            .append('<tr><td colspan="3" class="dataTables_empty">Kayıt Bulunmamaktadır.</td></tr>');
+                            .append('<tr><td colspan="2" class="dataTables_empty">Kayıt Bulunmamaktadır.</td></tr>');
                     }
                 },
                 "destroy": true,
                 "columns": [
                     {
-                        "data": "monthName",
-                        "orderable": false
-                    },
-                    {
-                        "data": "count",
+                        "data": "sectorName",
                         "orderable": false
                     },
                     {
@@ -300,12 +473,27 @@
                 "pageLength": 3
             });
 
-            $("#generalTable2").DataTable({
+            $.ajax({
+                "url": "/Report/YearlyIncomeReportTotalPost?year=" + document.getElementById("year").value,
+                "method": "POST"
+            }).done(function (response) {
+                var data = "";
+                response.forEach(element => {
+                    data += currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + element.totalAmountCurrencyName + " + ";
+                });
+                data = data.substring(0, data.length - 3);
+                $('#totalIncome').html(data);
+            });
+        });
+
+
+
+        (function () {
+            var generateCustomerTable = $("#ItemsTable").DataTable({
                 "language": {
                     processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
                     zeroRecords: "Hiçbir kayıt bulunamadı.",
                     emptyTable: "Kayıt bulunmamaktadır.",
-                    search: "Ara:",
                     oPaginate: {
                         "sFirst": "İlk",
                         "sLast": "Son",
@@ -315,265 +503,89 @@
                     sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
                     sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
                 },
-                "info": false,
                 "processing": true,
                 "serverSide": true,
-                "searchDelay": 1200,
-                "stateSave": true,
-                "lengthChange": false,
                 "searching": false,
+                "lengthChange": false,
+                "stateSave": true,
                 "stateDuration": -1,
                 "ajax": {
-                    "url": "/Report/MontlyIncomesReport",
-                    "method": "POST",
-                    "error": function (error) {
-                        $('#generalTable2 tbody')
-                            .empty()
-                            .append('<tr><td colspan="3" class="dataTables_empty">Kayıt Bulunmamaktadır.</td></tr>');
-                    }
+                    "url": "/VehiclePurchase/FinishingValorsPost",
+                    "method": "POST"
                 },
-                "destroy": true,
                 "columns": [
                     {
-                        "data": "monthName",
+                        "data": "id",
+                        "orderable": false
+                    },
+                    { "data": "carModel.carBrand.name", "orderable": false },
+                    { "data": "carModel.name", "orderable": false },
+                    {
+                        "data": "purchaseDate",
+                        "orderable": false,
+                        render: function (data, type, row) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                    },
+                    {
+                        "data": "valorDate",
+                        "orderable": false,
+                        render: function (data, type, full, meta) {
+                            if (data != null) {
+                                return data + " gün";
+                            }
+                            else {
+                                return "-";
+                            }
+                        }
+                    },
+                    {
+                        "data": "valorEndDate",
+                        "orderable": false,
+                        render: function (data, type, row) {
+                            if (data != "0001-01-01T00:00:00") {
+                                return window.moment(data).format("DD-MMMM-YYYY");
+                            }
+                            else {
+                                return "-";
+                            }
+                        }
+                    },
+                    {
+                        "data": "paymentDate",
+                        "orderable": false,
+                        render: function (data, type, row) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                    },
+                    {
+                        "data": "chassis",
                         "orderable": false
                     },
                     {
-                        "data": "count",
-                        "orderable": false
-                    },
-                    {
-                        "data": "totalAmount",
-                        "render": function (data, type, full, meta) {
-                            return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.totalAmountCurrencyName;
-                        },
-                        "orderable": false
+                        "data": "actionId", render: function (data, type, row) {
+                            return '<a href="VehiclePurchase/Details/' + row.id + '" class="text-muted"><i class="fas fa-search"></i></a>'
+                        }, "orderable": false
                     }
                 ],
-                "ordering": false,
-                "paging": false,
-                "pageLength": 3
+                "ordering": true,
+                "paging": true,
+                "pagingType": "simple_numbers",
+                "pageLength": 5
             });
-
-            document.getElementById("year").addEventListener('change', (event) => {
-                $('#yearTotalExpense').html('<h3 class="card-title" id="yearTotalExpense"><i class="nav-icon fas fa-credit-card"></i>&nbsp;&nbsp;' + document.getElementById("year").value + ' Yılı Toplam Gider Miktarı</h3>');
-                $('#yearTotalIncome').html('<h3 class="card-title" id="yearTotalIncome"><i class="nav-icon fas fa-money-bill-wave"></i>&nbsp;&nbsp;' + document.getElementById("year").value + ' Yılı Toplam Gelir Miktarı</h3>');
-
-                var expenseTable = $("#expenseTable").DataTable({
-                    "language": {
-                        processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
-                        zeroRecords: "Hiçbir kayıt bulunamadı.",
-                        emptyTable: "Kayıt bulunmamaktadır.",
-                        search: "Ara:",
-                        oPaginate: {
-                            "sFirst": "İlk",
-                            "sLast": "Son",
-                            "sNext": "»",
-                            "sPrevious": "«"
-                        },
-                        sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
-                        sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
-                    },
-                    "info": false,
-                    "processing": true,
-                    "serverSide": true,
-                    "searchDelay": 1200,
-                    "stateSave": true,
-                    "lengthChange": false,
-                    "searching": false,
-                    "stateDuration": -1,
-                    "ajax": {
-                        "url": "/Report/YearlyExpenseReport?year=" + document.getElementById("year").value,
-                        "method": "POST",
-                        "error": function (error) {
-                            $('#expenseTable tbody')
-                                .empty()
-                                .append('<tr><td colspan="2" class="dataTables_empty">Kayıt Bulunmamaktadır.</td></tr>');
-                        }
-                    },
-                    "destroy": true,
-                    "columns": [
-                        {
-                            "data": "sectorName",
-                            "orderable": false
-                        },
-                        {
-                            "data": "totalAmount",
-                            "render": function (data, type, full, meta) {
-                                return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.totalAmountCurrencyName;
-                            },
-                            "orderable": false
-                        }
-                    ],
-                    "ordering": false,
-                    "paging": false,
-                    "pageLength": 3
-                });
-
-                $.ajax({
-                    "url": "/Report/YearlyExpenseReportTotalPost?year=" + document.getElementById("year").value,
-                    "method": "POST"
-                }).done(function (response) {
-                    var data = "";
-                    response.forEach(element => {
-                        data += currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + element.totalAmountCurrencyName + " + ";
-                    });
-                    data = data.substring(0, data.length - 3);
-                    $('#totalExpense').html(data);
-                });
-
-                var incomeTable = $("#incomeTable").DataTable({
-                    "language": {
-                        processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
-                        zeroRecords: "Hiçbir kayıt bulunamadı.",
-                        emptyTable: "Kayıt bulunmamaktadır.",
-                        search: "Ara:",
-                        oPaginate: {
-                            "sFirst": "İlk",
-                            "sLast": "Son",
-                            "sNext": "»",
-                            "sPrevious": "«"
-                        },
-                        sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
-                        sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
-                    },
-                    "info": false,
-                    "processing": true,
-                    "serverSide": true,
-                    "searchDelay": 1200,
-                    "stateSave": true,
-                    "lengthChange": false,
-                    "searching": false,
-                    "stateDuration": -1,
-                    "ajax": {
-                        "url": "/Report/YearlyIncomeReport?year=" + document.getElementById("year").value,
-                        "method": "POST",
-                        "error": function (error) {
-                            $('#expenseTable tbody')
-                                .empty()
-                                .append('<tr><td colspan="2" class="dataTables_empty">Kayıt Bulunmamaktadır.</td></tr>');
-                        }
-                    },
-                    "destroy": true,
-                    "columns": [
-                        {
-                            "data": "sectorName",
-                            "orderable": false
-                        },
-                        {
-                            "data": "totalAmount",
-                            "render": function (data, type, full, meta) {
-                                return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.totalAmountCurrencyName;
-                            },
-                            "orderable": false
-                        }
-                    ],
-                    "ordering": false,
-                    "paging": false,
-                    "pageLength": 3
-                });
-
-                $.ajax({
-                    "url": "/Report/YearlyIncomeReportTotalPost?year=" + document.getElementById("year").value,
-                    "method": "POST"
-                }).done(function (response) {
-                    var data = "";
-                    response.forEach(element => {
-                        data += currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + element.totalAmountCurrencyName + " + ";
-                    });
-                    data = data.substring(0, data.length - 3);
-                    $('#totalIncome').html(data);
-                });
-            });
-
-
-
-            (function () {
-                var generateCustomerTable = $("#ItemsTable").DataTable({
-                    "language": {
-                        processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
-                        zeroRecords: "Hiçbir kayıt bulunamadı.",
-                        emptyTable: "Kayıt bulunmamaktadır.",
-                        oPaginate: {
-                            "sFirst": "İlk",
-                            "sLast": "Son",
-                            "sNext": "»",
-                            "sPrevious": "«"
-                        },
-                        sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
-                        sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
-                    },
-                    "processing": true,
-                    "serverSide": true,
-                    "searching": false,
-                    "lengthChange": false,
-                    "stateSave": true,
-                    "stateDuration": -1,
-                    "ajax": {
-                        "url": "/VehiclePurchase/FinishingValorsPost",
-                        "method": "POST"
-                    },
-                    "columns": [
-                        {
-                            "data": "id",
-                            "orderable": false
-                        },
-                        { "data": "carModel.carBrand.name", "orderable": false },
-                        { "data": "carModel.name", "orderable": false },
-                        {
-                            "data": "purchaseDate",
-                            "orderable": false,
-                            render: function (data, type, row) {
-                                return window.moment(data).format("DD-MMMM-YYYY");
-                            }
-                        },
-                        {
-                            "data": "valorDate",
-                            "orderable": false,
-                            render: function (data, type, full, meta) {
-                                if (data != null) {
-                                    return data + " gün";
-                                }
-                                else {
-                                    return "-";
-                                }
-                            }
-                        },
-                        {
-                            "data": "valorEndDate",
-                            "orderable": false,
-                            render: function (data, type, row) {
-                                if (data != "0001-01-01T00:00:00") {
-                                    return window.moment(data).format("DD-MMMM-YYYY");
-                                }
-                                else {
-                                    return "-";
-                                }
-                            }
-                        },
-                        {
-                            "data": "paymentDate",
-                            "orderable": false,
-                            render: function (data, type, row) {
-                                return window.moment(data).format("DD-MMMM-YYYY");
-                            }
-                        },
-                        {
-                            "data": "chassis",
-                            "orderable": false
-                        },
-                        {
-                            "data": "actionId", render: function (data, type, row) {
-                                return '<a href="VehiclePurchase/Details/' + row.id + '" class="text-muted"><i class="fas fa-search"></i></a>'
-                            }, "orderable": false
-                        }
-                    ],
-                    "ordering": true,
-                    "paging": true,
-                    "pagingType": "simple_numbers",
-                    "pageLength": 5
-                });
-            })(jQuery);
         })(jQuery);
-    </script>
+
+        $.ajax({
+            "url": "/MyVehicles/FinishingInspectionDate",
+            "method": "POST"
+        }).done(function (response) {
+            if(response != 0){
+                document.getElementById("warningSuccessMessage2").value = "Kontrol Et";
+                document.getElementById("swalDefaultWarning2").value = "Muayene tarihi yaklaşan " + response.length + " adet araç bulunmaktadır. Lütfen araçları kontrol ediniz.";
+                document.getElementById("swalDefaultWarning2").click();
+            }
+        });
+
+    })(jQuery);
+</script>
 }
