@@ -156,5 +156,7 @@ namespace ExpenseManagement.Data
         public DbSet<Tankers> Tankers { get; set; }
 
         public DbSet<ImportantDocuments> ImportantDocuments { get; set; }
+
+        public DbSet<MyVehicles> MyVehicles { get; set; }
     }
 }

@@ -1,0 +1,169 @@
+﻿@model ExpenseManagement.Models.MyVehicles
+
+@{
+    ViewData["Title"] = "Araç Ekle";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-plus"></i>&nbsp;Araç Ekle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="CarModel.CarBrandName" class="control-label"></label>
+                                            <select id="Brand" asp-for="CarModel.CarBrand.Name" class="form-control"></select>
+                                            <span asp-validation-for="CarModel.CarBrand.Name" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="CarModel.Name" class="control-label"></label>
+                                            <select id="Model" asp-for="CarModel.Name" class="form-control"></select>
+                                            <span asp-validation-for="CarModel.Name" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label asp-for="ModelYear" class="control-label"></label>
+                                            <input asp-for="ModelYear" class="form-control" id="modelYear" autocomplete="off" />
+                                            <span asp-validation-for="ModelYear" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label asp-for="TrafficInsuranceAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                            </div>
+                                            <input asp-for="TrafficInsuranceAmount" class="form-control" autocomplete="off" id="trafficInsuranceAmount" />
+                                            <span asp-validation-for="TrafficInsuranceAmount" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label asp-for="KaskoAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                            </div>
+                                            <input asp-for="KaskoAmount" class="form-control" autocomplete="off" id="kaskoAmount" />
+                                            <span asp-validation-for="KaskoAmount" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label asp-for="InspectionDate" class="control-label"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input asp-for="InspectionDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker" />
+                                            </div>
+                                            <span asp-validation-for="InspectionDate" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Ekle" class="btn btn-success" onclick="create()" id="createButton" />
+                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+<script>
+    function brandLoad() {
+        $('#Brand').html('');
+        $("#isNew").attr('value', 'false');
+        $("#isSold").attr('value', 'false');
+        $.getJSON('@Url.Action("GetCarBrands", "CarBrand")', function (result) {
+            for (var i = 0; i < result.length; i++) {
+                $("#Brand").append("<option id='" + result[i].id + "'>" + result[i].name + "</option>")
+            }
+            showValue(result[0].id);
+        })
+    }
+
+    window.onload = brandLoad;
+
+    $("#Brand").on("change", function (e) {
+        showValue(e.target.selectedOptions[0].id);
+    })
+
+    function showValue(brandId)
+    {
+        $('#Model').html('');
+        $.getJSON('@Url.Action("GetCarModelsById", "CarModel")' + "?Id=" + brandId, function (result) {
+            for (var i = 0; i < result.length; i++) {
+                $("#Model").append("<option id='" + result[i].id + "'>" + result[i].name + "</option>")
+            }
+        })
+    }
+
+    function create() {
+        var model = document.getElementById("Model").value;
+        var modelYear = document.getElementById("modelYear").value;
+        var trafficInsuranceAmount = document.getElementById("trafficInsuranceAmount").value;
+        var kaskoAmount = document.getElementById("kaskoAmount").value;
+        var inspectionDate = document.getElementById("datepicker").value;
+
+        var data = new FormData();
+
+        data.append('CarModel.Name', model);
+        data.append('modelYear', modelYear);
+        data.append('trafficInsuranceAmount', trafficInsuranceAmount);
+        data.append('kaskoAmount', kaskoAmount);
+        data.append('inspectionDate', inspectionDate);
+
+        $("#createButton").attr("disabled", true);
+
+        $.ajax({
+            type: "POST",
+            url: "/MyVehicles/Create",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    location.reload();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#createButton").attr("disabled", false);
+                }, 1600);
+            }
+        });
+        }
+</script>
+}
