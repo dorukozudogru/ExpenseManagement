@@ -43,6 +43,27 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label asp-for="LicencePlate" class="control-label"></label>
+                                            <input asp-for="LicencePlate" class="form-control" id="licencePlate" autocomplete="off" />
+                                            <span asp-validation-for="LicencePlate" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label asp-for="CurrentValue" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen küsürat için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                                </div>
+                                                <input asp-for="CurrentValue" class="form-control" id="currentValue" autocomplete="off" />
+                                                <span asp-validation-for="CurrentValue" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
                                         <label asp-for="TrafficInsuranceAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
@@ -62,9 +83,7 @@
                                             <span asp-validation-for="KaskoAmount" class="text-danger"></span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label asp-for="InspectionDate" class="control-label"></label>
                                             <div class="input-group">
@@ -132,6 +151,8 @@
         var trafficInsuranceAmount = document.getElementById("trafficInsuranceAmount").value;
         var kaskoAmount = document.getElementById("kaskoAmount").value;
         var inspectionDate = document.getElementById("datepicker").value;
+        var licencePlate = document.getElementById("licencePlate").value;
+        var currentValue = document.getElementById("currentValue").value;
 
         var data = new FormData();
 
@@ -140,6 +161,8 @@
         data.append('trafficInsuranceAmount', trafficInsuranceAmount);
         data.append('kaskoAmount', kaskoAmount);
         data.append('inspectionDate', inspectionDate);
+        data.append('licencePlate', licencePlate);
+        data.append('currentValue', currentValue);
 
         $("#createButton").attr("disabled", true);
 

@@ -46,6 +46,12 @@
                                                 @Html.DisplayNameFor(model => model.ModelYear)
                                             </th>
                                             <th>
+                                                @Html.DisplayNameFor(model => model.LicencePlate)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.CurrentValue)
+                                            </th>
+                                            <th>
                                                 @Html.DisplayNameFor(model => model.TrafficInsuranceAmount)
                                             </th>
                                             <th>
@@ -109,6 +115,19 @@
                 {
                     "data": "modelYear",
                     "orderable": false
+                },
+                {
+                    "data": "licencePlate",
+                    "orderable": false
+                },
+                {
+                    "data": "currentValue",
+                    "render": function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.currentValue, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                        }
+                        return "-";
+                    }
                 },
                 {
                     "data": "trafficInsuranceAmount",
