@@ -93,6 +93,8 @@ namespace ExpenseManagement.Controllers
                     myVehicle.KaskoAmount = myVehicles.KaskoAmount;
                     myVehicle.ModelYear = myVehicles.ModelYear;
                     myVehicle.TrafficInsuranceAmount = myVehicles.TrafficInsuranceAmount;
+                    myVehicle.LicencePlate = myVehicles.LicencePlate;
+                    myVehicle.CurrentValue = myVehicles.CurrentValue;
 
                     _context.Update(myVehicle);
                     await _context.SaveChangesAsync();
@@ -157,23 +159,11 @@ namespace ExpenseManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> FinishingInspectionDate()
         {
-            //var requestFormData = Request.Form;
-
             var myVehicles = await _context.MyVehicles
                 .Where(m => m.InspectionDate.AddDays(-15) <= DateTime.Now)
                 .Include(c => c.CarModel)
                 .Include(cb => cb.CarModel.CarBrand)
                 .ToListAsync();
-
-            //List<MyVehicles> listItems = ProcessCollection(myVehicles, requestFormData);
-
-            //var response = new PaginatedResponse<MyVehicles>
-            //{
-            //    Data = listItems,
-            //    Draw = int.Parse(requestFormData["draw"]),
-            //    RecordsFiltered = myVehicles.Count,
-            //    RecordsTotal = myVehicles.Count
-            //};
 
             return Ok(myVehicles);
         }

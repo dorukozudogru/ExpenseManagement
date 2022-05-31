@@ -32,5 +32,13 @@ namespace ExpenseManagement.Models
         [Required]
         [DisplayName("Gelecek Muayene Tarihi")]
         public DateTime InspectionDate { get; set; }
+
+        [Required]
+        [DisplayName("Plaka")]
+        public string LicencePlate { get; set; }
+
+        [Required]
+        [DisplayName("Aracın Güncel Değeri")]
+        public double CurrentValue { get; set; }
     }
 }

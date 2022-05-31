@@ -18,6 +18,8 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Drawing;
 using static ExpenseManagement.Models.ViewModels.ReportViewModel;
+using Newtonsoft.Json;
+using ExpenseManagement.Models.ViewModels;
 
 namespace ExpenseManagement.Controllers
 {
@@ -37,7 +39,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(bool state)
+        public async Task<IActionResult> Post(bool state, bool isFiltered, DateTime startDate, DateTime finishDate)
         {
             var paylistContext = await _context.Paylists
                 .Where(e => e.State == state)
@@ -45,6 +47,15 @@ namespace ExpenseManagement.Controllers
                 .ThenByDescending(e => e.Amount)
                 .AsNoTracking()
                 .ToListAsync();
+
+            if (isFiltered != false)
+            {
+                if (startDate != DateTime.MinValue && finishDate != DateTime.MinValue)
+                {
+                    paylistContext = paylistContext.Where(p => p.Date >= startDate && p.Date <= finishDate).ToList();
+                }
+                FakeSession.Instance.Obj = JsonConvert.SerializeObject(paylistContext);
+            }
 
             return Ok(paylistContext);
         }
@@ -188,6 +199,15 @@ namespace ExpenseManagement.Controllers
         {
             var stream = ExportPaylist(_context.Paylists
                 .Where(s => s.State == false).ToList(), "Ödeme Listesi");
+            string fileName = String.Format("{0}.xlsx", "Ödeme Listesi");
+            string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            stream.Position = 0;
+            return File(stream, fileType, fileName);
+        }
+
+        public ActionResult ExportPassivePaylist()
+        {
+            var stream = ExportPaylist(JsonConvert.DeserializeObject<List<Paylists>>(FakeSession.Instance.Obj), "Ödeme Listesi");
             string fileName = String.Format("{0}.xlsx", "Ödeme Listesi");
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;

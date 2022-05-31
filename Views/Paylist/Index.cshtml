@@ -85,7 +85,57 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Başlangıç Tarihi</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Bitiş Tarihi</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control float-right" id="datepicker2" autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">&nbsp;</label>
+                                    <div class="input-group">
+                                        <div class="col-md-6">
+                                            <input type="submit" value="Filtreyi Uygula" class="btn btn-success btn-block" onclick="getResult()" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a class="btn btn-primary btn-block" asp-controller="Paylist" asp-action="ExportPassivePaylist"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <ul class="todo-list" id="done-todo-list" data-widget="todo-list"></ul>
+                        <br />
+                        <div class="card-footer">
+                            <div class="row">
+                                <label class="control-label">Toplam Ödenen Miktar</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control float-right" id="totalPaid" autocomplete="off" readonly />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,188 +144,257 @@
 </section>
 
 @section Scripts{
-    <script>
-        $(".todo-list").on("click", ":checkbox", function () {
-            id = $(this).closest("li")[0].id;
-            $.ajax({
-                url: '/Paylist/EditState?id=' + id,
-                type: 'POST',
-                success: function (returnvalue) {
-                    document.getElementById("swalDefaultSuccess").value = returnvalue.message;
-                    document.getElementById("swalDefaultSuccess").click();
-                    window.setTimeout(function () {
-                        window.location.reload();
-                    }, 2000);
-                },
-                error: function (error) {
-                    document.getElementById("swalDefaultError").value = error.responseText;
-                    document.getElementById("swalDefaultError").click();
-                }
-            });
+<script>
+    $(".todo-list").on("click", ":checkbox", function () {
+        id = $(this).closest("li")[0].id;
+        $.ajax({
+            url: '/Paylist/EditState?id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+            }
         });
-    </script>
-    <script>
-        (function () {
-            $.ajax({
-                type: "POST",
-                url: "/Paylist/Post?state=false",
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-                    $.each(data, function (index, item) {
-                        const weekday = new Array(7);
+    });
+</script>
+<script>
+    (function () {
+        $.ajax({
+            type: "POST",
+            url: "/Paylist/Post?state=false&isFiltered=false",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $.each(data, function (index, item) {
+                    const weekday = new Array(7);
 
-                        weekday[1] = "Pazartesi";
-                        weekday[2] = "Salı";
-                        weekday[3] = "Çarşamba";
-                        weekday[4] = "Perşembe";
-                        weekday[5] = "Cuma";
-                        weekday[6] = "Cumartesi";
-                        weekday[7] = "Pazar";
+                    weekday[1] = "Pazartesi";
+                    weekday[2] = "Salı";
+                    weekday[3] = "Çarşamba";
+                    weekday[4] = "Perşembe";
+                    weekday[5] = "Cuma";
+                    weekday[6] = "Cumartesi";
+                    weekday[7] = "Pazar";
 
-                        var screenDate = new Date(item.date);
+                    var screenDate = new Date(item.date);
 
-                        var dayS = screenDate.getDate();
-                        var monthS = screenDate.getMonth() + 1;
-                        var yearS = screenDate.getFullYear();
-                        dayS = dayS < 10 ? "0" + dayS : dayS;
-                        monthS = monthS < 10 ? "0" + monthS : monthS;
+                    var dayS = screenDate.getDate();
+                    var monthS = screenDate.getMonth() + 1;
+                    var yearS = screenDate.getFullYear();
+                    dayS = dayS < 10 ? "0" + dayS : dayS;
+                    monthS = monthS < 10 ? "0" + monthS : monthS;
 
-                        var fullDate = dayS + "/" + monthS + "/" + yearS;
+                    var fullDate = dayS + "/" + monthS + "/" + yearS;
 
-                        $("#todo-list").append(
-                            '<li id="' + item.id + '">'
-                            + '<div class="icheck-primary d-inline ml-2">'
-                            + '<input class="checkbox" type="checkbox" asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
-                            + '<span class="text">'
-                            + fullDate + " (" + weekday[screenDate.getDay()] + ') - ' + currency(item.amount, { decimal: ',', separator: '.', symbol: '' }).format() + ' - ' + item.personToBePaid
-                            + '</span><div class="tools">'
-                            + '<a href="Paylist/Edit?Id=' + item.id + '"><i class="fas fa-edit"></i></a>'
-                            + '</div>'
-                            + '</li>'
-                        );
-                    });
-                }
-            })
-        })(jQuery);
-        (function () {
-            $.ajax({
-                type: "POST",
-                url: "/Paylist/Post?state=true",
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-                    $.each(data, function (index, item) {
-                        const weekday = new Array(7);
-
-                        weekday[1] = "Pazartesi";
-                        weekday[2] = "Salı";
-                        weekday[3] = "Çarşamba";
-                        weekday[4] = "Perşembe";
-                        weekday[5] = "Cuma";
-                        weekday[6] = "Cumartesi";
-                        weekday[7] = "Pazar";
-
-                        var screenDate = new Date(item.date);
-
-                        var dayS = screenDate.getDate();
-                        var monthS = screenDate.getMonth() + 1;
-                        var yearS = screenDate.getFullYear();
-                        dayS = dayS < 10 ? "0" + dayS : dayS;
-                        monthS = monthS < 10 ? "0" + monthS : monthS;
-
-                        var fullDate = dayS + "/" + monthS + "/" + yearS;
-
-                        $("#done-todo-list").append(
-                            '<li class="done" id="' + item.id + '">'
-                            + '<div class="icheck-primary d-inline ml-2">'
-                            + '<input class="checkbox" type="checkbox" checked asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
-                            + '<span class="text">'
-                            + fullDate + " (" + weekday[screenDate.getDay()] + ') - ' + currency(item.amount, { decimal: ',', separator: '.', symbol: '' }).format() + ' - ' + item.personToBePaid
-                            + '</span><div class="tools">'
-                            + '</div>'
-                            + '</li>'
-                        );
-                    });
-                }
-            })
-        })(jQuery);
-        (function () {
-            $("#generalTable2").DataTable({
-                "language": {
-                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
-                    zeroRecords: "Hiçbir kayıt bulunamadı.",
-                    emptyTable: "Kayıt bulunmamaktadır.",
-                    search: "Ara:",
-                    oPaginate: {
-                        "sFirst": "İlk",
-                        "sLast": "Son",
-                        "sNext": "»",
-                        "sPrevious": "«"
-                    },
-                    sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
-                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
-                },
-                "processing": true,
-                "serverSide": true,
-                "searchDelay": 1200,
-                "stateSave": true,
-                "lengthChange": false,
-                "searching": false,
-                "stateDuration": -1,
-                "footerCallback": function (row, data, start, end, display) {
-                    var api = this.api(), data;
-
-                    var intVal = function (i) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '') * 1 :
-                            typeof i === 'number' ?
-                                i : 0;
-                    };
-
-                    pageAmountTotal = api
-                        .column(1, { page: 'current' })
-                        .data()
-                        .reduce(function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
-
-                    $(api.column(1).footer()).html(
-                        currency(pageAmountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
+                    $("#todo-list").append(
+                        '<li id="' + item.id + '">'
+                        + '<div class="icheck-primary d-inline ml-2">'
+                        + '<input class="checkbox" type="checkbox" asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
+                        + '<span class="text">'
+                        + fullDate + " (" + weekday[screenDate.getDay()] + ') - ' + currency(item.amount, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺ - ' + item.personToBePaid
+                        + '</span><div class="tools">'
+                        + '<a href="Paylist/Edit?Id=' + item.id + '"><i class="fas fa-edit"></i></a>'
+                        + '</div>'
+                        + '</li>'
                     );
+                });
+            }
+        })
+    })(jQuery);
+    (function () {
+        $.ajax({
+            type: "POST",
+            url: "/Paylist/Post?state=true&isFiltered=false",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                var totalPaid = 0;
+
+                $.each(data, function (index, item) {
+                    const weekday = new Array(7);
+
+                    weekday[1] = "Pazartesi";
+                    weekday[2] = "Salı";
+                    weekday[3] = "Çarşamba";
+                    weekday[4] = "Perşembe";
+                    weekday[5] = "Cuma";
+                    weekday[6] = "Cumartesi";
+                    weekday[7] = "Pazar";
+
+                    var screenDate = new Date(item.date);
+
+                    var dayS = screenDate.getDate();
+                    var monthS = screenDate.getMonth() + 1;
+                    var yearS = screenDate.getFullYear();
+                    dayS = dayS < 10 ? "0" + dayS : dayS;
+                    monthS = monthS < 10 ? "0" + monthS : monthS;
+
+                    var fullDate = dayS + "/" + monthS + "/" + yearS;
+
+                    $("#done-todo-list").append(
+                        '<li class="done" id="' + item.id + '">'
+                        + '<div class="icheck-primary d-inline ml-2">'
+                        + '<input class="checkbox" type="checkbox" checked asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
+                        + '<span class="text">'
+                        + fullDate + " (" + weekday[screenDate.getDay()] + ') - ' + currency(item.amount, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺ - ' + item.personToBePaid
+                        + '</span><div class="tools">'
+                        + '</div>'
+                        + '</li>'
+                    );
+
+                    totalPaid += item.amount;
+                });
+
+                document.getElementById('totalPaid').value = currency(totalPaid, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+            }
+        })
+    })(jQuery);
+    (function () {
+        $("#generalTable2").DataTable({
+            "language": {
+                processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                zeroRecords: "Hiçbir kayıt bulunamadı.",
+                emptyTable: "Kayıt bulunmamaktadır.",
+                search: "Ara:",
+                oPaginate: {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "»",
+                    "sPrevious": "«"
                 },
-                "ajax": {
-                    "url": "/Paylist/DailyTotalPost",
-                    "method": "POST",
-                    "error": function (error) {
-                        $('#generalTable2 tbody')
-                            .empty()
-                            .append('<tr><td colspan="3" class="dataTables_empty">Kayıt Bulunmamaktadır.</td></tr>');
-                    }
-                },
-                "destroy": true,
-                "columns": [
-                    {
-                        "data": "date",
-                        render: function (data, type, row) {
-                            if (data != null) {
-                                return window.moment(data).format("DD/MM/YYYY");
-                            }
-                            return "-";
-                        },
-                        "orderable": false
+                sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
+                sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+            },
+            "processing": true,
+            "serverSide": true,
+            "searchDelay": 1200,
+            "stateSave": true,
+            "lengthChange": false,
+            "searching": false,
+            "stateDuration": -1,
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+
+                pageAmountTotal = api
+                    .column(1, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(1).footer()).html(
+                    currency(pageAmountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
+                );
+            },
+            "ajax": {
+                "url": "/Paylist/DailyTotalPost",
+                "method": "POST",
+                "error": function (error) {
+                    $('#generalTable2 tbody')
+                        .empty()
+                        .append('<tr><td colspan="3" class="dataTables_empty">Kayıt Bulunmamaktadır.</td></tr>');
+                }
+            },
+            "destroy": true,
+            "columns": [
+                {
+                    "data": "date",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            const weekday = new Array(7);
+
+                            weekday[1] = "Pazartesi";
+                            weekday[2] = "Salı";
+                            weekday[3] = "Çarşamba";
+                            weekday[4] = "Perşembe";
+                            weekday[5] = "Cuma";
+                            weekday[6] = "Cumartesi";
+                            weekday[7] = "Pazar";
+
+                            return window.moment(data).format("DD/MM/YYYY") + " (" + weekday[window.moment(data).day()] + ")";
+                        }
+                        return "-";
                     },
-                    {
-                        "data": "totalAmount",
-                        "render": function (data, type, full, meta) {
-                            return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
-                        },
-                        "orderable": false
-                    }
-                ],
-                "ordering": false,
-                "pageLength": 5
-            });
-        })(jQuery);
-    </script>
+                    "orderable": false
+                },
+                {
+                    "data": "totalAmount",
+                    "render": function (data, type, full, meta) {
+                        return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                    },
+                    "orderable": false
+                }
+            ],
+            "ordering": false,
+            "pageLength": 5
+        });
+    })(jQuery);
+</script>
+<script>
+    function getResult() {
+        $.ajax({
+            type: "POST",
+            url: "/Paylist/Post?state=true&isFiltered=true"
+                    + "&startDate=" + document.getElementById("datepicker").value
+                    + "&finishDate=" + document.getElementById("datepicker2").value,
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#done-todo-list").empty();
+                var totalPaid = 0;
+
+                $.each(data, function (index, item) {
+                    const weekday = new Array(7);
+
+                    weekday[1] = "Pazartesi";
+                    weekday[2] = "Salı";
+                    weekday[3] = "Çarşamba";
+                    weekday[4] = "Perşembe";
+                    weekday[5] = "Cuma";
+                    weekday[6] = "Cumartesi";
+                    weekday[7] = "Pazar";
+
+                    var screenDate = new Date(item.date);
+
+                    var dayS = screenDate.getDate();
+                    var monthS = screenDate.getMonth() + 1;
+                    var yearS = screenDate.getFullYear();
+                    dayS = dayS < 10 ? "0" + dayS : dayS;
+                    monthS = monthS < 10 ? "0" + monthS : monthS;
+
+                    var fullDate = dayS + "/" + monthS + "/" + yearS;
+
+                    $("#done-todo-list").append(
+                        '<li class="done" id="' + item.id + '">'
+                        + '<div class="icheck-primary d-inline ml-2">'
+                        + '<input class="checkbox" type="checkbox" checked asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
+                        + '<span class="text">'
+                        + fullDate + " (" + weekday[screenDate.getDay()] + ') - ' + currency(item.amount, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺ - ' + item.personToBePaid
+                        + '</span><div class="tools">'
+                        + '</div>'
+                        + '</li>'
+                    );
+
+                    totalPaid += item.amount;
+                });
+
+                document.getElementById('totalPaid').value = currency(totalPaid, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+            }
+        })
+    }
+</script>
 }
