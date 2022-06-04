@@ -1,0 +1,290 @@
+﻿@model ExpenseManagement.Models.LetterOfGuarantees
+
+@{
+    ViewData["Title"] = "Teminat Mektubunu Güncelle";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Teminat Mektubunu Güncelle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" id="id" />
+                                <div class="form-group">
+                                    <label asp-for="Institution" class="control-label"></label>
+                                    <input asp-for="Institution" class="form-control" id="institution" autocomplete="off" />
+                                    <span asp-validation-for="Institution" class="text-danger"></span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="BankBranch.Name" class="control-label"></label>
+                                            <select asp-for="BankBranchId" class="form-control" asp-items="ViewBag.BankBranchId" id="bankBranchId"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="Amount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
+                                                </div>
+                                                <input asp-for="Amount" class="form-control" id="amount" autocomplete="off" />
+                                                <span asp-validation-for="Amount" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <label class="control-label">Masraf (Binde)</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">‰</span>
+                                                </div>
+                                                <select asp-for="LetterOfGuaranteeCostId" class="form-control" asp-items="ViewBag.LetterOfGuaranteeCostId" id="letterOfGuaranteeCostId" onchange="calculate()"></select>
+                                                <span asp-validation-for="LetterOfGuaranteeCostId" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label asp-for="Cost" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()" id="amountCurrency"></select>
+                                                </div>
+                                                <input asp-for="Cost" class="form-control" id="cost" autocomplete="off" />
+                                                <span asp-validation-for="Cost" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="FinishDate" class="control-label"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input asp-for="FinishDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker" />
+                                            </div>
+                                            <span asp-validation-for="FinishDate" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="LetterOfGuaranteeImage" class="control-label"></label>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <a class="btn btn-secondary btn-block float-right" id="openDocument" href="#" data-toggle="modal" data-target="#modal-document" style="margin-left:10px"><i class="fa fa-file-pdf"></i>&nbsp;&nbsp;Dokümanı Görüntüle</a>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="input-group">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" asp-for="LetterOfGuaranteeImage" accept="application/pdf" id="logImage" name="logImage">
+                                                    <label class="custom-file-label" for="exampleInputFile">Teminat Mektubu İçin Dosya Seçiniz</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <a class="btn btn-danger btn-block text-white" id="deleteDocument" onclick="deleteImage()"><i class="fas fa-trash"></i>&nbsp;&nbsp;Dokümanı Sil</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="update()" id="updateButton" />
+                            <a class="btn btn-primary pull-right" asp-action="Monthly" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="modal-document">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title"><strong><i class="fa fa-file-pdf"></i>&nbsp;&nbsp;Doküman</strong></h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" id="docDiv">
+                                    <iframe id="document" style="width:1108px;height:650px"></iframe>
+                                </div>
+                                <div class="modal-body" id="imgDiv">
+                                    <img id="image" style="width:100%;height:100%" webkitallowfullscreen allowfullscreen />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.onload = function getLog() {
+        var id = '@Url.RouteUrl(ViewContext.RouteData.Values).Split("/").Last()';
+
+        $.ajax({
+            url: '/LetterOfGuarantee/EditPost?&id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                var date = new Date(returnvalue.finishDate);
+
+                var dayS = date.getDate();
+                var monthS = date.getMonth() + 1;
+                var yearS = date.getFullYear();
+                dayS = dayS < 10 ? "0" + dayS : dayS;
+                monthS = monthS < 10 ? "0" + monthS : monthS;
+
+                document.getElementById("id").value = returnvalue.id;
+                document.getElementById("institution").value = returnvalue.institution
+                document.getElementById("bankBranchId").value = returnvalue.bankBranchId
+                document.getElementById("amount").value = currency(returnvalue.amount, { decimal: ',', separator: '', symbol: '' }).format()
+                document.getElementById("letterOfGuaranteeCostId").value = returnvalue.letterOfGuaranteeCostId
+                document.getElementById("cost").value = currency(returnvalue.cost, { decimal: ',', separator: '', symbol: '' }).format()
+                document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = "Aylık Üretim Kaydı Bir Hata Oluştu!";
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+
+        $("#institution").autocomplete({
+            source: '/LetterOfGuarantee/GetInstitutions'
+        });
+
+        $("#openDocument").on("click", function () {
+            $.ajax({
+                url: '/LetterOfGuarantee/GetDocument?&id=' + id,
+                type: 'POST',
+                success: function (returnvalue) {
+                    if (returnvalue.letterOfGuaranteeImageFormat == "application/pdf") {
+                        $('#imgDiv').remove();
+                        $('#image').remove();
+                        document.getElementById("document").src = 'data:application/pdf;base64,' + returnvalue.letterOfGuaranteeImage;
+                    }
+                    else {
+                        $('#docDiv').remove();
+                        $('#document').remove();
+                        document.getElementById("image").src = 'data:image;base64,' + returnvalue.letterOfGuaranteeImage;
+                    }
+                },
+                error: function (error) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: 'Doküman Bulunmamaktadır!',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }),
+                    window.setTimeout(function () {
+                        $("#modal-document").modal('hide');
+                    }, 2000);
+                }
+            });
+        });
+    }
+
+    function calculate() {
+        var letterOfGuaranteeCostId = document.getElementById("letterOfGuaranteeCostId").value;
+        var amount = document.getElementById("amount").value;
+        var total = amount * letterOfGuaranteeCostId / 1000;
+
+        if (isNaN(Number(total))) {
+            amount = Number(amount.replace(',', '.'));
+            total = amount * letterOfGuaranteeCostId / 1000;
+        }
+
+        var cost = +total + +amount;
+
+        document.getElementById("cost").value = currency(cost, { decimal: ',', separator: '', symbol: '' }).format();
+    }
+
+    function deleteImage() {
+        var id = document.getElementById("id").value;
+        $.ajax({
+            url: '/LetterOfGuarantee/DeleteImage?id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>
+<script>
+    function update() {
+        var id = document.getElementById("id").value;
+        var institution = document.getElementById("institution").value;
+        var bankBranchId = document.getElementById("bankBranchId").value;
+        var amount = document.getElementById("amount").value;
+        var letterOfGuaranteeCostId = document.getElementById("letterOfGuaranteeCostId").value;
+        var cost = document.getElementById("cost").value;
+        var finishDate = document.getElementById("datepicker").value;
+
+        var data = new FormData();
+        var fileupload = $("#logImage").get(0);
+        var files = fileupload.files;
+        for (var i = 0; i < files.length; i++) {
+            data.append(files[i].name, files[i]);
+        }
+
+        data.append('id', id);
+        data.append('institution', institution);
+        data.append('bankBranchId', bankBranchId);
+        data.append('amount', amount);
+        data.append('letterOfGuaranteeCostId', letterOfGuaranteeCostId);
+        data.append('cost', cost);
+        data.append('finishDate', finishDate);
+
+        $("#updateButton").attr("disabled", true);
+
+        $.ajax({
+            type: "POST",
+            url: "/LetterOfGuarantee/Edit?id=" + id,
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#updateButton").attr("disabled", false);
+                }, 1600);
+            }
+        });
+    }
+</script>

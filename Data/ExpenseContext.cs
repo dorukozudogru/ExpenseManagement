@@ -158,5 +158,11 @@ namespace ExpenseManagement.Data
         public DbSet<ImportantDocuments> ImportantDocuments { get; set; }
 
         public DbSet<MyVehicles> MyVehicles { get; set; }
+
+        public DbSet<LetterOfGuaranteeCosts> LetterOfGuaranteeCosts { get; set; }
+
+        public DbSet<LetterOfGuarantees> LetterOfGuarantees { get; set; }
+
+        public DbSet<LetterOfGuaranteeDocuments> LetterOfGuaranteeDocuments { get; set; }
     }
 }

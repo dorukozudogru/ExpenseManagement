@@ -1,0 +1,165 @@
+﻿@model IEnumerable<ExpenseManagement.Models.LetterOfGuarantees>
+
+@{
+    ViewData["Title"] = "Teminat Mektupları";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fa-solid fa-envelope-open-text"></i>&nbsp;Teminat Mektupları
+                            <a class="btn btn-light text-primary btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="card-body">
+                                <table id="ItemsTable" class="table table-bordered table-striped" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Id)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Institution)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.BankBranch.Name)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Amount)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.LetterOfGuaranteeCosts.Cost)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Cost)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.FinishDate)
+                                            </th>
+                                            <th>
+                                                Süre Bitimine Kalan Gün Sayısı
+                                            </th>
+                                            <th>İşlemler</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.onload = function getAll() {
+        $("#ItemsTable").DataTable({
+            "language": {
+                processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                zeroRecords: "Hiçbir kayıt bulunamadı.",
+                emptyTable: "Kayıt bulunmamaktadır.",
+                search: "Ara:",
+                oPaginate: {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "»",
+                    "sPrevious": "«"
+                },
+                sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
+                sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+            },
+            "processing": true,
+            "serverSide": true,
+            "searchDelay": 1200,
+            "stateSave": true,
+            "stateDuration": -1,
+            "ajax": {
+                "url": "/LetterOfGuarantee/Post",
+                "method": "POST"
+            },
+            "columns": [
+                { "data": "id" },
+                {
+                    "data": "institution",
+                    "orderable": false
+                },
+                {
+                    "data": "bankBranch.name",
+                    "orderable": false
+                },
+                {
+                    "data": "amount",
+                    "render": function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.amount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                        }
+                        return "-";
+                    }
+                },
+                {
+                    "data": "letterOfGuaranteeCosts.cost",
+                    render: function (data, type, row) {
+                        return "‰" + data;
+                    }
+                },
+                {
+                    "data": "cost",
+                    "render": function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.cost, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                        }
+                        return "-";
+                    }
+                },
+                {
+                    "data": "finishDate",
+                    render: function (data, type, row) {
+                        return window.moment(data).format("DD-MMMM-YYYY");
+                    }
+                },
+                {
+                    "data": "finishDate",
+                    "render": function (data, type, full, meta) {
+                        var insDateSub = moment(data);
+                        var dt = new Date();
+                        var today = moment(dt.getTime());
+
+                        const diffTime = Math.abs(insDateSub - today);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                        return diffDays;
+                    }
+                },
+                {
+                    "data": "actionId", render: function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="LetterOfGuarantee/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="LetterOfGuarantee/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="LetterOfGuarantee/Delete/' + row.id + '">Sil</a></ul></div>'
+                    },
+                    "orderable": false
+                }
+            ],
+            "ordering": true,
+            "paging": true,
+            "pagingType": "simple_numbers",
+            "pageLength": 100
+        });
+
+        $.ajax({
+            "url": "/LetterOfGuarantee/FinishingGuaranteeDate",
+            "method": "POST"
+        }).done(function (response) {
+            if(response != 0){
+                document.getElementById("warningSuccessMessage2").value = "Sayfaya Git";
+                document.getElementById("swalDefaultWarning2Title").value = "Bitiş Tarihi Yaklaşan Teminat Mektubu";
+                document.getElementById("swalDefaultWarning2").value = "Bitiş tarihi yaklaşan " + response.length + " adet teminat mektubu bulunmaktadır. Lütfen kontrol ediniz.";
+                document.getElementById("swalDefaultWarning2").click();
+            }
+        });
+        };
+</script>

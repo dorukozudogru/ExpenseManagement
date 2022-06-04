@@ -18,6 +18,10 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <div class="card-body">
+                                <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success float-right">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch3" value="true">
+                                    <label class="custom-control-label" for="customSwitch3">Pasif Kullanıcıları Göster</label>
+                                </div>
                                 <table id="ItemsTable" class="table table-bordered table-striped" width="100%">
                                     <thead>
                                         <tr>
@@ -77,25 +81,6 @@
                                 <div class="modal-footer justify-content-between">
                                     <button type="button" class="btn btn-success" id="active">Evet</button>
                                     <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Kapat</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="modal-admin">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title"><strong>Kullanıcının Admin Yetkisini Değiştir</strong></h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p id="message-admin">&hellip;</p>
-                                </div>
-                                <div class="modal-footer justify-content-between">
-                                    <button type="button" class="btn btn-success" id="admin">Evet</button>
-                                    <button type="button" class="btn btn-primary pull-right" data-dismiss="modal">Kapat</button>
                                 </div>
                             </div>
                         </div>
@@ -175,114 +160,100 @@
     </div>
 </section>
 
-@section Scripts {
-    @{
-        <script>
-            var passiveUserId;
-            var passiveUserName;
-
-            $(document).delegate('.setPassive',
-                'click',
-                function (e) {
-                    passiveUserId = $(this).attr('user-id');
-                    passiveUserName = $(this).attr('user-username');
-                    document.getElementById('message-passive').innerHTML = "<strong>" + passiveUserName + "</strong> kullanıcısını <strong>pasif</strong> yapmak istediğinizden emin misiniz?";
-                });
-
-            $(document).delegate('.setActive',
-                'click',
-                function (e) {
-                    passiveUserId = $(this).attr('user-id');
-                    passiveUserName = $(this).attr('user-username');
-                    document.getElementById('message-active').innerHTML = "<strong>" + passiveUserName + "</strong> kullanıcısını <strong>aktif</strong> yapmak istediğinizden emin misiniz?";
-                });
-
-            $(document).delegate('.setAudit',
-                'click',
-                function (e) {
-                    passiveUserId = $(this).attr('user-id');
-                    passiveUserName = $(this).attr('user-username');
-                    document.getElementById('message-audit').innerHTML = "<h5 class='modal-title' id='username'>&nbsp;-&nbsp;" + passiveUserName + "</h5>";
-                    document.getElementById('message-audit').value = passiveUserName;
-                });
-
-            $(document).delegate('#passive',
-                'click',
-                function (e) {
-                    $.ajax({
-                        url: '/Account/Passive?passiveUserId=' + passiveUserId,
-                        type: 'POST',
-                        success: function (returnvalue) {
-                            $("#modal-passive").modal('hide');
-                            document.getElementById("swalDefaultSuccess").value = returnvalue.message;
-                            document.getElementById("swalDefaultSuccess").click();
-                            setTimeout("location.reload(true);", 2000);
-                        },
-                        error: function (error) {
-                            $("#modal-passive").modal('hide');
-                            document.getElementById("swalDefaultError").value = error.responseText;
-                            document.getElementById("swalDefaultError").click();
+<script>
+    window.onload = function getAll() {
+            var generateCustomerTable = $("#ItemsTable").DataTable({
+                "language": {
+                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                    zeroRecords: "Hiçbir kayıt bulunamadı.",
+                    emptyTable: "Kayıt bulunmamaktadır.",
+                    search: "Ara:",
+                    oPaginate: {
+                        "sFirst": "İlk",
+                        "sLast": "Son",
+                        "sNext": "»",
+                        "sPrevious": "«"
+                    },
+                    sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
+                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                },
+                "processing": true,
+                "serverSide": true,
+                "searchDelay": 1200,
+                "searching": false,
+                "stateSave": true,
+                "destroy": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "url": "/Account/Post?isActive=" + document.getElementById("customSwitch3").value,
+                    "method": "POST"
+                },
+                "columns": [
+                    { "data": "id" },
+                    { "data": "userName" },
+                    {
+                        "data": "lastLoginDate",
+                        render: function (data, type, row) {
+                            if (data != null) {
+                                return window.moment(data).format("DD-MMMM-YYYY HH:mm:ss");
+                            }
+                            return "-";
                         }
-                    });
-                });
-
-            $(document).delegate('#active',
-                'click',
-                function (e) {
-                    $.ajax({
-                        url: '/Account/Active?passiveUserId=' + passiveUserId,
-                        type: 'POST',
-                        success: function (returnvalue) {
-                            $("#modal-active").modal('hide');
-                            document.getElementById("swalDefaultSuccess").value = returnvalue.message;
-                            document.getElementById("swalDefaultSuccess").click();
-                            setTimeout("location.reload(true);", 2000);
-                        },
-                        error: function (error) {
-                            $("#modal-active").modal('hide');
-                            document.getElementById("swalDefaultError").value = error.responseText;
-                            document.getElementById("swalDefaultError").click();
+                    },
+                    {
+                        "data": "isActive",
+                        render: function (data, type, row) {
+                            if (data === true) {
+                                return '<div class="form-group clearfix"><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess1" checked disabled><label for="checkboxSuccess1"></label></div></div>'
+                            }
+                            else if (data === false) {
+                                return '<div class="form-group clearfix"><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess1" disabled><label for="checkboxSuccess1"></label></div></div>'
+                            }
                         }
-                    });
-                });
-        </script>
-        <script>
-            var adminUserId;
-            var adminUserName;
-
-            $(document).delegate('.setAdmin',
-                'click',
-                function (e) {
-                    adminUserId = $(this).attr('user-id');
-                    adminUserName = $(this).attr('user-username');
-                    document.getElementById('message-admin').innerHTML = "<strong>" + adminUserName + "</strong> kullanıcısının <strong>admin yetkisini değiştirmek</strong> istediğinizden emin misiniz?";
-                });
-
-            $(document).delegate('#admin',
-                'click',
-                function (e) {
-                    $.ajax({
-                        url: '/Account/Admin?adminUserId=' + adminUserId,
-                        type: 'POST',
-                        success: function (returnvalue) {
-                            $("#modal-admin").modal('hide');
-                            document.getElementById("swalDefaultSuccess").value = returnvalue.message;
-                            document.getElementById("swalDefaultSuccess").click();
-                            setTimeout("location.reload(true);", 2000);
-                        },
-                        error: function (error) {
-                            $("#modal-admin").modal('hide');
-                            document.getElementById("swalDefaultError").value = error.responseText;
-                            document.getElementById("swalDefaultError").click();
+                    },
+                    {
+                        "data": "isAdmin",
+                        render: function (data, type, row) {
+                            if (data === true) {
+                                return '<div class="form-group clearfix"><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess1" checked disabled><label for="checkboxSuccess1"></label></div></div>'
+                            }
+                            else if (data === false) {
+                                return '<div class="form-group clearfix"><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess1" disabled><label for="checkboxSuccess1"></label></div></div>'
+                            }
                         }
-                    });
-                });
-        </script>
-        <script src="~/js/datatables.min.js"></script>
-        <script src="~/js/moment.min.js"></script>
-        <script>
-            (function () {
-                var generateCustomerTable = $("#ItemsTable").DataTable({
+                    },
+                    {
+                        "data": "actionId",
+                        "orderable": false,
+                        render: function (data, type, row) {
+                            if (row.isActive) {
+                                return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Account/Edit/' + row.id + '">Şifre Güncelle</a> <a class="dropdown-item" href="Role/RoleAssign/' + row.id + '">Rol Ata</a> <a href="#" data-toggle="modal" data-target="#modal-passive" class="setPassive dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setPassive">Pasif Yap</a> <a href="#" data-toggle="modal" data-target="#modal-userAudits" class="dropdown-item setAudit" user-id="' + row.id + '" user-username="' + row.userName + '" name="userAudits">Geçmiş</a> </ul></div>'
+                            }
+                            else {
+                                return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Account/Edit/' + row.id + '">Şifre Güncelle</a> <a class="dropdown-item" href="Role/RoleAssign/' + row.id + '">Rol Ata</a> <a href="#" data-toggle="modal" data-target="#modal-active" class="setActive dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setActive">Aktif Yap</a> <a href="#" data-toggle="modal" data-target="#modal-userAudits" class="dropdown-item setAudit" user-id="' + row.id + '" user-username="' + row.userName + '" name="userAudits">Geçmiş</a> </ul></div>'
+                            }
+                        }
+                    }
+                ],
+                "ordering": true,
+                "paging": true,
+                "pagingType": "simple_numbers",
+                "pageLength": 100
+            });
+
+            $("#customSwitch3").on("click", function (e) {
+                if ($(this).is(':checked')) {
+                    $(this).attr('value', 'false');
+                    getRes(document.getElementById("customSwitch3").value);
+                }
+                else{
+                    $(this).attr('value', 'true');
+                    getRes(document.getElementById("customSwitch3").value);
+                }
+            })
+
+            function getRes(checkVal){
+                $("#ItemsTable").DataTable({
                     "language": {
                         processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
                         zeroRecords: "Hiçbir kayıt bulunamadı.",
@@ -302,9 +273,10 @@
                     "searchDelay": 1200,
                     "searching": false,
                     "stateSave": true,
+                    "destroy": true,
                     "stateDuration": -1,
                     "ajax": {
-                        "url": "/Account/Post",
+                        "url": "/Account/Post?isActive=" + checkVal,
                         "method": "POST"
                     },
                     "columns": [
@@ -359,58 +331,114 @@
                     "pagingType": "simple_numbers",
                     "pageLength": 100
                 });
-            })(jQuery);
-        </script>
-        <script>
-            function getResult() {
-                $("#generalTable2").DataTable({
-                    "language": {
-                        processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
-                        zeroRecords: "Hiçbir kayıt bulunamadı.",
-                        emptyTable: "Kayıt bulunmamaktadır.",
-                        search: "Ara:",
-                        oPaginate: {
-                            "sFirst": "İlk",
-                            "sLast": "Son",
-                            "sNext": "»",
-                            "sPrevious": "«"
-                        },
-                        sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
-                        sInfo: "",
-                    },
-                    "processing": true,
-                    "serverSide": true,
-                    "searchDelay": 1200,
-                    "stateSave": true,
-                    "lengthChange": false,
-                    "searching": false,
-                    "stateDuration": -1,
-                    "destroy": true,
-                    "ajax": {
-                        "url": "/Audit/UserAuditPost?"
-                            + "username=" + document.getElementById("message-audit").value
-                            + "&startDate=" + document.getElementById("datepicker").value
-                            + "&finishDate=" + document.getElementById("datepicker2").value,
-                        "method": "POST"
-                    },
-                    "columns": [
-                        {
-                            "data": "actionName",
-                            "orderable": false
-                        },
-                        {
-                            "data": "tableName",
-                            "orderable": false
-                        },
-                        {
-                            "data": "actionCount",
-                            "orderable": false
-                        }
-                    ],
-                    "ordering": true,
-                    "paging": false
-                });
             }
-        </script>
+
+            var passiveUserId;
+            var passiveUserName;
+
+            $(document).delegate('.setPassive','click',function (e) {
+                passiveUserId = $(this).attr('user-id');
+                passiveUserName = $(this).attr('user-username');
+                document.getElementById('message-passive').innerHTML = "<strong>" + passiveUserName + "</strong> kullanıcısını <strong>pasif</strong> yapmak istediğinizden emin misiniz?";
+            });
+
+            $(document).delegate('.setActive','click',function (e) {
+                passiveUserId = $(this).attr('user-id');
+                passiveUserName = $(this).attr('user-username');
+                document.getElementById('message-active').innerHTML = "<strong>" + passiveUserName + "</strong> kullanıcısını <strong>aktif</strong> yapmak istediğinizden emin misiniz?";
+            });
+
+            $(document).delegate('.setAudit','click',function (e) {
+                passiveUserId = $(this).attr('user-id');
+                passiveUserName = $(this).attr('user-username');
+                document.getElementById('message-audit').innerHTML = "<h5 class='modal-title' id='username'>&nbsp;-&nbsp;" + passiveUserName + "</h5>";
+                document.getElementById('message-audit').value = passiveUserName;
+            });
+
+            $(document).delegate('#passive','click',function (e) {
+                $.ajax({
+                    url: '/Account/Passive?passiveUserId=' + passiveUserId,
+                    type: 'POST',
+                    success: function (returnvalue) {
+                        $("#modal-passive").modal('hide');
+                        document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                        document.getElementById("swalDefaultSuccess").click();
+                        setTimeout("location.reload(true);", 2000);
+                    },
+                    error: function (error) {
+                        $("#modal-passive").modal('hide');
+                        document.getElementById("swalDefaultError").value = error.responseText;
+                        document.getElementById("swalDefaultError").click();
+                    }
+                });
+            });
+
+            $(document).delegate('#active','click',function (e) {
+                $.ajax({
+                    url: '/Account/Active?passiveUserId=' + passiveUserId,
+                    type: 'POST',
+                    success: function (returnvalue) {
+                        $("#modal-active").modal('hide');
+                        document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                        document.getElementById("swalDefaultSuccess").click();
+                        setTimeout("location.reload(true);", 2000);
+                    },
+                    error: function (error) {
+                        $("#modal-active").modal('hide');
+                        document.getElementById("swalDefaultError").value = error.responseText;
+                        document.getElementById("swalDefaultError").click();
+                    }
+                });
+            });
+        }
+
+        function getResult() {
+        $("#generalTable2").DataTable({
+            "language": {
+                processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                zeroRecords: "Hiçbir kayıt bulunamadı.",
+                emptyTable: "Kayıt bulunmamaktadır.",
+                search: "Ara:",
+                oPaginate: {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "»",
+                    "sPrevious": "«"
+                },
+                sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
+                sInfo: "",
+            },
+            "processing": true,
+            "serverSide": true,
+            "searchDelay": 1200,
+            "stateSave": true,
+            "lengthChange": false,
+            "searching": false,
+            "stateDuration": -1,
+            "destroy": true,
+            "ajax": {
+                "url": "/Audit/UserAuditPost?"
+                    + "username=" + document.getElementById("message-audit").value
+                    + "&startDate=" + document.getElementById("datepicker").value
+                    + "&finishDate=" + document.getElementById("datepicker2").value,
+                "method": "POST"
+            },
+            "columns": [
+                {
+                    "data": "actionName",
+                    "orderable": false
+                },
+                {
+                    "data": "tableName",
+                    "orderable": false
+                },
+                {
+                    "data": "actionCount",
+                    "orderable": false
+                }
+            ],
+            "ordering": true,
+            "paging": false
+        });
     }
-}
+</script>
