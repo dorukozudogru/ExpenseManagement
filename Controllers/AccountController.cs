@@ -184,11 +184,12 @@ namespace ExpenseManagement.Controllers
 
         [Authorize(Roles = ("Admin, Banaz"))]
         [HttpPost]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post(bool isActive)
         {
             var requestFormData = Request.Form;
 
             List<AppIdentityUser> users = await _context.Users
+                .Where(u => u.IsActive == isActive)
                 .AsNoTracking()
                 .ToListAsync();
 

@@ -80,7 +80,7 @@
                                         <h5>&nbsp;</h5>
                                     </div>
                                     <div class="icon">
-                                        <i class="fas fa-lira-sign"></i>
+                                        <i class="fa-solid fa-turkish-lira-sign"></i>
                                     </div>
                                     <a href="#" class="">
                                         &nbsp;
@@ -95,7 +95,7 @@
                                         <h5 id="dollartolira">0</h5>
                                     </div>
                                     <div class="icon">
-                                        <i class="fas fa-dollar-sign"></i>
+                                        <i class="fa-solid fa-dollar-sign"></i>
                                     </div>
                                     <a href="#" class="">
                                         &nbsp;
@@ -110,7 +110,7 @@
                                         <h5 id="eurotolira">0</h5>
                                     </div>
                                     <div class="icon">
-                                        <i class="fas fa-euro-sign"></i>
+                                        <i class="fa-solid fa-euro-sign"></i>
                                     </div>
                                     <a href="#" class="">
                                         &nbsp;
@@ -121,11 +121,11 @@
                                 <div class="small-box bg-success">
                                     <div class="inner">
                                         <h3 id="pound">0</h3>
-                                        <h5 id="currentpound">Güncel Kur: ₺0</h5>
-                                        <h5 id="poundtolira">₺0</h5>
+                                        <h5 id="currentpound">0</h5>
+                                        <h5 id="poundtolira">0</h5>
                                     </div>
                                     <div class="icon">
-                                        <i class="fas fa-pound-sign"></i>
+                                        <i class="fa-solid fa-sterling-sign"></i>
                                     </div>
                                     <a href="#" class="">
                                         &nbsp;
@@ -195,7 +195,6 @@
                 "url": "/Report/TotalAccountReport",
                 "method": "POST"
             }).done(function (response) {
-                //console.log(response);
                 response.forEach(element => {
                     if (element.currency == "₺") {
                         if (element.totalAmount != null) {
@@ -241,8 +240,20 @@
                     }
                     if (element.currency == "£") {
                         if (element.totalAmount != null) {
-                            var zero = 0;
                             $('#pound').html(currency(element.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format());
+
+                            $.ajax({
+                                type: "GET",
+                                url: "https://api.currencyapi.com/v3/latest?apikey=ff94a2c0-60ef-11ec-8f35-ab1e84ffeb94&base_currency=GBP",
+                                success: function (response) {
+                                    var poundtolira = element.totalAmount * response.data.TRY.value;
+                                    $('#currentpound').html(currency(response.data.TRY.value, { decimal: ',', separator: '.', symbol: 'Güncel Kur: ₺' }).format());
+                                    $('#poundtolira').html(currency(poundtolira, { decimal: ',', separator: '.', symbol: '₺' }).format());
+                                },
+                                error: function (error) {
+                                    alert("error");
+                                }
+                            });
                         }
                     }
                 });

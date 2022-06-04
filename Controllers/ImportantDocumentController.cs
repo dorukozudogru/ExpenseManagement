@@ -141,6 +141,7 @@ namespace ExpenseManagement.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var importantDocuments = await _context.ImportantDocuments.FindAsync(id);
+            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             _context.ImportantDocuments.Remove(importantDocuments);
             await _context.SaveChangesAsync();
             return Ok(new { Result = true, Message = "Doküman Silinmiştir!" });

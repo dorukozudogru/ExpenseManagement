@@ -4,14 +4,16 @@ using ExpenseManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseManagement.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    partial class ExpenseContextModelSnapshot : ModelSnapshot
+    [Migration("20220601083844_logcost-added")]
+    partial class logcostadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -587,55 +589,6 @@ namespace ExpenseManagement.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LetterOfGuaranteeCosts");
-                });
-
-            modelBuilder.Entity("ExpenseManagement.Models.LetterOfGuaranteeDocuments", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("LetterOfGuaranteeId");
-
-                    b.Property<byte[]>("LetterOfGuaranteeImage");
-
-                    b.Property<string>("LetterOfGuaranteeImageFormat");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LetterOfGuaranteeDocuments");
-                });
-
-            modelBuilder.Entity("ExpenseManagement.Models.LetterOfGuarantees", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<double>("Amount");
-
-                    b.Property<int>("BankBranchId");
-
-                    b.Property<double>("Cost");
-
-                    b.Property<DateTime>("FinishDate");
-
-                    b.Property<string>("Institution")
-                        .IsRequired();
-
-                    b.Property<int>("LetterOfGuaranteeCostId");
-
-                    b.Property<byte[]>("LetterOfGuaranteeImage");
-
-                    b.Property<string>("LetterOfGuaranteeImageFormat");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BankBranchId");
-
-                    b.HasIndex("LetterOfGuaranteeCostId");
-
-                    b.ToTable("LetterOfGuarantees");
                 });
 
             modelBuilder.Entity("ExpenseManagement.Models.MyVehicles", b =>
@@ -1221,19 +1174,6 @@ namespace ExpenseManagement.Migrations
                     b.HasOne("ExpenseManagement.Models.Sectors", "Sector")
                         .WithMany()
                         .HasForeignKey("SectorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ExpenseManagement.Models.LetterOfGuarantees", b =>
-                {
-                    b.HasOne("ExpenseManagement.Models.BankBranches", "BankBranch")
-                        .WithMany()
-                        .HasForeignKey("BankBranchId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ExpenseManagement.Models.LetterOfGuaranteeCosts", "LetterOfGuaranteeCosts")
-                        .WithMany()
-                        .HasForeignKey("LetterOfGuaranteeCostId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
