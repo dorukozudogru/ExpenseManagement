@@ -1,7 +1,7 @@
-﻿@model IEnumerable<ExpenseManagement.Models.LetterOfGuarantees>
+﻿@model IEnumerable<ExpenseManagement.Models.BankLoans>
 
 @{
-    ViewData["Title"] = "Teminat Mektupları";
+    ViewData["Title"] = "Banka Kredileri";
 }
 
 <section class="content">
@@ -11,7 +11,7 @@
                 <div class="card card-primary">
                     <div class="card-header">
                         <h5 class="box-title">
-                            <i class="fa-solid fa-envelope-open-text"></i>&nbsp;Teminat Mektupları
+                            <i class="fa-solid fa-money-bill-transfer"></i>&nbsp;Banka Kredileri
                             <a class="btn btn-light text-primary btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
                         </h5>
                     </div>
@@ -25,29 +25,39 @@
                                                 @Html.DisplayNameFor(model => model.Id)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.Institution)
-                                            </th>
-                                            <th>
                                                 @Html.DisplayNameFor(model => model.BankBranch.Name)
                                             </th>
                                             <th>
                                                 @Html.DisplayNameFor(model => model.Amount)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.LetterOfGuaranteeCosts.Cost)
+                                                @Html.DisplayNameFor(model => model.InstallmentAmount)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.Cost)
+                                                @Html.DisplayNameFor(model => model.TotalAmountToBeRepaid)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Interest)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.StartDate)
                                             </th>
                                             <th>
                                                 @Html.DisplayNameFor(model => model.FinishDate)
                                             </th>
-                                            <th>
-                                                Süre Bitimine Kalan Gün Sayısı
-                                            </th>
                                             <th>İşlemler</th>
                                         </tr>
                                     </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <td></td>
+                                            <td style="font-weight:bold">Toplam:</td>
+                                            <td style="font-weight:bold"></td>
+                                            <td style="font-weight:bold"></td>
+                                            <td style="font-weight:bold"></td>
+                                            <td colspan="4"></td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -81,16 +91,55 @@
             "stateSave": true,
             "stateDuration": -1,
             "searching": false,
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+
+                amountTotal = api
+                    .column(2, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(2).footer()).html(
+                    currency(amountTotal, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
+                );
+
+                amountTotal2 = api
+                    .column(3, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(3).footer()).html(
+                    currency(amountTotal2, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
+                );
+
+                amountTotal3 = api
+                    .column(4, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(4).footer()).html(
+                    currency(amountTotal3, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
+                );
+            },
             "ajax": {
-                "url": "/LetterOfGuarantee/Post",
+                "url": "/BankLoan/Post",
                 "method": "POST"
             },
             "columns": [
                 { "data": "id" },
-                {
-                    "data": "institution",
-                    "orderable": false
-                },
                 {
                     "data": "bankBranch.name",
                     "orderable": false
@@ -105,18 +154,34 @@
                     }
                 },
                 {
-                    "data": "letterOfGuaranteeCosts.cost",
-                    render: function (data, type, row) {
-                        return "‰" + data;
+                    "data": "installmentAmount",
+                    "render": function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.installmentAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                        }
+                        return "-";
                     }
                 },
                 {
-                    "data": "cost",
+                    "data": "totalAmountToBeRepaid",
                     "render": function (data, type, full, meta) {
                         if (data != null) {
-                            return currency(full.cost, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                            return currency(full.totalAmountToBeRepaid, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                         }
                         return "-";
+                    }
+                },
+                {
+                    "data": "interest",
+                    "orderable": false,
+                    "render": function (data, type, full, meta) {
+                        return "%" + currency(full.interest, { decimal: ',', separator: '.', symbol: '' }).format();
+                    }
+                },
+                {
+                    "data": "startDate",
+                    render: function (data, type, row) {
+                        return window.moment(data).format("DD-MMMM-YYYY");
                     }
                 },
                 {
@@ -126,21 +191,8 @@
                     }
                 },
                 {
-                    "data": "finishDate",
-                    "render": function (data, type, full, meta) {
-                        var insDateSub = moment(data);
-                        var dt = new Date();
-                        var today = moment(dt.getTime());
-
-                        const diffTime = Math.abs(insDateSub - today);
-                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                        return diffDays;
-                    }
-                },
-                {
                     "data": "actionId", render: function (data, type, row) {
-                        return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="LetterOfGuarantee/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="LetterOfGuarantee/Details/' + row.id + '">Detaylar</a> <a class="dropdown-item" href="LetterOfGuarantee/Delete/' + row.id + '">Sil</a></ul></div>'
+                        return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="BankLoan/Edit/' + row.id + '">Güncelle</a> <a class="dropdown-item" href="BankLoan/Delete/' + row.id + '">Sil</a></ul></div>'
                     },
                     "orderable": false
                 }
@@ -149,18 +201,6 @@
             "paging": true,
             "pagingType": "simple_numbers",
             "pageLength": 100
-        });
-
-        $.ajax({
-            "url": "/LetterOfGuarantee/FinishingGuaranteeDate",
-            "method": "POST"
-        }).done(function (response) {
-            if(response != 0){
-                document.getElementById("warningSuccessMessage2").value = "Sayfaya Git";
-                document.getElementById("swalDefaultWarning2Title").value = "Bitiş Tarihi Yaklaşan Teminat Mektubu";
-                document.getElementById("swalDefaultWarning2").value = "Bitiş tarihi yaklaşan " + response.length + " adet teminat mektubu bulunmaktadır. Lütfen kontrol ediniz.";
-                document.getElementById("swalDefaultWarning2").click();
-            }
         });
         };
 </script>

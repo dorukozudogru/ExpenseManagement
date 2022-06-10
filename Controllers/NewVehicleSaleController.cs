@@ -397,7 +397,17 @@ namespace ExpenseManagement.Controllers
                     ws.Cells[c, 10].Value = items[c - 2].VehicleCost + " " + items[c - 2].VehicleCostCurrencyName;
                     ws.Cells[c, 11].Value = items[c - 2].WarrantyPlus;
                     ws.Cells[c, 12].Value = items[c - 2].Description;
-                    ws.Cells[c, 13].Value = items[c - 2].TaxExempt;
+
+                    if (items[c - 2].TaxExempt == true)
+                    {
+                        ws.Cells[c, 13].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        ws.Cells[c, 13].Style.Fill.BackgroundColor.SetColor(Color.Red);
+                        ws.Cells[c, 13].Value = "Evet";
+                    }
+                    else if (items[c - 2].TaxExempt == false)
+                    {
+                        ws.Cells[c, 13].Value = "Hayır";
+                    }
 
                     ws.Column(7).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].SaleAmountCurrencyName);
                     ws.Column(10).Style.Numberformat.Format = String.Format("#,##0.00 {0}", items[c - 2].VehicleCostCurrencyName);
@@ -409,7 +419,7 @@ namespace ExpenseManagement.Controllers
                 ws.Column(13).PageBreak = true;
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Landscape;
-                ws.PrinterSettings.Scale = 100;
+                ws.PrinterSettings.Scale = 60;
 
                 p.Save();
             }

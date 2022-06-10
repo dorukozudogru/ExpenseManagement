@@ -59,7 +59,7 @@ namespace ExpenseManagement.Controllers
                         }
                         else
                         {
-                            user.LastLoginDate = DateTime.Now;
+                            user.LastLoginDate = DateTime.Now.AddHours(10);
                             _context.Update(user);
                             await _context.SaveChangesAsync();
                             return Redirect("~/Home");

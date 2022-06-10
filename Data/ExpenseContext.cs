@@ -164,5 +164,7 @@ namespace ExpenseManagement.Data
         public DbSet<LetterOfGuarantees> LetterOfGuarantees { get; set; }
 
         public DbSet<LetterOfGuaranteeDocuments> LetterOfGuaranteeDocuments { get; set; }
+
+        public DbSet<BankLoans> BankLoans { get; set; }
     }
 }

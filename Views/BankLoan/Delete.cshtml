@@ -1,7 +1,7 @@
-﻿@model ExpenseManagement.Models.BankVaults
+﻿@model ExpenseManagement.Models.BankLoans
 
 @{
-    ViewData["Title"] = "Banka Kaydını Sil";
+    ViewData["Title"] = "Banka Kredisini Sil";
 }
 
 <section class="content">
@@ -9,18 +9,32 @@
         <div class="row">
             <div class="col-12">
                 <div class="callout callout-danger">
-                    <h4>Bu banka kaydını silmek istediğinizden emin misiniz?</h4>
+                    <h4>Bu kaydı silmek istediğinizden emin misiniz?</h4>
                     <p>
-                        Bu banka kaydını silerseniz işlemi geriye alamayacaksınız.
+                        Bu kaydı silerseniz işlemi geriye alamayacaksınız.
                     </p>
                 </div>
                 <div class="invoice p-3 mb-3">
                     <div class="row">
                         <div class="col-12">
                             <h4>
-                                <i class="fa-solid fa-vault"></i> @Html.DisplayFor(model => model.Id) | @Html.DisplayFor(model => model.AccountType.Name) | @Html.DisplayFor(model => model.Amount) @Html.DisplayFor(model => model.AmountCurrencyName) | @Html.DisplayFor(model => model.BankBranch)
+                                <i class="fa-solid fa-money-bill-transfer"></i> @Html.DisplayFor(model => model.Id)
                                 <br />
                             </h4>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row invoice-info">
+                        <div class="col-sm-12 invoice-col">
+                            <address>
+                                @Html.DisplayNameFor(model => model.BankBranch.Name): <strong>@Html.DisplayFor(model => model.BankBranch.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.Amount): <strong>@Html.DisplayFor(model => model.Amount) ₺</strong><br>
+                                @Html.DisplayNameFor(model => model.InstallmentAmount): <strong>@Html.DisplayFor(model => model.InstallmentAmount) ₺</strong><br>
+                                @Html.DisplayNameFor(model => model.TotalAmountToBeRepaid): <strong>@Html.DisplayFor(model => model.TotalAmountToBeRepaid) ₺</strong><br>
+                                @Html.DisplayNameFor(model => model.Interest): <strong>%@Html.DisplayFor(model => model.Interest)</strong><br>
+                                @Html.DisplayNameFor(model => model.StartDate): <strong>@Html.DisplayFor(model => model.StartDate)</strong><br>
+                                @Html.DisplayNameFor(model => model.FinishDate): <strong>@Html.DisplayFor(model => model.FinishDate)</strong><br>
+                            </address>
                         </div>
                     </div>
                     <hr />
@@ -39,14 +53,13 @@
     </div>
 </section>
 
-
 <script>
     var id;
 
     function deleted() {
         id = document.getElementById("id").value;
         $.ajax({
-            url: '/BankVault/Delete?id=' + id,
+            url: '/BankLoan/Delete?id=' + id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;
