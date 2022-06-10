@@ -1,0 +1,166 @@
+﻿@model ExpenseManagement.Models.BankLoans
+
+@{
+    ViewData["Title"] = "Banka Kredisi Ekle";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fa fa-plus"></i>&nbsp;Banka Kredisi Ekle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label asp-for="BankBranchId" class="control-label"></label>
+                                    <select asp-for="BankBranchId" class="form-control" asp-items="ViewBag.BankBranchId" id="bankBranchId"></select>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="Amount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                                </div>
+                                                <input asp-for="Amount" class="form-control" id="amount" autocomplete="off" />
+                                                <span asp-validation-for="Amount" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="InstallmentAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                                </div>
+                                                <input asp-for="InstallmentAmount" class="form-control" id="installmentAmount" autocomplete="off" />
+                                                <span asp-validation-for="InstallmentAmount" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="TotalAmountToBeRepaid" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                                </div>
+                                                <input asp-for="TotalAmountToBeRepaid" class="form-control" id="totalAmountToBeRepaid" autocomplete="off" />
+                                                <span asp-validation-for="TotalAmountToBeRepaid" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="Interest" class="control-label"></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-percentage"></i></span>
+                                                </div>
+                                                <input asp-for="Interest" class="form-control" id="interest" autocomplete="off" />
+                                                <span asp-validation-for="Interest" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="StartDate" class="control-label"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input asp-for="StartDate" type="text" class="form-control float-right" id="datepicker" autocomplete="off" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="FinishDate" class="control-label"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input asp-for="FinishDate" type="text" class="form-control float-right" id="datepicker2" autocomplete="off" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Ekle" class="btn btn-success" onclick="add()" id="createButton" />
+                            <a class="btn btn-primary" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function add() {
+        var bankBranchId = document.getElementById("bankBranchId").value;
+        var amount = document.getElementById("amount").value;
+        var installmentAmount = document.getElementById("installmentAmount").value;
+        var totalAmountToBeRepaid = document.getElementById("totalAmountToBeRepaid").value;
+        var interest = document.getElementById("interest").value;
+        var startDate = document.getElementById("datepicker").value;
+        var finishDate = document.getElementById("datepicker2").value;
+
+        var data = new FormData();
+
+        data.append('bankBranchId', bankBranchId);
+        data.append('amount', amount);
+        data.append('installmentAmount', installmentAmount);
+        data.append('totalAmountToBeRepaid', totalAmountToBeRepaid);
+        data.append('interest', interest);
+        data.append('startDate', startDate);
+        data.append('finishDate', finishDate);
+
+        $("#createButton").attr("disabled", true);
+
+        $.ajax({
+            type: "POST",
+            url: "/BankLoan/Create",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#createButton").attr("disabled", false);
+                }, 1600);
+            }
+        });
+    }
+</script>
