@@ -8,6 +8,10 @@ namespace ExpenseManagement.Models
         [Key]
         public int Id { get; set; }
 
+        [Required]
+        [DisplayName("Yıl")]
+        public int Year { get; set; }
+
         [DisplayName("Trafik Tescil Bedeli")]
         public double RegistrationFee { get; set; }
     }

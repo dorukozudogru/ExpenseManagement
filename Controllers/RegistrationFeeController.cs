@@ -64,6 +64,7 @@ namespace ExpenseManagement.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    registrationFee.Year = registrationFees.Year;
                     registrationFee.RegistrationFee = registrationFees.RegistrationFee;
 
                     _context.Update(registrationFee);

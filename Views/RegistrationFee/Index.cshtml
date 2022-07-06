@@ -22,6 +22,9 @@
                                     <thead>
                                         <tr>
                                             <th>
+                                                @Html.DisplayNameFor(model => model.Year)
+                                            </th>
+                                            <th>
                                                 @Html.DisplayNameFor(model => model.RegistrationFee)
                                             </th>
                                             <th>İşlemler</th>
@@ -31,6 +34,9 @@
                                         @foreach (var item in Model)
                                         {
                                             <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Year)
+                                                </td>
                                                 <td>
                                                     @Html.DisplayFor(modelItem => item.RegistrationFee)
                                                 </td>

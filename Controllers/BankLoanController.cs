@@ -88,6 +88,7 @@ namespace ExpenseManagement.Controllers
                     bankLoan.InstallmentAmount = bankLoans.InstallmentAmount;
                     bankLoan.TotalAmountToBeRepaid = bankLoans.TotalAmountToBeRepaid;
                     bankLoan.Interest = bankLoans.Interest;
+                    bankLoan.Cost = bankLoans.Cost;
                     bankLoan.StartDate = bankLoans.StartDate;
                     bankLoan.FinishDate = bankLoans.FinishDate;
 

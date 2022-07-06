@@ -35,6 +35,10 @@ namespace ExpenseManagement.Models
         public double Interest { get; set; }
 
         [Required]
+        [DisplayName("Masraf")]
+        public double Cost { get; set; }
+
+        [Required]
         [DisplayName("Kredi Başlangıç Tarihi")]
         public DateTime StartDate { get; set; }
 
