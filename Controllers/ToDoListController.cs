@@ -18,6 +18,8 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Drawing;
 using static ExpenseManagement.Models.ViewModels.ReportViewModel;
+using ExpenseManagement.Models.ViewModels;
+using Newtonsoft.Json;
 
 namespace ExpenseManagement.Controllers
 {
@@ -33,11 +35,20 @@ namespace ExpenseManagement.Controllers
 
         public IActionResult Index()
         {
+            var sectors = _context.Sectors
+                .ToList();
+            sectors.Add(new Sectors
+            {
+                Id = 0,
+                Name = ""
+            });
+
+            ViewData["SectorId"] = new SelectList(sectors.OrderBy(s => s.Id), "Id", "Name");
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(bool state)
+        public async Task<IActionResult> Post(bool state, bool isFiltered, int sectorId)
         {
             var toDoListContext = await _context.ToDoLists
                 .Where(e => e.State == state)
@@ -53,7 +64,26 @@ namespace ExpenseManagement.Controllers
                     .ToList();
             }
 
+            if (isFiltered != false)
+            {
+                if (sectorId != 0)
+                {
+                    toDoListContext = toDoListContext
+                        .Where(e => e.SectorId == sectorId)
+                        .ToList();
+                }
+            }
+
             toDoListContext = GetAllEnumNamesHelper.GetEnumName(toDoListContext);
+
+            if (state == false)
+            {
+                FakeSession.Instance.Obj = JsonConvert.SerializeObject(toDoListContext);
+            }
+            else
+            {
+                FakeSessionSec.Instance.Obj = JsonConvert.SerializeObject(toDoListContext);
+            }
 
             return Ok(toDoListContext);
         }
@@ -65,7 +95,7 @@ namespace ExpenseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,SectorId,Debtor,Amount,AmountCurrency")] ToDoLists toDoLists)
+        public async Task<IActionResult> Create(ToDoLists toDoLists)
         {
             if (ModelState.IsValid)
             {
@@ -107,6 +137,7 @@ namespace ExpenseManagement.Controllers
                 if (ModelState.IsValid)
                 {
                     toDoList.SectorId = toDoLists.SectorId;
+                    toDoList.DeptType = toDoLists.DeptType;
                     toDoList.Debtor = toDoLists.Debtor;
                     toDoList.Amount = toDoLists.Amount;
                     toDoList.AmountCurrency = toDoLists.AmountCurrency;
@@ -130,6 +161,7 @@ namespace ExpenseManagement.Controllers
                 if (toDoList.State == true)
                 {
                     toDoList.State = false;
+                    toDoList.CollectAt = DateTime.MinValue;
                 }
                 else if (toDoList.State == false)
                 {
@@ -167,11 +199,13 @@ namespace ExpenseManagement.Controllers
                 .GroupBy(e => new
                 {
                     e.Sector.Name,
+                    e.DeptType,
                     e.AmountCurrency
                 })
                 .Select(e => new ToDoListResponse
                 {
                     SectorName = e.Key.Name,
+                    DeptType = e.Key.DeptType,
                     TotalAmount = e.Sum(x => x.Amount),
                     TotalAmountCurrency = e.Key.AmountCurrency
                 })
@@ -206,9 +240,17 @@ namespace ExpenseManagement.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult ExportAllActiveToDos()
         {
-            var stream = ExportToDo(_context.ToDoLists
-                .Include(s => s.Sector)
-                .Where(s => s.State == false).ToList(), "Alacak Listesi");
+            var stream = ExportToDo(JsonConvert.DeserializeObject<List<ToDoLists>>(FakeSession.Instance.Obj), "Alacak Listesi");
+            string fileName = String.Format("{0}.xlsx", "Alacak Listesi");
+            string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            stream.Position = 0;
+            return File(stream, fileType, fileName);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult ExportAllPassiveToDos()
+        {
+            var stream = ExportToDo(JsonConvert.DeserializeObject<List<ToDoLists>>(FakeSessionSec.Instance.Obj), "Alacak Listesi");
             string fileName = String.Format("{0}.xlsx", "Alacak Listesi");
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;
@@ -247,10 +289,24 @@ namespace ExpenseManagement.Controllers
                 for (int c = 2; c < items.Count + 2; c++)
                 {
                     ws.Cells[c, 1].Value = items[c - 2].Id;
-                    ws.Cells[c, 2].Value = items[c - 2].Sector.Name;
+                    if (!string.IsNullOrEmpty(items[c - 2].DeptType))
+                    {
+                        ws.Cells[c, 2].Value = items[c - 2].Sector.Name + " (" + items[c - 2].DeptType + ")";
+                    }
+                    else
+                    {
+                        ws.Cells[c, 2].Value = items[c - 2].Sector.Name;
+                    }
                     ws.Cells[c, 3].Value = items[c - 2].Debtor;
                     ws.Cells[c, 4].Value = items[c - 2].Amount + " " + items[c - 2].AmountCurrencyName;
-                    ws.Cells[c, 5].Value = items[c - 2].CollectAt;
+                    if (items[c - 2].CollectAt != DateTime.MinValue)
+                    {
+                        ws.Cells[c, 5].Value = items[c - 2].CollectAt;
+                    }
+                    else
+                    {
+                        ws.Cells[c, 5].Value = "-";
+                    }
 
                     ws.Column(4).Style.Numberformat.Format = items[c - 2].AmountCurrencyName + "#,##0.00";
                 }

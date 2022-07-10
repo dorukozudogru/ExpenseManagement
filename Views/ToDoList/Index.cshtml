@@ -47,35 +47,45 @@
                             </a>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <a class="btn btn-outline-light text-primary btn-block btn-sm" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
-                        </div>
-                        <div class="col-md-6">
-                            <a class="btn btn-outline-light text-info btn-block btn-sm" asp-controller="ToDoList" asp-action="ExportAllActiveToDos"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
-                        </div>
-                    </div>
                     <div class="card-body">
+                        <div class="card collapsed-card">
+                            <div class="card-header border-0 btn-sm">
+                                <h3 class="card-title">
+                                    <i class="fas fa-filter mr-1"></i>&nbsp;Filtreler
+                                </h3>
+                                <div class="card-tools">
+                                    <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                        <i class="fas fa-plus text-black-50"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group btn-sm">
+                                    <label class="control-label">Sektör/İş Kolu Adı</label>
+                                    <select class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="submit" value="Filtreyi Uygula" class="btn btn-success btn-block btn-sm" onclick="getResult()" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="submit" value="Temizle" class="btn btn-danger btn-block btn-sm" onclick="clearFilter()" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5">
+                                <a class="btn btn-primary btn-block btn-sm" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
+                            </div>
+                            <div class="col-md-5">
+                                <a class="btn btn-info btn-block btn-sm" asp-controller="ToDoList" asp-action="ExportAllActiveToDos"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <br />
                         <ul class="todo-list" id="todo-list" data-widget="todo-list">
-                            @*@foreach (var item in Model)
-                                {
-                                    <li id="@item.Id">
-                                        <div class="icheck-primary d-inline ml-2">
-                                            <input class="checkbox" type="checkbox" asp-for="@item.State" id="cb+@item.Id">
-                                            <label for="cb+@item.Id"></label>
-                                        </div>
-                                        <span class="text">
-                                            @item.Sector.Name - @item.Debtor - @item.Amount @item.AmountCurrencyName
-                                        </span>
-                                        @if (@item.State != true)
-                                        {
-                                            <div class="tools">
-                                                <a asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a>
-                                                <i class="fas fa-trash-o"></i>
-                                            </div>
-                                        }
-                                    </li>
-                                }*@
                         </ul>
                     </div>
                 </div>
@@ -99,6 +109,40 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <div class="card collapsed-card">
+                            <div class="card-header border-0 btn-sm">
+                                <h3 class="card-title">
+                                    <i class="fas fa-filter mr-1"></i>&nbsp;Filtreler
+                                </h3>
+                                <div class="card-tools">
+                                    <a href="#" class="btn btn-tool btn-sm" data-card-widget="collapse">
+                                        <i class="fas fa-plus text-black-50"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group btn-sm">
+                                    <label class="control-label">Sektör/İş Kolu Adı</label>
+                                    <select class="form-control" asp-items="ViewBag.SectorId" id="sectorId2"></select>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="submit" value="Filtreyi Uygula" class="btn btn-success btn-block btn-sm" onclick="getPassiveResult()" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="submit" value="Temizle" class="btn btn-danger btn-block btn-sm" onclick="clearFilter()" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-10">
+                                <a class="btn btn-info btn-block btn-sm" asp-controller="ToDoList" asp-action="ExportAllPassiveToDos"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <br />
                         <ul class="todo-list" id="done-todo-list" data-widget="todo-list">
                         </ul>
                     </div>
@@ -109,121 +153,203 @@
 </section>
 
 @section Scripts{
-    <script>
-        $(".todo-list").on("click", ":checkbox", function () {
-            id = $(this).closest("li")[0].id;
-            $.ajax({
-                url: '/ToDoList/EditState?id=' + id,
-                type: 'POST',
-                success: function (returnvalue) {
-                    document.getElementById("swalDefaultSuccess").value = returnvalue.message;
-                    document.getElementById("swalDefaultSuccess").click();
-                    window.setTimeout(function () {
-                        window.location.reload();
-                    }, 2000);
-                },
-                error: function (error) {
-                    document.getElementById("swalDefaultError").value = error.responseText;
-                    document.getElementById("swalDefaultError").click();
-                }
-            });
+<script>
+    $(".todo-list").on("click", ":checkbox", function () {
+        id = $(this).closest("li")[0].id;
+        $.ajax({
+            url: '/ToDoList/EditState?id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
+                document.getElementById("swalDefaultError").click();
+            }
         });
-    </script>
-    <script>
-        (function () {
-            $.ajax({
-                type: "POST",
-                url: "/ToDoList/Post?state=false",
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-                    $.each(data, function (index, item) {
-                        $("#todo-list").append(
-                            '<li id="' + item.id + '">'
-                            + '<div class="icheck-primary d-inline ml-2">'
-                            + '<input class="checkbox" type="checkbox" asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
-                            + '<span class="text">'
-                            + item.sector.name + ' - ' + item.debtor + ' - ' + currency(item.amount, { decimal: ',', separator: '.', symbol: '' }).format() + ' ' + item.amountCurrencyName
-                            + '</span><div class="tools">'
-                            + '<a href="ToDoList/Edit?Id=' + item.id + '"><i class="fas fa-edit"></i></a>'
-                            + '</div>'
-                            + '</li>'
-                        );
-                    });
-                }
-            })
-        })(jQuery);
-        (function () {
-            $.ajax({
-                type: "POST",
-                url: "/ToDoList/Post?state=true",
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-                    $.each(data, function (index, item) {
-                        $("#done-todo-list").append(
-                            '<li class="done" id="' + item.id + '">'
-                            + '<div class="icheck-primary d-inline ml-2">'
-                            + '<input class="checkbox" type="checkbox" checked asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
-                            + '<span class="text">'
-                            + item.sector.name + ' - ' + item.debtor + ' - ' + currency(item.amount, { decimal: ',', separator: '.', symbol: '' }).format() + ' ' + item.amountCurrencyName
-                            + '</span><div class="tools">'
-                            + '</div>'
-                            + '</li>'
-                        );
-                    });
-                }
-            })
-        })(jQuery);
-        (function () {
-            $("#generalTable2").DataTable({
-                "language": {
-                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
-                    zeroRecords: "Hiçbir kayıt bulunamadı.",
-                    emptyTable: "Kayıt bulunmamaktadır.",
-                    search: "Ara:",
-                    oPaginate: {
-                        "sFirst": "İlk",
-                        "sLast": "Son",
-                        "sNext": "»",
-                        "sPrevious": "«"
-                    },
-                    sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
-                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
-                },
-                "processing": true,
-                "serverSide": true,
-                "searchDelay": 1200,
-                "stateSave": true,
-                "lengthChange": false,
-                "searching": false,
-                "stateDuration": -1,
-                "ajax": {
-                    "url": "/ToDoList/SectorTotalPost",
-                    "method": "POST",
-                    "error": function (error) {
-                        $('#generalTable2 tbody')
-                            .empty()
-                            .append('<tr><td colspan="3" class="dataTables_empty">Kayıt Bulunmamaktadır.</td></tr>');
+    });
+</script>
+<script>
+    (function () {
+        $.ajax({
+            type: "POST",
+            url: "/ToDoList/Post?state=false",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $.each(data, function (index, item) {
+                    var deptType = "";
+                    if(item.deptType != null){
+                        deptType = ' (' + item.deptType + ')';
                     }
-                },
-                "destroy": true,
-                "columns": [
-                    {
-                        "data": "sectorName",
-                        "orderable": false
-                    },
-                    {
-                        "data": "totalAmount",
-                        "render": function (data, type, full, meta) {
-                            return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.totalAmountCurrencyName;
-                        },
-                        "orderable": false
+
+                    $("#todo-list").append(
+                        '<li id="' + item.id + '">'
+                        + '<div class="icheck-primary d-inline ml-2">'
+                        + '<input class="checkbox" type="checkbox" asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
+                        + '<span class="text">'
+                        + item.sector.name + deptType + ' - ' + item.debtor + ' - ' + currency(item.amount, { decimal: ',', separator: '.', symbol: '' }).format() + ' ' + item.amountCurrencyName
+                        + '</span><div class="tools">'
+                        + '<a href="ToDoList/Edit?Id=' + item.id + '"><i class="fas fa-edit"></i></a>'
+                        + '</div>'
+                        + '</li>'
+                    );
+                });
+            }
+        })
+    })(jQuery);
+    (function () {
+        $.ajax({
+            type: "POST",
+            url: "/ToDoList/Post?state=true",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $.each(data, function (index, item) {
+                    var deptType = "";
+                    if(item.deptType != null){
+                        deptType = ' (' + item.deptType + ')';
                     }
-                ],
-                "ordering": false,
-                "pageLength": 3
-            });
-        })(jQuery);
-    </script>
+
+                    $("#done-todo-list").append(
+                        '<li class="done" id="' + item.id + '">'
+                        + '<div class="icheck-primary d-inline ml-2">'
+                        + '<input class="checkbox" type="checkbox" checked asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
+                        + '<span class="text">'
+                        + item.sector.name + deptType + ' - ' + item.debtor + ' - ' + currency(item.amount, { decimal: ',', separator: '.', symbol: '' }).format() + ' ' + item.amountCurrencyName
+                        + '</span><div class="tools">'
+                        + '</div>'
+                        + '</li>'
+                    );
+                });
+            }
+        })
+    })(jQuery);
+    (function () {
+        $("#generalTable2").DataTable({
+            "language": {
+                processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                zeroRecords: "Hiçbir kayıt bulunamadı.",
+                emptyTable: "Kayıt bulunmamaktadır.",
+                search: "Ara:",
+                oPaginate: {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "»",
+                    "sPrevious": "«"
+                },
+                sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
+                sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+            },
+            "processing": true,
+            "serverSide": true,
+            "searchDelay": 1200,
+            "stateSave": true,
+            "lengthChange": false,
+            "searching": false,
+            "stateDuration": -1,
+            "ajax": {
+                "url": "/ToDoList/SectorTotalPost",
+                "method": "POST",
+                "error": function (error) {
+                    $('#generalTable2 tbody')
+                        .empty()
+                        .append('<tr><td colspan="3" class="dataTables_empty">Kayıt Bulunmamaktadır.</td></tr>');
+                }
+            },
+            "destroy": true,
+            "columns": [
+                {
+                    "data": "sectorName",
+                    "render": function (data, type, full, meta) {
+                        if(full.deptType != null){
+                            return full.sectorName + ' (' + full.deptType + ')';
+                        }
+                        else{
+                            return full.sectorName;
+                        }
+                    },
+                    "orderable": false
+                },
+                {
+                    "data": "totalAmount",
+                    "render": function (data, type, full, meta) {
+                        return currency(full.totalAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.totalAmountCurrencyName;
+                    },
+                    "orderable": false
+                }
+            ],
+            "ordering": false,
+            "pageLength": 3
+        });
+    })(jQuery);
+</script>
+<script>
+    function getResult() {
+        $.ajax({
+            type: "POST",
+            url: "/ToDoList/Post?state=false&isFiltered=true&sectorId=" + document.getElementById("sectorId").value,
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#todo-list").empty();
+                $.each(data, function (index, item) {
+                    var deptType = "";
+                    if(item.deptType != null){
+                        deptType = ' (' + item.deptType + ')';
+                    }
+
+                    $("#todo-list").append(
+                        '<li id="' + item.id + '">'
+                        + '<div class="icheck-primary d-inline ml-2">'
+                        + '<input class="checkbox" type="checkbox" asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
+                        + '<span class="text">'
+                        + item.sector.name + deptType + ' - ' + item.debtor + ' - ' + currency(item.amount, { decimal: ',', separator: '.', symbol: '' }).format() + ' ' + item.amountCurrencyName
+                        + '</span><div class="tools">'
+                        + '<a href="ToDoList/Edit?Id=' + item.id + '"><i class="fas fa-edit"></i></a>'
+                        + '</div>'
+                        + '</li>'
+                    );
+                });
+            }
+        })
+    }
+
+    function getPassiveResult() {
+        $.ajax({
+            type: "POST",
+            url: "/ToDoList/Post?state=true&isFiltered=true&sectorId=" + document.getElementById("sectorId2").value,
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#done-todo-list").empty();
+                $.each(data, function (index, item) {
+                    var deptType = "";
+                    if(item.deptType != null){
+                        deptType = ' (' + item.deptType + ')';
+                    }
+
+                    $("#done-todo-list").append(
+                        '<li class="done" id="' + item.id + '">'
+                        + '<div class="icheck-primary d-inline ml-2">'
+                        + '<input class="checkbox" type="checkbox" checked asp-for="' + item.state + '" id="cb+' + item.id + '"><label for="cb+' + item.id + '"></label></div>'
+                        + '<span class="text">'
+                        + item.sector.name + deptType + ' - ' + item.debtor + ' - ' + currency(item.amount, { decimal: ',', separator: '.', symbol: '' }).format() + ' ' + item.amountCurrencyName
+                        + '</span><div class="tools">'
+                        + '</div>'
+                        + '</li>'
+                    );
+                });
+            }
+        })
+    }
+
+    function clearFilter() {
+        location.reload();
+    }
+</script>
 }
