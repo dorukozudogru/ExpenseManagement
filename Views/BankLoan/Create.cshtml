@@ -49,7 +49,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label asp-for="TotalAmountToBeRepaid" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                             <div class="input-group mb-3">
@@ -61,7 +61,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label asp-for="Interest" class="control-label"></label>
                                             <div class="input-group mb-3">
@@ -70,6 +70,18 @@
                                                 </div>
                                                 <input asp-for="Interest" class="form-control" id="interest" autocomplete="off" />
                                                 <span asp-validation-for="Interest" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label asp-for="Cost" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control btn btn-default" disabled asp-items="@Html.GetEnumSelectList<Expenses.AmountCurrencyEnum>()"></select>
+                                                </div>
+                                                <input asp-for="Cost" class="form-control" id="cost" autocomplete="off" />
+                                                <span asp-validation-for="Cost" class="text-danger"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -126,6 +138,7 @@
         var installmentAmount = document.getElementById("installmentAmount").value;
         var totalAmountToBeRepaid = document.getElementById("totalAmountToBeRepaid").value;
         var interest = document.getElementById("interest").value;
+        var cost = document.getElementById("cost").value;
         var startDate = document.getElementById("datepicker").value;
         var finishDate = document.getElementById("datepicker2").value;
 
@@ -136,6 +149,7 @@
         data.append('installmentAmount', installmentAmount);
         data.append('totalAmountToBeRepaid', totalAmountToBeRepaid);
         data.append('interest', interest);
+        data.append('cost', cost);
         data.append('startDate', startDate);
         data.append('finishDate', finishDate);
 

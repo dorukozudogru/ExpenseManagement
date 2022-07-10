@@ -40,6 +40,9 @@
                                                 @Html.DisplayNameFor(model => model.Interest)
                                             </th>
                                             <th>
+                                                @Html.DisplayNameFor(model => model.Cost)
+                                            </th>
+                                            <th>
                                                 @Html.DisplayNameFor(model => model.StartDate)
                                             </th>
                                             <th>
@@ -55,7 +58,10 @@
                                             <td style="font-weight:bold"></td>
                                             <td style="font-weight:bold"></td>
                                             <td style="font-weight:bold"></td>
-                                            <td colspan="4"></td>
+                                            <td style="font-weight:bold"></td>
+                                            <td style="font-weight:bold"></td>
+                                            <td colspan="2"></td>
+                                            <td style="font-weight:bold"></td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -133,6 +139,17 @@
                 $(api.column(4).footer()).html(
                     currency(amountTotal3, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
                 );
+
+                amountTotal4 = api
+                    .column(6, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(6).footer()).html(
+                    currency(amountTotal4, { decimal: ',', separator: '.', symbol: '' }).format() + ' ₺'
+                );
             },
             "ajax": {
                 "url": "/BankLoan/Post",
@@ -176,6 +193,15 @@
                     "orderable": false,
                     "render": function (data, type, full, meta) {
                         return "%" + currency(full.interest, { decimal: ',', separator: '.', symbol: '' }).format();
+                    }
+                },
+                {
+                    "data": "cost",
+                    "render": function (data, type, full, meta) {
+                        if (data != null) {
+                            return currency(full.cost, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                        }
+                        return "-";
                     }
                 },
                 {

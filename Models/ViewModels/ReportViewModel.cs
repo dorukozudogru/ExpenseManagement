@@ -99,6 +99,8 @@ namespace ExpenseManagement.Models.ViewModels
         {
             public string SectorName { get; set; }
 
+            public string DeptType { get; set; }
+
             public double TotalAmount { get; set; }
 
             public byte TotalAmountCurrency { get; set; }

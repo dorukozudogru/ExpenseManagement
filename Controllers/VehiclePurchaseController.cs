@@ -113,7 +113,7 @@ namespace ExpenseManagement.Controllers
 
         public IActionResult Create()
         {
-            ViewData["RegistrationFeeId"] = new SelectList(_context.RegistrationFees.OrderBy(s => s.RegistrationFee), "Id", "RegistrationFee");
+            ViewData["RegistrationFeeId"] = new SelectList(_context.RegistrationFees.Where(r => r.Year == DateTime.Now.Year).OrderBy(s => s.RegistrationFee), "Id", "RegistrationFee");
             ViewData["CarModelId"] = new SelectList(_context.CarModels, "Id", "Name");
             return View();
         }

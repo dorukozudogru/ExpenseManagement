@@ -15,6 +15,9 @@ namespace ExpenseManagement.Models
         public int SectorId { get; set; }
         public virtual Sectors Sector { get; set; }
 
+        [DisplayName("Alacak Türü")]
+        public string DeptType { get; set; }
+
         [Required]
         [DisplayName("Alınacak Kişi/Kurum")]
         public string Debtor { get; set; }

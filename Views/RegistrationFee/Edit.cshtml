@@ -16,9 +16,27 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-12">
+                            <input type="hidden" asp-for="Id" id="id" />
+                            <div class="col-md-4">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                <input type="hidden" asp-for="Id" id="id" />
+                                <div class="form-group">
+                                    <label asp-for="Year" class="control-label"></label>
+                                    <div class="input-group-prepend">
+                                        <select asp-for="Year" class="form-control btn btn-default" id="year">
+                                            <option>2021</option>
+                                            <option>2022</option>
+                                            <option>2023</option>
+                                            <option>2024</option>
+                                            <option>2025</option>
+                                            <option>2026</option>
+                                            <option>2027</option>
+                                            <option>2028</option>
+                                            <option>2029</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
                                 <div class="form-group">
                                     <label asp-for="RegistrationFee" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen küsürat için virgül (,) kullanınız.)</strong></label>
                                     <input asp-for="RegistrationFee" class="form-control" id="registrationFee" autocomplete="off" />
@@ -42,11 +60,13 @@
 </section>
 
 <script>
+    var year;
     var registrationFee;
     var id;
 
     function update() {
         registrationFee = document.getElementById("registrationFee").value;
+        year = document.getElementById("year").value;
         id = document.getElementById("id").value;
 
         registrationFee2 = registrationFee.replace(/,/g, '.');
@@ -54,7 +74,7 @@
         $("#updateButton").attr("disabled", true);
 
         $.ajax({
-            url: '/RegistrationFee/Edit?registrationFees.RegistrationFee=' + registrationFee2 + "&id=" + id,
+            url: '/RegistrationFee/Edit?registrationFees.RegistrationFee=' + registrationFee2 + '&registrationFees.Year=' + year + "&id=" + id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;

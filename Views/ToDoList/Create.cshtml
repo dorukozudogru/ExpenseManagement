@@ -20,7 +20,18 @@
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 <div class="form-group">
                                     <label asp-for="Sector.Name" class="control-label"></label>
-                                    <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId"></select>
+                                    <select asp-for="SectorId" class="form-control" asp-items="ViewBag.SectorId" id="sectorId" onchange="sectorChanged()"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="DeptType" class="control-label"></label>
+                                    <div class="input-group-prepend">
+                                        <select asp-for="DeptType" class="form-control" id="deptType" disabled>
+                                            <option></option>
+                                            <option>Şahıs</option>
+                                            <option>Sigorta</option>
+                                            <option>Filo</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Debtor" class="control-label"></label>
@@ -53,13 +64,27 @@
 </section>
 
 <script>
+    function sectorChanged() {
+        var sector = document.getElementById("sectorId").options[document.getElementById('sectorId').selectedIndex].text;
+
+        if(sector == "SKODA SERVİS BİRİMİ"){
+            $('#deptType').removeAttr('disabled');
+        }
+        else{
+            $('#deptType').attr('disabled', 'disabled');
+            $('#deptType').val('');
+        }
+    }
+
     var sectorId;
+    var deptType;
     var debtor;
     var amount;
     var amountCurrency;
 
     function add() {
         sectorId = document.getElementById("sectorId").value;
+        deptType = document.getElementById("deptType").value;
         debtor = document.getElementById("debtor").value;
         amount = document.getElementById("amount").value;
         amountCurrency = document.getElementById("amountCurrency").value;
@@ -67,6 +92,7 @@
         var data = new FormData();
 
         data.append('sectorId', sectorId);
+        data.append('deptType', deptType);
         data.append('debtor', debtor);
         data.append('amount', amount);
         data.append('amountCurrency', amountCurrency);
