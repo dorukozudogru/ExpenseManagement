@@ -148,7 +148,7 @@ namespace ExpenseManagement.Controllers
         {
             List<DepositAccounts> banks = await _context.DepositAccounts
                 .Include(i => i.BankBranch)
-                .Where(i => i.FinishDate >= DateTime.Now.Date)
+                .Where(i => i.FinishDate >= DateTime.Now.Date && i.IsActive == true)
                 .GroupBy(i => new
                 {
                     i.AmountCurrency,

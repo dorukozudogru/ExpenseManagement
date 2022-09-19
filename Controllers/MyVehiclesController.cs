@@ -10,6 +10,7 @@ using ExpenseManagement.Models;
 using ExpenseManagement.Helpers;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ExpenseManagement.Controllers
 {
@@ -165,7 +166,26 @@ namespace ExpenseManagement.Controllers
                 .Include(cb => cb.CarModel.CarBrand)
                 .ToListAsync();
 
-            return Ok(myVehicles);
+            var user = await _context.Users.FindAsync(GetLoggedUserId());
+
+            if (user.FinishingInspectionClickDate.Value.Date != DateTime.Now.Date)
+            {
+                if (GetLoggedUserRole() == "Admin" || GetLoggedUserRole() == "Banaz")
+                {
+                    return Ok(myVehicles);
+                }
+            }
+            return Ok();
+        }
+
+        public string GetLoggedUserId()
+        {
+            return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        public string GetLoggedUserRole()
+        {
+            return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
         }
     }
 }

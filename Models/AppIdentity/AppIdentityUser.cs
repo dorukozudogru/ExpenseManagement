@@ -19,5 +19,11 @@ namespace ExpenseManagement.Models
 
         [DisplayName("Son Oturum Açma Tarihi")]
         public DateTime? LastLoginDate { get; set; }
+
+        [DisplayName("Muayene Tarihi Yaklaşan Araçlar Görüldü Tarihi")]
+        public DateTime? FinishingInspectionClickDate { get; set; }
+
+        [DisplayName("Bitiş Tarihi Yaklaşan Teminat Mektubu Görüldü Tarihi")]
+        public DateTime? FinishingGuaranteeClickDate { get; set; }
     }
 }

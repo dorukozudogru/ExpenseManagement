@@ -499,10 +499,11 @@
             </button>
             <button type="button" class="btn btn-danger swalDefaultWarning2" hidden id="swalDefaultWarning2">
             </button>
-            <button type="button" class="btn btn-danger swalDefaultWarning2Title" hidden id="swalDefaultWarning2Title">
+            <button type="button" class="btn btn-danger swalDefaultWarning3" hidden id="swalDefaultWarning3">
             </button>
             <input id="warningSuccessMessage" hidden />
             <input id="warningSuccessMessage2" hidden />
+            <input id="warningSuccessMessage3" hidden />
             <button type="button" class="btn btn-danger swalDefaultError" hidden id="swalDefaultError">
             </button>
             @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Banaz") || User.IsInRole("Muhasebe")))
@@ -1129,22 +1130,45 @@
 
         $('.swalDefaultWarning2').click(function () {
             Swal.fire({
-                title: document.getElementById("swalDefaultWarning2Title").value,
+                title: "Muayene Tarihi Yaklaşan Araçlar",
                 text: document.getElementById("swalDefaultWarning2").value,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: document.getElementById("warningSuccessMessage2").value,
+                confirmButtonText: 'Kontrol Et',
                 cancelButtonText: 'Kapat'
             }).then((result) => {
                 if (result.dismiss == "cancel") {
-
+                    $.ajax({
+                        "url": "/Account/SetAccountFinishingInspectionClickDate",
+                        "method": "POST"
+                    });
                 }
-                if (result.value && document.getElementById("warningSuccessMessage2").value == "Kontrol Et") {
+                if (result.value == true) {
                     location.href = '/MyVehicles';
                 }
-                if (result.value && document.getElementById("warningSuccessMessage2").value == "Sayfaya Git") {
+            })
+        });
+
+        $('.swalDefaultWarning3').click(function () {
+            Swal.fire({
+                title: "Bitiş Tarihi Yaklaşan Teminat Mektubu",
+                text: document.getElementById("swalDefaultWarning3").value,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sayfaya Git',
+                cancelButtonText: 'Kapat'
+            }).then((result) => {
+                if (result.dismiss == "cancel") {
+                    $.ajax({
+                        "url": "/Account/SetAccountFinishingGuaranteeClickDate",
+                        "method": "POST"
+                    });
+                }
+                if (result.value == true) {
                     location.href = '/LetterOfGuarantee';
                 }
             })
