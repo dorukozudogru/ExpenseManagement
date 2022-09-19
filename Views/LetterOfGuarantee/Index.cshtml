@@ -156,10 +156,8 @@
             "method": "POST"
         }).done(function (response) {
             if(response != 0){
-                document.getElementById("warningSuccessMessage2").value = "Sayfaya Git";
-                document.getElementById("swalDefaultWarning2Title").value = "Bitiş Tarihi Yaklaşan Teminat Mektubu";
-                document.getElementById("swalDefaultWarning2").value = "Bitiş tarihi yaklaşan " + response.length + " adet teminat mektubu bulunmaktadır. Lütfen kontrol ediniz.";
-                document.getElementById("swalDefaultWarning2").click();
+                document.getElementById("swalDefaultWarning3").value = "Bitiş tarihi yaklaşan " + response.length + " adet teminat mektubu bulunmaktadır. Lütfen kontrol ediniz.";
+                document.getElementById("swalDefaultWarning3").click();
             }
         });
         };

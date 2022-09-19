@@ -318,7 +318,18 @@ namespace ExpenseManagement.Controllers
                 .Where(m => m.FinishDate.AddDays(-20) <= DateTime.Now)
                 .ToListAsync();
 
-            return Ok(myVehicles);
+            var user = await _context.Users.FindAsync(GetLoggedUserId());
+
+            if (user.FinishingGuaranteeClickDate.Value.Date != DateTime.Now.Date)
+            {
+                return Ok(myVehicles);
+            }
+            return Ok();
+        }
+
+        public string GetLoggedUserId()
+        {
+            return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
         }
 
         public string GetLoggedUserRole()

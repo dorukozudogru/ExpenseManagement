@@ -109,172 +109,219 @@
                             </div>
                         </div>
                     </div>
+                    <div class="modal fade" id="modal-finish">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title"><strong>Vadeyi Bitirmek İstediğinize Emin misiniz?</strong></h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p id="message-finish">&hellip;</p>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-success" id="finish">Evet</button>
+                                    <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Kapat</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-@section Scripts{
-    <script>
-        (function () {
-            $("#ItemsTable").DataTable({
-                "language": {
-                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
-                    zeroRecords: "Hiçbir kayıt bulunamadı.",
-                    emptyTable: "Kayıt bulunmamaktadır.",
-                    search: "Ara:",
-                    oPaginate: {
-                        "sFirst": "İlk",
-                        "sLast": "Son",
-                        "sNext": "»",
-                        "sPrevious": "«"
-                    },
-                    sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
-                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+<script>
+    window.onload = function all() {
+        $("#ItemsTable").DataTable({
+            "language": {
+                processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                zeroRecords: "Hiçbir kayıt bulunamadı.",
+                emptyTable: "Kayıt bulunmamaktadır.",
+                search: "Ara:",
+                oPaginate: {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "»",
+                    "sPrevious": "«"
                 },
-                "processing": true,
-                "serverSide": true,
-                "searchDelay": 1200,
-                "stateSave": true,
-                "stateDuration": -1,
-                "ajax": {
-                    "url": "/DepositAccount/Post?isActive=true",
-                    "method": "POST"
+                sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
+                sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+            },
+            "processing": true,
+            "serverSide": true,
+            "searchDelay": 1200,
+            "stateSave": true,
+            "stateDuration": -1,
+            "ajax": {
+                "url": "/DepositAccount/Post?isActive=true",
+                "method": "POST"
+            },
+            "columns": [
+                { "data": "id" },
+                {
+                    "data": "bankBranch.name",
+                    "orderable": false
                 },
-                "columns": [
-                    { "data": "id" },
-                    {
-                        "data": "bankBranch.name",
-                        "orderable": false
-                    },
-                    {
-                        "data": "amount",
-                        "render": function (data, type, full, meta) {
-                            return currency(full.amount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.amountCurrencyName;
-                        }
-                    },
-                    {
-                        "data": "dayOfDeposit",
-                        "orderable": false
-                    },
-                    {
-                        "data": "interest",
-                        "orderable": false,
-                        "render": function (data, type, full, meta) {
-                            return "%" + currency(full.interest, { decimal: ',', separator: '.', symbol: '' }).format();
-                        }
-                    },
-                    {
-                        "data": "profit",
-                        "render": function (data, type, full, meta) {
-                            return currency(full.profit, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.profitCurrencyName;
-                        }
-                    },
-                    {
-                        "data": "startDate",
-                        render: function (data, type, row) {
-                            return window.moment(data).format("DD-MMMM-YYYY");
-                        }
-                    },
-                    {
-                        "data": "finishDate",
-                        render: function (data, type, row) {
-                            return window.moment(data).format("DD-MMMM-YYYY");
-                        }
-                    },
-                    {
-                        "data": "actionId", render: function (data, type, row) {
-                            return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="DepositAccount/Edit/' + row.id + '">Güncelle</a><a class="dropdown-item" href="DepositAccount/Delete/' + row.id + '">Sil</a></ul></div>'
-                        },
-                        "orderable": false
+                {
+                    "data": "amount",
+                    "render": function (data, type, full, meta) {
+                        return currency(full.amount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.amountCurrencyName;
                     }
-                ],
-                "ordering": true,
-                "paging": true,
-                "pagingType": "simple_numbers",
-                "pageLength": 100
-            });
+                },
+                {
+                    "data": "dayOfDeposit",
+                    "orderable": false
+                },
+                {
+                    "data": "interest",
+                    "orderable": false,
+                    "render": function (data, type, full, meta) {
+                        return "%" + currency(full.interest, { decimal: ',', separator: '.', symbol: '' }).format();
+                    }
+                },
+                {
+                    "data": "profit",
+                    "render": function (data, type, full, meta) {
+                        return currency(full.profit, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.profitCurrencyName;
+                    }
+                },
+                {
+                    "data": "startDate",
+                    render: function (data, type, row) {
+                        return window.moment(data).format("DD-MMMM-YYYY");
+                    }
+                },
+                {
+                    "data": "finishDate",
+                    render: function (data, type, row) {
+                        return window.moment(data).format("DD-MMMM-YYYY");
+                    }
+                },
+                {
+                    "data": "actionId", render: function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a href="#" data-toggle="modal" data-target="#modal-finish" account-id="' + row.id + '" account-branch="' + row.bankBranch.name + '" account-finish-date="' + row.finishDate + '" class="setFinished dropdown-item">Vadeyi Bitir</a><a class="dropdown-item" href="DepositAccount/Edit/' + row.id + '">Güncelle</a><a class="dropdown-item" href="DepositAccount/Delete/' + row.id + '">Sil</a></ul></div>'
+                    },
+                    "orderable": false
+                }
+            ],
+            "ordering": true,
+            "paging": true,
+            "pagingType": "simple_numbers",
+            "pageLength": 100
+        });
 
-            $("#finished").DataTable({
-                "language": {
-                    processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
-                    zeroRecords: "Hiçbir kayıt bulunamadı.",
-                    emptyTable: "Kayıt bulunmamaktadır.",
-                    search: "Ara:",
-                    oPaginate: {
-                        "sFirst": "İlk",
-                        "sLast": "Son",
-                        "sNext": "»",
-                        "sPrevious": "«"
-                    },
-                    sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
-                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+        $("#finished").DataTable({
+            "language": {
+                processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                zeroRecords: "Hiçbir kayıt bulunamadı.",
+                emptyTable: "Kayıt bulunmamaktadır.",
+                search: "Ara:",
+                oPaginate: {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "»",
+                    "sPrevious": "«"
                 },
-                "processing": true,
-                "serverSide": true,
-                "searchDelay": 1200,
-                "stateSave": true,
-                "searching": false,
-                "lengthChange": false,
-                "stateDuration": -1,
-                "ajax": {
-                    "url": "/DepositAccount/Post?isActive=false",
-                    "method": "POST"
+                sLengthMenu: "Listelenen maksimum kayıt sayısı: _MENU_",
+                sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+            },
+            "processing": true,
+            "serverSide": true,
+            "searchDelay": 1200,
+            "stateSave": true,
+            "searching": false,
+            "lengthChange": false,
+            "stateDuration": -1,
+            "ajax": {
+                "url": "/DepositAccount/Post?isActive=false",
+                "method": "POST"
+            },
+            "columns": [
+                { "data": "id" },
+                {
+                    "data": "bankBranch.name",
+                    "orderable": false
                 },
-                "columns": [
-                    { "data": "id" },
-                    {
-                        "data": "bankBranch.name",
-                        "orderable": false
-                    },
-                    {
-                        "data": "amount",
-                        "render": function (data, type, full, meta) {
-                            return currency(full.amount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.amountCurrencyName;
-                        }
-                    },
-                    {
-                        "data": "dayOfDeposit",
-                        "orderable": false
-                    },
-                    {
-                        "data": "interest",
-                        "orderable": false,
-                        "render": function (data, type, full, meta) {
-                            return "%" + currency(full.interest, { decimal: ',', separator: '.', symbol: '' }).format();
-                        }
-                    },
-                    {
-                        "data": "profit",
-                        "render": function (data, type, full, meta) {
-                            return currency(full.profit, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.profitCurrencyName;
-                        }
-                    },
-                    {
-                        "data": "startDate",
-                        render: function (data, type, row) {
-                            return window.moment(data).format("DD-MMMM-YYYY");
-                        }
-                    },
-                    {
-                        "data": "finishDate",
-                        render: function (data, type, row) {
-                            return window.moment(data).format("DD-MMMM-YYYY");
-                        }
-                    },
-                    {
-                        "data": "actionId", render: function (data, type, row) {
-                            return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="DepositAccount/Edit/' + row.id + '">Güncelle</a><a class="dropdown-item" href="DepositAccount/Delete/' + row.id + '">Sil</a></ul></div>'
-                        },
-                        "orderable": false
+                {
+                    "data": "amount",
+                    "render": function (data, type, full, meta) {
+                        return currency(full.amount, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.amountCurrencyName;
                     }
-                ],
-                "ordering": true,
-                "paging": true,
-                "pagingType": "simple_numbers",
-                "pageLength": 10
+                },
+                {
+                    "data": "dayOfDeposit",
+                    "orderable": false
+                },
+                {
+                    "data": "interest",
+                    "orderable": false,
+                    "render": function (data, type, full, meta) {
+                        return "%" + currency(full.interest, { decimal: ',', separator: '.', symbol: '' }).format();
+                    }
+                },
+                {
+                    "data": "profit",
+                    "render": function (data, type, full, meta) {
+                        return currency(full.profit, { decimal: ',', separator: '.', symbol: '' }).format() + " " + full.profitCurrencyName;
+                    }
+                },
+                {
+                    "data": "startDate",
+                    render: function (data, type, row) {
+                        return window.moment(data).format("DD-MMMM-YYYY");
+                    }
+                },
+                {
+                    "data": "finishDate",
+                    render: function (data, type, row) {
+                        return window.moment(data).format("DD-MMMM-YYYY");
+                    }
+                },
+                {
+                    "data": "actionId", render: function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn" data-toggle="dropdown"><span class="fa fa-angle-down"></span></button></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="DepositAccount/Edit/' + row.id + '">Güncelle</a><a class="dropdown-item" href="DepositAccount/Delete/' + row.id + '">Sil</a></ul></div>'
+                    },
+                    "orderable": false
+                }
+            ],
+            "ordering": true,
+            "paging": true,
+            "pagingType": "simple_numbers",
+            "pageLength": 10
+        });
+
+        var finishAccountId;
+        var finishBranch;
+        var finishDate;
+
+        $(document).delegate('.setFinished','click',function (e) {
+            finishAccountId = $(this).attr('account-id');
+            finishBranch = $(this).attr('account-branch');
+            finishDate = $(this).attr('account-finish-date');
+
+            document.getElementById('message-finish').innerHTML = "<strong>" + finishBranch + "</strong> bankasına/şubesine ait <strong>" + window.moment(finishDate).format("DD-MMMM-YYYY") + "</strong> bitiş tarihli vadeli hesabı bitirmek istediğinizden emin misiniz?";
+        });
+
+        $(document).delegate('#finish','click',function (e) {
+            $.ajax({
+                url: '/DepositAccount/FinishDeposit?id=' + finishAccountId,
+                type: 'POST',
+                success: function (returnvalue) {
+                    $("#modal-finish").modal('hide');
+                    document.getElementById("swalDefaultSuccess").value = returnvalue.message;
+                    document.getElementById("swalDefaultSuccess").click();
+                    setTimeout("location.reload(true);", 2000);
+                },
+                error: function (error) {
+                    $("#modal-finish").modal('hide');
+                    document.getElementById("swalDefaultError").value = error.responseText;
+                    document.getElementById("swalDefaultError").click();
+                }
             });
-        })(jQuery);
-    </script>
-}
+        });
+    }
+</script>

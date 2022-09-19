@@ -190,9 +190,14 @@ namespace ExpenseManagement.Controllers
             return Ok(new { Result = true, Message = "Vadeli Hesap Kaydı Silinmiştir!" });
         }
 
-        private bool DepositAccountsExists(int id)
+        [HttpPost]
+        public async Task<IActionResult> FinishDeposit(int id)
         {
-            return _context.DepositAccounts.Any(e => e.Id == id);
+            var depositAccounts = await _context.DepositAccounts.FindAsync(id);
+            depositAccounts.IsActive = false;
+            _context.Update(depositAccounts);
+            await _context.SaveChangesAsync();
+            return Ok(new { Result = true, Message = "Vadeli Hesap Kaydı Bitirilmiştir!" });
         }
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System;
 using ExpenseManagement.Data;
 using static ExpenseManagement.Helpers.ProcessCollectionHelper;
+using System.Security.Claims;
 
 namespace ExpenseManagement.Controllers
 {
@@ -323,6 +324,39 @@ namespace ExpenseManagement.Controllers
         public IActionResult AccessDenied()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetAccountFinishingInspectionClickDate()
+        {
+            var user = await _context.Users.FindAsync(GetLoggedUserId());
+            if (user != null)
+            {
+                user.FinishingInspectionClickDate = DateTime.Now.AddHours(10);
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            return BadRequest("Kullanıcı Bulunamadı!");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetAccountFinishingGuaranteeClickDate()
+        {
+            var user = await _context.Users.FindAsync(GetLoggedUserId());
+            if (user != null)
+            {
+                user.FinishingGuaranteeClickDate = DateTime.Now.AddHours(10);
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            return BadRequest("Kullanıcı Bulunamadı!");
+        }
+
+        public string GetLoggedUserId()
+        {
+            return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
         }
     }
 }

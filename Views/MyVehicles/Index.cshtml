@@ -226,8 +226,6 @@
             "method": "POST"
         }).done(function (response) {
             if(response != 0){
-                document.getElementById("warningSuccessMessage2").value = "Kontrol Et";
-                document.getElementById("swalDefaultWarning2Title").value = "Muayene Tarihi Yaklaşan Araçlar";
                 document.getElementById("swalDefaultWarning2").value = "Muayene tarihi yaklaşan " + response.length + " adet araç bulunmaktadır. Lütfen araçları kontrol ediniz.";
                 document.getElementById("swalDefaultWarning2").click();
             }
